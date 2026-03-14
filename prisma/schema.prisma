@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Deck {
+  id            String   @id @default(uuid())
+  shareId       String   @unique
+  title         String
+  companyName   String
+  industry      String
+  stage         String
+  fundingTarget String
+  investorType  String
+  keyMetrics    String   @default("")
+  teamInfo      String   @default("")
+  problem       String   @default("")
+  solution      String   @default("")
+  slides        String   // JSON string of slide data
+  isPremium     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  views         View[]
+  transactions  Transaction[]
+}
+
+model View {
+  id          String   @id @default(uuid())
+  deckId      String
+  deck        Deck     @relation(fields: [deckId], references: [id])
+  viewerIp    String   @default("")
+  userAgent   String   @default("")
+  slideViews  String   @default("[]") // JSON: [{slideIndex, timeSpent}]
+  totalTime   Int      @default(0) // seconds
+  createdAt   DateTime @default(now())
+}
+
+// --- Admin & payments (UPH-53) ---
+enum Role {
+  user
+  admin
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(user)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  transactions Transaction[]
+}
+
+model Transaction {
+  id               String   @id @default(uuid())
+  userId           String?
+  user             User?    @relation(fields: [userId], references: [id])
+  deckId           String?
+  deck             Deck?    @relation(fields: [deckId], references: [id])
+  stripePaymentId  String?  // Stripe payment intent or session id
+  amountCents      Int
+  currency         String   @default("usd")
+  status           String   // pending | succeeded | failed | refunded
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+  @@index([deckId])
+  @@index([stripePaymentId])
+}
+
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique // e.g. stripe_secret_key, stripe_publishable_key
+  value     String   // secret keys never returned to client; admin can overwrite
+  updatedAt DateTime @updatedAt
+}

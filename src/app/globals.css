@@ -1,0 +1,240 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #fafafa;
+  --foreground: #1a1a2e;
+  --electric: #4361ee;
+  --navy: #1a1a2e;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: rgba(67, 97, 238, 0.2);
+  color: #1a1a2e;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Respect reduced motion — WCAG 2.1 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Premium focus styles */
+*:focus-visible {
+  outline: 2px solid #4361ee;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@layer utilities {
+  /* Enhanced glassmorphism — inspired by serviceplan-agents.com */
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .glass-dark {
+    background: rgba(10, 10, 22, 0.6);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.54);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 6px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #4361ee 0%, #7c3aed 50%, #4361ee 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-light {
+    background: linear-gradient(135deg, #93a5f6 0%, #c4b5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .bg-grid {
+    background-image: linear-gradient(
+        rgba(67, 97, 238, 0.03) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(67, 97, 238, 0.03) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .bg-grid-dark {
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0.03) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(
+      circle,
+      rgba(67, 97, 238, 0.06) 1px,
+      transparent 1px
+    );
+    background-size: 24px 24px;
+  }
+
+  /* Gradient border effect */
+  .gradient-border {
+    position: relative;
+    background: white;
+    border-radius: 1rem;
+  }
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.3), rgba(124, 58, 237, 0.2), rgba(67, 97, 238, 0.1));
+    z-index: -1;
+  }
+
+  /* Stagger animation delays */
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.35s; }
+  .stagger-4 { animation-delay: 0.5s; }
+  .stagger-5 { animation-delay: 0.65s; }
+  .stagger-6 { animation-delay: 0.8s; }
+}
+
+/* Slide transition */
+.slide-transition {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+/* Smooth input transitions */
+input,
+textarea,
+select {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d1df;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3bf;
+}
+
+/* Pricing section scroll-triggered stagger (motion with purpose) */
+.pricing-reveal-wrapper .pricing-reveal-grid > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.pricing-reveal-wrapper.revealed .pricing-reveal-grid > *:nth-child(1) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0ms;
+}
+.pricing-reveal-wrapper.revealed .pricing-reveal-grid > *:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 100ms;
+}
+.pricing-reveal-wrapper.revealed .pricing-reveal-grid > *:nth-child(3) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 200ms;
+}
+
+/* Section reveal (How it works, Features) — scroll-triggered stagger */
+.section-reveal-wrapper .section-reveal-grid > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(1) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0ms;
+}
+.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 80ms;
+}
+.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(3) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 160ms;
+}
+.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(4) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 240ms;
+}
+.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(5) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 320ms;
+}
+.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(6) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 400ms;
+}
+
+/* Noise texture overlay for dark sections */
+.noise-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+}
