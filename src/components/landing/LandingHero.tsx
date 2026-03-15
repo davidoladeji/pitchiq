@@ -25,13 +25,6 @@ export default function LandingHero() {
     return () => observer.disconnect();
   }, []);
 
-  const fade = (delay: number) =>
-    `transition-all duration-1000 ease-out ${
-      visible
-        ? `opacity-100 translate-y-0 delay-[${delay}ms]`
-        : "opacity-0 translate-y-6"
-    }`;
-
   return (
     <section
       ref={sectionRef}
