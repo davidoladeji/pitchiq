@@ -12,7 +12,6 @@ export default function DeckViewerClient() {
   const params = useParams();
   const shareId = params?.shareId as string;
   const [deck, setDeck] = useState<DeckData | null>(null);
-  const [isOwner, setIsOwner] = useState(false);
   const [ownerPlan, setOwnerPlan] = useState("starter");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -37,7 +36,6 @@ export default function DeckViewerClient() {
         if (!res.ok) throw new Error("Deck not found");
         const data = await res.json();
         setDeck(data);
-        if (data.isOwner) setIsOwner(true);
         if (data.ownerPlan) setOwnerPlan(data.ownerPlan);
       } catch {
         setError("This deck doesn't exist or has been removed.");
