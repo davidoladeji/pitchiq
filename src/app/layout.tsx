@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { GeistMono } from "geist/font/mono";
-import { Inter, Space_Grotesk, DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
+import { JetBrains_Mono, Inter, Space_Grotesk, DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import Providers from "@/components/Providers";
 import "./globals.css";
 
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], display: "swap", variable: "--font-geist-mono" });
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], display: "swap", variable: "--font-space-grotesk" });
 const dmSans = DM_Sans({ subsets: ["latin"], display: "swap", variable: "--font-dm-sans" });
@@ -36,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistMono.variable} ${inter.variable} ${spaceGrotesk.variable} ${dmSans.variable} ${plusJakarta.variable}`}>
+    <html lang="en" className={`${jetbrainsMono.variable} ${inter.variable} ${spaceGrotesk.variable} ${dmSans.variable} ${plusJakarta.variable}`}>
       <body className="antialiased">
         <Providers>{children}</Providers>
       </body>
