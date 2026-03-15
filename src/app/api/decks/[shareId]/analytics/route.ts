@@ -50,10 +50,8 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: NextRequest,
-  _context: { params: { shareId: string } }
-) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function POST(req: NextRequest) {
   try {
     const { viewId, slideViews, totalTime } = await req.json();
 
