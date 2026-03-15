@@ -4,6 +4,8 @@ import { useState, useCallback } from "react";
 import { DeckInput, DeckData } from "@/lib/types";
 import { THEMES } from "@/lib/themes";
 import FormField, { inputClass } from "@/components/ui/FormField";
+import SearchableSelect from "@/components/ui/SearchableSelect";
+import { INDUSTRIES } from "@/lib/industries";
 
 interface DeckFormProps {
   onGenerated: (deck: DeckData) => void;
@@ -26,64 +28,64 @@ function StepIndicator({
 }) {
   return (
     <div
-      className="flex items-center gap-1 mb-10"
+      className="mb-10"
       role="group"
       aria-label={`Step ${currentStep + 1} of ${totalSteps}`}
     >
-      {STEPS.map((step, i) => (
-        <div key={step.label} className="flex items-center flex-1">
-          <div className="flex items-center gap-2.5 flex-1">
+      {/* Mobile: compact dots + label */}
+      <div className="flex sm:hidden items-center gap-3">
+        <div className="flex gap-1.5">
+          {STEPS.map((_, i) => (
             <div
-              className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold shrink-0 transition-all duration-500 ${
-                i < currentStep
-                  ? "bg-electric text-white shadow-sm"
-                  : i === currentStep
-                  ? "bg-navy text-white shadow-lg shadow-navy/20 ring-4 ring-navy/5"
-                  : "bg-gray-100 text-gray-300 border border-gray-200"
-              }`}
-              {...(i === currentStep ? { "aria-current": "step" as const } : {})}
-            >
-              {i < currentStep ? (
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              ) : (
-                step.icon
-              )}
-            </div>
-            <div className="hidden sm:block min-w-0">
-              <p
-                className={`text-xs font-semibold truncate transition-colors ${
-                  i <= currentStep ? "text-navy" : "text-gray-300"
-                }`}
-              >
-                {step.label}
-              </p>
-              <p className="text-[10px] text-gray-500 truncate">
-                {step.description}
-              </p>
-            </div>
-          </div>
-          {i < totalSteps - 1 && (
-            <div
-              className={`h-px flex-1 mx-3 transition-all duration-500 ${
-                i < currentStep ? "bg-electric" : "bg-gray-200"
+              key={i}
+              className={`h-1.5 rounded-full transition-all duration-500 ${
+                i <= currentStep ? "bg-electric w-6" : "bg-gray-200 w-1.5"
               }`}
             />
-          )}
+          ))}
         </div>
-      ))}
+        <p className="text-xs font-semibold text-navy">
+          {STEPS[currentStep].label}
+          <span className="text-gray-400 font-normal ml-1">{STEPS[currentStep].description}</span>
+        </p>
+      </div>
+
+      {/* Desktop: full step indicators */}
+      <div className="hidden sm:flex items-center gap-1">
+        {STEPS.map((step, i) => (
+          <div key={step.label} className="flex items-center flex-1 min-w-0">
+            <div className="flex items-center gap-2 min-w-0 flex-shrink-0">
+              <div
+                className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold shrink-0 transition-all duration-500 ${
+                  i < currentStep
+                    ? "bg-electric text-white shadow-sm"
+                    : i === currentStep
+                    ? "bg-navy text-white shadow-lg shadow-navy/20 ring-4 ring-navy/5"
+                    : "bg-gray-100 text-gray-300 border border-gray-200"
+                }`}
+                {...(i === currentStep ? { "aria-current": "step" as const } : {})}
+              >
+                {i < currentStep ? (
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  step.icon
+                )}
+              </div>
+              <div className="hidden md:block min-w-0">
+                <p className={`text-xs font-semibold truncate transition-colors ${i <= currentStep ? "text-navy" : "text-gray-300"}`}>
+                  {step.label}
+                </p>
+                <p className="text-[10px] text-gray-400 truncate">{step.description}</p>
+              </div>
+            </div>
+            {i < totalSteps - 1 && (
+              <div className={`h-px flex-1 mx-2 transition-all duration-500 ${i < currentStep ? "bg-electric" : "bg-gray-200"}`} />
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -109,6 +111,43 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
   const update = useCallback((field: keyof DeckInput, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   }, []);
+
+  const [refining, setRefining] = useState<Record<string, boolean>>({});
+
+  const handleRefine = useCallback(async (field: keyof DeckInput) => {
+    const currentValue = form[field];
+    if (!currentValue?.toString().trim()) return;
+    setRefining((prev) => ({ ...prev, [field]: true }));
+    try {
+      const res = await fetch("/api/decks/refine", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          field,
+          currentValue,
+          context: {
+            companyName: form.companyName,
+            industry: form.industry,
+            stage: form.stage,
+            problem: form.problem,
+            solution: form.solution,
+            keyMetrics: form.keyMetrics,
+            teamInfo: form.teamInfo,
+          },
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.refined) {
+          setForm((prev) => ({ ...prev, [field]: data.refined }));
+        }
+      }
+    } catch {
+      // Silently fail
+    } finally {
+      setRefining((prev) => ({ ...prev, [field]: false }));
+    }
+  }, [form]);
 
   const canAdvance = () => {
     switch (step) {
@@ -222,15 +261,13 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
             <FormField
               label="Industry"
               required
-              hint="e.g. FinTech, HealthTech, AI/ML, SaaS, Marketplace"
+              hint="Search or type a custom industry"
             >
-              <input
-                type="text"
-                required
+              <SearchableSelect
+                options={INDUSTRIES}
                 value={form.industry}
-                onChange={(e) => update("industry", e.target.value)}
-                placeholder="FinTech, HealthTech, SaaS..."
-                className={inputClass}
+                onChange={(val) => update("industry", val)}
+                placeholder="Search industries..."
               />
             </FormField>
           </div>
@@ -300,31 +337,67 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
             <FormField
               label="Problem You're Solving"
               required
-              hint="Be specific about who has this problem and why it matters"
+              hint="Type a rough draft, then click Refine to polish it"
             >
-              <textarea
-                required
-                rows={3}
-                value={form.problem}
-                onChange={(e) => update("problem", e.target.value)}
-                placeholder="Describe the problem your startup solves. Be specific about who has this problem and why existing solutions fall short."
-                className={`${inputClass} resize-none`}
-                autoFocus
-              />
+              <div className="relative">
+                <textarea
+                  required
+                  rows={3}
+                  value={form.problem}
+                  onChange={(e) => update("problem", e.target.value)}
+                  placeholder="Describe the problem your startup solves. Be specific about who has this problem and why existing solutions fall short."
+                  className={`${inputClass} resize-none pr-24`}
+                  autoFocus
+                />
+                {form.problem.trim().length > 5 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRefine("problem")}
+                    disabled={refining.problem}
+                    className="absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-electric bg-electric/[0.06] hover:bg-electric/[0.12] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+                    title="AI will refine your text"
+                  >
+                    {refining.problem ? (
+                      <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                    ) : (
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
+                    )}
+                    Refine
+                  </button>
+                )}
+              </div>
             </FormField>
             <FormField
               label="Your Solution"
               required
-              hint="What makes your approach uniquely different?"
+              hint="Type a rough draft, then click Refine to polish it"
             >
-              <textarea
-                required
-                rows={3}
-                value={form.solution}
-                onChange={(e) => update("solution", e.target.value)}
-                placeholder="Describe your solution. How does it work? What makes it different?"
-                className={`${inputClass} resize-none`}
-              />
+              <div className="relative">
+                <textarea
+                  required
+                  rows={3}
+                  value={form.solution}
+                  onChange={(e) => update("solution", e.target.value)}
+                  placeholder="Describe your solution. How does it work? What makes it different?"
+                  className={`${inputClass} resize-none pr-24`}
+                />
+                {form.solution.trim().length > 5 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRefine("solution")}
+                    disabled={refining.solution}
+                    className="absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-electric bg-electric/[0.06] hover:bg-electric/[0.12] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+                    title="AI will refine your text"
+                  >
+                    {refining.solution ? (
+                      <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                    ) : (
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
+                    )}
+                    Refine
+                  </button>
+                )}
+              </div>
             </FormField>
           </div>
         )}
@@ -335,31 +408,67 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
             <FormField
               label="Key Metrics / Traction"
               required
-              hint="Numbers make your deck stronger — MRR, users, growth rate"
+              hint="Type a rough draft, then click Refine to polish it"
             >
-              <textarea
-                required
-                rows={3}
-                value={form.keyMetrics}
-                onChange={(e) => update("keyMetrics", e.target.value)}
-                placeholder="MRR, users, growth rate, partnerships..."
-                className={`${inputClass} resize-none`}
-                autoFocus
-              />
+              <div className="relative">
+                <textarea
+                  required
+                  rows={3}
+                  value={form.keyMetrics}
+                  onChange={(e) => update("keyMetrics", e.target.value)}
+                  placeholder="MRR, users, growth rate, partnerships..."
+                  className={`${inputClass} resize-none pr-24`}
+                  autoFocus
+                />
+                {form.keyMetrics.trim().length > 5 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRefine("keyMetrics")}
+                    disabled={refining.keyMetrics}
+                    className="absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-electric bg-electric/[0.06] hover:bg-electric/[0.12] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+                    title="AI will refine your text"
+                  >
+                    {refining.keyMetrics ? (
+                      <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                    ) : (
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
+                    )}
+                    Refine
+                  </button>
+                )}
+              </div>
             </FormField>
             <FormField
               label="Team"
               required
-              hint="Highlight relevant experience and domain expertise"
+              hint="Type a rough draft, then click Refine to polish it"
             >
-              <textarea
-                required
-                rows={3}
-                value={form.teamInfo}
-                onChange={(e) => update("teamInfo", e.target.value)}
-                placeholder="Founder backgrounds, key hires, domain expertise..."
-                className={`${inputClass} resize-none`}
-              />
+              <div className="relative">
+                <textarea
+                  required
+                  rows={3}
+                  value={form.teamInfo}
+                  onChange={(e) => update("teamInfo", e.target.value)}
+                  placeholder="Founder backgrounds, key hires, domain expertise..."
+                  className={`${inputClass} resize-none pr-24`}
+                />
+                {form.teamInfo.trim().length > 5 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRefine("teamInfo")}
+                    disabled={refining.teamInfo}
+                    className="absolute top-2.5 right-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-electric bg-electric/[0.06] hover:bg-electric/[0.12] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+                    title="AI will refine your text"
+                  >
+                    {refining.teamInfo ? (
+                      <svg className="animate-spin h-3 w-3" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                    ) : (
+                      <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>
+                    )}
+                    Refine
+                  </button>
+                )}
+              </div>
             </FormField>
           </div>
         )}

@@ -46,10 +46,16 @@ export default function DeckViewerClient() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#fafafa]" aria-busy="true" aria-label="Loading deck">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-electric focus:text-white focus:outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2"
+        >
+          Skip to main content
+        </a>
         <AppNav
           actions={<div className="h-9 w-28 rounded-lg bg-gray-200 animate-pulse" />}
         />
-        <div className="pt-24 pb-16 px-4 sm:px-6">
+        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
               <div className="h-8 w-48 mx-auto rounded-lg bg-gray-200 animate-pulse mb-3" />
@@ -79,7 +85,7 @@ export default function DeckViewerClient() {
               <div className="h-10 w-24 rounded-xl bg-gray-200 animate-pulse" />
             </div>
           </div>
-        </div>
+        </main>
       </div>
     );
   }

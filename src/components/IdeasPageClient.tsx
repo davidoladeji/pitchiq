@@ -230,16 +230,16 @@ export default function IdeasPageClient() {
 
                   <div className="grid sm:grid-cols-2 gap-3 mb-3">
                     <div className="rounded-xl bg-gray-50 p-3">
-                      <p className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1">Problem</p>
+                      <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider mb-1">Problem</p>
                       <p className="text-gray-600 text-sm leading-relaxed">{idea.problem}</p>
                     </div>
                     <div className="rounded-xl bg-gray-50 p-3">
-                      <p className="text-[11px] text-gray-400 font-semibold uppercase tracking-wider mb-1">Solution</p>
+                      <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider mb-1">Solution</p>
                       <p className="text-gray-600 text-sm leading-relaxed">{idea.solution}</p>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 mb-4">
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-4">
                     <span className="inline-flex items-center gap-1">
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
                       {idea.targetCustomer}
@@ -340,14 +340,14 @@ export default function IdeasPageClient() {
               </div>
               <div>
                 <p className="font-semibold text-navy text-sm">Surprise me</p>
-                <p className="text-gray-400 text-xs">Skip the questions &mdash; get random, creative ideas instantly</p>
+                <p className="text-gray-500 text-xs">Skip the questions &mdash; get random, creative ideas instantly</p>
               </div>
             </div>
           </button>
 
           <div className="relative flex items-center gap-3 mb-4">
             <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-400 font-medium">or answer questions</span>
+            <span className="text-xs text-gray-500 font-medium">or answer questions</span>
             <div className="flex-1 h-px bg-gray-200" />
           </div>
 
@@ -370,7 +370,7 @@ export default function IdeasPageClient() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
             {/* Progress */}
             <div className="flex items-center gap-3 mb-6">
-              <span className="text-xs font-semibold text-gray-400 tabular-nums shrink-0">
+              <span className="text-xs font-semibold text-gray-600 tabular-nums shrink-0">
                 {step + 1}/{IDEA_QUESTIONS.length}
               </span>
               <div className="flex-1 flex gap-1">
@@ -421,7 +421,7 @@ export default function IdeasPageClient() {
                     AI Suggest
                   </button>
                 </div>
-                <p className="text-xs text-gray-400 mb-4">{currentQuestion.hint}</p>
+                <p className="text-xs text-gray-500 mb-4">{currentQuestion.hint}</p>
 
                 {currentQuestion.id === "model" ? (
                   <select
@@ -460,7 +460,7 @@ export default function IdeasPageClient() {
                     type="button"
                     onClick={handleBack}
                     disabled={step === 0}
-                    className="min-h-[44px] px-4 py-2.5 rounded-xl text-gray-400 text-sm font-medium hover:text-navy disabled:opacity-30 disabled:pointer-events-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="min-h-[44px] px-4 py-2.5 rounded-xl text-gray-500 text-sm font-medium hover:text-navy disabled:opacity-30 disabled:pointer-events-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                   >
                     Back
                   </button>
@@ -470,7 +470,7 @@ export default function IdeasPageClient() {
                       <button
                         type="button"
                         onClick={() => setStep((s) => s + 1)}
-                        className="min-h-[44px] px-4 py-2.5 rounded-xl text-gray-400 text-sm font-medium hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                        className="min-h-[44px] px-4 py-2.5 rounded-xl text-gray-500 text-sm font-medium hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                       >
                         Skip
                       </button>

@@ -1,9 +1,45 @@
+export interface ChartDataPoint {
+  label: string;
+  value: number;
+  color?: string;
+}
+
+export interface MetricCard {
+  label: string;
+  value: string;
+  change?: string; // e.g. "+24%" or "3x"
+  trend?: "up" | "down" | "neutral";
+}
+
+export interface TeamMember {
+  name: string;
+  role: string;
+  bio?: string;
+}
+
+export interface TimelineItem {
+  date: string;
+  title: string;
+  description?: string;
+  completed?: boolean;
+}
+
 export interface SlideData {
   title: string;
   subtitle?: string;
   content: string[];
-  type: "title" | "content" | "stats" | "comparison" | "cta";
+  type: "title" | "content" | "stats" | "comparison" | "cta" | "chart" | "metrics" | "team" | "timeline" | "image-content";
   accent?: boolean;
+  chartData?: {
+    type: "bar" | "pie" | "line" | "area";
+    data: ChartDataPoint[];
+    label?: string; // y-axis or legend label
+  };
+  metrics?: MetricCard[];
+  team?: TeamMember[];
+  timeline?: TimelineItem[];
+  imageUrl?: string;
+  imagePrompt?: string; // For Thesys image generation
 }
 
 export interface DeckInput {

@@ -216,9 +216,9 @@ export default function CreatePageClient() {
         {deck && (
           <div
             ref={deckRef}
-            className="max-w-5xl mx-auto space-y-8 animate-fade-in-up"
+            className="max-w-5xl mx-auto space-y-8"
           >
-            <div className="text-center">
+            <div className="text-center animate-fade-in-up stagger-1">
               <p className="inline-flex items-center justify-center gap-2 text-electric text-sm font-medium mb-3" role="status" aria-live="polite">
                 <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -234,14 +234,18 @@ export default function CreatePageClient() {
             </div>
 
             {deck.piqScore && (
-              <PIQScoreCard score={deck.piqScore} />
+              <div className="animate-fade-in-up stagger-2">
+                <PIQScoreCard score={deck.piqScore} />
+              </div>
             )}
 
-            <SlideRenderer
-              slides={deck.slides}
-              companyName={deck.companyName}
-              themeId={deck.themeId}
-            />
+            <div className="animate-fade-in-up stagger-3">
+              <SlideRenderer
+                slides={deck.slides}
+                companyName={deck.companyName}
+                themeId={deck.themeId}
+              />
+            </div>
 
             {/* Live region: announces copy success to screen readers (WCAG 2.1 AA) */}
             {copySuccessAnnouncement && (
@@ -249,7 +253,7 @@ export default function CreatePageClient() {
                 {copySuccessAnnouncement}
               </p>
             )}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 animate-fade-in-up stagger-4">
               <ExportMenu deck={deck} />
               <button
                 type="button"
@@ -289,7 +293,7 @@ export default function CreatePageClient() {
               </button>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 flex items-center gap-3 max-w-xl mx-auto">
+            <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 flex items-center gap-3 max-w-xl mx-auto animate-fade-in-up stagger-5">
               <div className="flex-1 text-xs sm:text-sm text-gray-500 truncate font-mono">
                 {shareUrl}
               </div>

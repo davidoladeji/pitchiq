@@ -3,6 +3,12 @@
 import { SlideData } from "@/lib/types";
 import { getTheme, ThemeDef } from "@/lib/themes";
 import { useState, useEffect, useCallback, CSSProperties } from "react";
+import {
+  BarChart, Bar, PieChart, Pie, Cell,
+  LineChart, Line, AreaChart, Area,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 interface SlideRendererProps {
   slides: SlideData[];
@@ -10,6 +16,8 @@ interface SlideRendererProps {
   showBranding?: boolean;
   themeId?: string;
 }
+
+const CHART_COLORS = ["#4361ee", "#7c3aed", "#10b981", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899"];
 
 function themeVars(theme: ThemeDef): CSSProperties {
   return {
@@ -23,13 +31,7 @@ function themeVars(theme: ThemeDef): CSSProperties {
   } as CSSProperties;
 }
 
-function TitleSlide({
-  slide,
-  companyName,
-}: {
-  slide: SlideData;
-  companyName: string;
-}) {
+function TitleSlide({ slide, companyName }: { slide: SlideData; companyName: string }) {
   return (
     <div
       className="flex flex-col items-center justify-center h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
@@ -67,13 +69,7 @@ function TitleSlide({
   );
 }
 
-function ContentSlide({
-  slide,
-  accent,
-}: {
-  slide: SlideData;
-  accent?: boolean;
-}) {
+function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
   return (
     <div
       className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
@@ -82,13 +78,9 @@ function ContentSlide({
         color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
       }}
     >
-      {accent && (
-        <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />
-      )}
+      {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
       <div className="mb-6 md:mb-8 relative z-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">
-          {slide.title}
-        </h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
         {slide.subtitle && (
           <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: accent ? "var(--t-text-secondary)" : undefined }}>
             {slide.subtitle}
@@ -98,14 +90,8 @@ function ContentSlide({
       <div className="flex-1 flex flex-col justify-center space-y-3 md:space-y-4 relative z-10 max-w-3xl">
         {slide.content.map((item, i) => (
           <div key={i} className="flex items-start gap-3 md:gap-4">
-            <span
-              className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]"
-              style={{ background: accent ? "var(--t-accent-light)" : "var(--t-accent)" }}
-              aria-hidden="true"
-            />
-            <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">
-              {item}
-            </p>
+            <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accent ? "var(--t-accent-light)" : "var(--t-accent)" }} aria-hidden="true" />
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
           </div>
         ))}
       </div>
@@ -113,13 +99,7 @@ function ContentSlide({
   );
 }
 
-function StatsSlide({
-  slide,
-  accent,
-}: {
-  slide: SlideData;
-  accent?: boolean;
-}) {
+function StatsSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
   return (
     <div
       className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
@@ -128,13 +108,9 @@ function StatsSlide({
         color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
       }}
     >
-      {accent && (
-        <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />
-      )}
+      {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
       <div className="mb-6 md:mb-8 relative z-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">
-          {slide.title}
-        </h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
         {slide.subtitle && (
           <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: accent ? "var(--t-text-secondary)" : undefined }}>
             {slide.subtitle}
@@ -151,11 +127,269 @@ function StatsSlide({
               border: accent ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.08)",
             }}
           >
-            <p className="text-sm sm:text-base md:text-lg font-medium leading-relaxed opacity-90">
-              {item}
-            </p>
+            <p className="text-sm sm:text-base md:text-lg font-medium leading-relaxed opacity-90">{item}</p>
           </div>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function ChartSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
+  const chart = slide.chartData;
+  const isDark = !!accent;
+
+  return (
+    <div
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
+      style={{
+        background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
+        color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
+      }}
+    >
+      {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+      <div className="mb-4 md:mb-6 relative z-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        {slide.subtitle && (
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>
+            {slide.subtitle}
+          </p>
+        )}
+      </div>
+
+      <div className="flex-1 relative z-10 min-h-0">
+        {chart?.data?.length ? (
+          <ResponsiveContainer width="100%" height="100%">
+            {chart.type === "pie" ? (
+              <PieChart>
+                <Pie
+                  data={chart.data}
+                  dataKey="value"
+                  nameKey="label"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="70%"
+                  innerRadius="40%"
+                  paddingAngle={3}
+                  label={({ name, value }: { name?: string; value?: number }) => `${name}: ${value}%`}
+                  labelLine={true}
+                >
+                  {chart.data.map((_, i) => (
+                    <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    background: isDark ? "rgba(15,23,42,0.95)" : "#fff",
+                    border: "1px solid rgba(128,128,128,0.2)",
+                    borderRadius: "8px",
+                    color: isDark ? "#fff" : "#0f172a",
+                    fontSize: "13px",
+                  }}
+                />
+                <Legend wrapperStyle={{ fontSize: "12px", color: isDark ? "rgba(255,255,255,0.7)" : "#475569" }} />
+              </PieChart>
+            ) : chart.type === "line" ? (
+              <LineChart data={chart.data}>
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"} />
+                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8", fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: isDark ? "rgba(15,23,42,0.95)" : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : "#0f172a", fontSize: "13px" }} />
+                <Line type="monotone" dataKey="value" stroke="#4361ee" strokeWidth={3} dot={{ fill: "#4361ee", r: 5 }} activeDot={{ r: 7 }} />
+              </LineChart>
+            ) : chart.type === "area" ? (
+              <AreaChart data={chart.data}>
+                <defs>
+                  <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#4361ee" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#4361ee" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"} />
+                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8", fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: isDark ? "rgba(15,23,42,0.95)" : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : "#0f172a", fontSize: "13px" }} />
+                <Area type="monotone" dataKey="value" stroke="#4361ee" strokeWidth={3} fill="url(#areaGrad)" dot={{ fill: "#4361ee", r: 4 }} />
+              </AreaChart>
+            ) : (
+              <BarChart data={chart.data}>
+                <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"} />
+                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8", fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: isDark ? "rgba(15,23,42,0.95)" : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : "#0f172a", fontSize: "13px" }} />
+                <Bar dataKey="value" radius={[6, 6, 0, 0]}>
+                  {chart.data.map((_, i) => (
+                    <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            )}
+          </ResponsiveContainer>
+        ) : (
+          /* Fallback to text content when no chart data */
+          <div className="space-y-3">
+            {slide.content.map((item, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: isDark ? "var(--t-accent-light)" : "var(--t-accent)" }} aria-hidden="true" />
+                <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
+  const isDark = !!accent;
+  const metricsData = slide.metrics || [];
+
+  return (
+    <div
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
+      style={{
+        background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
+        color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
+      }}
+    >
+      {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+      <div className="mb-6 md:mb-8 relative z-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        {slide.subtitle && (
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>
+            {slide.subtitle}
+          </p>
+        )}
+      </div>
+
+      <div className="flex-1 grid grid-cols-2 gap-3 md:gap-4 items-stretch relative z-10">
+        {metricsData.length > 0
+          ? metricsData.map((metric, i) => (
+              <div
+                key={i}
+                className="p-4 md:p-6 rounded-xl flex flex-col justify-center"
+                style={{
+                  background: isDark ? "var(--t-card-bg)" : "rgba(0,0,0,0.02)",
+                  border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.08)",
+                }}
+              >
+                <p className="text-[11px] md:text-xs uppercase tracking-wider font-semibold opacity-50 mb-1">{metric.label}</p>
+                <p className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight" style={{ color: isDark ? "var(--t-text)" : "var(--t-bg-dark)" }}>
+                  {metric.value}
+                </p>
+                {metric.change && (
+                  <p className={`text-xs md:text-sm font-semibold mt-1 ${metric.trend === "up" ? "text-emerald-400" : metric.trend === "down" ? "text-red-400" : "text-gray-400"}`}>
+                    {metric.trend === "up" ? "\u2191" : metric.trend === "down" ? "\u2193" : "\u2192"} {metric.change}
+                  </p>
+                )}
+              </div>
+            ))
+          : slide.content.map((item, i) => (
+              <div
+                key={i}
+                className="p-4 md:p-6 rounded-xl flex items-center"
+                style={{
+                  background: isDark ? "var(--t-card-bg)" : "rgba(0,0,0,0.02)",
+                  border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.08)",
+                }}
+              >
+                <p className="text-sm sm:text-base md:text-lg font-medium leading-relaxed opacity-90">{item}</p>
+              </div>
+            ))}
+      </div>
+    </div>
+  );
+}
+
+function TeamSlide({ slide }: { slide: SlideData }) {
+  const teamData = slide.team || [];
+
+  return (
+    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
+      <div className="mb-6 md:mb-8">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
+      </div>
+
+      <div className={`flex-1 grid gap-4 items-stretch ${teamData.length <= 3 ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4"}`}>
+        {teamData.length > 0
+          ? teamData.map((member, i) => (
+              <div key={i} className="flex flex-col items-center text-center p-4 md:p-5 rounded-xl" style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                <div
+                  className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-3 text-white font-bold text-lg md:text-xl"
+                  style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}
+                >
+                  {member.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+                </div>
+                <p className="font-bold text-sm md:text-base">{member.name}</p>
+                <p className="text-xs md:text-sm font-medium opacity-60" style={{ color: "var(--t-accent)" }}>{member.role}</p>
+                {member.bio && <p className="text-xs opacity-50 mt-2 leading-relaxed line-clamp-2">{member.bio}</p>}
+              </div>
+            ))
+          : slide.content.map((item, i) => (
+              <div key={i} className="flex items-center gap-3 p-4 rounded-xl" style={{ background: "rgba(0,0,0,0.02)", border: "1px solid rgba(0,0,0,0.06)" }}>
+                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}>
+                  {item.charAt(0)}
+                </div>
+                <p className="text-sm md:text-base font-medium">{item}</p>
+              </div>
+            ))}
+      </div>
+    </div>
+  );
+}
+
+function TimelineSlide({ slide }: { slide: SlideData }) {
+  const timelineData = slide.timeline || [];
+
+  return (
+    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
+      <div className="mb-6 md:mb-8">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
+      </div>
+
+      <div className="flex-1 flex flex-col justify-center">
+        {timelineData.length > 0 ? (
+          <div className="relative">
+            {/* Timeline line */}
+            <div className="absolute left-[18px] top-2 bottom-2 w-0.5" style={{ background: "color-mix(in srgb, var(--t-accent) 25%, transparent)" }} />
+
+            <div className="space-y-5 md:space-y-6">
+              {timelineData.map((item, i) => (
+                <div key={i} className="flex items-start gap-4 relative">
+                  <div
+                    className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10 border-2 ${item.completed ? "border-emerald-400 bg-emerald-400/10" : ""}`}
+                    style={!item.completed ? { borderColor: "var(--t-accent)", background: "color-mix(in srgb, var(--t-accent) 10%, transparent)" } : undefined}
+                  >
+                    {item.completed ? (
+                      <svg className="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--t-accent)" }} />
+                    )}
+                  </div>
+                  <div className="pt-1">
+                    <p className="text-xs font-semibold uppercase tracking-wider opacity-50 mb-0.5">{item.date}</p>
+                    <p className="font-bold text-sm md:text-base">{item.title}</p>
+                    {item.description && <p className="text-xs md:text-sm opacity-60 mt-0.5">{item.description}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {slide.content.map((item, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: "var(--t-accent)" }} aria-hidden="true" />
+                <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -163,39 +397,22 @@ function StatsSlide({
 
 function ComparisonSlide({ slide }: { slide: SlideData }) {
   return (
-    <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12"
-      style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}
-    >
+    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
       <div className="mb-6 md:mb-8">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">
-          {slide.title}
-        </h2>
-        {slide.subtitle && (
-          <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">
-            {slide.subtitle}
-          </p>
-        )}
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
       </div>
       <div className="flex-1 flex flex-col justify-center space-y-3 md:space-y-4 max-w-3xl">
         {slide.content.map((item, i) => (
-          <div
-            key={i}
-            className="flex items-start gap-3 md:gap-4 p-4 md:p-5 rounded-xl border transition-colors"
-            style={{ borderColor: "rgba(0,0,0,0.06)", background: "rgba(0,0,0,0.02)" }}
-          >
+          <div key={i} className="flex items-start gap-3 md:gap-4 p-4 md:p-5 rounded-xl border transition-colors" style={{ borderColor: "rgba(0,0,0,0.06)", background: "rgba(0,0,0,0.02)" }}>
             <div
               className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
               style={{ background: "color-mix(in srgb, var(--t-accent) 10%, transparent)", border: "1px solid color-mix(in srgb, var(--t-accent) 20%, transparent)" }}
               aria-hidden="true"
             >
-              <span className="font-bold text-sm" style={{ color: "var(--t-accent)" }}>
-                {i + 1}
-              </span>
+              <span className="font-bold text-sm" style={{ color: "var(--t-accent)" }}>{i + 1}</span>
             </div>
-            <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-70 pt-0.5">
-              {item}
-            </p>
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-70 pt-0.5">{item}</p>
           </div>
         ))}
       </div>
@@ -203,13 +420,7 @@ function ComparisonSlide({ slide }: { slide: SlideData }) {
   );
 }
 
-function CtaSlide({
-  slide,
-  companyName,
-}: {
-  slide: SlideData;
-  companyName: string;
-}) {
+function CtaSlide({ slide, companyName }: { slide: SlideData; companyName: string }) {
   return (
     <div
       className="flex flex-col items-center justify-center h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
@@ -222,9 +433,7 @@ function CtaSlide({
         aria-hidden="true"
       />
       <div className="relative z-10 flex flex-col items-center text-center max-w-2xl">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-tight leading-tight text-balance">
-          {slide.title}
-        </h2>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-tight leading-tight text-balance">{slide.title}</h2>
         {slide.subtitle && (
           <p className="text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-60" style={{ color: "var(--t-text-secondary)" }}>
             {slide.subtitle}
@@ -238,9 +447,7 @@ function CtaSlide({
           ))}
         </div>
         <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-dark-card" aria-hidden="true">
-          <span className="text-base md:text-xl font-bold" style={{ color: "var(--t-accent-light)" }}>
-            {companyName[0]}
-          </span>
+          <span className="text-base md:text-xl font-bold" style={{ color: "var(--t-accent-light)" }}>{companyName[0]}</span>
         </div>
       </div>
     </div>
@@ -251,6 +458,14 @@ function renderSlide(slide: SlideData, companyName: string) {
   switch (slide.type) {
     case "title":
       return <TitleSlide slide={slide} companyName={companyName} />;
+    case "chart":
+      return <ChartSlide slide={slide} accent={slide.accent} />;
+    case "metrics":
+      return <MetricsSlide slide={slide} accent={slide.accent} />;
+    case "team":
+      return <TeamSlide slide={slide} />;
+    case "timeline":
+      return <TimelineSlide slide={slide} />;
     case "stats":
       return <StatsSlide slide={slide} accent={slide.accent} />;
     case "comparison":
@@ -262,24 +477,14 @@ function renderSlide(slide: SlideData, companyName: string) {
   }
 }
 
-export default function SlideRenderer({
-  slides,
-  companyName,
-  showBranding = true,
-  themeId,
-}: SlideRendererProps) {
+export default function SlideRenderer({ slides, companyName, showBranding = true, themeId }: SlideRendererProps) {
   const theme = getTheme(themeId || "midnight");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const goTo = useCallback(
     (index: number) => {
-      if (
-        index >= 0 &&
-        index < slides.length &&
-        index !== currentSlide &&
-        !isTransitioning
-      ) {
+      if (index >= 0 && index < slides.length && index !== currentSlide && !isTransitioning) {
         setIsTransitioning(true);
         setCurrentSlide(index);
         setTimeout(() => setIsTransitioning(false), 300);
@@ -293,126 +498,62 @@ export default function SlideRenderer({
       if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
         e.preventDefault();
         goTo(currentSlide - 1);
-      } else if (
-        e.key === "ArrowRight" ||
-        e.key === "ArrowDown" ||
-        e.key === " "
-      ) {
+      } else if (e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === " ") {
         e.preventDefault();
         goTo(currentSlide + 1);
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentSlide, goTo]);
 
   return (
     <div className="relative" style={themeVars(theme)}>
-      {/* Slide display */}
-      <div
-        id="slide-container"
-        className="relative aspect-[16/9] w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-premium-lg border border-gray-200/50"
-      >
-        <div
-          className={`absolute inset-0 transition-opacity duration-300 ease-out ${
-            isTransitioning ? "opacity-90" : "opacity-100"
-          }`}
-        >
+      <div id="slide-container" className="relative aspect-[16/9] w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-premium-lg border border-gray-200/50">
+        <div className={`absolute inset-0 transition-opacity duration-300 ease-out ${isTransitioning ? "opacity-90" : "opacity-100"}`}>
           {renderSlide(slides[currentSlide], companyName)}
         </div>
 
-        {/* Slide number */}
         <div className="absolute bottom-3 md:bottom-4 right-3 md:right-4 text-xs md:text-sm opacity-30 font-medium font-mono tracking-wider">
-          {String(currentSlide + 1).padStart(2, "0")} /{" "}
-          {String(slides.length).padStart(2, "0")}
+          {String(currentSlide + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
         </div>
 
-        {/* Branding */}
         {showBranding && (
           <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 text-[10px] md:text-xs opacity-25 font-medium tracking-wide">
             Made with PitchIQ
           </div>
         )}
 
-        {/* Click zones for navigation */}
-        <button
-          onClick={() => goTo(currentSlide - 1)}
-          className="absolute left-0 top-0 w-1/4 h-full cursor-w-resize opacity-0 hover:opacity-100 transition-opacity"
-          aria-label="Previous slide"
-        >
+        <button onClick={() => goTo(currentSlide - 1)} className="absolute left-0 top-0 w-1/4 h-full cursor-w-resize opacity-0 hover:opacity-100 transition-opacity" aria-label="Previous slide">
           <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center backdrop-blur-sm">
-            <svg
-              className="w-4 h-4 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15 19l-7-7 7-7"
-              />
+            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </div>
         </button>
-        <button
-          onClick={() => goTo(currentSlide + 1)}
-          className="absolute right-0 top-0 w-1/4 h-full cursor-e-resize opacity-0 hover:opacity-100 transition-opacity"
-          aria-label="Next slide"
-        >
+        <button onClick={() => goTo(currentSlide + 1)} className="absolute right-0 top-0 w-1/4 h-full cursor-e-resize opacity-0 hover:opacity-100 transition-opacity" aria-label="Next slide">
           <div className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center backdrop-blur-sm">
-            <svg
-              className="w-4 h-4 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M9 5l7 7-7 7"
-              />
+            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </div>
         </button>
       </div>
 
-      {/* Controls */}
       <div className="flex items-center justify-center gap-4 mt-6" role="group" aria-label="Slide navigation">
-        <button
-          onClick={() => goTo(currentSlide - 1)}
-          disabled={currentSlide === 0}
-          className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-gray-200 text-navy disabled:opacity-25 hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-          aria-label="Previous slide"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
+        <button onClick={() => goTo(currentSlide - 1)} disabled={currentSlide === 0} className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-gray-200 text-navy disabled:opacity-25 hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2" aria-label="Previous slide">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
 
-        {/* Slide indicators */}
         <div className="flex gap-1.5 items-center">
           {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
               className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
-                i === currentSlide
-                  ? "bg-navy w-6 h-2.5"
-                  : "bg-gray-200 hover:bg-gray-300 w-2.5 h-2.5"
+                i === currentSlide ? "bg-navy w-6 h-2.5" : "bg-gray-200 hover:bg-gray-300 w-2.5 h-2.5"
               }`}
               aria-label={`Go to slide ${i + 1}`}
               aria-current={i === currentSlide ? "true" : undefined}
@@ -420,38 +561,16 @@ export default function SlideRenderer({
           ))}
         </div>
 
-        <button
-          onClick={() => goTo(currentSlide + 1)}
-          disabled={currentSlide === slides.length - 1}
-          className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-gray-200 text-navy disabled:opacity-25 hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-          aria-label="Next slide"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 5l7 7-7 7"
-            />
+        <button onClick={() => goTo(currentSlide + 1)} disabled={currentSlide === slides.length - 1} className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-gray-200 text-navy disabled:opacity-25 hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2" aria-label="Next slide">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
 
-      {/* Keyboard nav hint */}
       <p className="text-center text-xs text-gray-500 mt-3 hidden md:block">
-        Use{" "}
-        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">
-          &larr;
-        </kbd>{" "}
-        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">
-          &rarr;
-        </kbd>{" "}
-        to navigate
+        Use <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">&larr;</kbd>{" "}
+        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">&rarr;</kbd> to navigate
       </p>
     </div>
   );

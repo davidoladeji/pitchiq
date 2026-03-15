@@ -87,13 +87,22 @@ export default function DashboardClient({
                 Describe your startup and get an AI-generated pitch deck with a
                 PIQ Score in 60 seconds.
               </p>
-              <Link
-                href="/create"
-                aria-label="Create your first pitch deck"
-                className="inline-flex items-center px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-              >
-                Create Deck
-              </Link>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <Link
+                  href="/create"
+                  aria-label="Create your first pitch deck"
+                  className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                >
+                  Create Deck
+                </Link>
+                <Link
+                  href="/ideas"
+                  aria-label="Explore startup ideas — no signup required"
+                  className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:border-electric/30 hover:text-electric transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                >
+                  Explore ideas first
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="grid gap-4">
