@@ -100,10 +100,54 @@ function renderTextSlide(pdf: any, slide: DeckData["slides"][number], idx: numbe
   pdf.setTextColor(isDark ? 220 : 60, isDark ? 230 : 60, isDark ? 255 : 80);
   pdf.setFont("helvetica", "normal");
   let yPos = slide.subtitle ? 220 : 200;
-  for (const item of slide.content) {
-    const lines = pdf.splitTextToSize(`\u2022 ${item}`, 1100);
-    pdf.text(lines, 80, yPos);
-    yPos += lines.length * 28 + 12;
+
+  // For timeline slides, render timeline items if content is sparse
+  if (slide.type === "timeline" && slide.timeline?.length) {
+    for (const item of slide.timeline) {
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(14);
+      pdf.setTextColor(isDark ? 150 : 100, isDark ? 170 : 100, isDark ? 220 : 120);
+      pdf.text(item.date, 80, yPos);
+      yPos += 22;
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(18);
+      pdf.setTextColor(isDark ? 220 : 40, isDark ? 230 : 40, isDark ? 255 : 60);
+      pdf.text(item.title, 80, yPos);
+      yPos += 22;
+      if (item.description) {
+        pdf.setFont("helvetica", "normal");
+        pdf.setFontSize(14);
+        pdf.setTextColor(isDark ? 180 : 100, isDark ? 190 : 100, isDark ? 210 : 120);
+        pdf.text(item.description, 80, yPos);
+        yPos += 18;
+      }
+      yPos += 16;
+    }
+  } else if (slide.type === "metrics" && slide.metrics?.length) {
+    // Render metric cards as text
+    for (const metric of slide.metrics) {
+      pdf.setFont("helvetica", "normal");
+      pdf.setFontSize(12);
+      pdf.setTextColor(isDark ? 150 : 120, isDark ? 160 : 120, isDark ? 180 : 140);
+      pdf.text(metric.label.toUpperCase(), 80, yPos);
+      yPos += 20;
+      pdf.setFont("helvetica", "bold");
+      pdf.setFontSize(28);
+      pdf.setTextColor(isDark ? 255 : 26, isDark ? 255 : 26, isDark ? 255 : 46);
+      pdf.text(metric.value, 80, yPos);
+      if (metric.change) {
+        pdf.setFontSize(14);
+        pdf.setTextColor(metric.trend === "up" ? 34 : 239, metric.trend === "up" ? 197 : 68, metric.trend === "up" ? 94 : 68);
+        pdf.text(`  ${metric.change}`, 80 + pdf.getTextWidth(metric.value) + 10, yPos);
+      }
+      yPos += 36;
+    }
+  } else {
+    for (const item of slide.content) {
+      const lines = pdf.splitTextToSize(`\u2022 ${item}`, 1100);
+      pdf.text(lines, 80, yPos);
+      yPos += lines.length * 28 + 12;
+    }
   }
   pdf.setFontSize(10);
   pdf.setTextColor(150, 150, 170);

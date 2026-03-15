@@ -19,6 +19,15 @@ interface SlideRendererProps {
 
 const CHART_COLORS = ["#4361ee", "#7c3aed", "#10b981", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899"];
 
+/** Convert hex color to rgba string — html2canvas-safe replacement for color-mix() */
+function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.substring(0, 2), 16);
+  const g = parseInt(h.substring(2, 4), 16);
+  const b = parseInt(h.substring(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 function themeVars(theme: ThemeDef): CSSProperties {
   return {
     "--t-bg-dark": theme.bgDark,
@@ -119,16 +128,16 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
     return (
       <div className="flex flex-col h-full relative overflow-hidden" style={{ background: bg, color: fg }}>
         {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
-        <div className="flex-1 grid grid-cols-2 relative z-10">
+        <div className="flex-1 grid grid-cols-[2fr_3fr] relative z-10">
           <div className="flex flex-col justify-center p-8 md:p-10 lg:p-12" style={{ borderRight: `1px solid ${accent ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}` }}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-3" style={headingStyle}>{slide.title}</h2>
             {slide.subtitle && <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: subColor }}>{slide.subtitle}</p>}
           </div>
-          <div className="flex flex-col justify-center p-8 md:p-10 space-y-3">
+          <div className="flex flex-col justify-center p-6 md:p-8 lg:p-10 space-y-2.5">
             {items.map((item, i) => (
-              <div key={i} className="flex items-start gap-3">
-                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accentColor }} aria-hidden="true" />
-                <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+              <div key={i} className="flex items-start gap-3 p-2.5 rounded-lg" style={{ background: accent ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.015)" }}>
+                <span className="w-1.5 rounded-full mt-1.5 shrink-0 min-h-[1.25rem]" style={{ background: accentColor }} aria-hidden="true" />
+                <p className="text-sm sm:text-base leading-relaxed opacity-90">{item}</p>
               </div>
             ))}
           </div>
@@ -138,16 +147,15 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
   }
 
   if (layout === "two-column") {
-    const half = Math.ceil(items.length / 2);
     return (
       <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
         {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
         {header()}
-        <div className="flex-1 min-h-0 overflow-hidden grid grid-cols-2 gap-x-8 gap-y-3 relative z-10 items-start content-center">
+        <div className="flex-1 min-h-0 overflow-hidden grid grid-cols-2 gap-x-6 gap-y-2.5 relative z-10 items-start content-center">
           {items.map((item, i) => (
-            <div key={i} className={`flex items-start gap-3 ${i < half ? "" : ""}`}>
-              <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: accentColor }} aria-hidden="true" />
-              <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+            <div key={i} className="flex items-start gap-3 p-3 rounded-lg" style={{ background: accent ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.015)" }}>
+              <span className="w-1.5 rounded-full mt-1.5 shrink-0 min-h-[1rem]" style={{ background: accentColor }} aria-hidden="true" />
+              <p className="text-sm sm:text-base leading-relaxed opacity-90">{item}</p>
             </div>
           ))}
         </div>
@@ -436,40 +444,53 @@ function TeamSlide({ slide }: { slide: SlideData }) {
   );
 }
 
-function TimelineSlide({ slide }: { slide: SlideData }) {
+function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; accentHex?: string }) {
   const timelineData = (slide.timeline || []).slice(0, 5);
+  const isDark = !!slide.accent;
 
   return (
-    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
-      <div className="mb-4 md:mb-6 shrink-0">
+    <div
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden"
+      style={{
+        background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
+        color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
+      }}
+    >
+      {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+      <div className="mb-4 md:mb-6 shrink-0 relative z-10">
         <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
-        {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
+        {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>{slide.subtitle}</p>}
       </div>
 
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center">
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center relative z-10">
         {timelineData.length > 0 ? (
           <div className="relative">
-            <div className="absolute left-[18px] top-2 bottom-2 w-0.5" style={{ background: "color-mix(in srgb, var(--t-accent) 25%, transparent)" }} />
+            <div className="absolute left-[18px] top-2 bottom-2 w-0.5" style={{ background: hexToRgba(accentHex, 0.25) }} />
 
             <div className="space-y-3 md:space-y-4">
               {timelineData.map((item, i) => (
                 <div key={i} className="flex items-start gap-4 relative">
                   <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 border-2 ${item.completed ? "border-emerald-400 bg-emerald-400/10" : ""}`}
-                    style={!item.completed ? { borderColor: "var(--t-accent)", background: "color-mix(in srgb, var(--t-accent) 10%, transparent)" } : undefined}
+                    className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10"
+                    style={{
+                      borderWidth: "2px",
+                      borderStyle: "solid",
+                      borderColor: item.completed ? "#34d399" : accentHex,
+                      background: item.completed ? "rgba(52,211,153,0.1)" : hexToRgba(accentHex, 0.1),
+                    }}
                   >
                     {item.completed ? (
-                      <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#10b981" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      <span className="w-2 h-2 rounded-full" style={{ background: "var(--t-accent)" }} />
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: accentHex }} />
                     )}
                   </div>
-                  <div className="pt-0.5 min-w-0">
-                    <p className="text-[10px] font-semibold uppercase tracking-wider opacity-50 mb-0.5">{item.date}</p>
-                    <p className="font-bold text-sm">{item.title}</p>
-                    {item.description && <p className="text-xs opacity-60 mt-0.5 truncate">{item.description}</p>}
+                  <div className="pt-1 min-w-0 flex-1">
+                    <p className="text-[11px] font-bold uppercase tracking-wider mb-0.5" style={{ color: accentHex }}>{item.date}</p>
+                    <p className="font-bold text-sm md:text-base">{item.title}</p>
+                    {item.description && <p className="text-xs md:text-sm opacity-60 mt-0.5">{item.description}</p>}
                   </div>
                 </div>
               ))}
@@ -479,7 +500,7 @@ function TimelineSlide({ slide }: { slide: SlideData }) {
           <div className="space-y-3">
             {slide.content.map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: "var(--t-accent)" }} aria-hidden="true" />
+                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accentHex }} aria-hidden="true" />
                 <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
               </div>
             ))}
@@ -490,25 +511,25 @@ function TimelineSlide({ slide }: { slide: SlideData }) {
   );
 }
 
-function ComparisonSlide({ slide }: { slide: SlideData }) {
-  const items = slide.content.slice(0, 5);
+function ComparisonSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; accentHex?: string }) {
+  const items = slide.content.slice(0, 6);
   return (
     <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
       <div className="mb-4 md:mb-6 shrink-0">
         <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
       </div>
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center space-y-2 md:space-y-3 max-w-3xl">
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center space-y-2 md:space-y-3">
         {items.map((item, i) => (
-          <div key={i} className="flex items-start gap-3 p-3 md:p-4 rounded-xl border transition-colors" style={{ borderColor: "rgba(0,0,0,0.06)", background: "rgba(0,0,0,0.02)" }}>
+          <div key={i} className="flex items-start gap-3 p-3 md:p-4 rounded-xl" style={{ border: "1px solid rgba(0,0,0,0.08)", background: "rgba(0,0,0,0.02)" }}>
             <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
-              style={{ background: "color-mix(in srgb, var(--t-accent) 10%, transparent)", border: "1px solid color-mix(in srgb, var(--t-accent) 20%, transparent)" }}
+              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: hexToRgba(accentHex, 0.1), border: `1px solid ${hexToRgba(accentHex, 0.2)}` }}
               aria-hidden="true"
             >
-              <span className="font-bold text-xs" style={{ color: "var(--t-accent)" }}>{i + 1}</span>
+              <span className="font-bold text-xs" style={{ color: accentHex }}>{i + 1}</span>
             </div>
-            <p className="text-sm sm:text-base leading-relaxed opacity-70 pt-0.5">{item}</p>
+            <p className="text-sm sm:text-base leading-relaxed pt-1">{item}</p>
           </div>
         ))}
       </div>
@@ -550,7 +571,7 @@ function CtaSlide({ slide, companyName }: { slide: SlideData; companyName: strin
   );
 }
 
-function renderSlide(slide: SlideData, companyName: string) {
+function renderSlide(slide: SlideData, companyName: string, accentHex?: string) {
   switch (slide.type) {
     case "title":
       return <TitleSlide slide={slide} companyName={companyName} />;
@@ -561,11 +582,11 @@ function renderSlide(slide: SlideData, companyName: string) {
     case "team":
       return <TeamSlide slide={slide} />;
     case "timeline":
-      return <TimelineSlide slide={slide} />;
+      return <TimelineSlide slide={slide} accentHex={accentHex} />;
     case "stats":
       return <StatsSlide slide={slide} accent={slide.accent} />;
     case "comparison":
-      return <ComparisonSlide slide={slide} />;
+      return <ComparisonSlide slide={slide} accentHex={accentHex} />;
     case "cta":
       return <CtaSlide slide={slide} companyName={companyName} />;
     default:
@@ -627,7 +648,7 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
       >
         {slides.map((slide, i) => (
           <div key={i} className="w-[1280px] h-[720px] relative overflow-hidden" style={themeVars(theme)}>
-            {renderSlide(slide, companyName)}
+            {renderSlide(slide, companyName, theme.accent)}
             {showBranding && (
               <div className="absolute bottom-3 left-4 text-[10px] opacity-25 font-medium tracking-wide" style={{ color: (slide.type === "title" || slide.type === "cta" || slide.accent) ? "var(--t-text)" : "var(--t-bg-dark)" }}>
                 Made with PitchIQ
@@ -642,7 +663,7 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
 
       <div id="slide-container" className="relative aspect-[16/9] w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-premium-lg border border-gray-200/50">
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out ${isTransitioning ? "opacity-90" : "opacity-100"}`}>
-          {renderSlide(slides[currentSlide], companyName)}
+          {renderSlide(slides[currentSlide], companyName, theme.accent)}
         </div>
 
         <div className="absolute bottom-3 md:bottom-4 right-3 md:right-4 text-xs md:text-sm opacity-30 font-medium font-mono tracking-wider">
