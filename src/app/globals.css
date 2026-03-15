@@ -26,6 +26,11 @@ body {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 /* Respect reduced motion — WCAG 2.1 */

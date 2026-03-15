@@ -205,8 +205,7 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
               <AuthButton />
               {ctaButton}
             </div>
-            <div className="md:hidden flex items-center gap-1.5">
-              {ctaButton}
+            <div className="md:hidden flex items-center">
               {hamburger}
             </div>
           </div>
