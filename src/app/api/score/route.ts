@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
-import { extractDeckText } from "@/lib/extract-deck-text";
+import { extractDeckText, ExtractionResult } from "@/lib/extract-deck-text";
 import { scoreDeck, scoreDeckWithVision } from "@/lib/piq-score";
 import { SlideData } from "@/lib/types";
 import { nanoid } from "nanoid";
 import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
@@ -49,42 +49,60 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Extract text (needed for slide count, company name detection, and PPTX scoring)
-    const extraction = await extractDeckText(buffer, fileType);
-    const companyName = companyNameOverride?.trim() || extraction.detectedCompanyName;
-
-    let piqScore;
-    let slides: SlideData[];
-
-    if (fileType === "pdf" && process.env.ANTHROPIC_API_KEY) {
-      // === VISION SCORING for PDFs ===
-      // Send the raw PDF to Claude so it can see layout, design, charts, and images
-      try {
-        piqScore = await scoreDeckWithVision(buffer, companyName);
-      } catch (visionErr) {
-        console.error("Vision scoring failed, falling back to text:", visionErr);
-        // Fall back to text-based scoring
-        piqScore = null;
+    // Extract text — this can fail for image-heavy PDFs, which is fine since vision handles those
+    let extraction: ExtractionResult | null = null;
+    try {
+      extraction = await extractDeckText(buffer, fileType);
+    } catch (extractErr) {
+      console.error("[score] Text extraction failed:", extractErr);
+      // For PPTX, text extraction is required (no vision fallback)
+      if (fileType === "pptx") {
+        return NextResponse.json(
+          { error: "Could not read this PPTX file. It may be corrupted." },
+          { status: 422 }
+        );
       }
     }
 
-    // Convert extracted slides to SlideData for text-based fallback or persistence
-    slides = extraction.slides.map((s) => {
-      const lines = s.text.split("\n").filter((l) => l.trim().length > 0);
-      const title = lines[0]?.slice(0, 100) || `Slide ${s.slideNumber}`;
-      const content = lines.slice(1).filter((l) => l.trim().length > 2);
+    const companyName = companyNameOverride?.trim() || extraction?.detectedCompanyName || "Unknown Company";
 
-      return {
-        title,
-        subtitle: "",
-        content: content.length > 0 ? content : [s.text.slice(0, 200)],
-        type: "content" as const,
-      };
-    });
+    let piqScore = null;
 
-    // Text-based scoring fallback (for PPTX, or if vision failed)
+    // === VISION SCORING for PDFs ===
+    if (fileType === "pdf" && process.env.ANTHROPIC_API_KEY) {
+      try {
+        console.log(`[score] Attempting vision scoring for PDF (${(buffer.length / 1024 / 1024).toFixed(1)}MB)`);
+        piqScore = await scoreDeckWithVision(buffer, companyName);
+        console.log("[score] Vision scoring succeeded");
+      } catch (visionErr) {
+        console.error("[score] Vision scoring failed:", visionErr instanceof Error ? visionErr.message : visionErr);
+        // Fall through to text-based scoring
+      }
+    }
+
+    // Convert extracted slides to SlideData (for text fallback, persistence, and slide count)
+    let slides: SlideData[] = [];
+    let slideCount = 0;
+
+    if (extraction) {
+      slideCount = extraction.slideCount;
+      slides = extraction.slides.map((s) => {
+        const lines = s.text.split("\n").filter((l) => l.trim().length > 0);
+        const title = lines[0]?.slice(0, 100) || `Slide ${s.slideNumber}`;
+        const content = lines.slice(1).filter((l) => l.trim().length > 2);
+
+        return {
+          title,
+          subtitle: "",
+          content: content.length > 0 ? content : [s.text.slice(0, 200)],
+          type: "content" as const,
+        };
+      });
+    }
+
+    // Text-based scoring fallback (for PPTX, or if vision failed for PDF)
     if (!piqScore) {
-      if (extraction.fullText.trim().length < 50) {
+      if (!extraction || extraction.fullText.trim().length < 50) {
         return NextResponse.json(
           {
             error:
@@ -143,13 +161,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       piqScore,
-      slideCount: extraction.slideCount,
+      slideCount: slideCount || slides.length,
       companyName,
       deckId,
       shareId,
     });
   } catch (err) {
-    console.error("Score upload error:", err);
+    console.error("[score] Unhandled error:", err instanceof Error ? err.stack : err);
     return NextResponse.json(
       { error: "Failed to process file. Please try again." },
       { status: 500 }

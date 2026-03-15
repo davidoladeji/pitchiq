@@ -92,6 +92,12 @@ Return ONLY valid JSON in this exact structure:
 }`;
 
 /**
+ * Max raw PDF size we'll attempt to send to the vision API.
+ * Base64 inflates by ~33%, plus the prompt text, so 20MB raw → ~27MB request (under 32MB API limit).
+ */
+const MAX_VISION_PDF_SIZE = 20 * 1024 * 1024; // 20MB
+
+/**
  * Score an uploaded PDF deck visually using Claude's vision/document API.
  * Sends the raw PDF buffer so Claude can see layout, design, charts, and images.
  */
@@ -102,48 +108,61 @@ export async function scoreDeckWithVision(
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error("ANTHROPIC_API_KEY required for vision scoring");
 
-  const base64Pdf = pdfBuffer.toString("base64");
-
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1500,
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "document",
-              source: {
-                type: "base64",
-                media_type: "application/pdf",
-                data: base64Pdf,
-              },
-            },
-            {
-              type: "text",
-              text: `${SCORING_PROMPT}\n\nCompany name: ${companyName}\n\nAnalyze the pitch deck document above. You can see every slide visually — evaluate the design, layout, charts, imagery, and text content together.`,
-            },
-          ],
-        },
-      ],
-    }),
-  });
-
-  if (!res.ok) {
-    const errText = await res.text().catch(() => "");
-    throw new Error(`Vision scoring API error ${res.status}: ${errText}`);
+  if (pdfBuffer.length > MAX_VISION_PDF_SIZE) {
+    throw new Error(`PDF too large for vision scoring (${(pdfBuffer.length / 1024 / 1024).toFixed(1)}MB > 20MB limit)`);
   }
 
-  const data = await res.json();
-  const text = data.content?.[0]?.text || "";
-  return parseAIResponse(text);
+  const base64Pdf = pdfBuffer.toString("base64");
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 55_000); // 55s timeout (Vercel function has 60s)
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514",
+        max_tokens: 1500,
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "document",
+                source: {
+                  type: "base64",
+                  media_type: "application/pdf",
+                  data: base64Pdf,
+                },
+              },
+              {
+                type: "text",
+                text: `${SCORING_PROMPT}\n\nCompany name: ${companyName}\n\nAnalyze the pitch deck document above. You can see every slide visually — evaluate the design, layout, charts, imagery, and text content together.`,
+              },
+            ],
+          },
+        ],
+      }),
+    });
+
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      console.error(`[scoreDeckWithVision] API error ${res.status}:`, errText);
+      throw new Error(`Vision scoring API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    const text = data.content?.[0]?.text || "";
+    return parseAIResponse(text);
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 /**
