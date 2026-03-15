@@ -48,13 +48,13 @@ export default function LandingCTA() {
           <Link
             href="/create"
             aria-label="Generate your pitch deck for free — no signup required"
-            className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(67,97,238,0.4)] active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+            className="inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all hover:-translate-y-0.5 hover:shadow-[0_0_30px_rgba(67,97,238,0.4)] active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
           >
             Generate Your Deck &mdash; Free
           </Link>
         </div>
         <p
-          className={`mt-5 text-sm text-zinc-600 transition-all duration-700 ease-out delay-300 ${
+          className={`mt-5 text-sm text-zinc-400 transition-all duration-700 ease-out delay-300 ${
             inView ? "opacity-100" : "opacity-0"
           }`}
         >

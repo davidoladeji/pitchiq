@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/next-auth";
 
 export async function GET(
   req: NextRequest,
@@ -8,6 +10,7 @@ export async function GET(
   try {
     const deck = await prisma.deck.findUnique({
       where: { shareId: params.shareId },
+      include: { owner: { select: { id: true, plan: true } } },
     });
 
     if (!deck) {
@@ -34,6 +37,12 @@ export async function GET(
       piqScore = undefined;
     }
 
+    // Check if current viewer is the deck owner
+    const session = await getServerSession(authOptions);
+    const currentUserId = (session?.user as { id?: string })?.id;
+    const isOwner = !!(currentUserId && deck.userId && currentUserId === deck.userId);
+    const ownerPlan = isOwner ? (deck.owner?.plan ?? "starter") : undefined;
+
     return NextResponse.json({
       id: deck.id,
       shareId: deck.shareId,
@@ -44,6 +53,8 @@ export async function GET(
       isPremium: deck.isPremium,
       themeId: deck.themeId,
       piqScore,
+      isOwner,
+      ownerPlan,
     });
   } catch (error) {
     console.error("Deck fetch error:", error);

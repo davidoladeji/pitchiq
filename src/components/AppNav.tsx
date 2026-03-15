@@ -104,7 +104,8 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
   const ctaButton = (
     <Link
       href="/create"
-      className={`inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm active:scale-[0.97] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
+      aria-label="Get started — create your pitch deck"
+      className={`inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
         isLanding
           ? "bg-white text-[#09090B] hover:bg-zinc-100 hover:shadow-md"
           : "bg-[#09090B] text-white hover:bg-[#09090B]/80 hover:shadow-md"
@@ -258,7 +259,8 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
             <Link
               href="/create"
               onClick={closeMenu}
-              className="w-full text-center py-3.5 rounded-full bg-gradient-to-r from-[#4361ee] to-[#8B5CF6] text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30 active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+              aria-label="Get started — create your pitch deck"
+              className="w-full text-center py-3.5 rounded-full bg-gradient-to-r from-[#4361ee] to-[#8B5CF6] text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30 active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
             >
               Get Started
             </Link>

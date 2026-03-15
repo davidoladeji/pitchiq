@@ -104,7 +104,7 @@ export default function LandingHero() {
           <Link
             href="/create"
             aria-label="Get your PIQ Score"
-            className="group inline-flex items-center justify-center px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all duration-300 hover:shadow-[0_0_40px_rgba(67,97,238,0.35)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1a2e]"
+            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all duration-300 hover:shadow-[0_0_40px_rgba(67,97,238,0.35)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
           >
             Get Your PIQ Score
             <svg

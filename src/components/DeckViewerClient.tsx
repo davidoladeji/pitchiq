@@ -5,12 +5,15 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import SlideRenderer from "@/components/SlideRenderer";
+import ExportMenu from "@/components/ExportMenu";
 import { DeckData } from "@/lib/types";
 
 export default function DeckViewerClient() {
   const params = useParams();
   const shareId = params?.shareId as string;
   const [deck, setDeck] = useState<DeckData | null>(null);
+  const [isOwner, setIsOwner] = useState(false);
+  const [ownerPlan, setOwnerPlan] = useState("starter");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -34,6 +37,8 @@ export default function DeckViewerClient() {
         if (!res.ok) throw new Error("Deck not found");
         const data = await res.json();
         setDeck(data);
+        if (data.isOwner) setIsOwner(true);
+        if (data.ownerPlan) setOwnerPlan(data.ownerPlan);
       } catch {
         setError("This deck doesn't exist or has been removed.");
       } finally {
@@ -137,13 +142,18 @@ export default function DeckViewerClient() {
     <div className="min-h-screen bg-[#fafafa]">
       <AppNav
         actions={
-          <Link
-            href="/create"
-            aria-label="Create your own pitch deck"
-            className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-navy text-white text-sm font-medium shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-          >
-            Create Your Own
-          </Link>
+          <div className="flex items-center gap-2">
+            {deck && (
+              <ExportMenu deck={deck} userPlan={ownerPlan} className="[&_button]:min-h-[36px] [&_button]:py-1.5 [&_button]:px-4 [&_button]:text-xs [&_button]:rounded-lg" />
+            )}
+            <Link
+              href="/create"
+              aria-label="Create your own pitch deck"
+              className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-navy text-white text-sm font-medium shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            >
+              Create Your Own
+            </Link>
+          </div>
         }
       />
 
@@ -199,6 +209,9 @@ export default function DeckViewerClient() {
           {/* Actions below deck */}
           <div className="flex flex-col items-center gap-4 mt-8">
             <div className="flex flex-wrap items-center justify-center gap-3">
+              {deck && (
+                <ExportMenu deck={deck} userPlan={ownerPlan} />
+              )}
               <Link
                 href="/dashboard"
                 className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-gray-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
