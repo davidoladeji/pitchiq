@@ -26,8 +26,128 @@ function getGrade(score: number): string {
   return "F";
 }
 
+function parseAIResponse(text: string): PIQScore {
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error("No JSON in AI response");
+
+  const parsed = JSON.parse(jsonMatch[0]);
+
+  const dimensions: PIQDimension[] = DIMENSIONS.map((dim) => {
+    const aiDim = parsed.dimensions?.find((d: { id: string }) => d.id === dim.id);
+    return {
+      id: dim.id,
+      label: dim.label,
+      weight: dim.weight,
+      score: Math.min(100, Math.max(0, aiDim?.score ?? 50)),
+      feedback: aiDim?.feedback ?? "",
+    };
+  });
+
+  const overall = Math.round(
+    dimensions.reduce((sum, d) => sum + d.score * (d.weight / 100), 0)
+  );
+
+  return {
+    overall,
+    grade: getGrade(overall),
+    dimensions,
+    recommendations: parsed.recommendations || [],
+  };
+}
+
+const SCORING_PROMPT = `You are an expert pitch deck evaluator used by VCs and founders. Score this pitch deck on 8 dimensions (0-100 each).
+
+DIMENSIONS & WEIGHTS:
+1. Narrative Structure (15%) — Story flow, completeness, pacing, logical progression from problem → solution → traction → ask
+2. Market Sizing (15%) — TAM/SAM/SOM clarity, market data quality, growth potential evidence
+3. Competitive Differentiation (12%) — Unique value proposition, defensibility, competitive landscape awareness
+4. Financial Clarity (15%) — Revenue model, projections, unit economics, realistic assumptions
+5. Team Presentation (10%) — Founder credibility, relevant experience, completeness of team
+6. Ask Justification (13%) — Funding amount rationale, use of funds, milestone alignment
+7. Design Quality (10%) — Visual hierarchy, readability, professional polish, consistent branding, appropriate use of whitespace and imagery
+8. Data Credibility (10%) — Traction evidence, validated metrics, social proof, data-backed claims
+
+SCORING GUIDELINES:
+- 90-100: Exceptional, investor-ready
+- 75-89: Strong, minor improvements needed
+- 60-74: Average, significant gaps
+- 40-59: Below average, major issues
+- 0-39: Poor, fundamental rework needed
+
+Be honest and critical. Most decks should score 50-75. Only truly exceptional decks score above 85.
+
+Return ONLY valid JSON in this exact structure:
+{
+  "dimensions": [
+    {"id": "narrative", "score": <0-100>, "feedback": "<1 specific sentence>"},
+    {"id": "market", "score": <0-100>, "feedback": "<1 specific sentence>"},
+    {"id": "differentiation", "score": <0-100>, "feedback": "<1 specific sentence>"},
+    {"id": "financials", "score": <0-100>, "feedback": "<1 specific sentence>"},
+    {"id": "team", "score": <0-100>, "feedback": "<1 specific sentence>"},
+    {"id": "ask", "score": <0-100>, "feedback": "<1 specific sentence>"},
+    {"id": "design", "score": <0-100>, "feedback": "<1 specific sentence>"},
+    {"id": "credibility", "score": <0-100>, "feedback": "<1 specific sentence>"}
+  ],
+  "recommendations": ["<actionable tip 1>", "<actionable tip 2>", "<actionable tip 3>"]
+}`;
+
 /**
- * Score a deck using AI (Claude) if API key is available.
+ * Score an uploaded PDF deck visually using Claude's vision/document API.
+ * Sends the raw PDF buffer so Claude can see layout, design, charts, and images.
+ */
+export async function scoreDeckWithVision(
+  pdfBuffer: Buffer,
+  companyName: string
+): Promise<PIQScore> {
+  const apiKey = process.env.ANTHROPIC_API_KEY;
+  if (!apiKey) throw new Error("ANTHROPIC_API_KEY required for vision scoring");
+
+  const base64Pdf = pdfBuffer.toString("base64");
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1500,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "document",
+              source: {
+                type: "base64",
+                media_type: "application/pdf",
+                data: base64Pdf,
+              },
+            },
+            {
+              type: "text",
+              text: `${SCORING_PROMPT}\n\nCompany name: ${companyName}\n\nAnalyze the pitch deck document above. You can see every slide visually — evaluate the design, layout, charts, imagery, and text content together.`,
+            },
+          ],
+        },
+      ],
+    }),
+  });
+
+  if (!res.ok) {
+    const errText = await res.text().catch(() => "");
+    throw new Error(`Vision scoring API error ${res.status}: ${errText}`);
+  }
+
+  const data = await res.json();
+  const text = data.content?.[0]?.text || "";
+  return parseAIResponse(text);
+}
+
+/**
+ * Score a deck using AI (Claude) from slide text data.
  * Falls back to heuristic scoring when no key is set.
  */
 export async function scoreDeck(
@@ -83,11 +203,11 @@ async function aiScore(
     },
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
-      max_tokens: 1024,
+      max_tokens: 1500,
       messages: [
         {
           role: "user",
-          content: `You are an expert pitch deck evaluator. Score this pitch deck on 8 dimensions (0-100 each). Return ONLY valid JSON.
+          content: `${SCORING_PROMPT}
 
 Company: ${input.companyName}
 Industry: ${input.industry}
@@ -99,22 +219,7 @@ Key Metrics: ${input.keyMetrics}
 Team: ${input.teamInfo}
 
 SLIDES:
-${slidesSummary}
-
-Return this exact JSON structure:
-{
-  "dimensions": [
-    {"id": "narrative", "score": <0-100>, "feedback": "<1 sentence>"},
-    {"id": "market", "score": <0-100>, "feedback": "<1 sentence>"},
-    {"id": "differentiation", "score": <0-100>, "feedback": "<1 sentence>"},
-    {"id": "financials", "score": <0-100>, "feedback": "<1 sentence>"},
-    {"id": "team", "score": <0-100>, "feedback": "<1 sentence>"},
-    {"id": "ask", "score": <0-100>, "feedback": "<1 sentence>"},
-    {"id": "design", "score": <0-100>, "feedback": "<1 sentence>"},
-    {"id": "credibility", "score": <0-100>, "feedback": "<1 sentence>"}
-  ],
-  "recommendations": ["<actionable tip 1>", "<actionable tip 2>", "<actionable tip 3>"]
-}`,
+${slidesSummary}`,
         },
       ],
     }),
@@ -124,32 +229,7 @@ Return this exact JSON structure:
 
   const data = await res.json();
   const text = data.content?.[0]?.text || "";
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error("No JSON in AI response");
-
-  const parsed = JSON.parse(jsonMatch[0]);
-
-  const dimensions: PIQDimension[] = DIMENSIONS.map((dim) => {
-    const aiDim = parsed.dimensions?.find((d: { id: string }) => d.id === dim.id);
-    return {
-      id: dim.id,
-      label: dim.label,
-      weight: dim.weight,
-      score: Math.min(100, Math.max(0, aiDim?.score ?? 50)),
-      feedback: aiDim?.feedback ?? "",
-    };
-  });
-
-  const overall = Math.round(
-    dimensions.reduce((sum, d) => sum + d.score * (d.weight / 100), 0)
-  );
-
-  return {
-    overall,
-    grade: getGrade(overall),
-    dimensions,
-    recommendations: parsed.recommendations || [],
-  };
+  return parseAIResponse(text);
 }
 
 /**
@@ -223,7 +303,7 @@ function heuristicScore(
   };
 
   const scoreDesign = () => {
-    let score = 65; // base score since deck was AI-generated
+    let score = 65;
     if (slides.length >= 5) score += 10;
     if (slides.some((s) => s.type === "stats")) score += 8;
     if (slides.every((s) => s.title.length > 0)) score += 7;

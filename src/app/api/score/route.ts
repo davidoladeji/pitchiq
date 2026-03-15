@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import { extractDeckText } from "@/lib/extract-deck-text";
-import { scoreDeck } from "@/lib/piq-score";
+import { scoreDeck, scoreDeckWithVision } from "@/lib/piq-score";
 import { SlideData } from "@/lib/types";
 import { nanoid } from "nanoid";
 import { rateLimit } from "@/lib/rate-limit";
@@ -49,23 +49,27 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Extract text
+    // Extract text (needed for slide count, company name detection, and PPTX scoring)
     const extraction = await extractDeckText(buffer, fileType);
-
-    if (extraction.fullText.trim().length < 50) {
-      return NextResponse.json(
-        {
-          error:
-            "Could not extract enough text from this file. It may be image-based. Please upload a text-based PDF or PPTX file.",
-        },
-        { status: 422 }
-      );
-    }
-
     const companyName = companyNameOverride?.trim() || extraction.detectedCompanyName;
 
-    // Convert extracted slides to SlideData format for scoring
-    const slides: SlideData[] = extraction.slides.map((s) => {
+    let piqScore;
+    let slides: SlideData[];
+
+    if (fileType === "pdf" && process.env.ANTHROPIC_API_KEY) {
+      // === VISION SCORING for PDFs ===
+      // Send the raw PDF to Claude so it can see layout, design, charts, and images
+      try {
+        piqScore = await scoreDeckWithVision(buffer, companyName);
+      } catch (visionErr) {
+        console.error("Vision scoring failed, falling back to text:", visionErr);
+        // Fall back to text-based scoring
+        piqScore = null;
+      }
+    }
+
+    // Convert extracted slides to SlideData for text-based fallback or persistence
+    slides = extraction.slides.map((s) => {
       const lines = s.text.split("\n").filter((l) => l.trim().length > 0);
       const title = lines[0]?.slice(0, 100) || `Slide ${s.slideNumber}`;
       const content = lines.slice(1).filter((l) => l.trim().length > 2);
@@ -78,20 +82,31 @@ export async function POST(req: NextRequest) {
       };
     });
 
-    // Build minimal input for scoring
-    const scoringInput = {
-      companyName,
-      industry: "",
-      stage: "",
-      fundingTarget: "",
-      problem: "",
-      solution: "",
-      keyMetrics: "",
-      teamInfo: "",
-    };
+    // Text-based scoring fallback (for PPTX, or if vision failed)
+    if (!piqScore) {
+      if (extraction.fullText.trim().length < 50) {
+        return NextResponse.json(
+          {
+            error:
+              "Could not extract enough text from this file. For best results with image-heavy decks, please upload as PDF.",
+          },
+          { status: 422 }
+        );
+      }
 
-    // Score the deck
-    const piqScore = await scoreDeck(slides, scoringInput);
+      const scoringInput = {
+        companyName,
+        industry: "",
+        stage: "",
+        fundingTarget: "",
+        problem: "",
+        solution: "",
+        keyMetrics: "",
+        teamInfo: "",
+      };
+
+      piqScore = await scoreDeck(slides, scoringInput);
+    }
 
     // Optionally persist as a deck
     let deckId: string | undefined;
