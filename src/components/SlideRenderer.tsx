@@ -28,8 +28,15 @@ function themeVars(theme: ThemeDef): CSSProperties {
     "--t-accent": theme.accent,
     "--t-accent-light": theme.accentLight,
     "--t-card-bg": theme.cardBg,
+    "--t-heading-font": theme.headingFont,
+    "--t-heading-weight": String(theme.headingWeight),
   } as CSSProperties;
 }
+
+const headingStyle: CSSProperties = {
+  fontFamily: "var(--t-heading-font)",
+  fontWeight: "var(--t-heading-weight)" as unknown as number,
+};
 
 function TitleSlide({ slide, companyName }: { slide: SlideData; companyName: string }) {
   return (
@@ -49,7 +56,7 @@ function TitleSlide({ slide, companyName }: { slide: SlideData; companyName: str
             {companyName[0]}
           </span>
         </div>
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 tracking-tight leading-[1.1]">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 tracking-tight leading-[1.1]" style={headingStyle}>
           {slide.title}
         </h1>
         {slide.subtitle && (
@@ -70,27 +77,116 @@ function TitleSlide({ slide, companyName }: { slide: SlideData; companyName: str
 }
 
 function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
-  return (
-    <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
-      style={{
-        background: accent ? "var(--t-bg-dark)" : "var(--t-bg-light)",
-        color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
-      }}
-    >
-      {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
-      <div className="mb-4 md:mb-6 relative z-10 shrink-0">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
-        {slide.subtitle && (
-          <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: accent ? "var(--t-text-secondary)" : undefined }}>
-            {slide.subtitle}
-          </p>
-        )}
+  const layout = slide.layout || "default";
+  const bg = accent ? "var(--t-bg-dark)" : "var(--t-bg-light)";
+  const fg = accent ? "var(--t-text)" : "var(--t-bg-dark)";
+  const accentColor = accent ? "var(--t-accent-light)" : "var(--t-accent)";
+  const subColor = accent ? "var(--t-text-secondary)" : undefined;
+  const items = slide.content.slice(0, 6);
+
+  const header = (className?: string) => (
+    <div className={className || "mb-4 md:mb-6 relative z-10 shrink-0"}>
+      <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
+      {slide.subtitle && (
+        <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: subColor }}>
+          {slide.subtitle}
+        </p>
+      )}
+    </div>
+  );
+
+  if (layout === "centered") {
+    return (
+      <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
+        {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+        {accent && <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${accent ? "var(--t-accent)" : "var(--t-accent)"}, transparent)` }} />}
+        <div className="text-center mb-6 relative z-10 shrink-0">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2" style={headingStyle}>{slide.title}</h2>
+          {slide.subtitle && <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60 max-w-2xl mx-auto" style={{ color: subColor }}>{slide.subtitle}</p>}
+        </div>
+        <div className="flex-1 min-h-0 overflow-hidden grid grid-cols-2 sm:grid-cols-3 gap-3 relative z-10 items-center">
+          {items.map((item, i) => (
+            <div key={i} className="p-4 rounded-xl text-center" style={{ background: accent ? "var(--t-card-bg)" : "rgba(0,0,0,0.02)", borderTop: `3px solid ${accentColor}` }}>
+              <p className="text-sm sm:text-base leading-relaxed opacity-90">{item}</p>
+            </div>
+          ))}
+        </div>
       </div>
+    );
+  }
+
+  if (layout === "split") {
+    return (
+      <div className="flex flex-col h-full relative overflow-hidden" style={{ background: bg, color: fg }}>
+        {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+        <div className="flex-1 grid grid-cols-2 relative z-10">
+          <div className="flex flex-col justify-center p-8 md:p-10 lg:p-12" style={{ borderRight: `1px solid ${accent ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}` }}>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-3" style={headingStyle}>{slide.title}</h2>
+            {slide.subtitle && <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: subColor }}>{slide.subtitle}</p>}
+          </div>
+          <div className="flex flex-col justify-center p-8 md:p-10 space-y-3">
+            {items.map((item, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accentColor }} aria-hidden="true" />
+                <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (layout === "two-column") {
+    const half = Math.ceil(items.length / 2);
+    return (
+      <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
+        {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+        {header()}
+        <div className="flex-1 min-h-0 overflow-hidden grid grid-cols-2 gap-x-8 gap-y-3 relative z-10 items-start content-center">
+          {items.map((item, i) => (
+            <div key={i} className={`flex items-start gap-3 ${i < half ? "" : ""}`}>
+              <span className="w-1.5 h-1.5 rounded-full mt-2 shrink-0" style={{ background: accentColor }} aria-hidden="true" />
+              <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (layout === "stat-highlight" && items.length > 1) {
+    return (
+      <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
+        {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+        {header()}
+        <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center relative z-10">
+          <div className="mb-6 p-6 rounded-xl" style={{ background: accent ? "var(--t-card-bg)" : "rgba(0,0,0,0.02)", borderLeft: `4px solid ${accentColor}` }}>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold leading-snug" style={{ color: accentColor }}>{items[0]}</p>
+          </div>
+          <div className="space-y-3">
+            {items.slice(1).map((item, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accentColor }} aria-hidden="true" />
+                <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Default layout
+  return (
+    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
+      {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+      {accent && <div className="absolute top-0 left-0 right-0 h-1" style={{ background: accentColor }} aria-hidden="true" />}
+      {header()}
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center space-y-3 md:space-y-4 relative z-10 max-w-3xl">
-        {slide.content.slice(0, 6).map((item, i) => (
+        {items.map((item, i) => (
           <div key={i} className="flex items-start gap-3 md:gap-4">
-            <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accent ? "var(--t-accent-light)" : "var(--t-accent)" }} aria-hidden="true" />
+            <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accentColor }} aria-hidden="true" />
             <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
           </div>
         ))}
@@ -110,7 +206,7 @@ function StatsSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
     >
       {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
       <div className="mb-6 md:mb-8 relative z-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && (
           <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: accent ? "var(--t-text-secondary)" : undefined }}>
             {slide.subtitle}
@@ -149,7 +245,7 @@ function ChartSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
     >
       {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
       <div className="mb-4 md:mb-6 relative z-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && (
           <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>
             {slide.subtitle}
@@ -255,7 +351,7 @@ function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
     >
       {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
       <div className="mb-6 md:mb-8 relative z-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && (
           <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>
             {slide.subtitle}
@@ -279,7 +375,7 @@ function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
                   {metric.value}
                 </p>
                 {metric.change && (
-                  <p className={`text-xs md:text-sm font-semibold mt-1 ${metric.trend === "up" ? "text-emerald-400" : metric.trend === "down" ? "text-red-400" : "text-gray-400"}`}>
+                  <p className={`text-xs md:text-sm font-semibold mt-1 ${metric.trend === "up" ? "text-emerald-400" : metric.trend === "down" ? "text-red-400" : isDark ? "text-gray-400" : "text-gray-500"}`}>
                     {metric.trend === "up" ? "\u2191" : metric.trend === "down" ? "\u2193" : "\u2192"} {metric.change}
                   </p>
                 )}
@@ -308,7 +404,7 @@ function TeamSlide({ slide }: { slide: SlideData }) {
   return (
     <div className="flex flex-col h-full p-8 md:p-10 lg:p-12" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
       <div className="mb-6 md:mb-8">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
       </div>
 
@@ -346,7 +442,7 @@ function TimelineSlide({ slide }: { slide: SlideData }) {
   return (
     <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
       <div className="mb-4 md:mb-6 shrink-0">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
       </div>
 
@@ -399,7 +495,7 @@ function ComparisonSlide({ slide }: { slide: SlideData }) {
   return (
     <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
       <div className="mb-4 md:mb-6 shrink-0">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
       </div>
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center space-y-2 md:space-y-3 max-w-3xl">
@@ -433,7 +529,7 @@ function CtaSlide({ slide, companyName }: { slide: SlideData; companyName: strin
         aria-hidden="true"
       />
       <div className="relative z-10 flex flex-col items-center text-center max-w-2xl">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-tight leading-tight text-balance">{slide.title}</h2>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl mb-4 tracking-tight leading-tight text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && (
           <p className="text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-60" style={{ color: "var(--t-text-secondary)" }}>
             {slide.subtitle}

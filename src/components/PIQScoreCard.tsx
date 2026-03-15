@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { PIQScore } from "@/lib/types";
 
 function scoreColor(score: number): string {
@@ -9,7 +10,13 @@ function scoreColor(score: number): string {
   return "#ef4444";
 }
 
-export default function PIQScoreCard({ score }: { score: PIQScore }) {
+export default function PIQScoreCard({
+  score,
+  detail = "full",
+}: {
+  score: PIQScore;
+  detail?: "basic" | "full";
+}) {
   const radius = 54;
   const stroke = 6;
   const circumference = 2 * Math.PI * radius;
@@ -53,32 +60,63 @@ export default function PIQScoreCard({ score }: { score: PIQScore }) {
             </span>
             <span className="text-sm text-gray-500">Fundability Rating</span>
           </div>
-          <div className="space-y-2">
-            {score.dimensions.map((dim) => (
-              <div key={dim.id} className="flex items-center gap-2">
-                <span className="text-[11px] text-gray-500 w-[100px] shrink-0 text-right truncate">
-                  {dim.label}
-                </span>
-                <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-700"
-                    style={{
-                      width: `${dim.score}%`,
-                      background: scoreColor(dim.score),
-                    }}
-                  />
+
+          {detail === "full" ? (
+            <div className="space-y-2">
+              {score.dimensions.map((dim) => (
+                <div key={dim.id} className="flex items-center gap-2">
+                  <span className="text-[11px] text-gray-500 w-[100px] shrink-0 text-right truncate">
+                    {dim.label}
+                  </span>
+                  <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-700"
+                      style={{
+                        width: `${dim.score}%`,
+                        background: scoreColor(dim.score),
+                      }}
+                    />
+                  </div>
+                  <span className="text-xs font-semibold tabular-nums w-7 text-right" style={{ color: scoreColor(dim.score) }}>
+                    {dim.score}
+                  </span>
                 </div>
-                <span className="text-xs font-semibold tabular-nums w-7 text-right" style={{ color: scoreColor(dim.score) }}>
-                  {dim.score}
-                </span>
+              ))}
+            </div>
+          ) : (
+            /* Basic plan — blurred dimensions with upgrade CTA */
+            <div className="relative">
+              <div className="space-y-2 blur-[6px] select-none pointer-events-none" aria-hidden="true">
+                {score.dimensions.slice(0, 4).map((dim) => (
+                  <div key={dim.id} className="flex items-center gap-2">
+                    <span className="text-[11px] text-gray-500 w-[100px] shrink-0 text-right truncate">
+                      {dim.label}
+                    </span>
+                    <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+                      <div className="h-full rounded-full bg-gray-300" style={{ width: "60%" }} />
+                    </div>
+                    <span className="text-xs font-semibold tabular-nums w-7 text-right text-gray-400">--</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <Link
+                  href="/#pricing"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-electric/10 text-electric text-xs font-semibold hover:bg-electric/20 transition-colors"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                  </svg>
+                  Upgrade for full breakdown
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Recommendations */}
-      {score.recommendations.length > 0 && (
+      {/* Recommendations — only for full detail */}
+      {detail === "full" && score.recommendations.length > 0 && (
         <div className="mt-5 pt-5 border-t border-gray-100">
           <h3 className="text-sm font-semibold text-navy mb-3">Improve your score</h3>
           <ul className="space-y-2">
@@ -91,6 +129,19 @@ export default function PIQScoreCard({ score }: { score: PIQScore }) {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {detail === "basic" && (
+        <div className="mt-5 pt-5 border-t border-gray-100">
+          <div className="flex items-center gap-3">
+            <svg className="w-5 h-5 text-electric shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
+            <p className="text-sm text-gray-500">
+              <Link href="/#pricing" className="text-electric font-semibold hover:underline">Upgrade to Pro</Link> for dimension-by-dimension breakdown and personalized coaching recommendations.
+            </p>
+          </div>
         </div>
       )}
     </div>

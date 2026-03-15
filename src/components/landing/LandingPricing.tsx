@@ -163,7 +163,7 @@ export default function LandingPricing() {
                 className={`relative flex flex-col rounded-2xl p-6 transition-all duration-500 h-full ${
                   tier.highlight
                     ? "bg-navy text-white shadow-xl ring-1 ring-white/10 lg:scale-[1.04] lg:-my-2"
-                    : "bg-white border border-gray-200"
+                    : "bg-white border border-gray-200 hover:shadow-card-hover hover:border-electric/15 hover:-translate-y-0.5"
                 } ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
                 style={{ transitionDelay: inView ? `${i * 80}ms` : "0ms" }}
               >

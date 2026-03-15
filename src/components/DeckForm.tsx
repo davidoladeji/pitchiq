@@ -6,9 +6,11 @@ import { THEMES } from "@/lib/themes";
 import FormField, { inputClass } from "@/components/ui/FormField";
 import SearchableSelect from "@/components/ui/SearchableSelect";
 import { INDUSTRIES } from "@/lib/industries";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 interface DeckFormProps {
   onGenerated: (deck: DeckData) => void;
+  userPlan?: string;
 }
 
 const STEPS = [
@@ -31,6 +33,7 @@ function StepIndicator({
       className="mb-10"
       role="group"
       aria-label={`Step ${currentStep + 1} of ${totalSteps}`}
+      aria-live="polite"
     >
       {/* Mobile: compact dots + label */}
       <div className="flex sm:hidden items-center gap-3">
@@ -46,7 +49,7 @@ function StepIndicator({
         </div>
         <p className="text-xs font-semibold text-navy">
           {STEPS[currentStep].label}
-          <span className="text-gray-400 font-normal ml-1">{STEPS[currentStep].description}</span>
+          <span className="text-gray-500 font-normal ml-1">{STEPS[currentStep].description}</span>
         </p>
       </div>
 
@@ -77,7 +80,7 @@ function StepIndicator({
                 <p className={`text-xs font-semibold truncate transition-colors ${i <= currentStep ? "text-navy" : "text-gray-300"}`}>
                   {step.label}
                 </p>
-                <p className="text-[10px] text-gray-400 truncate">{step.description}</p>
+                <p className="text-[10px] text-gray-500 truncate">{step.description}</p>
               </div>
             </div>
             {i < totalSteps - 1 && (
@@ -91,7 +94,8 @@ function StepIndicator({
 }
 
 
-export default function DeckForm({ onGenerated }: DeckFormProps) {
+export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckFormProps) {
+  const planLimits = getPlanLimits(userPlan);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [step, setStep] = useState(0);
@@ -478,48 +482,69 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
           <div className="space-y-6 animate-fade-in">
             <FormField label="Choose a Theme" hint="Pick a visual theme for your deck slides">
               <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-                {THEMES.map((theme) => (
-                  <button
-                    key={theme.id}
-                    type="button"
-                    onClick={() => update("themeId", theme.id)}
-                    className={`group relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
-                      form.themeId === theme.id
-                        ? "border-electric bg-electric/5 shadow-sm"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <div
-                      className="w-full aspect-[16/9] rounded-lg overflow-hidden flex items-end"
-                      style={{ background: theme.bgDark }}
-                    >
-                      <div className="w-full px-2 pb-1.5">
-                        <div
-                          className="h-1 rounded-full mb-1"
-                          style={{ background: theme.accent, width: "60%" }}
-                        />
-                        <div
-                          className="h-0.5 rounded-full opacity-40"
-                          style={{ background: theme.textSecondary, width: "80%" }}
-                        />
-                      </div>
-                    </div>
-                    <span
-                      className={`text-xs font-medium ${
-                        form.themeId === theme.id ? "text-electric" : "text-gray-500"
+                {THEMES.map((theme) => {
+                  const isLocked = !planLimits.allowedThemes.includes(theme.id);
+                  return (
+                    <button
+                      key={theme.id}
+                      type="button"
+                      onClick={() => {
+                        if (isLocked) return;
+                        update("themeId", theme.id);
+                      }}
+                      disabled={isLocked}
+                      className={`group relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
+                        isLocked
+                          ? "border-gray-100 opacity-60 cursor-not-allowed"
+                          : form.themeId === theme.id
+                          ? "border-electric bg-electric/5 shadow-sm"
+                          : "border-gray-200 hover:border-gray-300"
                       }`}
                     >
-                      {theme.name}
-                    </span>
-                    {form.themeId === theme.id && (
-                      <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-electric flex items-center justify-center">
-                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
+                      <div
+                        className="w-full aspect-[16/9] rounded-lg overflow-hidden flex items-end relative"
+                        style={{ background: theme.bgDark }}
+                      >
+                        <div className="w-full px-2 pb-1.5">
+                          <div
+                            className="h-1 rounded-full mb-1"
+                            style={{ background: theme.accent, width: "60%" }}
+                          />
+                          <div
+                            className="h-0.5 rounded-full opacity-40"
+                            style={{ background: theme.textSecondary, width: "80%" }}
+                          />
+                        </div>
+                        {isLocked && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-lg">
+                            <svg className="w-4 h-4 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                            </svg>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </button>
-                ))}
+                      <span
+                        className={`text-xs font-medium ${
+                          isLocked
+                            ? "text-gray-400"
+                            : form.themeId === theme.id ? "text-electric" : "text-gray-500"
+                        }`}
+                      >
+                        {theme.name}
+                        {isLocked && (
+                          <span className="ml-1 text-[9px] font-bold text-electric/70 uppercase">Pro</span>
+                        )}
+                      </span>
+                      {!isLocked && form.themeId === theme.id && (
+                        <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-electric flex items-center justify-center">
+                          <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </FormField>
           </div>

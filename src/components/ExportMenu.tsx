@@ -2,13 +2,15 @@
 
 import { useState, useRef, useEffect } from "react";
 import { DeckData } from "@/lib/types";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 interface ExportMenuProps {
   deck: DeckData;
   className?: string;
+  userPlan?: string;
 }
 
-async function exportPdf(deck: DeckData) {
+async function exportPdf(deck: DeckData, watermark: boolean) {
   const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
     import("jspdf"),
     import("html2canvas"),
@@ -39,16 +41,38 @@ async function exportPdf(deck: DeckData) {
         // Fallback: text-only for this slide
         renderTextSlide(pdf, deck.slides[i], i, deck.slides.length);
       }
+
+      // Add watermark for free tier
+      if (watermark) {
+        addWatermark(pdf);
+      }
     }
   } else {
     // No rendered container — fall back to text-only
     for (let i = 0; i < deck.slides.length; i++) {
       if (i > 0) pdf.addPage([1280, 720], "landscape");
       renderTextSlide(pdf, deck.slides[i], i, deck.slides.length);
+      if (watermark) {
+        addWatermark(pdf);
+      }
     }
   }
 
   pdf.save(`${deck.companyName}-pitch-deck.pdf`);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function addWatermark(pdf: any) {
+  pdf.saveGraphicsState();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  pdf.setGState(new (pdf as any).GState({ opacity: 0.1 }));
+  pdf.setFontSize(54);
+  pdf.setTextColor(100, 100, 120);
+  pdf.text("PitchIQ Free \u2014 Upgrade to Pro", 640, 380, {
+    angle: -30,
+    align: "center",
+  });
+  pdf.restoreGraphicsState();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,7 +101,7 @@ function renderTextSlide(pdf: any, slide: DeckData["slides"][number], idx: numbe
   pdf.setFont("helvetica", "normal");
   let yPos = slide.subtitle ? 220 : 200;
   for (const item of slide.content) {
-    const lines = pdf.splitTextToSize(`• ${item}`, 1100);
+    const lines = pdf.splitTextToSize(`\u2022 ${item}`, 1100);
     pdf.text(lines, 80, yPos);
     yPos += lines.length * 28 + 12;
   }
@@ -87,10 +111,11 @@ function renderTextSlide(pdf: any, slide: DeckData["slides"][number], idx: numbe
   pdf.text(`${idx + 1} / ${total}`, 1180, 690);
 }
 
-export default function ExportMenu({ deck, className = "" }: ExportMenuProps) {
+export default function ExportMenu({ deck, className = "", userPlan = "starter" }: ExportMenuProps) {
   const [open, setOpen] = useState(false);
   const [exporting, setExporting] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const limits = getPlanLimits(userPlan);
 
   useEffect(() => {
     if (!open) return;
@@ -106,7 +131,7 @@ export default function ExportMenu({ deck, className = "" }: ExportMenuProps) {
   const handleExport = async (format: "pdf") => {
     setExporting(format);
     try {
-      await exportPdf(deck);
+      await exportPdf(deck, limits.pdfWatermark);
     } finally {
       setExporting(null);
       setOpen(false);
@@ -152,12 +177,15 @@ export default function ExportMenu({ deck, className = "" }: ExportMenuProps) {
           >
             <span className="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center text-xs font-bold">PDF</span>
             Download PDF
+            {limits.pdfWatermark && (
+              <span className="ml-auto text-[9px] text-gray-400 font-medium">Watermarked</span>
+            )}
           </button>
           <div className="border-t border-gray-100 mt-1 pt-1">
             <div className="px-4 py-2.5 text-sm text-gray-500 flex items-center gap-3">
               <span className="w-8 h-8 rounded-lg bg-orange-50 text-orange-300 flex items-center justify-center text-xs font-bold">PPT</span>
               PPTX Export
-              <span className="ml-auto text-[10px] text-gray-500 font-medium">Soon</span>
+              <span className="ml-auto text-[10px] text-gray-500 font-medium">{limits.pptxExport ? "Soon" : "Pro"}</span>
             </div>
             <div className="px-4 py-2.5 text-sm text-gray-500 flex items-center gap-3">
               <span className="w-8 h-8 rounded-lg bg-gray-50 text-gray-300 flex items-center justify-center text-xs font-bold">G</span>

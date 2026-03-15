@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { generateDeck } from "@/lib/generate-deck";
 import { scoreDeck } from "@/lib/piq-score";
 import { DeckInput } from "@/lib/types";
+import { getPlanLimits } from "@/lib/plan-limits";
 import { nanoid } from "nanoid";
 
 export async function POST(req: NextRequest) {
@@ -21,6 +22,34 @@ export async function POST(req: NextRequest) {
     // Get the authenticated user (optional — decks can be created without login)
     const session = await getServerSession(authOptions);
     const userId = (session?.user as { id?: string })?.id || null;
+
+    // Enforce plan limits
+    let userPlan = "starter";
+    if (userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { plan: true },
+      });
+      userPlan = user?.plan || "starter";
+
+      const limits = getPlanLimits(userPlan);
+      const deckCount = await prisma.deck.count({ where: { userId } });
+
+      if (deckCount >= limits.maxDecks) {
+        return NextResponse.json(
+          {
+            error: "You've reached your free deck limit. Upgrade to Pro for unlimited decks.",
+            code: "PLAN_LIMIT",
+          },
+          { status: 403 }
+        );
+      }
+
+      // Force allowed theme
+      if (body.themeId && !limits.allowedThemes.includes(body.themeId)) {
+        body.themeId = "midnight";
+      }
+    }
 
     const slides = await generateDeck(body);
     const shareId = nanoid(10);

@@ -29,6 +29,7 @@ export interface SlideData {
   subtitle?: string;
   content: string[];
   type: "title" | "content" | "stats" | "comparison" | "cta" | "chart" | "metrics" | "team" | "timeline" | "image-content";
+  layout?: "default" | "centered" | "split" | "two-column" | "stat-highlight";
   accent?: boolean;
   chartData?: {
     type: "bar" | "pie" | "line" | "area";

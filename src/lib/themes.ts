@@ -9,6 +9,8 @@ export interface ThemeDef {
   accentLight: string;
   cardBg: string;
   fontFamily: string;
+  headingFont: string;
+  headingWeight: number;
 }
 
 export const THEMES: ThemeDef[] = [
@@ -23,6 +25,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#6b8aff",
     cardBg: "rgba(255,255,255,0.05)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Inter', system-ui, sans-serif",
+    headingWeight: 800,
   },
   {
     id: "arctic",
@@ -35,6 +39,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#7dd3fc",
     cardBg: "rgba(255,255,255,0.06)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Inter', system-ui, sans-serif",
+    headingWeight: 800,
   },
   {
     id: "ember",
@@ -47,6 +53,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#fb923c",
     cardBg: "rgba(255,255,255,0.05)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Space Grotesk', system-ui, sans-serif",
+    headingWeight: 700,
   },
   {
     id: "forest",
@@ -59,6 +67,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#4ade80",
     cardBg: "rgba(255,255,255,0.05)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'DM Sans', system-ui, sans-serif",
+    headingWeight: 700,
   },
   {
     id: "sunset",
@@ -71,6 +81,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#c084fc",
     cardBg: "rgba(255,255,255,0.05)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'DM Sans', system-ui, sans-serif",
+    headingWeight: 700,
   },
   {
     id: "monochrome",
@@ -83,6 +95,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#e4e4e7",
     cardBg: "rgba(255,255,255,0.06)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    headingWeight: 800,
   },
   {
     id: "ocean",
@@ -95,6 +109,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#60a5fa",
     cardBg: "rgba(255,255,255,0.05)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Inter', system-ui, sans-serif",
+    headingWeight: 800,
   },
   {
     id: "lavender",
@@ -107,6 +123,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#a78bfa",
     cardBg: "rgba(255,255,255,0.05)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'DM Sans', system-ui, sans-serif",
+    headingWeight: 700,
   },
   {
     id: "slate",
@@ -119,6 +137,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#94a3b8",
     cardBg: "rgba(255,255,255,0.06)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    headingWeight: 800,
   },
   {
     id: "coral",
@@ -131,6 +151,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#fb7185",
     cardBg: "rgba(255,255,255,0.05)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Space Grotesk', system-ui, sans-serif",
+    headingWeight: 700,
   },
   {
     id: "minimal",
@@ -143,6 +165,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#374151",
     cardBg: "#f9fafb",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
+    headingWeight: 800,
   },
   {
     id: "bold",
@@ -155,6 +179,8 @@ export const THEMES: ThemeDef[] = [
     accentLight: "#fbbf24",
     cardBg: "rgba(255,255,255,0.08)",
     fontFamily: "system-ui, sans-serif",
+    headingFont: "'Space Grotesk', system-ui, sans-serif",
+    headingWeight: 900,
   },
 ];
 

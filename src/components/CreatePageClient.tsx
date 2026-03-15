@@ -8,8 +8,16 @@ import SlideRenderer from "@/components/SlideRenderer";
 import PIQScoreCard from "@/components/PIQScoreCard";
 import ExportMenu from "@/components/ExportMenu";
 import { DeckData } from "@/lib/types";
+import { getPlanLimits } from "@/lib/plan-limits";
 
-export default function CreatePageClient() {
+export default function CreatePageClient({
+  userPlan = "starter",
+  deckCount = 0,
+}: {
+  userPlan?: string;
+  deckCount?: number;
+}) {
+  const limits = getPlanLimits(userPlan);
   const [deck, setDeck] = useState<DeckData | null>(null);
   const [copied, setCopied] = useState(false);
   const [pdfExporting, setPdfExporting] = useState(false);
@@ -139,6 +147,27 @@ export default function CreatePageClient() {
       />
 
       <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+        {!deck && deckCount >= limits.maxDecks && (
+          <div className="max-w-2xl mx-auto mb-6 animate-fade-in">
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-amber-900 text-sm mb-1">Free deck limit reached</h3>
+                  <p className="text-amber-700 text-xs sm:text-sm">
+                    You&apos;ve used your 1 free deck. Upgrade to Pro for unlimited decks, all themes, full PIQ coaching & more.
+                  </p>
+                </div>
+                <Link
+                  href="/#pricing"
+                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                >
+                  Upgrade Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         {!deck && (
           <div className="max-w-2xl mx-auto animate-fade-in">
             <div className="text-center mb-12">
@@ -186,7 +215,7 @@ export default function CreatePageClient() {
               )}
             </div>
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 md:p-10">
-              <DeckForm onGenerated={handleGenerated} />
+              <DeckForm onGenerated={handleGenerated} userPlan={userPlan} />
             </div>
           </div>
         )}
@@ -213,7 +242,7 @@ export default function CreatePageClient() {
 
             {deck.piqScore && (
               <div className="animate-fade-in-up stagger-2">
-                <PIQScoreCard score={deck.piqScore} />
+                <PIQScoreCard score={deck.piqScore} detail={limits.piqScoreDetail} />
               </div>
             )}
 
@@ -232,7 +261,7 @@ export default function CreatePageClient() {
               </p>
             )}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4 animate-fade-in-up stagger-4">
-              <ExportMenu deck={deck} />
+              <ExportMenu deck={deck} userPlan={userPlan} />
               <button
                 type="button"
                 onClick={handleCopyLink}

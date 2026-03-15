@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import AppNav from "@/components/AppNav";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 interface DeckSummary {
   id: string;
@@ -48,6 +49,8 @@ export default function DashboardClient({
   const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(!!upgradedPlan);
   const isPaidPlan = plan !== "starter";
   const planInfo = PLAN_LABELS[plan] || PLAN_LABELS.starter;
+  const limits = getPlanLimits(plan);
+  const atDeckLimit = decks.length >= limits.maxDecks;
 
   const handleManageBilling = async () => {
     setManagingBilling(true);
@@ -75,13 +78,26 @@ export default function DashboardClient({
       </a>
       <AppNav
         actions={
-          <Link
-            href="/create"
-            aria-label="Create new pitch deck"
-            className="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-          >
-            New Deck
-          </Link>
+          atDeckLimit && !isPaidPlan ? (
+            <Link
+              href="/#pricing"
+              aria-label="Upgrade to create more decks"
+              className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-electric to-purple-500 text-white text-sm font-semibold shadow-sm hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+              </svg>
+              Upgrade for More
+            </Link>
+          ) : (
+            <Link
+              href="/create"
+              aria-label="Create new pitch deck"
+              className="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            >
+              New Deck
+            </Link>
+          )
         }
       />
 
@@ -130,7 +146,9 @@ export default function DashboardClient({
             <p className="text-gray-500 text-sm">
               {decks.length === 0
                 ? "You haven't created any decks yet."
-                : `${decks.length} deck${decks.length === 1 ? "" : "s"}`}
+                : !isPaidPlan && limits.maxDecks < Infinity
+                  ? `${decks.length} of ${limits.maxDecks} deck${limits.maxDecks === 1 ? "" : "s"} used`
+                  : `${decks.length} deck${decks.length === 1 ? "" : "s"}`}
             </p>
             {hasSubscription && (
               <button
@@ -223,7 +241,7 @@ export default function DashboardClient({
                     key={deck.id}
                     href={`/deck/${deck.shareId}`}
                     aria-label={`View deck: ${deck.title}`}
-                    className="group bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:border-electric/20 hover:shadow-card-hover transition-all"
+                    className="group bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 transition-all duration-300 hover:border-electric/20 hover:shadow-card-hover hover:-translate-y-1"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0 flex-1">

@@ -37,6 +37,7 @@ Return a JSON array of slide objects. Each slide MUST have:
 - "subtitle": string (optional subheading)
 - "content": string[] (bullet points — always include even for visual slides)
 - "type": one of: "title", "content", "stats", "comparison", "cta", "chart", "metrics", "team", "timeline"
+- "layout": one of: "default", "centered", "split", "two-column", "stat-highlight" (for "content" type slides ONLY — vary these across slides!)
 - "accent": boolean (true for slides that should be visually emphasized)
 
 PLUS these optional fields for visual slides:
@@ -44,6 +45,8 @@ PLUS these optional fields for visual slides:
 - "metrics": [{"label":"string","value":"string","change":"string","trend":"up"|"down"|"neutral"},...] — for type "metrics" (4-6 KPI cards)
 - "team": [{"name":"string","role":"string","bio":"string"},...] — for type "team"
 - "timeline": [{"date":"string","title":"string","description":"string","completed":boolean},...] — for type "timeline"
+
+IMPORTANT about layout field for content slides: Vary the layout across content slides. NEVER use the same layout for consecutive content slides. Use "split" for problem/solution contrast, "centered" for feature highlights, "stat-highlight" when a slide leads with a key number or stat, "two-column" for lists of 6+ items, "default" for standard bullets. Write content items that mix styles — include stat-leading items (e.g. "85% of enterprises face..."), short punchy statements, and contextual explanations. Avoid making all bullets the same length. Assign accent:true to 3-5 slides spread across the deck, not consecutively.
 
 IMPORTANT: Make each deck UNIQUE and VISUALLY DIVERSE. You MUST use a MIX of slide types:
 - At least 2 "chart" slides with realistic chartData (market size, revenue projections, growth)
@@ -139,6 +142,15 @@ function generateFallbackDeck(input: DeckInput): SlideData[] {
     .map((s) => s.trim())
     .filter(Boolean);
 
+  // Dynamic quarter/year
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const currentQ = Math.ceil((now.getMonth() + 1) / 3);
+  const q = (offset: number) => {
+    const q0 = currentQ - 1 + offset;
+    return `Q${(q0 % 4) + 1} ${currentYear + Math.floor(q0 / 4)}`;
+  };
+
   return [
     {
       title: input.companyName,
@@ -152,12 +164,14 @@ function generateFallbackDeck(input: DeckInput): SlideData[] {
       subtitle: "A growing pain point",
       content: problemBullets,
       type: "content",
+      layout: "split",
     },
     {
       title: "Our Solution",
       subtitle: `How ${input.companyName} solves it`,
       content: solutionBullets,
       type: "content",
+      layout: "centered",
       accent: true,
     },
     {
@@ -184,6 +198,7 @@ function generateFallbackDeck(input: DeckInput): SlideData[] {
         ...solutionBullets.slice(1, 3),
       ].filter(Boolean).slice(0, 4),
       type: "content",
+      layout: "two-column",
     },
     {
       title: "Business Model",
@@ -194,6 +209,7 @@ function generateFallbackDeck(input: DeckInput): SlideData[] {
         ...toBullets(input.solution, 1).map((s) => `Value driver: ${s}`),
       ].filter(Boolean).slice(0, 4),
       type: "content",
+      layout: "stat-highlight",
     },
     {
       title: "Traction & KPIs",
@@ -255,11 +271,12 @@ function generateFallbackDeck(input: DeckInput): SlideData[] {
       subtitle: "Next 12 months",
       content: ["Launch → Scale → Expand"],
       type: "timeline",
+      accent: true,
       timeline: [
-        { date: "Q1 2025", title: "Public Launch", description: "V1 release with core features", completed: true },
-        { date: "Q2 2025", title: "Scale Growth", description: "10x user base, partnerships", completed: false },
-        { date: "Q3 2025", title: "Enterprise", description: "B2B product, team features", completed: false },
-        { date: "Q4 2025", title: "Profitability", description: "Break-even with expanding margins", completed: false },
+        { date: q(0), title: "Public Launch", description: "V1 release with core features", completed: true },
+        { date: q(1), title: "Scale Growth", description: "10x user base, partnerships", completed: false },
+        { date: q(2), title: "Enterprise", description: "B2B product, team features", completed: false },
+        { date: q(3), title: "Profitability", description: "Break-even with expanding margins", completed: false },
       ],
     },
     {
@@ -270,9 +287,9 @@ function generateFallbackDeck(input: DeckInput): SlideData[] {
       chartData: {
         type: "bar",
         data: [
-          { label: "2025", value: 450 },
-          { label: "2026", value: 1800 },
-          { label: "2027", value: 5200 },
+          { label: String(currentYear), value: 450 },
+          { label: String(currentYear + 1), value: 1800 },
+          { label: String(currentYear + 2), value: 5200 },
         ],
         label: "Revenue ($K)",
       },
