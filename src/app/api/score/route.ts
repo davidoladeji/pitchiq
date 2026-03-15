@@ -15,6 +15,13 @@ const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
 export async function POST(req: NextRequest) {
   try {
+    // Require authentication
+    const session = await getServerSession(authOptions);
+    const userId = (session?.user as { id?: string })?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Sign in to score your deck", code: "AUTH_REQUIRED" }, { status: 401 });
+    }
+
     const ip = req.headers.get("x-forwarded-for") || "unknown";
     const rl = rateLimit(`score:${ip}`, { maxRequests: 10, windowMs: 60 * 60 * 1000 });
     if (!rl.success) {
@@ -131,9 +138,6 @@ export async function POST(req: NextRequest) {
     let shareId: string | undefined;
 
     if (saveDeck) {
-      const session = await getServerSession(authOptions);
-      const userId = (session?.user as { id?: string })?.id;
-
       shareId = nanoid(10);
       const deck = await prisma.deck.create({
         data: {
@@ -153,7 +157,7 @@ export async function POST(req: NextRequest) {
           themeId: "midnight",
           source: "uploaded",
           originalFileName: file.name,
-          userId: userId || null,
+          userId,
         },
       });
       deckId = deck.id;

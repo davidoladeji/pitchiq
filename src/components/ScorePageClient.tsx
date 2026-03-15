@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import DeckUploader from "@/components/DeckUploader";
@@ -15,6 +16,7 @@ export default function ScorePageClient({
 }: {
   userPlan?: string;
 }) {
+  const { status } = useSession();
   const limits = getPlanLimits(userPlan);
   const [state, setState] = useState<PageState>("idle");
   const [file, setFile] = useState<File | null>(null);
@@ -61,6 +63,39 @@ export default function ScorePageClient({
       setState("error");
     }
   };
+
+  if (status === "loading") {
+    return (
+      <div className="min-h-screen bg-[#fafafa]">
+        <AppNav />
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin" />
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    return (
+      <div className="min-h-screen bg-[#fafafa]">
+        <AppNav />
+        <main className="pt-24 pb-16 px-4 sm:px-6">
+          <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+            <div className="w-16 h-16 rounded-2xl bg-[#4361ee]/10 flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-[#4361ee]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-navy mb-2">Sign in to score your deck</h2>
+            <p className="text-gray-500 mb-6 max-w-md">Create a free account to get an instant fundability score with actionable feedback.</p>
+            <a href="/auth/signin?callbackUrl=/score" className="inline-flex items-center px-6 py-3 rounded-full bg-[#4361ee] text-white font-semibold hover:opacity-90 transition-opacity">
+              Sign in to get started
+            </a>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#fafafa]">

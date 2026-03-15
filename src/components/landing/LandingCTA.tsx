@@ -61,7 +61,7 @@ export default function LandingCTA() {
             inView ? "opacity-100" : "opacity-0"
           }`}
         >
-          No signup &middot; No credit card
+          Free to start &middot; No credit card
         </p>
       </div>
     </section>

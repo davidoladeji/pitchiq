@@ -58,7 +58,7 @@ export default function LandingHero() {
       <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
         {/* Pill badge */}
         <div
-          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-800 bg-white/[0.03] mb-10 transition-all duration-700 ease-out ${
+          className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.03] mb-10 transition-all duration-700 ease-out ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
@@ -66,7 +66,7 @@ export default function LandingHero() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-75" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-electric" />
           </span>
-          <span className="text-sm text-zinc-500 font-medium tracking-wide">
+          <span className="text-sm text-blue-100/70 font-medium tracking-wide">
             AI-Powered Fundraising Intelligence
           </span>
         </div>
@@ -103,7 +103,7 @@ export default function LandingHero() {
           <Link
             href="/create"
             aria-label="Get your PIQ Score"
-            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all duration-300 hover:shadow-[0_0_40px_rgba(67,97,238,0.35)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-[0_0_40px_rgba(67,97,238,0.35)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
           >
             Get Your PIQ Score
             <svg
@@ -129,7 +129,7 @@ export default function LandingHero() {
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          No signup required &middot; No credit card &middot; Privacy-first
+          Free to start &middot; No credit card &middot; Privacy-first
         </p>
       </div>
     </section>

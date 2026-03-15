@@ -119,7 +119,7 @@ export default function LandingDemo() {
                     <span className="text-5xl font-bold text-white tabular-nums tracking-tight">
                       {visible ? OVERALL : 0}
                     </span>
-                    <span className="text-[10px] text-zinc-500 font-semibold uppercase tracking-[0.2em] mt-1">
+                    <span className="text-[10px] text-blue-100/70 font-semibold uppercase tracking-[0.2em] mt-1">
                       PIQ Score
                     </span>
                   </div>
@@ -127,7 +127,7 @@ export default function LandingDemo() {
                 <div className="mt-4 text-center">
                   <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-electric/10 border border-electric/20 text-electric-200 text-xs font-semibold tracking-wide">
                     B+
-                    <span className="text-zinc-500 font-normal">
+                    <span className="text-blue-100/70 font-normal">
                       &middot; Fundable
                     </span>
                   </span>
@@ -138,7 +138,7 @@ export default function LandingDemo() {
               <div className="flex-1 w-full space-y-3.5">
                 {DIMENSIONS.map((dim, i) => (
                   <div key={dim.label} className="flex items-center gap-3">
-                    <span className="text-[10px] sm:text-[11px] text-zinc-500 w-16 sm:w-[90px] shrink-0 text-right font-medium">
+                    <span className="text-[10px] sm:text-[11px] text-blue-100/70 w-16 sm:w-[90px] shrink-0 text-right font-medium">
                       {dim.label}
                     </span>
                     <div className="flex-1 h-[5px] rounded-full bg-white/[0.04] overflow-hidden">
@@ -180,12 +180,12 @@ export default function LandingDemo() {
           {STATS.map((stat) => (
             <div
               key={stat.label}
-              className="flex flex-col items-center py-5 rounded-xl border border-[#27272A] bg-white/[0.02]"
+              className="flex flex-col items-center py-5 rounded-xl border border-white/10 bg-white/[0.02]"
             >
               <span className="text-2xl font-bold text-white tracking-tight">
                 {stat.value}
               </span>
-              <span className="text-sm text-zinc-500 mt-1">{stat.label}</span>
+              <span className="text-sm text-blue-100/70 mt-1">{stat.label}</span>
             </div>
           ))}
         </div>

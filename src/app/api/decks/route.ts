@@ -43,31 +43,32 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Get the authenticated user (optional — decks can be created without login)
+    // Require authentication
     const session = await getServerSession(authOptions);
-    const userId = (session?.user as { id?: string })?.id || null;
+    const userId = (session?.user as { id?: string })?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Sign in to create a deck", code: "AUTH_REQUIRED" }, { status: 401 });
+    }
 
     // Enforce plan limits
     let userPlan = "starter";
-    if (userId) {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { plan: true },
-      });
-      userPlan = user?.plan || "starter";
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { plan: true },
+    });
+    userPlan = user?.plan || "starter";
 
-      const deckCount = await prisma.deck.count({ where: { userId } });
-      const planLimits = getPlanLimits(userPlan);
+    const deckCount = await prisma.deck.count({ where: { userId } });
+    const planLimits = getPlanLimits(userPlan);
 
-      if (deckCount >= planLimits.maxDecks) {
-        return NextResponse.json(
-          {
-            error: "You've reached your free deck limit. Upgrade to Pro for unlimited decks.",
-            code: "PLAN_LIMIT",
-          },
-          { status: 403 }
-        );
-      }
+    if (deckCount >= planLimits.maxDecks) {
+      return NextResponse.json(
+        {
+          error: "You've reached your free deck limit. Upgrade to Pro for unlimited decks.",
+          code: "PLAN_LIMIT",
+        },
+        { status: 403 }
+      );
     }
 
     // Validate theme for ALL users (not just authenticated)

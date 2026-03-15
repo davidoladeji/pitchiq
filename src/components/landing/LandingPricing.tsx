@@ -158,11 +158,11 @@ export default function LandingPricing() {
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          {/* Starter Card */}
+          {/* Starter Card — hover lift for perceived interactivity (conversion, premium minimalism) */}
           <div
             role="group"
             aria-label="Starter plan"
-            className="relative flex flex-col rounded-2xl border border-navy-200 p-5 sm:p-8"
+            className="relative flex flex-col rounded-2xl border border-navy-200 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-navy-300"
           >
             <h3 className="text-base font-bold tracking-tight text-navy">
               {starterTier.name}
@@ -198,11 +198,11 @@ export default function LandingPricing() {
             </Link>
           </div>
 
-          {/* Pro Card */}
+          {/* Pro Card — subtle glow + hover lift so recommended plan stands out (conversion) */}
           <div
             role="group"
             aria-label="Pro plan, most popular"
-            className="relative flex flex-col rounded-2xl border border-electric p-5 sm:p-8"
+            className="relative flex flex-col rounded-2xl border border-electric p-5 sm:p-8 shadow-glow transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-glow-lg"
           >
             <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide">
               Popular

@@ -52,15 +52,15 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
 
   const pillStyle = isLanding
     ? scrolled
-      ? "bg-[#18181B]/95 border-white/[0.1] shadow-xl shadow-black/30 backdrop-blur-xl"
-      : "bg-[#18181B]/80 border-white/[0.08] backdrop-blur-xl"
+      ? "bg-navy/95 border-white/10 shadow-xl shadow-black/30 backdrop-blur-xl"
+      : "bg-navy/80 border-white/[0.08] backdrop-blur-xl"
     : scrolled
-      ? "glass border-gray-200/60 shadow-lg shadow-black/5"
-      : "bg-white/60 border-gray-200/40 backdrop-blur-xl";
+      ? "glass border-navy-200/60 shadow-lg shadow-black/5"
+      : "bg-white/60 border-navy-200/40 backdrop-blur-xl";
 
   const textColor = isLanding
-    ? "text-zinc-400 hover:text-white"
-    : "text-gray-500 hover:text-navy";
+    ? "text-blue-100/70 hover:text-white"
+    : "text-navy-500 hover:text-navy";
 
   const logoText = isLanding ? "text-white" : "text-navy";
 
@@ -71,8 +71,13 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
       className="flex items-center gap-2 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
       aria-label="PitchIQ home"
     >
-      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-electric to-violet flex items-center justify-center shadow-md shadow-electric/25">
-        <span className="text-white font-bold text-xs leading-none">P</span>
+      <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center shadow-md shadow-[#4361ee]/25"
+           style={{ background: "linear-gradient(135deg, #4361ee 0%, #8B5CF6 100%)" }}>
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 13V3h4.5a3.5 3.5 0 010 7H5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M11 8l2-2.5L15 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
+          <line x1="13" y1="5.5" x2="13" y2="12" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
+        </svg>
       </div>
       <span className={`font-display font-bold text-lg tracking-tight ${logoText}`}>
         PitchIQ
@@ -107,23 +112,23 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
       aria-label="Get started — create your pitch deck"
       className={`inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
         isLanding
-          ? "bg-white text-[#09090B] hover:bg-zinc-100 hover:shadow-md"
-          : "bg-[#09090B] text-white hover:bg-[#09090B]/80 hover:shadow-md"
+          ? "bg-white text-navy hover:bg-navy-100 hover:shadow-md"
+          : "bg-navy text-white hover:bg-navy/80 hover:shadow-md"
       }`}
     >
       Get Started
     </Link>
   );
 
-  /* --- Hamburger icon --- */
+  /* --- Hamburger: min 44×44px touch target (WCAG 2.1) --- */
   const hamburger = (
     <button
       type="button"
       onClick={() => setIsMenuOpen((o) => !o)}
-      className={`w-9 h-9 inline-flex items-center justify-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric ${
+      className={`min-w-[44px] min-h-[44px] w-11 h-11 inline-flex items-center justify-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric ${
         isLanding
           ? "text-white/80 hover:text-white hover:bg-white/10"
-          : "text-navy hover:bg-gray-100"
+          : "text-navy hover:bg-navy-100"
       }`}
       aria-label={isMenuOpen ? "Close menu" : "Open menu"}
       aria-expanded={isMenuOpen}

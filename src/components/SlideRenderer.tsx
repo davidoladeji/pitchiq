@@ -51,7 +51,7 @@ const headingStyle: CSSProperties = {
 function TitleSlide({ slide, companyName, accentHex }: { slide: SlideData; companyName: string; accentHex?: string }) {
   return (
     <div
-      className="flex flex-col items-center justify-center h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
+      className="flex flex-col items-center justify-center h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden"
       style={{ background: "var(--t-bg-dark)", color: "var(--t-text)" }}
     >
       <div className="absolute inset-0 bg-grid-dark opacity-15" aria-hidden="true" />
@@ -105,14 +105,14 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
 
   if (layout === "centered") {
     return (
-      <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
+      <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
         {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
         {accent && <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${accent ? "var(--t-accent)" : "var(--t-accent)"}, transparent)` }} />}
         <div className="text-center mb-6 relative z-10 shrink-0">
           <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2" style={headingStyle}>{slide.title}</h2>
           {slide.subtitle && <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60 max-w-2xl mx-auto" style={{ color: subColor }}>{slide.subtitle}</p>}
         </div>
-        <div className="flex-1 min-h-0 overflow-hidden grid grid-cols-2 sm:grid-cols-3 gap-3 relative z-10 items-center">
+        <div className="flex-1 min-h-0 overflow-hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 relative z-10 items-center">
           {items.map((item, i) => (
             <div key={i} className="p-4 rounded-xl text-center" style={{ background: accent ? "var(--t-card-bg)" : "rgba(0,0,0,0.02)", borderTop: `3px solid ${accentColor}` }}>
               <p className="text-sm sm:text-base leading-relaxed opacity-90">{item}</p>
@@ -127,12 +127,12 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
     return (
       <div className="flex flex-col h-full relative overflow-hidden" style={{ background: bg, color: fg }}>
         {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
-        <div className="flex-1 grid grid-cols-[2fr_3fr] relative z-10">
-          <div className="flex flex-col justify-center p-8 md:p-10 lg:p-12" style={{ borderRight: `1px solid ${accent ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}` }}>
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-[2fr_3fr] relative z-10">
+          <div className={`flex flex-col justify-center p-4 sm:p-6 md:p-8 lg:p-12 border-b md:border-b-0 ${accent ? "md:border-r md:border-white/[0.08]" : "md:border-r md:border-black/[0.06]"}`}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-3" style={headingStyle}>{slide.title}</h2>
             {slide.subtitle && <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: subColor }}>{slide.subtitle}</p>}
           </div>
-          <div className="flex flex-col justify-center p-6 md:p-8 lg:p-10 space-y-2.5">
+          <div className="flex flex-col justify-center p-4 sm:p-6 md:p-8 lg:p-10 space-y-2.5">
             {items.map((item, i) => (
               <div key={i} className="flex items-start gap-3 p-2.5 rounded-lg" style={{ background: accent ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.015)" }}>
                 <span className="w-1.5 rounded-full mt-1.5 shrink-0 min-h-[1.25rem]" style={{ background: accentColor }} aria-hidden="true" />
@@ -147,10 +147,10 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
 
   if (layout === "two-column") {
     return (
-      <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
+      <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
         {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
         {header()}
-        <div className="flex-1 min-h-0 overflow-hidden grid grid-cols-2 gap-x-6 gap-y-2.5 relative z-10 items-start content-center">
+        <div className="flex-1 min-h-0 overflow-hidden grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5 relative z-10 items-start content-center">
           {items.map((item, i) => (
             <div key={i} className="flex items-start gap-3 p-3 rounded-lg" style={{ background: accent ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.015)" }}>
               <span className="w-1.5 rounded-full mt-1.5 shrink-0 min-h-[1rem]" style={{ background: accentColor }} aria-hidden="true" />
@@ -164,7 +164,7 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
 
   if (layout === "stat-highlight" && items.length > 1) {
     return (
-      <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
+      <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
         {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
         {header()}
         <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center relative z-10">
@@ -186,7 +186,7 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
 
   // Default layout
   return (
-    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
+    <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden" style={{ background: bg, color: fg }}>
       {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
       {accent && <div className="absolute top-0 left-0 right-0 h-1" style={{ background: accentColor }} aria-hidden="true" />}
       {header()}
@@ -205,7 +205,7 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
 function StatsSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
   return (
     <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
+      className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden"
       style={{
         background: accent ? "var(--t-bg-dark)" : "var(--t-bg-light)",
         color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
@@ -244,7 +244,7 @@ function ChartSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
 
   return (
     <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
+      className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative"
       style={{
         background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
         color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
@@ -350,7 +350,7 @@ function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
 
   return (
     <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
+      className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden"
       style={{
         background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
         color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
@@ -366,7 +366,7 @@ function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
         )}
       </div>
 
-      <div className="flex-1 grid grid-cols-2 gap-3 md:gap-4 items-stretch relative z-10">
+      <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 items-stretch relative z-10">
         {metricsData.length > 0
           ? metricsData.map((metric, i) => (
               <div
@@ -377,7 +377,7 @@ function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
                   border: isDark ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.08)",
                 }}
               >
-                <p className="text-[11px] md:text-xs uppercase tracking-wider font-semibold opacity-50 mb-1">{metric.label}</p>
+                <p className="text-xs md:text-sm uppercase tracking-wider font-semibold opacity-50 mb-1">{metric.label}</p>
                 <p className="text-2xl md:text-3xl lg:text-4xl font-bold tracking-tight" style={{ color: isDark ? "var(--t-text)" : "var(--t-bg-dark)" }}>
                   {metric.value}
                 </p>
@@ -409,7 +409,7 @@ function TeamSlide({ slide }: { slide: SlideData }) {
   const teamData = slide.team || [];
 
   return (
-    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
+    <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
       <div className="mb-6 md:mb-8">
         <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
@@ -449,7 +449,7 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
 
   return (
     <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden"
+      className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden"
       style={{
         background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
         color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
@@ -487,7 +487,7 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
                     )}
                   </div>
                   <div className="pt-1 min-w-0 flex-1">
-                    <p className="text-[11px] font-bold uppercase tracking-wider mb-0.5" style={{ color: accentHex }}>{item.date}</p>
+                    <p className="text-xs font-bold uppercase tracking-wider mb-0.5" style={{ color: accentHex }}>{item.date}</p>
                     <p className="font-bold text-sm md:text-base">{item.title}</p>
                     {item.description && <p className="text-xs md:text-sm opacity-60 mt-0.5">{item.description}</p>}
                   </div>
@@ -513,7 +513,7 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
 function ComparisonSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; accentHex?: string }) {
   const items = slide.content.slice(0, 6);
   return (
-    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
+    <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
       <div className="mb-4 md:mb-6 shrink-0">
         <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
@@ -539,7 +539,7 @@ function ComparisonSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; a
 function CtaSlide({ slide, companyName, accentHex }: { slide: SlideData; companyName: string; accentHex?: string }) {
   return (
     <div
-      className="flex flex-col items-center justify-center h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
+      className="flex flex-col items-center justify-center h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden"
       style={{ background: "var(--t-bg-dark)", color: "var(--t-text)" }}
     >
       <div className="absolute inset-0 bg-grid-dark opacity-15" aria-hidden="true" />
@@ -673,14 +673,14 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
           </div>
         )}
 
-        <button onClick={() => goTo(currentSlide - 1)} className="absolute left-0 top-0 w-1/4 h-full cursor-w-resize opacity-0 hover:opacity-100 transition-opacity" aria-label="Previous slide">
+        <button onClick={() => goTo(currentSlide - 1)} className="absolute left-0 top-0 w-1/4 h-full cursor-w-resize opacity-30 sm:opacity-0 sm:hover:opacity-100 transition-opacity" aria-label="Previous slide">
           <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center backdrop-blur-sm">
             <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </div>
         </button>
-        <button onClick={() => goTo(currentSlide + 1)} className="absolute right-0 top-0 w-1/4 h-full cursor-e-resize opacity-0 hover:opacity-100 transition-opacity" aria-label="Next slide">
+        <button onClick={() => goTo(currentSlide + 1)} className="absolute right-0 top-0 w-1/4 h-full cursor-e-resize opacity-30 sm:opacity-0 sm:hover:opacity-100 transition-opacity" aria-label="Next slide">
           <div className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center backdrop-blur-sm">
             <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -701,7 +701,7 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
           </svg>
         </button>
 
-        <div className="flex gap-1.5 items-center">
+        <div className="flex gap-1.5 items-center overflow-x-auto max-w-[280px] sm:max-w-none">
           {slides.map((_, i) => (
             <button
               key={i}
@@ -723,8 +723,8 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
       </div>
 
       <p className="text-center text-xs text-gray-500 mt-3 hidden md:block">
-        Use <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">&larr;</kbd>{" "}
-        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">&rarr;</kbd> to navigate
+        Use <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-xs font-mono">&larr;</kbd>{" "}
+        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-xs font-mono">&rarr;</kbd> to navigate
       </p>
     </div>
   );
