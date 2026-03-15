@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import AppNav from "@/components/AppNav";
 import SlideRenderer from "@/components/SlideRenderer";
 import { DeckData } from "@/lib/types";
 
@@ -45,22 +46,9 @@ export default function DeckViewerClient() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#fafafa]" aria-busy="true" aria-label="Loading deck">
-        <nav className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-label="Deck viewer navigation">
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-            >
-              <div className="w-8 h-8 rounded-lg bg-electric-gradient flex items-center justify-center shadow-glow">
-                <span className="text-white font-bold text-sm">P</span>
-              </div>
-              <span className="font-bold text-xl text-navy tracking-tight">
-                PitchIQ
-              </span>
-            </Link>
-            <div className="h-9 w-28 rounded-lg bg-gray-200 animate-pulse" />
-          </div>
-        </nav>
+        <AppNav
+          actions={<div className="h-9 w-28 rounded-lg bg-gray-200 animate-pulse" />}
+        />
         <div className="pt-24 pb-16 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
@@ -118,7 +106,7 @@ export default function DeckViewerClient() {
         <h1 className="text-2xl font-bold text-navy mb-2 tracking-tight">
           Deck not found
         </h1>
-        <p className="text-gray-400 mb-8 text-center max-w-sm">{error}</p>
+        <p className="text-gray-500 mb-8 text-center max-w-sm">{error}</p>
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <Link
             href="/create"
@@ -139,27 +127,16 @@ export default function DeckViewerClient() {
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
-      <nav className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-label="Deck viewer navigation">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-          >
-            <div className="w-8 h-8 rounded-lg bg-electric-gradient flex items-center justify-center shadow-glow">
-              <span className="text-white font-bold text-sm">P</span>
-            </div>
-            <span className="font-bold text-xl text-navy tracking-tight">
-              PitchIQ
-            </span>
-          </Link>
+      <AppNav
+        actions={
           <Link
             href="/create"
             className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-navy text-white text-sm font-medium shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Create Your Own
           </Link>
-        </div>
-      </nav>
+        }
+      />
 
       <div className="pt-24 pb-16 px-4 sm:px-6 animate-fade-in">
         <div className="max-w-5xl mx-auto">
@@ -167,7 +144,7 @@ export default function DeckViewerClient() {
             <h1 className="text-xl sm:text-2xl font-bold text-navy mb-1 tracking-tight">
               {deck.title}
             </h1>
-            <p className="text-gray-400 text-sm mb-4">{deck.slides.length} slides</p>
+            <p className="text-gray-500 text-sm mb-4">{deck.slides.length} slides</p>
             {/* Share strip — same copy-success pattern as Create (trust through polish, design system) */}
             {shareUrl && (
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">

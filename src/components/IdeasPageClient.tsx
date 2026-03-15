@@ -3,11 +3,10 @@
 import { useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AppNav from "@/components/AppNav";
 import { IDEA_QUESTIONS } from "@/lib/generate-ideas";
 import { BusinessIdea, IdeaQuestionAnswer } from "@/lib/types";
-
-const inputClass =
-  "w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white focus:border-electric focus:ring-2 focus:ring-electric/10 outline-none transition-all text-navy placeholder:text-gray-300 text-sm";
+import { inputClass } from "@/components/ui/FormField";
 
 export default function IdeasPageClient() {
   const router = useRouter();
@@ -101,29 +100,23 @@ export default function IdeasPageClient() {
         <a href="#main" className={skipLinkClass}>
           Skip to main content
         </a>
-        <nav className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-label="Main navigation">
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2">
-              <div className="w-8 h-8 rounded-lg bg-electric-gradient flex items-center justify-center shadow-glow">
-                <span className="text-white font-bold text-sm">P</span>
-              </div>
-              <span className="font-bold text-xl text-navy tracking-tight">PitchIQ</span>
-            </Link>
+        <AppNav
+          actions={
             <Link
               href="/create"
               className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Create Deck
             </Link>
-          </div>
-        </nav>
+          }
+        />
 
         <main id="main" className="pt-24 pb-16 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
             <h1 className="text-2xl md:text-3xl font-bold text-navy mb-2 tracking-tight">
               Your business ideas
             </h1>
-            <p className="text-gray-400 text-sm mb-8">
+            <p className="text-gray-600 text-sm mb-8">
               Pick one to turn into a pitch deck, or start over.
             </p>
             <ul className="space-y-6">
@@ -138,7 +131,7 @@ export default function IdeasPageClient() {
                   <p className="text-gray-500 text-sm mb-2"><strong>Solution:</strong> {idea.solution}</p>
                   <p className="text-gray-500 text-sm"><strong>Target:</strong> {idea.targetCustomer}</p>
                   {idea.whyNow && (
-                    <p className="text-gray-400 text-xs mt-2"><strong>Why now:</strong> {idea.whyNow}</p>
+                    <p className="text-gray-500 text-xs mt-2"><strong>Why now:</strong> {idea.whyNow}</p>
                   )}
                   <button
                     type="button"
@@ -165,12 +158,14 @@ export default function IdeasPageClient() {
               <button
                 type="button"
                 onClick={() => { setIdeas(null); setStep(0); setAnswers(Object.fromEntries(IDEA_QUESTIONS.map((q) => [q.id, ""]))); }}
+                aria-label="Generate new ideas again"
                 className="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-xl border border-gray-200 text-navy text-sm font-medium shadow-sm hover:border-gray-300 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
               >
                 Generate again
               </button>
               <Link
                 href="/"
+                aria-label="Back to PitchIQ home"
                 className="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-xl text-gray-500 text-sm font-medium hover:text-navy hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
               >
                 Back to home
@@ -187,33 +182,27 @@ export default function IdeasPageClient() {
       <a href="#main" className={skipLinkClass}>
         Skip to main content
       </a>
-      <nav className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-label="Main navigation">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2">
-            <div className="w-8 h-8 rounded-lg bg-electric-gradient flex items-center justify-center shadow-glow">
-              <span className="text-white font-bold text-sm">P</span>
-            </div>
-            <span className="font-bold text-xl text-navy tracking-tight">PitchIQ</span>
-          </Link>
+      <AppNav
+        actions={
           <Link
             href="/create"
             className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg text-navy text-sm font-medium shadow-sm hover:bg-white/5 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Create Deck
           </Link>
-        </div>
-      </nav>
+        }
+      />
 
       <main id="main" className="pt-24 pb-16 px-4 sm:px-6">
         <div className="max-w-xl mx-auto">
           <h1 className="text-2xl md:text-3xl font-bold text-navy mb-2 tracking-tight">
             Business idea generator
           </h1>
-          <p className="text-gray-400 text-sm mb-2">
+          <p className="text-gray-600 text-sm mb-2">
             Answer a few questions and we’ll suggest viable business ideas. Then you can turn one into a pitch deck.
           </p>
-          <p className="text-gray-400 text-sm mb-8 flex items-center gap-2">
-            <svg className="w-4 h-4 shrink-0 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <p className="text-gray-600 text-sm mb-8 flex items-center gap-2">
+            <svg className="w-4 h-4 shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>Takes about 60 seconds</span>
@@ -221,7 +210,7 @@ export default function IdeasPageClient() {
 
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
             <div className="flex items-center gap-2 mb-6">
-              <span className="text-xs font-semibold text-gray-400">
+              <span className="text-xs font-semibold text-gray-600">
                 Question {step + 1} of {IDEA_QUESTIONS.length}
               </span>
               <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -286,11 +275,13 @@ export default function IdeasPageClient() {
                         type="button"
                         onClick={handleSubmit}
                         disabled={!canSubmit}
+                        aria-label={loading ? "Generating business ideas" : "Generate business ideas"}
+                        aria-busy={loading}
                         className="min-h-[44px] px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                       >
                         Generate ideas
                       </button>
-                      <p className="text-gray-400 text-xs mt-1.5">No signup · No credit card</p>
+                      <p className="text-gray-500 text-xs mt-1.5">No signup · No credit card</p>
                     </div>
                   )}
                 </div>

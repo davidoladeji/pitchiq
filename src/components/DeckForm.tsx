@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { DeckInput, DeckData } from "@/lib/types";
+import FormField, { inputClass } from "@/components/ui/FormField";
 
 interface DeckFormProps {
   onGenerated: (deck: DeckData) => void;
@@ -67,7 +68,7 @@ function StepIndicator({
               >
                 {step.label}
               </p>
-              <p className="text-[10px] text-gray-400 truncate">
+              <p className="text-[10px] text-gray-500 truncate">
                 {step.description}
               </p>
             </div>
@@ -85,33 +86,6 @@ function StepIndicator({
   );
 }
 
-function FormField({
-  label,
-  required,
-  children,
-  hint,
-}: {
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-  hint?: string;
-}) {
-  return (
-    <div className="space-y-2">
-      <label className="block text-sm font-semibold text-navy">
-        {label}{" "}
-        {required && <span className="text-electric text-xs">*</span>}
-      </label>
-      {children}
-      {hint && (
-        <p className="text-xs text-gray-400 pl-1">{hint}</p>
-      )}
-    </div>
-  );
-}
-
-const inputClass =
-  "w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white focus:border-electric focus:ring-2 focus:ring-electric/10 outline-none transition-all text-navy placeholder:text-gray-300 text-sm";
 
 export default function DeckForm({ onGenerated }: DeckFormProps) {
   const [loading, setLoading] = useState(false);
@@ -266,6 +240,7 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
                 value={form.stage}
                 onChange={(e) => update("stage", e.target.value)}
                 className={`${inputClass} bg-white cursor-pointer`}
+                autoFocus
               >
                 <option>Pre-seed</option>
                 <option>Seed</option>
@@ -301,11 +276,11 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
                     className={`min-h-[44px] flex flex-col items-center justify-center gap-1.5 p-4 rounded-xl border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
                       form.investorType === opt.value
                         ? "border-navy bg-navy/[0.03] text-navy shadow-sm"
-                        : "border-gray-200 text-gray-400 hover:border-gray-300 hover:text-gray-500"
+                        : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-navy"
                     }`}
                   >
                     <span className="text-sm font-bold">{opt.label}</span>
-                    <span className="text-[10px] text-gray-400">
+                    <span className="text-[10px] text-gray-500">
                       {opt.desc}
                     </span>
                   </button>
@@ -330,6 +305,7 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
                 onChange={(e) => update("problem", e.target.value)}
                 placeholder="Describe the problem your startup solves. Be specific about who has this problem and why existing solutions fall short."
                 className={`${inputClass} resize-none`}
+                autoFocus
               />
             </FormField>
             <FormField
@@ -364,6 +340,7 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
                 onChange={(e) => update("keyMetrics", e.target.value)}
                 placeholder="MRR, users, growth rate, partnerships..."
                 className={`${inputClass} resize-none`}
+                autoFocus
               />
             </FormField>
             <FormField
@@ -423,7 +400,7 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
           className={`min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
             step === 0
               ? "opacity-0 pointer-events-none"
-              : "text-gray-400 hover:text-navy hover:bg-gray-50"
+              : "text-gray-500 hover:text-navy hover:bg-gray-50"
           }`}
         >
           <span className="flex items-center gap-1.5">
@@ -473,11 +450,13 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
             <button
               type="submit"
               disabled={loading || !canAdvance()}
+              aria-busy={loading}
+              aria-label={loading ? "Generating your pitch deck" : "Generate pitch deck"}
               className="min-h-[44px] inline-flex items-center px-8 py-3.5 rounded-xl bg-electric text-white font-semibold hover:bg-electric-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-electric/20 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               {loading ? (
                 <span className="flex items-center gap-2.5">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
                     <circle
                       className="opacity-25"
                       cx="12"
@@ -499,8 +478,8 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
                 "Generate Pitch Deck"
               )}
             </button>
-            <p className="text-gray-400 text-sm">No signup · No credit card</p>
-            <p className="text-gray-400 text-xs mt-1">We don&apos;t store your pitch — generate and share, no account needed.</p>
+            <p className="text-gray-500 text-sm">No signup · No credit card</p>
+            <p className="text-gray-600 text-xs mt-1">We don&apos;t store your pitch — generate and share, no account needed.</p>
           </div>
         )}
       </div>

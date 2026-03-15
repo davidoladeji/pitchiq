@@ -16,6 +16,10 @@ export interface DeckInput {
   solution: string;
   keyMetrics: string;
   teamInfo: string;
+  themeId?: string;
+  brandLogo?: string;
+  brandPrimaryColor?: string;
+  brandFont?: string;
 }
 
 export interface DeckData {
@@ -26,6 +30,24 @@ export interface DeckData {
   slides: SlideData[];
   createdAt: string;
   isPremium: boolean;
+  themeId?: string;
+  piqScore?: PIQScore;
+}
+
+/** PIQ Score — 0-100 fundability rating */
+export interface PIQScore {
+  overall: number;
+  grade: string; // A+ through F
+  dimensions: PIQDimension[];
+  recommendations: string[];
+}
+
+export interface PIQDimension {
+  id: string;
+  label: string;
+  score: number; // 0-100
+  weight: number; // percentage weight (sums to 100)
+  feedback: string;
 }
 
 export interface ViewAnalytics {

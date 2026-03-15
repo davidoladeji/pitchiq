@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from "react";
 import Link from "next/link";
+import AppNav from "@/components/AppNav";
 import DeckForm from "@/components/DeckForm";
 import SlideRenderer from "@/components/SlideRenderer";
 import { DeckData } from "@/lib/types";
@@ -110,20 +111,9 @@ export default function CreatePageClient() {
       >
         Skip to main content
       </a>
-      <nav className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-label="Main navigation">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link
-            href="/"
-            className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-          >
-            <div className="w-8 h-8 rounded-lg bg-electric-gradient flex items-center justify-center shadow-glow">
-              <span className="text-white font-bold text-sm">P</span>
-            </div>
-            <span className="font-bold text-xl text-navy tracking-tight">
-              PitchIQ
-            </span>
-          </Link>
-          {deck && (
+      <AppNav
+        actions={
+          deck ? (
             <div className="flex items-center gap-2 sm:gap-3">
               <button
                 type="button"
@@ -133,19 +123,8 @@ export default function CreatePageClient() {
               >
                 {copied ? (
                   <span className="flex items-center gap-1.5 text-electric">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                      aria-hidden="true"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M5 13l4 4L19 7"
-                      />
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                     Copied
                   </span>
@@ -175,9 +154,9 @@ export default function CreatePageClient() {
                 )}
               </button>
             </div>
-          )}
-        </div>
-      </nav>
+          ) : undefined
+        }
+      />
 
       <main id="main" className="pt-24 pb-16 px-4 sm:px-6">
         {!deck && (
@@ -186,11 +165,11 @@ export default function CreatePageClient() {
               <h1 className="text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
                 Create Your Pitch Deck
               </h1>
-              <p className="text-gray-400 text-base sm:text-lg max-w-lg mx-auto">
+              <p className="text-gray-600 text-base sm:text-lg max-w-lg mx-auto">
                 Describe your startup and we&apos;ll generate a polished,
                 investor-ready pitch deck in seconds.
               </p>
-              <p className="mt-3 text-gray-400 text-sm inline-flex items-center justify-center gap-1.5">
+              <p className="mt-3 text-gray-600 text-sm inline-flex items-center justify-center gap-1.5">
                 <svg className="w-4 h-4 shrink-0 text-electric/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -247,7 +226,7 @@ export default function CreatePageClient() {
               <h1 className="text-xl sm:text-2xl font-bold text-navy mb-2 tracking-tight">
                 {deck.title}
               </h1>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-500 text-sm">
                 {deck.slides.length} slides generated
               </p>
             </div>
@@ -302,17 +281,29 @@ export default function CreatePageClient() {
                   "Copy Shareable Link"
                 )}
               </button>
+              <Link
+                href={`/deck/${deck.shareId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="View shareable deck in new tab — see what investors will see"
+                className="min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-navy font-medium hover:border-electric/40 hover:text-electric shadow-sm hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              >
+                <span>View shareable deck</span>
+                <svg className="w-4 h-4 shrink-0 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </Link>
               <button
                 type="button"
                 onClick={() => setDeck(null)}
-                className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl text-gray-400 font-medium hover:text-navy hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl text-gray-500 font-medium hover:text-navy hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
               >
                 Create Another
               </button>
             </div>
 
             <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 flex items-center gap-3 max-w-xl mx-auto">
-              <div className="flex-1 text-xs sm:text-sm text-gray-400 truncate font-mono">
+              <div className="flex-1 text-xs sm:text-sm text-gray-500 truncate font-mono">
                 {shareUrl}
               </div>
               <button

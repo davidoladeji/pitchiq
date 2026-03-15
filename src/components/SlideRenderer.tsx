@@ -426,10 +426,10 @@ export default function SlideRenderer({
       {/* Keyboard nav hint */}
       <p className="text-center text-xs text-gray-300 mt-3 hidden md:block">
         Use{" "}
-        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-400 text-[11px] font-mono">
+        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">
           &larr;
         </kbd>{" "}
-        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-400 text-[11px] font-mono">
+        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">
           &rarr;
         </kbd>{" "}
         to navigate

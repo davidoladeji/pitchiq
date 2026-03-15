@@ -45,6 +45,7 @@ export default function FinalCTA() {
         <span className="block rounded-xl p-[2px] bg-gradient-to-r from-electric via-violet to-electric shadow-glow shadow-electric/20">
           <Link
             href="/create"
+            aria-label="Generate your pitch deck for free — no signup required"
             className="group/inner relative min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-[10px] bg-electric text-white font-semibold text-lg transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a16]"
           >
             <span className="relative z-10">Generate Your Deck — Free</span>
