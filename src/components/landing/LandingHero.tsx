@@ -4,7 +4,10 @@ import Link from "next/link";
 
 export default function LandingHero() {
   return (
-    <section className="relative pt-28 pb-20 md:pt-36 md:pb-28 px-6 overflow-hidden bg-navy-900">
+    <section
+      className="relative pt-28 pb-20 md:pt-36 md:pb-28 px-6 overflow-hidden bg-navy-900"
+      aria-label="PitchIQ hero — get your PIQ Score and generate your deck"
+    >
       {/* Background effects */}
       <div className="absolute inset-0 bg-hero-gradient" />
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-electric/10 rounded-full blur-[140px] pointer-events-none" />
@@ -49,15 +52,17 @@ export default function LandingHero() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 animate-fade-in-up stagger-3">
           <Link
             href="/create"
+            aria-label="Get your PIQ Score for free — no signup required"
             className="group relative w-full sm:w-auto min-h-[52px] inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-electric text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
           >
             Get Your PIQ Score &mdash; Free
-            <svg className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
           </Link>
           <a
             href="#how-it-works"
+            aria-label="See how PitchIQ works — four steps"
             className="w-full sm:w-auto min-h-[52px] inline-flex items-center justify-center px-8 py-3.5 rounded-xl border border-white/[0.12] text-white/70 font-medium text-base hover:bg-white/[0.04] hover:text-white hover:border-white/20 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
           >
             See How It Works

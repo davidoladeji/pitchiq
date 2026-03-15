@@ -6,6 +6,12 @@
 export default function IdeasLoading() {
   return (
     <div className="min-h-screen bg-[#fafafa]">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-electric focus:text-white focus:outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2"
+      >
+        Skip to main content
+      </a>
       {/* Nav skeleton — matches IdeasPageClient fixed nav */}
       <header className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-hidden="true">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -17,7 +23,7 @@ export default function IdeasLoading() {
         </div>
       </header>
 
-      <main className="pt-24 pb-16 px-4 sm:px-6" aria-hidden="true">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-hidden="true">
         <div className="max-w-xl mx-auto">
           {/* Title block skeleton — "Business idea generator" + subtext */}
           <div className="mb-8">

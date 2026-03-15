@@ -28,13 +28,21 @@ export default function SignInPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#fafafa] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2.5 mb-6 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-          >
+    <>
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:ring-2 focus:ring-electric focus:ring-offset-2 focus:bg-white focus:font-medium focus:text-navy"
+      >
+        Skip to main content
+      </a>
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center px-4">
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-8">
+            <Link
+              href="/"
+              aria-label="PitchIQ home"
+              className="inline-flex items-center gap-2.5 mb-6 min-h-[44px] min-w-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            >
             <div className="w-10 h-10 rounded-xl bg-electric-gradient flex items-center justify-center shadow-glow">
               <span className="text-white font-bold text-lg">P</span>
             </div>
@@ -42,52 +50,55 @@ export default function SignInPage() {
               PitchIQ
             </span>
           </Link>
-          <h1 className="text-2xl font-bold text-navy tracking-tight mb-2">
-            Sign in to PitchIQ
-          </h1>
-          <p className="text-gray-500 text-sm">
-            Save decks, track PIQ scores, and access analytics.
-          </p>
-        </div>
+          <main id="main" tabIndex={-1} className="outline-none">
+            <h1 className="text-2xl font-bold text-navy tracking-tight mb-2">
+              Sign in to PitchIQ
+            </h1>
+            <p className="text-gray-500 text-sm">
+              Save decks, track PIQ scores, and access analytics.
+            </p>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-3">
-          {providers ? (
-            Object.values(providers).map((provider) => (
-              <button
-                key={provider.id}
-                type="button"
-                onClick={() => signIn(provider.id, { callbackUrl: "/dashboard" })}
-                className="w-full min-h-[44px] flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-navy hover:bg-gray-50 hover:border-gray-300 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-              >
-                {PROVIDER_ICONS[provider.id] && (
-                  <svg
-                    className="w-5 h-5"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true"
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-3 mt-6">
+              {providers ? (
+                Object.values(providers).map((provider) => (
+                  <button
+                    key={provider.id}
+                    type="button"
+                    onClick={() => signIn(provider.id, { callbackUrl: "/dashboard" })}
+                    className="w-full min-h-[44px] flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-navy hover:bg-gray-50 hover:border-gray-300 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                   >
-                    <path d={PROVIDER_ICONS[provider.id]} />
-                  </svg>
-                )}
-                Continue with {provider.name}
-              </button>
-            ))
-          ) : (
-            <div className="space-y-3">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="h-12 rounded-xl bg-gray-100 animate-pulse"
-                />
-              ))}
+                    {PROVIDER_ICONS[provider.id] && (
+                      <svg
+                        className="w-5 h-5"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path d={PROVIDER_ICONS[provider.id]} />
+                      </svg>
+                    )}
+                    Continue with {provider.name}
+                  </button>
+                ))
+              ) : (
+                <div className="space-y-3">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="h-12 rounded-xl bg-gray-100 animate-pulse"
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
-        <p className="mt-6 text-center text-xs text-gray-400">
-          By signing in you agree to our terms. We never share your data.
-        </p>
+            <p className="mt-6 text-center text-xs text-gray-500">
+              By signing in you agree to our terms. We never share your data.
+            </p>
+          </main>
+        </div>
       </div>
     </div>
+    </>
   );
 }

@@ -38,7 +38,7 @@ export default function PIQScoreCard({ score }: { score: PIQScore }) {
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span className="text-3xl font-bold text-navy tabular-nums">{score.overall}</span>
-            <span className="text-[10px] text-gray-400 uppercase tracking-wider font-medium">PIQ Score</span>
+            <span className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">PIQ Score</span>
           </div>
         </div>
 

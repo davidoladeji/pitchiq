@@ -28,7 +28,7 @@ export default function RootLoading() {
         </div>
       </header>
 
-      <main id="main" aria-hidden="true">
+      <main id="main" tabIndex={-1} aria-hidden="true">
         {/* Hero skeleton — dark gradient to match real hero */}
         <section className="relative pt-32 pb-32 md:pt-40 md:pb-40 px-6 bg-hero-gradient overflow-hidden">
           <div className="max-w-4xl mx-auto text-center relative z-10">

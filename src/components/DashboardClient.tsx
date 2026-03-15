@@ -33,10 +33,17 @@ export default function DashboardClient({
 }) {
   return (
     <div className="min-h-screen bg-[#fafafa]">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:ring-2 focus:ring-electric focus:ring-offset-2 focus:bg-white focus:font-medium focus:text-navy"
+      >
+        Skip to main content
+      </a>
       <AppNav
         actions={
           <Link
             href="/create"
+            aria-label="Create new pitch deck"
             className="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             New Deck
@@ -44,7 +51,7 @@ export default function DashboardClient({
         }
       />
 
-      <main className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight">
             Hey {userName}
@@ -82,6 +89,7 @@ export default function DashboardClient({
               </p>
               <Link
                 href="/create"
+                aria-label="Create your first pitch deck"
                 className="inline-flex items-center px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
               >
                 Create Deck
@@ -95,6 +103,7 @@ export default function DashboardClient({
                   <Link
                     key={deck.id}
                     href={`/deck/${deck.shareId}`}
+                    aria-label={`View deck: ${deck.title}`}
                     className="group bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 hover:border-electric/20 hover:shadow-card-hover transition-all"
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -112,7 +121,7 @@ export default function DashboardClient({
                             <div className="text-lg font-bold text-electric tabular-nums">
                               {piqOverall}
                             </div>
-                            <div className="text-[10px] text-gray-400 uppercase tracking-wider">
+                            <div className="text-[10px] text-gray-500 uppercase tracking-wider">
                               PIQ
                             </div>
                           </div>
@@ -121,13 +130,13 @@ export default function DashboardClient({
                           <div className="text-lg font-bold text-navy tabular-nums">
                             {deck.viewCount}
                           </div>
-                          <div className="text-[10px] text-gray-400 uppercase tracking-wider">
+                          <div className="text-[10px] text-gray-500 uppercase tracking-wider">
                             Views
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 mt-3 text-xs text-gray-400">
+                    <div className="flex items-center gap-3 mt-3 text-xs text-gray-500">
                       <span>
                         {new Date(deck.createdAt).toLocaleDateString("en-US", {
                           month: "short",

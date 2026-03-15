@@ -443,7 +443,7 @@ export default function SlideRenderer({
       </div>
 
       {/* Keyboard nav hint */}
-      <p className="text-center text-xs text-gray-300 mt-3 hidden md:block">
+      <p className="text-center text-xs text-gray-500 mt-3 hidden md:block">
         Use{" "}
         <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-[11px] font-mono">
           &larr;

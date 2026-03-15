@@ -18,30 +18,34 @@ export default function Footer() {
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
           <Link
             href="/create"
+            aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
             className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-semibold bg-electric text-white hover:bg-electric-light transition-all shadow-sm hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Create your deck
           </Link>
           <Link
             href="/ideas"
+            aria-label="Explore startup ideas — no signup required"
             className="min-h-[44px] inline-flex items-center justify-center px-3 py-2 text-gray-500 text-sm hover:text-navy transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Explore Ideas
           </Link>
           <a
             href="#features"
+            aria-label="Jump to Features section"
             className="min-h-[44px] inline-flex items-center justify-center px-3 py-2 text-gray-500 text-sm hover:text-navy transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Features
           </a>
           <a
             href="#pricing"
+            aria-label="Jump to Pricing section"
             className="min-h-[44px] inline-flex items-center justify-center px-3 py-2 text-gray-500 text-sm hover:text-navy transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Pricing
           </a>
         </div>
-        <span className="text-gray-400 text-xs text-center md:text-right">
+        <span className="text-gray-500 text-xs text-center md:text-right">
           Privacy-first &middot; We never train on your data
         </span>
       </div>

@@ -137,15 +137,15 @@ export default function ExportMenu({ deck, className = "" }: ExportMenuProps) {
             Download PDF
           </button>
           <div className="border-t border-gray-100 mt-1 pt-1">
-            <div className="px-4 py-2.5 text-sm text-gray-400 flex items-center gap-3">
+            <div className="px-4 py-2.5 text-sm text-gray-500 flex items-center gap-3">
               <span className="w-8 h-8 rounded-lg bg-orange-50 text-orange-300 flex items-center justify-center text-xs font-bold">PPT</span>
               PPTX Export
-              <span className="ml-auto text-[10px] text-gray-300 font-medium">Soon</span>
+              <span className="ml-auto text-[10px] text-gray-500 font-medium">Soon</span>
             </div>
-            <div className="px-4 py-2.5 text-sm text-gray-400 flex items-center gap-3">
+            <div className="px-4 py-2.5 text-sm text-gray-500 flex items-center gap-3">
               <span className="w-8 h-8 rounded-lg bg-gray-50 text-gray-300 flex items-center justify-center text-xs font-bold">G</span>
               Google Slides
-              <span className="ml-auto text-[10px] text-gray-300 font-medium">Soon</span>
+              <span className="ml-auto text-[10px] text-gray-500 font-medium">Soon</span>
             </div>
           </div>
         </div>

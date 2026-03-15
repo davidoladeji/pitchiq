@@ -110,12 +110,14 @@ export default function DeckViewerClient() {
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <Link
             href="/create"
+            aria-label="Create your own pitch deck"
             className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl bg-electric text-white font-medium shadow-sm hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Create a deck
           </Link>
           <Link
             href="/"
+            aria-label="Go to PitchIQ home"
             className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border border-gray-200 text-navy font-medium shadow-sm hover:border-gray-300 hover:bg-gray-50 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Go to PitchIQ
@@ -131,6 +133,7 @@ export default function DeckViewerClient() {
         actions={
           <Link
             href="/create"
+            aria-label="Create your own pitch deck"
             className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-navy text-white text-sm font-medium shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Create Your Own

@@ -18,7 +18,8 @@ interface AppNavProps {
 const logoBlock = (
   <Link
     href="/"
-    className="flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+    className="flex items-center gap-2.5 min-h-[44px] min-w-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+    aria-label="PitchIQ home"
   >
     <div className="w-8 h-8 rounded-lg bg-electric-gradient flex items-center justify-center shadow-glow">
       <span className="text-white font-bold text-sm">P</span>

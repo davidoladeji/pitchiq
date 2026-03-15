@@ -160,7 +160,7 @@ export default function CreatePageClient() {
         }
       />
 
-      <main id="main" className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
         {!deck && (
           <div className="max-w-2xl mx-auto animate-fade-in">
             <div className="text-center mb-12">
