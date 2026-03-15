@@ -4,7 +4,6 @@
  */
 import { compare, hash } from "bcryptjs";
 import { cookies } from "next/headers";
-import { prisma } from "@/lib/db";
 import type { Role } from "@prisma/client";
 
 const SESSION_COOKIE = "pitchiq_admin_session";
@@ -27,9 +26,10 @@ function getSecret(): string | null {
 export function signSession(payload: { userId: string; role: Role }): string {
   const secret = getSecret();
   if (!secret) throw new Error("ADMIN_SESSION_SECRET must be set and at least 32 chars");
-  const crypto = require("crypto");
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const cryptoMod = require("crypto");
   const data = JSON.stringify({ ...payload, exp: Date.now() + SESSION_MAX_AGE * 1000 });
-  const sig = crypto.createHmac("sha256", secret).update(data).digest("hex");
+  const sig = cryptoMod.createHmac("sha256", secret).update(data).digest("hex");
   return Buffer.from(JSON.stringify({ data, sig })).toString("base64url");
 }
 
@@ -37,9 +37,10 @@ export function verifySession(token: string): { userId: string; role: Role } | n
   try {
     const secret = getSecret();
     if (!secret) return null;
-    const crypto = require("crypto");
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const cryptoMod = require("crypto");
     const raw = JSON.parse(Buffer.from(token, "base64url").toString());
-    const sig = crypto.createHmac("sha256", secret).update(raw.data).digest("hex");
+    const sig = cryptoMod.createHmac("sha256", secret).update(raw.data).digest("hex");
     if (sig !== raw.sig) return null;
     const payload = JSON.parse(raw.data);
     if (payload.exp < Date.now()) return null;

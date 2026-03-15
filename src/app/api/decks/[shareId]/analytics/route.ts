@@ -52,7 +52,7 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { shareId: string } }
+  _context: { params: { shareId: string } }
 ) {
   try {
     const { viewId, slideViews, totalTime } = await req.json();

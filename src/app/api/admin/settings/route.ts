@@ -26,7 +26,7 @@ export async function GET() {
       masked: SECRET_KEYS.has(r.key),
     }));
     return NextResponse.json(list);
-  } catch (e) {
+  } catch {
     return NextResponse.json(
       { error: "Database unavailable. Set DATABASE_URL and run migrations." },
       { status: 503 }

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import {
   verifyPassword,
-  hashPassword,
   sessionCookieValue,
   getSessionCookieName,
 } from "@/lib/auth";

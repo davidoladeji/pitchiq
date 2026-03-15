@@ -3,6 +3,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function AuthButton() {
   const { data: session, status } = useSession();
@@ -46,9 +47,11 @@ export default function AuthButton() {
         aria-expanded={menuOpen}
       >
         {session.user.image ? (
-          <img
+          <Image
             src={session.user.image}
             alt=""
+            width={32}
+            height={32}
             className="w-8 h-8 rounded-full border border-gray-200"
           />
         ) : (
