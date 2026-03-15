@@ -49,7 +49,7 @@ export default function LandingDemo() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-[#1a1a2e] py-28 sm:py-36 px-6"
+      className="relative bg-navy section-py px-6"
       aria-label="Product preview — PIQ Score visualization"
     >
       {/* Ambient glow behind mockup */}
@@ -65,14 +65,14 @@ export default function LandingDemo() {
           }`}
         >
           {/* Minimal browser chrome — just the 3 dots */}
-          <div className="flex items-center gap-2 px-5 py-3.5 bg-[#1a1a2e] border-b border-white/[0.06]">
+          <div className="flex items-center gap-2 px-5 py-3.5 bg-navy border-b border-white/[0.06]">
             <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
             <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
             <div className="w-3 h-3 rounded-full bg-[#28C840]" />
           </div>
 
           {/* Content area */}
-          <div className="bg-[#18181B] p-8 sm:p-12">
+          <div className="bg-[#18181B] p-4 sm:p-8 md:p-12">
             <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14">
               {/* Score gauge */}
               <div className="flex flex-col items-center shrink-0">
@@ -138,7 +138,7 @@ export default function LandingDemo() {
               <div className="flex-1 w-full space-y-3.5">
                 {DIMENSIONS.map((dim, i) => (
                   <div key={dim.label} className="flex items-center gap-3">
-                    <span className="text-[11px] text-zinc-500 w-[90px] shrink-0 text-right font-medium">
+                    <span className="text-[10px] sm:text-[11px] text-zinc-500 w-16 sm:w-[90px] shrink-0 text-right font-medium">
                       {dim.label}
                     </span>
                     <div className="flex-1 h-[5px] rounded-full bg-white/[0.04] overflow-hidden">
@@ -171,7 +171,7 @@ export default function LandingDemo() {
 
         {/* Stat callouts */}
         <div
-          className={`mt-10 grid grid-cols-3 gap-4 transition-all duration-1000 ease-out delay-500 ${
+          className={`mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4 transition-all duration-1000 ease-out delay-500 ${
             visible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-6"

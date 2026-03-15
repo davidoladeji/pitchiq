@@ -230,7 +230,7 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
       <div className="min-h-[300px] relative">
         {/* Loading skeleton — perceived speed during generation */}
         {loading && (
-          <div className="absolute inset-0 z-10 flex flex-col justify-center rounded-xl bg-gray-50/80 border border-gray-100 p-8 animate-fade-in" aria-live="polite" aria-busy="true">
+          <div className="absolute inset-0 z-10 flex flex-col justify-center rounded-xl bg-navy-50/90 border border-navy-100 p-8 animate-fade-in" aria-live="polite" aria-busy="true">
             <div className="flex flex-col items-center gap-6">
               <div className="w-14 h-14 rounded-2xl bg-electric/10 border border-electric/20 flex items-center justify-center">
                 <svg className="animate-spin h-7 w-7 text-electric" viewBox="0 0 24 24" aria-hidden="true">
@@ -240,9 +240,9 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
               </div>
               <p className="text-sm font-semibold text-navy">Generating your deck...</p>
               <div className="w-full max-w-xs space-y-3">
-                <div className="h-2 rounded-full bg-gray-200 animate-pulse" style={{ width: "100%" }} />
-                <div className="h-2 rounded-full bg-gray-200 animate-pulse" style={{ width: "85%" }} />
-                <div className="h-2 rounded-full bg-gray-200 animate-pulse" style={{ width: "70%" }} />
+                <div className="h-2 rounded-full bg-navy-100 animate-pulse" style={{ width: "100%" }} />
+                <div className="h-2 rounded-full bg-navy-100 animate-pulse" style={{ width: "85%" }} />
+                <div className="h-2 rounded-full bg-navy-100 animate-pulse" style={{ width: "70%" }} />
               </div>
             </div>
           </div>

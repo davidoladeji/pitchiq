@@ -46,7 +46,7 @@ export default function FinalCTA() {
           <Link
             href="/create"
             aria-label="Generate your pitch deck for free — no signup required"
-            className="group/inner relative min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-[10px] bg-electric text-white font-semibold text-lg transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a16]"
+            className="group/inner relative min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-[10px] bg-electric text-white font-semibold text-lg transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
           >
             <span className="relative z-10">Generate Your Deck — Free</span>
             <div className="absolute inset-0 rounded-[10px] bg-gradient-to-r from-electric to-violet opacity-0 group-hover/inner:opacity-100 transition-opacity duration-300" />

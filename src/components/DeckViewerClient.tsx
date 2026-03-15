@@ -51,7 +51,7 @@ export default function DeckViewerClient() {
       <div className="min-h-screen bg-[#fafafa]" aria-busy="true" aria-label="Loading deck">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-electric focus:text-white focus:outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-electric focus:text-white focus:outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2 focus:ring-offset-white"
         >
           Skip to main content
         </a>
@@ -166,7 +166,7 @@ export default function DeckViewerClient() {
             {shareUrl && (
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
                 <span className="text-gray-500 text-sm">Share this deck</span>
-                <div className="flex items-center w-full sm:w-auto max-w-md rounded-xl border border-gray-200 bg-white px-3 py-2 gap-2">
+                <div className="flex items-center w-full sm:w-auto max-w-full sm:max-w-md rounded-xl border border-gray-200 bg-white px-3 py-2 gap-2">
                   <span className="flex-1 min-w-0 truncate text-sm text-navy" aria-hidden="true">
                     {shareUrl.replace(/^https?:\/\//, "")}
                   </span>

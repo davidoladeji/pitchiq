@@ -72,19 +72,19 @@ export default function LandingFeatures() {
   return (
     <section
       id="features"
-      className="py-24 sm:py-32 px-6 bg-zinc-50"
+      className="section-py px-6 bg-navy-50"
       aria-label="Features — built for fundraising, not slides"
     >
       <div className="max-w-5xl mx-auto" ref={sectionRef}>
         {/* Section header */}
         <div className="text-center mb-20">
-          <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#4361ee]/[0.08] text-[#4361ee] text-[11px] font-semibold uppercase tracking-[0.2em] mb-5">
+          <span className="inline-block px-3.5 py-1.5 rounded-full bg-electric/10 text-electric text-[11px] font-semibold uppercase tracking-[0.2em] mb-5">
             Features
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-5xl font-bold text-[#1a1a2e] tracking-[-0.025em] mb-5 font-display leading-[1.1]">
+          <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-5xl font-bold text-navy tracking-[-0.025em] mb-5 font-display leading-[1.1]">
             Built for fundraising, not slides
           </h2>
-          <p className="text-lg text-zinc-500 max-w-md mx-auto leading-relaxed">
+          <p className="text-lg text-navy-500 max-w-md mx-auto leading-relaxed">
             Every feature optimized for one goal: closing investor meetings.
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function LandingFeatures() {
                 key={feat.title}
                 data-feature-card
                 data-feature-index={i}
-                className={`group relative bg-white rounded-xl p-8 border border-zinc-200 hover:border-[#1a1a2e]/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-500 ease-out cursor-default ${
+                className={`group relative bg-white rounded-xl p-8 border border-navy-200 hover:border-navy/20 hover:shadow-card-hover transition-all duration-500 ease-out cursor-default ${
                   isVisible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-6"
@@ -108,7 +108,7 @@ export default function LandingFeatures() {
                 }}
               >
                 {/* Icon */}
-                <div className="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center mb-5 text-zinc-600 group-hover:bg-[#4361ee] group-hover:text-white transition-all duration-300">
+                <div className="w-10 h-10 rounded-lg bg-navy-100 flex items-center justify-center mb-5 text-navy-500 group-hover:bg-electric group-hover:text-white transition-all duration-300">
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -127,18 +127,18 @@ export default function LandingFeatures() {
 
                 {/* Title + Pro badge */}
                 <div className="flex items-center gap-2.5 mb-2.5">
-                  <h3 className="font-semibold text-[#1a1a2e] text-base">
+                  <h3 className="font-semibold text-navy text-base">
                     {feat.title}
                   </h3>
                   {feat.pro && (
-                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#4361ee]/[0.08] text-[#4361ee] uppercase tracking-wider leading-none">
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-electric/10 text-electric uppercase tracking-wider leading-none">
                       Pro
                     </span>
                   )}
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-zinc-500 leading-relaxed">
+                <p className="text-sm text-navy-500 leading-relaxed">
                   {feat.desc}
                 </p>
               </div>

@@ -65,10 +65,10 @@ export default function LandingSteps() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-20">
-          <p className="text-xs tracking-[0.2em] text-zinc-400 font-medium uppercase mb-4">
+          <p className="text-xs tracking-[0.2em] text-navy-500 font-medium uppercase mb-4">
             HOW IT WORKS
           </p>
-          <h2 className="text-display-lg font-display text-[#1a1a2e]">
+          <h2 className="text-display-lg font-display text-navy">
             From idea to scored deck
             <br />
             in 60 seconds
@@ -83,8 +83,8 @@ export default function LandingSteps() {
               ref={(el) => {
                 rowRefs.current[i] = el;
               }}
-              className={`group flex items-start gap-8 sm:gap-12 py-8 sm:py-10 transition-all duration-700 ease-out ${
-                i < STEPS.length - 1 ? "border-b border-zinc-100" : ""
+              className={`group flex items-start gap-4 sm:gap-8 md:gap-12 py-8 sm:py-10 transition-all duration-700 ease-out ${
+                i < STEPS.length - 1 ? "border-b border-navy-100" : ""
               } ${
                 visibleRows[i]
                   ? "opacity-100 translate-y-0"
@@ -95,16 +95,16 @@ export default function LandingSteps() {
               }}
             >
               {/* Step number */}
-              <span className="text-6xl font-display font-bold text-zinc-200 leading-none select-none transition-colors duration-300 group-hover:text-[#4361ee] shrink-0 w-20 sm:w-24">
+              <span className="text-4xl sm:text-5xl md:text-6xl font-display font-bold text-navy-200 leading-none select-none transition-colors duration-300 group-hover:text-electric shrink-0 w-12 sm:w-16 md:w-24">
                 {step.num}
               </span>
 
               {/* Content */}
               <div className="pt-2">
-                <h3 className="text-xl font-semibold text-[#1a1a2e] mb-2">
+                <h3 className="text-xl font-semibold text-navy mb-2">
                   {step.title}
                 </h3>
-                <p className="text-base text-zinc-500 leading-relaxed max-w-lg">
+                <p className="text-base text-navy-500 leading-relaxed max-w-lg">
                   {step.desc}
                 </p>
               </div>

@@ -171,7 +171,7 @@ export default function CreatePageClient({
         {!deck && (
           <div className="max-w-2xl mx-auto animate-fade-in">
             <div className="text-center mb-12">
-              <h1 className="text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
                 Create Your Pitch Deck
               </h1>
               <p className="text-gray-600 text-base sm:text-lg max-w-lg mx-auto">

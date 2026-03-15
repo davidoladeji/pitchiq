@@ -20,7 +20,7 @@ export default function LandingCTA() {
 
   return (
     <section
-      className="py-24 lg:py-32 px-6 bg-navy relative overflow-hidden"
+      className="section-py px-6 bg-navy relative overflow-hidden"
       aria-label="Ready to pitch smarter — generate your deck for free"
     >
       <div className="absolute inset-0 bg-hero-mesh" />

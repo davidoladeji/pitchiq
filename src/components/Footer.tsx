@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer
-      className="bg-white border-t border-zinc-100"
+      className="bg-white border-t border-navy-100"
       aria-label="Site footer"
     >
       <div className="max-w-5xl mx-auto py-12 px-6">
@@ -13,7 +13,7 @@ export default function Footer() {
             <Link
               href="/create"
               aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
-              className="inline-flex items-center justify-center min-h-[44px] px-8 rounded-full bg-electric text-white font-semibold text-sm shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/20 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              className="inline-flex items-center justify-center min-h-[44px] px-8 rounded-full bg-electric text-white font-semibold text-sm shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/20 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Create your deck
             </Link>
@@ -33,39 +33,39 @@ export default function Footer() {
           </div>
 
           {/* Links */}
-          <nav className="flex items-center gap-6" aria-label="Footer navigation">
+          <nav className="flex flex-wrap items-center gap-3 sm:gap-6" aria-label="Footer navigation">
             <Link
               href="/create"
               aria-label="Create your pitch deck"
-              className="text-sm text-zinc-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded-lg"
+              className="text-sm text-navy-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
             >
               Create Deck
             </Link>
             <Link
               href="/score"
               aria-label="Score your deck"
-              className="text-sm text-zinc-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded-lg"
+              className="text-sm text-navy-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
             >
               Score Deck
             </Link>
             <Link
               href="/ideas"
               aria-label="Explore startup ideas — no signup required"
-              className="text-sm text-zinc-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded-lg"
+              className="text-sm text-navy-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
             >
               Ideas
             </Link>
             <a
               href="#features"
               aria-label="Jump to Features section"
-              className="text-sm text-zinc-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded-lg"
+              className="text-sm text-navy-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
             >
               Features
             </a>
             <a
               href="#pricing"
               aria-label="Jump to Pricing section"
-              className="text-sm text-zinc-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded-lg"
+              className="text-sm text-navy-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
             >
               Pricing
             </a>
@@ -73,7 +73,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom row */}
-        <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-600">
+        <div className="mt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-navy-500">
           <span>Privacy-first &middot; We never train on your data</span>
           <span>&copy; {new Date().getFullYear()} PitchIQ. All rights reserved.</span>
         </div>

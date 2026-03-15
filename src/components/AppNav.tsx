@@ -71,7 +71,7 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
       className="flex items-center gap-2 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
       aria-label="PitchIQ home"
     >
-      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#4361ee] to-[#8B5CF6] flex items-center justify-center shadow-md shadow-electric/25">
+      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-electric to-violet flex items-center justify-center shadow-md shadow-electric/25">
         <span className="text-white font-bold text-xs leading-none">P</span>
       </div>
       <span className={`font-display font-bold text-lg tracking-tight ${logoText}`}>
@@ -227,13 +227,13 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
         <button
           type="button"
           onClick={closeMenu}
-          className="absolute inset-0 bg-[#1a1a2e]/90 backdrop-blur-2xl"
+          className="absolute inset-0 bg-navy/90 backdrop-blur-2xl"
           aria-label="Close menu"
         />
 
         {/* Menu content */}
         <div
-          className={`relative z-10 flex flex-col justify-between h-full pt-24 pb-10 px-8 transition-transform duration-300 ${
+          className={`relative z-10 flex flex-col justify-between h-full pt-24 pb-10 px-6 sm:px-8 transition-transform duration-300 ${
             isMenuOpen ? "translate-y-0" : "-translate-y-4"
           }`}
         >
@@ -260,7 +260,7 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
               href="/create"
               onClick={closeMenu}
               aria-label="Get started — create your pitch deck"
-              className="w-full text-center py-3.5 rounded-full bg-gradient-to-r from-[#4361ee] to-[#8B5CF6] text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30 active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric"
+              className="w-full text-center py-3.5 rounded-full bg-gradient-to-r from-electric to-violet text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30 active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Get Started
             </Link>

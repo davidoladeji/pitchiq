@@ -29,8 +29,8 @@ export default function LandingTrust() {
           {ITEMS.map((item, i) => (
             <div
               key={item.title}
-              className={`flex-1 flex items-start gap-3 px-6 py-2 ${
-                i < ITEMS.length - 1 ? "md:border-r md:border-zinc-800" : ""
+              className={`flex-1 flex items-start gap-3 px-3 sm:px-6 py-2 ${
+                i < ITEMS.length - 1 ? "md:border-r md:border-white/10" : ""
               }`}
             >
               <svg
@@ -45,7 +45,7 @@ export default function LandingTrust() {
               </svg>
               <div>
                 <h3 className="text-white text-sm font-medium leading-tight">{item.title}</h3>
-                <p className="text-zinc-500 text-xs mt-0.5">{item.desc}</p>
+                <p className="text-blue-100/70 text-xs mt-0.5">{item.desc}</p>
               </div>
             </div>
           ))}

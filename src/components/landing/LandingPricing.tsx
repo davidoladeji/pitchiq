@@ -141,11 +141,11 @@ export default function LandingPricing() {
     <section id="pricing" aria-label="Pricing and plans" className="section-py px-6 bg-white">
       <div className="max-w-3xl mx-auto" ref={ref}>
         <div className="text-center mb-16">
-          <p className="text-xs tracking-[0.2em] uppercase text-zinc-400 mb-4">PRICING</p>
+          <p className="text-xs tracking-[0.2em] uppercase text-navy-500 mb-4">PRICING</p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-navy tracking-[-0.02em] mb-4">
             Start free, scale when ready
           </h2>
-          <p className="text-zinc-400 text-lg font-light">No surprises. Cancel anytime.</p>
+          <p className="text-navy-500 text-lg font-light">No surprises. Cancel anytime.</p>
           {error && (
             <p className="mt-3 text-red-500 text-sm font-medium" role="alert">
               {error}
@@ -162,12 +162,12 @@ export default function LandingPricing() {
           <div
             role="group"
             aria-label="Starter plan"
-            className="relative flex flex-col rounded-2xl border border-zinc-200 p-8"
+            className="relative flex flex-col rounded-2xl border border-navy-200 p-5 sm:p-8"
           >
             <h3 className="text-base font-bold tracking-tight text-navy">
               {starterTier.name}
             </h3>
-            <p className="text-xs mt-1 mb-6 text-zinc-400">
+            <p className="text-xs mt-1 mb-6 text-navy-500">
               {starterTier.desc}
             </p>
 
@@ -184,7 +184,7 @@ export default function LandingPricing() {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-zinc-500">{f}</span>
+                  <span className="text-navy-500">{f}</span>
                 </li>
               ))}
             </ul>
@@ -192,7 +192,7 @@ export default function LandingPricing() {
             <Link
               href={starterTier.href}
               aria-label="Get started with Starter plan"
-              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-zinc-100 text-navy transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy-100 text-navy transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               {starterTier.cta}
             </Link>
@@ -202,7 +202,7 @@ export default function LandingPricing() {
           <div
             role="group"
             aria-label="Pro plan, most popular"
-            className="relative flex flex-col rounded-2xl border border-electric p-8"
+            className="relative flex flex-col rounded-2xl border border-electric p-5 sm:p-8"
           >
             <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide">
               Popular
@@ -211,13 +211,13 @@ export default function LandingPricing() {
             <h3 className="text-base font-bold tracking-tight text-navy">
               {proTier.name}
             </h3>
-            <p className="text-xs mt-1 mb-6 text-zinc-400">
+            <p className="text-xs mt-1 mb-6 text-navy-500">
               {proTier.desc}
             </p>
 
             <div className="flex items-baseline gap-0.5 mb-8">
               <span className="text-4xl font-bold tracking-tight text-navy">{proTier.price}</span>
-              <span className="text-sm text-zinc-400">{proTier.unit}</span>
+              <span className="text-sm text-navy-500">{proTier.unit}</span>
             </div>
 
             <ul className="space-y-3 mb-8 flex-1">
@@ -229,7 +229,7 @@ export default function LandingPricing() {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-zinc-500">{f}</span>
+                  <span className="text-navy-500">{f}</span>
                 </li>
               ))}
             </ul>
@@ -247,7 +247,7 @@ export default function LandingPricing() {
                       ? "Setting up Pro checkout..."
                       : "Start free trial — Pro plan"
                   }
-                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
+                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
                 >
                   {isLoading ? (
                     <span className="inline-flex items-center gap-2">
@@ -268,7 +268,7 @@ export default function LandingPricing() {
 
         {/* Additional plans text */}
         <p
-          className={`text-center mt-10 text-sm text-zinc-400 transition-all duration-700 ease-out delay-200 ${
+          className={`text-center mt-10 text-sm text-navy-500 transition-all duration-700 ease-out delay-200 ${
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
@@ -277,12 +277,14 @@ export default function LandingPricing() {
             type="button"
             onClick={() => handleCheckout("growth")}
             disabled={!!loadingPlan}
-            className="text-electric hover:underline font-medium disabled:opacity-70"
+            aria-label={loadingPlan === "growth" ? "Setting up Growth checkout..." : "Start free trial — Growth plan ($79/mo)"}
+            aria-busy={loadingPlan === "growth"}
+            className="text-electric hover:underline font-medium disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded px-0.5"
           >
             Growth ($79/mo)
           </button>{" "}
           and{" "}
-          <Link href="#" className="text-electric hover:underline font-medium">
+          <Link href="#" className="text-electric hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded px-0.5" aria-label="Contact sales for Enterprise plan">
             Enterprise
           </Link>{" "}
           plans available.

@@ -28,8 +28,7 @@ export default function LandingHero() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[100vh] flex items-center justify-center px-6 overflow-hidden"
-      style={{ backgroundColor: "#1a1a2e" }}
+      className="relative min-h-[100vh] flex items-center justify-center px-4 sm:px-6 overflow-hidden bg-navy"
       aria-label="PitchIQ hero — get your PIQ Score"
     >
       {/* Grid overlay */}
@@ -37,7 +36,7 @@ export default function LandingHero() {
 
       {/* Animated gradient orb — electric #4361ee */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full pointer-events-none animate-glow-pulse"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] md:w-[800px] md:h-[800px] rounded-full pointer-events-none animate-glow-pulse"
         style={{
           background:
             "radial-gradient(circle, rgba(67,97,238,0.15) 0%, rgba(67,97,238,0.06) 40%, transparent 70%)",
@@ -47,7 +46,7 @@ export default function LandingHero() {
 
       {/* Secondary subtle orb */}
       <div
-        className="absolute bottom-[10%] right-[15%] w-[400px] h-[400px] rounded-full pointer-events-none"
+        className="absolute bottom-[10%] right-[15%] w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] rounded-full pointer-events-none"
         style={{
           background:
             "radial-gradient(circle, rgba(67,97,238,0.06) 0%, transparent 70%)",
@@ -74,7 +73,7 @@ export default function LandingHero() {
 
         {/* Headline */}
         <h1
-          className={`font-display text-display-xl font-bold text-white leading-[1.05] tracking-[-0.04em] mb-8 transition-all duration-1000 ease-out delay-150 ${
+          className={`font-display text-4xl sm:text-5xl md:text-display-xl font-bold text-white leading-[1.05] tracking-[-0.04em] mb-6 sm:mb-8 transition-all duration-1000 ease-out delay-150 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
@@ -85,9 +84,9 @@ export default function LandingHero() {
           before investors do
         </h1>
 
-        {/* Subtitle */}
+        {/* Subtitle — blue-100/70 for WCAG 2.1 AA contrast on dark navy */}
         <p
-          className={`text-lg text-zinc-400 max-w-xl mx-auto mb-10 leading-relaxed transition-all duration-1000 ease-out delay-300 ${
+          className={`text-lg text-blue-100/70 max-w-xl mx-auto mb-10 leading-relaxed transition-all duration-1000 ease-out delay-300 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
@@ -124,9 +123,9 @@ export default function LandingHero() {
           </Link>
         </div>
 
-        {/* Trust line */}
+        {/* Trust line — blue-200/50 for WCAG 2.1 AA contrast on dark navy */}
         <p
-          className={`text-sm text-zinc-600 tracking-wide transition-all duration-1000 ease-out delay-700 ${
+          className={`text-sm text-blue-200/50 tracking-wide transition-all duration-1000 ease-out delay-700 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >

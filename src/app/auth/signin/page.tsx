@@ -31,17 +31,17 @@ export default function SignInPage() {
     <>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:ring-2 focus:ring-electric focus:ring-offset-2 focus:bg-white focus:font-medium focus:text-navy"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:ring-2 focus:ring-electric focus:ring-offset-2 focus:ring-offset-white focus:bg-white focus:font-medium focus:text-navy"
       >
         Skip to main content
       </a>
-      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-navy-50/50 flex items-center justify-center px-4">
         <div className="w-full max-w-sm">
           <div className="text-center mb-8">
             <Link
               href="/"
               aria-label="PitchIQ home"
-              className="inline-flex items-center gap-2.5 mb-6 min-h-[44px] min-w-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              className="inline-flex items-center gap-2.5 mb-6 min-h-[44px] min-w-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               <div className="w-10 h-10 rounded-xl bg-electric-gradient flex items-center justify-center shadow-glow">
                 <span className="text-white font-bold text-lg">P</span>
@@ -53,19 +53,19 @@ export default function SignInPage() {
             <h1 className="text-2xl font-bold text-navy tracking-tight mb-2">
               Sign in to PitchIQ
             </h1>
-            <p className="text-gray-500 text-sm">
+            <p className="text-navy-500 text-sm">
               Save decks, track PIQ scores, and access analytics.
             </p>
           </div>
           <main id="main" tabIndex={-1} className="outline-none">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-3">
+            <div className="bg-white rounded-2xl border border-navy-100 shadow-sm p-6 space-y-3">
               {providers ? (
                 Object.values(providers).map((provider) => (
                   <button
                     key={provider.id}
                     type="button"
                     onClick={() => signIn(provider.id, { callbackUrl: "/dashboard" })}
-                    className="w-full min-h-[44px] flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-navy shadow-sm hover:bg-gray-50 hover:border-gray-300 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="w-full min-h-[44px] flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-navy-200 text-sm font-medium text-navy shadow-sm hover:bg-navy-50 hover:border-navy-300 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     {PROVIDER_ICONS[provider.id] && (
                       <svg
@@ -85,14 +85,14 @@ export default function SignInPage() {
                   {[1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="h-12 rounded-xl bg-gray-100 animate-pulse"
+                      className="h-12 rounded-xl bg-navy-100 animate-pulse"
                     />
                   ))}
                 </div>
               )}
             </div>
 
-            <p className="mt-6 text-center text-xs text-gray-500">
+            <p className="mt-6 text-center text-xs text-navy-500">
               By signing in you agree to our terms. We never share your data.
             </p>
           </main>

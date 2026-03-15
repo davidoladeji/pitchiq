@@ -135,7 +135,7 @@ export default function DashboardClient({
           )}
 
           <div className="flex items-start justify-between gap-4 mb-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-navy tracking-tight">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-navy tracking-tight">
               Hey {userName}
             </h1>
             <span className={`shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide ${planInfo.color}`}>
@@ -243,7 +243,7 @@ export default function DashboardClient({
                     aria-label={`View deck: ${deck.title}`}
                     className="group bg-white rounded-2xl border border-gray-100 p-5 sm:p-6 transition-all duration-300 hover:border-electric/20 hover:shadow-card-hover hover:-translate-y-1"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
                       <div className="min-w-0 flex-1">
                         <h2 className="font-bold text-navy text-base mb-1 truncate group-hover:text-electric transition-colors">
                           {deck.title}

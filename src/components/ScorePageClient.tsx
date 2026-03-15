@@ -82,7 +82,7 @@ export default function ScorePageClient({
               </svg>
               <span className="text-xs font-semibold text-electric">PIQ Score</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
               Score Your Pitch Deck
             </h1>
             <p className="text-gray-600 text-base sm:text-lg max-w-lg mx-auto">

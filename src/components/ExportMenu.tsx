@@ -212,7 +212,7 @@ export default function ExportMenu({ deck, className = "", userPlan = "starter" 
       </button>
 
       {open && (
-        <div className="absolute bottom-full mb-2 right-0 w-52 bg-white rounded-xl border border-gray-100 shadow-premium-lg py-1 z-50">
+        <div className="absolute bottom-full mb-2 right-0 w-48 sm:w-52 bg-white rounded-xl border border-gray-100 shadow-premium-lg py-1 z-50">
           <button
             type="button"
             onClick={() => handleExport("pdf")}
