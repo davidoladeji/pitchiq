@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateIdeas } from "@/lib/generate-ideas";
 import { IdeaQuestionAnswer } from "@/lib/types";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const rl = rateLimit(`ideas:${ip}`, { maxRequests: 20, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+      return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
+    }
+
     const body: { answers?: IdeaQuestionAnswer[]; surpriseMe?: boolean } = await req.json();
 
     if (body.surpriseMe) {

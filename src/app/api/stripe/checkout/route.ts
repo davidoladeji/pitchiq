@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     console.error("Stripe checkout error:", e);
     return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Checkout failed" },
+      { error: "Something went wrong. Please try again." },
       { status: 500 }
     );
   }

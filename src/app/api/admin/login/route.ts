@@ -6,9 +6,16 @@ import {
   getSessionCookieName,
 } from "@/lib/auth";
 import { Role } from "@prisma/client";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const rl = rateLimit(`admin-login:${ip}`, { maxRequests: 5, windowMs: 15 * 60 * 1000 });
+    if (!rl.success) {
+      return NextResponse.json({ error: "Too many attempts. Try again later." }, { status: 429 });
+    }
+
     const body = await req.json();
     const { email, password } = body as { email?: string; password?: string };
     if (!email || !password) {

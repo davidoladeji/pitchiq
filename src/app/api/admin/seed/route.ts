@@ -8,6 +8,10 @@ import { hashPassword } from "@/lib/auth";
 import { Role } from "@prisma/client";
 
 export async function POST(req: NextRequest) {
+  if (process.env.ALLOW_ADMIN_SEED !== "true") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
   try {
     const body = await req.json();
     const { email, password } = body as { email?: string; password?: string };

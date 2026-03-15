@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { rateLimit } from "@/lib/rate-limit";
 
 const FIELD_PROMPTS: Record<string, { role: string; instruction: string }> = {
   problem: {
@@ -30,10 +31,29 @@ const FIELD_PROMPTS: Record<string, { role: string; instruction: string }> = {
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const rl = rateLimit(`deck-refine:${ip}`, { maxRequests: 20, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+      return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
+    }
+
     const body: { field: string; currentValue: string; context?: Record<string, string> } = await req.json();
 
     if (!body.field || !body.currentValue?.trim()) {
       return NextResponse.json({ error: "field and currentValue are required" }, { status: 400 });
+    }
+
+    // Input length validation
+    const MAX_LEN = 5000;
+    if (body.currentValue.length > MAX_LEN) {
+      return NextResponse.json({ error: "currentValue exceeds maximum length" }, { status: 400 });
+    }
+    if (body.context) {
+      for (const [key, val] of Object.entries(body.context)) {
+        if (typeof val === 'string' && val.length > MAX_LEN) {
+          return NextResponse.json({ error: `context.${key} exceeds maximum length` }, { status: 400 });
+        }
+      }
     }
 
     const fieldConfig = FIELD_PROMPTS[body.field];

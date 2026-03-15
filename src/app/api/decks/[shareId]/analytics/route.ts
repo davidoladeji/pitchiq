@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 
 export async function GET(
@@ -13,6 +15,12 @@ export async function GET(
 
     if (!deck) {
       return NextResponse.json({ error: "Deck not found" }, { status: 404 });
+    }
+
+    const session = await getServerSession(authOptions);
+    const userId = (session?.user as { id?: string })?.id;
+    if (!userId || userId !== deck.userId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     // Premium gate — return limited data for free tier
@@ -51,7 +59,10 @@ export async function GET(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { shareId: string } }
+) {
   try {
     const { viewId, slideViews, totalTime } = await req.json();
 
@@ -59,8 +70,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "viewId required" }, { status: 400 });
     }
 
+    const deck = await prisma.deck.findUnique({
+      where: { shareId: params.shareId },
+    });
+
+    if (!deck) {
+      return NextResponse.json({ error: "Deck not found" }, { status: 404 });
+    }
+
+    const session = await getServerSession(authOptions);
+    const userId = (session?.user as { id?: string })?.id;
+    if (!userId || userId !== deck.userId) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     await prisma.view.update({
-      where: { id: viewId },
+      where: { id: viewId, deckId: deck.id },
       data: {
         slideViews: JSON.stringify(slideViews || []),
         totalTime: totalTime || 0,

@@ -40,8 +40,9 @@ export function verifySession(token: string): { userId: string; role: Role } | n
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const cryptoMod = require("crypto");
     const raw = JSON.parse(Buffer.from(token, "base64url").toString());
-    const sig = cryptoMod.createHmac("sha256", secret).update(raw.data).digest("hex");
-    if (sig !== raw.sig) return null;
+    const sig = cryptoMod.createHmac("sha256", secret).update(raw.data).digest("hex") as string;
+    if (sig.length !== (raw.sig as string).length) return null;
+    if (!cryptoMod.timingSafeEqual(Buffer.from(sig), Buffer.from(raw.sig as string))) return null;
     const payload = JSON.parse(raw.data);
     if (payload.exp < Date.now()) return null;
     return { userId: payload.userId, role: payload.role };

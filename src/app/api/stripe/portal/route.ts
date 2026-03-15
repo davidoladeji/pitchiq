@@ -41,7 +41,7 @@ export async function POST() {
   } catch (e) {
     console.error("Stripe portal error:", e);
     return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Portal failed" },
+      { error: "Something went wrong. Please try again." },
       { status: 500 }
     );
   }

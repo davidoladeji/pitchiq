@@ -7,9 +7,16 @@ import { scoreDeck } from "@/lib/piq-score";
 import { DeckInput } from "@/lib/types";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { nanoid } from "nanoid";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const rl = rateLimit(`deck-create:${ip}`, { maxRequests: 10, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+      return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
+    }
+
     const body: DeckInput = await req.json();
 
     if (!body.companyName || !body.problem || !body.solution) {
@@ -17,6 +24,23 @@ export async function POST(req: NextRequest) {
         { error: "Company name, problem, and solution are required" },
         { status: 400 }
       );
+    }
+
+    // Input length validation
+    const MAX_FIELD_LEN = 2000;
+    const MAX_LONG_FIELD_LEN = 5000;
+    const textFields = ['companyName', 'industry', 'stage', 'fundingTarget', 'investorType'];
+    const longFields = ['keyMetrics', 'teamInfo', 'problem', 'solution'];
+
+    for (const field of textFields) {
+      if (body[field as keyof DeckInput] && typeof body[field as keyof DeckInput] === 'string' && (body[field as keyof DeckInput] as string).length > MAX_FIELD_LEN) {
+        return NextResponse.json({ error: `${field} exceeds maximum length` }, { status: 400 });
+      }
+    }
+    for (const field of longFields) {
+      if (body[field as keyof DeckInput] && typeof body[field as keyof DeckInput] === 'string' && (body[field as keyof DeckInput] as string).length > MAX_LONG_FIELD_LEN) {
+        return NextResponse.json({ error: `${field} exceeds maximum length` }, { status: 400 });
+      }
     }
 
     // Get the authenticated user (optional — decks can be created without login)
@@ -32,10 +56,10 @@ export async function POST(req: NextRequest) {
       });
       userPlan = user?.plan || "starter";
 
-      const limits = getPlanLimits(userPlan);
       const deckCount = await prisma.deck.count({ where: { userId } });
+      const planLimits = getPlanLimits(userPlan);
 
-      if (deckCount >= limits.maxDecks) {
+      if (deckCount >= planLimits.maxDecks) {
         return NextResponse.json(
           {
             error: "You've reached your free deck limit. Upgrade to Pro for unlimited decks.",
@@ -44,11 +68,12 @@ export async function POST(req: NextRequest) {
           { status: 403 }
         );
       }
+    }
 
-      // Force allowed theme
-      if (body.themeId && !limits.allowedThemes.includes(body.themeId)) {
-        body.themeId = "midnight";
-      }
+    // Validate theme for ALL users (not just authenticated)
+    const limits = getPlanLimits(userPlan);
+    if (body.themeId && !limits.allowedThemes.includes(body.themeId)) {
+      body.themeId = "midnight";
     }
 
     const slides = await generateDeck(body);

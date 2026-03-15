@@ -1,12 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { IDEA_QUESTIONS } from "@/lib/generate-ideas";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const rl = rateLimit(`ideas-autofill:${ip}`, { maxRequests: 20, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+      return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
+    }
+
     const body: { questionId: string; previousAnswers?: Record<string, string> } = await req.json();
 
     if (!body.questionId) {
       return NextResponse.json({ error: "questionId is required" }, { status: 400 });
+    }
+
+    // Input length validation
+    const MAX_LEN = 2000;
+    if (body.questionId.length > MAX_LEN) {
+      return NextResponse.json({ error: "questionId exceeds maximum length" }, { status: 400 });
+    }
+    if (body.previousAnswers) {
+      for (const [key, val] of Object.entries(body.previousAnswers)) {
+        if (typeof val === 'string' && val.length > MAX_LEN) {
+          return NextResponse.json({ error: `previousAnswers.${key} exceeds maximum length` }, { status: 400 });
+        }
+      }
     }
 
     const question = IDEA_QUESTIONS.find((q) => q.id === body.questionId);

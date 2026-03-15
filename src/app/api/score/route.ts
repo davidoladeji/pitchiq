@@ -6,6 +6,7 @@ import { extractDeckText } from "@/lib/extract-deck-text";
 import { scoreDeck } from "@/lib/piq-score";
 import { SlideData } from "@/lib/types";
 import { nanoid } from "nanoid";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -14,6 +15,12 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "unknown";
+    const rl = rateLimit(`score:${ip}`, { maxRequests: 10, windowMs: 60 * 60 * 1000 });
+    if (!rl.success) {
+      return NextResponse.json({ error: "Rate limit exceeded. Please try again later." }, { status: 429 });
+    }
+
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     const companyNameOverride = formData.get("companyName") as string | null;

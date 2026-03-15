@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/db";
+import { getSession } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +22,11 @@ function AdminSetupMessage({ error }: { error: string }) {
 }
 
 export default async function AdminDashboardPage() {
+  const session = await getSession();
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   let userCount: number;
   let transactionCount: number;
   let deckCount: number;
