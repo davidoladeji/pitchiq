@@ -26,7 +26,7 @@ function formatFileSize(bytes: number): string {
 export default function DeckUploader({
   onFileSelected,
   accept = ".pdf,.pptx",
-  maxSizeMB = 10,
+  maxSizeMB = 100,
   disabled = false,
   isUploading = false,
 }: DeckUploaderProps) {

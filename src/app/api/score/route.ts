@@ -11,7 +11,7 @@ import { rateLimit } from "@/lib/rate-limit";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
 export async function POST(req: NextRequest) {
   try {
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: "File too large. Maximum size is 10MB." }, { status: 400 });
+      return NextResponse.json({ error: "File too large. Maximum size is 100MB." }, { status: 400 });
     }
 
     // Determine file type

@@ -9,7 +9,7 @@ const nextConfig = {
   },
   experimental: {
     serverActions: {
-      bodySizeLimit: "12mb",
+      bodySizeLimit: "100mb",
     },
   },
   async headers() {
