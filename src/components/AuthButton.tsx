@@ -30,7 +30,7 @@ export default function AuthButton() {
       <button
         type="button"
         onClick={() => signIn()}
-        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium text-navy shadow-sm hover:bg-gray-100 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium text-current opacity-70 hover:opacity-100 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
         aria-label="Sign in to PitchIQ"
       >
         Sign in

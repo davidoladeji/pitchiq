@@ -53,36 +53,36 @@ export default function DeckViewerClient() {
           Skip to main content
         </a>
         <AppNav
-          actions={<div className="h-9 w-28 rounded-lg bg-gray-200 animate-pulse" />}
+          actions={<div className="h-9 w-28 rounded-lg bg-navy-100 animate-pulse" />}
         />
         <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
-              <div className="h-8 w-48 mx-auto rounded-lg bg-gray-200 animate-pulse mb-3" />
-              <div className="h-4 w-16 mx-auto rounded bg-gray-100 animate-pulse" />
+              <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse mb-3" />
+              <div className="h-4 w-16 mx-auto rounded bg-navy-50 animate-pulse" />
             </div>
             <div className="space-y-6">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="aspect-video rounded-2xl bg-gray-100 border border-gray-100 animate-pulse"
+                  className="aspect-video rounded-2xl bg-navy-50 border border-navy-50 animate-pulse"
                   style={{ animationDelay: `${i * 100}ms` }}
                 >
                   <div className="h-full flex flex-col justify-center p-8 md:p-12">
-                    <div className="h-10 w-3/4 max-w-md rounded-lg bg-gray-200/80 mb-4" />
-                    <div className="h-5 w-1/2 max-w-xs rounded bg-gray-200/60 mb-6" />
+                    <div className="h-10 w-3/4 max-w-md rounded-lg bg-navy-100 mb-4" />
+                    <div className="h-5 w-1/2 max-w-xs rounded bg-navy-100/80 mb-6" />
                     <div className="space-y-2">
-                      <div className="h-4 w-full rounded bg-gray-200/50" />
-                      <div className="h-4 w-4/5 rounded bg-gray-200/50" />
-                      <div className="h-4 w-2/3 rounded bg-gray-200/50" />
+                      <div className="h-4 w-full rounded bg-navy-50" />
+                      <div className="h-4 w-4/5 rounded bg-navy-50" />
+                      <div className="h-4 w-2/3 rounded bg-navy-50" />
                     </div>
                   </div>
                 </div>
               ))}
             </div>
             <div className="flex justify-center mt-8 gap-3">
-              <div className="h-10 w-24 rounded-xl bg-gray-200 animate-pulse" />
-              <div className="h-10 w-24 rounded-xl bg-gray-200 animate-pulse" />
+              <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse" />
+              <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse" />
             </div>
           </div>
         </main>
@@ -165,7 +165,7 @@ export default function DeckViewerClient() {
                   <button
                     type="button"
                     onClick={handleCopyLink}
-                    className="min-h-[44px] min-w-[44px] shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-electric text-white text-sm font-medium shadow-sm hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="min-h-[44px] min-w-[44px] shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-electric text-white text-sm font-medium shadow-sm hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                     aria-label={copied ? "Link copied to clipboard" : "Copy share link"}
                   >
                     {copied ? (
@@ -201,7 +201,7 @@ export default function DeckViewerClient() {
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-gray-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-gray-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -210,7 +210,7 @@ export default function DeckViewerClient() {
               </Link>
               <Link
                 href="/create"
-                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
               >
                 Create New Deck
               </Link>
@@ -233,7 +233,7 @@ export default function DeckViewerClient() {
                   </div>
                   <Link
                     href="/#pricing"
-                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                   >
                     View Plans
                   </Link>

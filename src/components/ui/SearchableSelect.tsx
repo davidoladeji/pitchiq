@@ -100,7 +100,7 @@ export default function SearchableSelect({ options, value, onChange, placeholder
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 transition-colors p-1"
           tabIndex={-1}
           aria-label="Toggle dropdown"
         >
@@ -142,7 +142,7 @@ export default function SearchableSelect({ options, value, onChange, placeholder
       )}
 
       {open && filtered.length === 0 && query.trim() && (
-        <div className="absolute z-50 mt-1 w-full rounded-xl bg-white border border-gray-200 shadow-lg py-3 px-4 text-sm text-gray-400">
+        <div className="absolute z-50 mt-1 w-full rounded-xl bg-white border border-gray-200 shadow-lg py-3 px-4 text-sm text-gray-500">
           No match — using &ldquo;{query}&rdquo; as custom industry
         </div>
       )}

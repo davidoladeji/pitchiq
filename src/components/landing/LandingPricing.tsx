@@ -134,15 +134,18 @@ export default function LandingPricing() {
     }
   };
 
+  const starterTier = TIERS[0];
+  const proTier = TIERS[1];
+
   return (
-    <section id="pricing" aria-label="Pricing and plans" className="py-24 md:py-32 px-6">
-      <div className="max-w-5xl mx-auto" ref={ref}>
+    <section id="pricing" aria-label="Pricing and plans" className="section-py px-6 bg-white">
+      <div className="max-w-3xl mx-auto" ref={ref}>
         <div className="text-center mb-16">
-          <p className="text-electric font-semibold text-xs uppercase tracking-[0.2em] mb-3">Pricing</p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-navy tracking-tight mb-4">
+          <p className="text-xs tracking-[0.2em] uppercase text-zinc-400 mb-4">PRICING</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-navy tracking-[-0.02em] mb-4">
             Start free, scale when ready
           </h2>
-          <p className="text-gray-500 text-lg">No surprises. Cancel anytime.</p>
+          <p className="text-zinc-400 text-lg font-light">No surprises. Cancel anytime.</p>
           {error && (
             <p className="mt-3 text-red-500 text-sm font-medium" role="alert">
               {error}
@@ -150,107 +153,140 @@ export default function LandingPricing() {
           )}
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 items-stretch">
-          {TIERS.map((tier, i) => {
-            const isPaidPlan = !!tier.plan;
-            const isLoading = loadingPlan === tier.plan;
+        <div
+          className={`grid md:grid-cols-2 gap-6 items-stretch transition-all duration-700 ease-out ${
+            inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
+        >
+          {/* Starter Card */}
+          <div
+            role="group"
+            aria-label="Starter plan"
+            className="relative flex flex-col rounded-2xl border border-zinc-200 p-8"
+          >
+            <h3 className="text-base font-bold tracking-tight text-navy">
+              {starterTier.name}
+            </h3>
+            <p className="text-xs mt-1 mb-6 text-zinc-400">
+              {starterTier.desc}
+            </p>
 
-            return (
-              <div
-                key={tier.name}
-                role="group"
-                aria-label={tier.highlight ? `${tier.name} plan, most popular` : `${tier.name} plan`}
-                className={`relative flex flex-col rounded-2xl p-6 transition-all duration-500 h-full ${
-                  tier.highlight
-                    ? "bg-navy text-white shadow-xl ring-1 ring-white/10 lg:scale-[1.04] lg:-my-2"
-                    : "bg-white border border-gray-200 hover:shadow-card-hover hover:border-electric/15 hover:-translate-y-0.5"
-                } ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
-                style={{ transitionDelay: inView ? `${i * 80}ms` : "0ms" }}
-              >
-                {tier.highlight && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-electric text-white text-[10px] font-bold tracking-wide shadow-lg shadow-electric/30" aria-hidden="true">
-                    Most Popular
-                  </div>
-                )}
+            <div className="flex items-baseline gap-0.5 mb-8">
+              <span className="text-4xl font-bold tracking-tight text-navy">{starterTier.price}</span>
+            </div>
 
-                <h3 className={`text-base font-bold tracking-tight ${tier.highlight ? "text-white" : "text-navy"}`}>
-                  {tier.name}
-                </h3>
-                <p className={`text-xs mt-0.5 mb-4 ${tier.highlight ? "text-gray-400" : "text-gray-500"}`}>
-                  {tier.desc}
-                </p>
+            <ul className="space-y-3 mb-8 flex-1">
+              {starterTier.features.map((f) => (
+                <li key={f} className="flex items-center gap-3 text-sm">
+                  <svg
+                    className="w-4 h-4 shrink-0 text-electric"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-zinc-500">{f}</span>
+                </li>
+              ))}
+            </ul>
 
-                <div className="flex items-baseline gap-0.5 mb-5">
-                  <span className="text-3xl font-bold tracking-tight">{tier.price}</span>
-                  {tier.unit && (
-                    <span className={`text-sm ${tier.highlight ? "text-gray-400" : "text-gray-500"}`}>{tier.unit}</span>
-                  )}
-                </div>
+            <Link
+              href={starterTier.href}
+              aria-label="Get started with Starter plan"
+              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-zinc-100 text-navy transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            >
+              {starterTier.cta}
+            </Link>
+          </div>
 
-                <ul className="space-y-2.5 mb-6 flex-1">
-                  {tier.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-sm">
-                      <svg
-                        className={`w-3.5 h-3.5 shrink-0 ${tier.highlight ? "text-electric-200" : "text-electric"}`}
-                        fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          {/* Pro Card */}
+          <div
+            role="group"
+            aria-label="Pro plan, most popular"
+            className="relative flex flex-col rounded-2xl border border-electric p-8"
+          >
+            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide">
+              Popular
+            </div>
+
+            <h3 className="text-base font-bold tracking-tight text-navy">
+              {proTier.name}
+            </h3>
+            <p className="text-xs mt-1 mb-6 text-zinc-400">
+              {proTier.desc}
+            </p>
+
+            <div className="flex items-baseline gap-0.5 mb-8">
+              <span className="text-4xl font-bold tracking-tight text-navy">{proTier.price}</span>
+              <span className="text-sm text-zinc-400">{proTier.unit}</span>
+            </div>
+
+            <ul className="space-y-3 mb-8 flex-1">
+              {proTier.features.map((f) => (
+                <li key={f} className="flex items-center gap-3 text-sm">
+                  <svg
+                    className="w-4 h-4 shrink-0 text-electric"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-zinc-500">{f}</span>
+                </li>
+              ))}
+            </ul>
+
+            {(() => {
+              const isLoading = loadingPlan === proTier.plan;
+              return (
+                <button
+                  type="button"
+                  onClick={() => handleCheckout(proTier.plan!)}
+                  disabled={!!loadingPlan}
+                  aria-busy={isLoading}
+                  aria-label={
+                    isLoading
+                      ? "Setting up Pro checkout..."
+                      : "Start free trial — Pro plan"
+                  }
+                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
+                >
+                  {isLoading ? (
+                    <span className="inline-flex items-center gap-2">
+                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
-                      <span className={tier.highlight ? "text-gray-300" : "text-gray-500"}>{f}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {isPaidPlan ? (
-                  <button
-                    type="button"
-                    onClick={() => handleCheckout(tier.plan!)}
-                    disabled={!!loadingPlan}
-                    aria-busy={isLoading}
-                    aria-label={
-                      isLoading
-                        ? `Setting up ${tier.name} checkout...`
-                        : `Start free trial — ${tier.name} plan`
-                    }
-                    className={`mt-auto w-full text-center min-h-[44px] flex items-center justify-center py-2.5 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0 ${
-                      tier.highlight
-                        ? "bg-electric text-white shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30 focus-visible:ring-offset-navy"
-                        : "bg-gray-50 text-navy border border-gray-200 hover:border-electric/20 hover:shadow-sm"
-                    }`}
-                  >
-                    {isLoading ? (
-                      <span className="inline-flex items-center gap-2">
-                        <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        Setting up...
-                      </span>
-                    ) : (
-                      tier.cta
-                    )}
-                  </button>
-                ) : (
-                  <Link
-                    href={tier.href}
-                    aria-label={
-                      tier.cta === "Contact Sales"
-                        ? "Contact sales for Enterprise plan"
-                        : `Get started with ${tier.name} plan`
-                    }
-                    className={`mt-auto w-full text-center min-h-[44px] flex items-center justify-center py-2.5 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
-                      tier.highlight
-                        ? "bg-electric text-white shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30 focus-visible:ring-offset-navy"
-                        : "bg-gray-50 text-navy border border-gray-200 hover:border-electric/20 hover:shadow-sm"
-                    }`}
-                  >
-                    {tier.cta}
-                  </Link>
-                )}
-              </div>
-            );
-          })}
+                      Setting up...
+                    </span>
+                  ) : (
+                    proTier.cta
+                  )}
+                </button>
+              );
+            })()}
+          </div>
         </div>
+
+        {/* Additional plans text */}
+        <p
+          className={`text-center mt-10 text-sm text-zinc-400 transition-all duration-700 ease-out delay-200 ${
+            inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+        >
+          Need more?{" "}
+          <button
+            type="button"
+            onClick={() => handleCheckout("growth")}
+            disabled={!!loadingPlan}
+            className="text-electric hover:underline font-medium disabled:opacity-70"
+          >
+            Growth ($79/mo)
+          </button>{" "}
+          and{" "}
+          <Link href="#" className="text-electric hover:underline font-medium">
+            Enterprise
+          </Link>{" "}
+          plans available.
+        </p>
       </div>
     </section>
   );

@@ -15,7 +15,8 @@ export function AdminLogoutButton() {
     <button
       type="button"
       onClick={handleLogout}
-      className="text-gray-600 hover:text-gray-900"
+      aria-label="Log out of admin"
+      className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg px-3 text-gray-600 hover:text-gray-900 focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:outline-none"
     >
       Logout
     </button>

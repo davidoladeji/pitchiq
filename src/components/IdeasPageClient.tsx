@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import AppNav from "@/components/AppNav";
@@ -20,6 +20,15 @@ export default function IdeasPageClient() {
   const [ideas, setIdeas] = useState<BusinessIdea[] | null>(null);
   const [deckLoadingId, setDeckLoadingId] = useState<number | null>(null);
   const [autofilling, setAutofilling] = useState<Record<string, boolean>>({});
+  const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  /** When ideas load, move focus to results heading so keyboard/screen reader users land on the new content (WCAG 2.1 AA, founder-first). */
+  useEffect(() => {
+    if (ideas?.length) {
+      const t = setTimeout(() => resultsHeadingRef.current?.focus({ preventScroll: true }), 200);
+      return () => clearTimeout(t);
+    }
+  }, [ideas]);
 
   const currentQuestion = IDEA_QUESTIONS[step];
   const answerPayload: IdeaQuestionAnswer[] = IDEA_QUESTIONS.map((q) => ({
@@ -206,7 +215,11 @@ export default function IdeasPageClient() {
 
         <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
-            <h1 className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight">
+            <h1
+              ref={resultsHeadingRef}
+              tabIndex={-1}
+              className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight outline-none focus:outline-none"
+            >
               Here are your ideas
             </h1>
             <p className="text-gray-500 text-sm mb-8">
@@ -216,7 +229,7 @@ export default function IdeasPageClient() {
               {ideas.map((idea, i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:border-electric/20 hover:shadow-md transition-all"
+                  className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:border-electric/20 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div>
@@ -330,7 +343,7 @@ export default function IdeasPageClient() {
             type="button"
             onClick={handleSurpriseMe}
             disabled={loading}
-            className="w-full mb-6 p-4 rounded-2xl border-2 border-dashed border-electric/20 bg-electric/[0.02] hover:bg-electric/[0.05] hover:border-electric/30 transition-all text-left group disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            className="w-full mb-6 p-4 rounded-2xl border-2 border-dashed border-electric/20 bg-electric/[0.02] hover:bg-electric/[0.05] hover:border-electric/30 transition-all text-left group disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 active:scale-[0.99]"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-electric/10 flex items-center justify-center shrink-0 group-hover:bg-electric group-hover:text-white text-electric transition-all">
@@ -369,7 +382,11 @@ export default function IdeasPageClient() {
           {/* Question card */}
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
             {/* Progress */}
-            <div className="flex items-center gap-3 mb-6">
+            <div
+              className="flex items-center gap-3 mb-6"
+              role="group"
+              aria-label={`Question ${step + 1} of ${IDEA_QUESTIONS.length}`}
+            >
               <span className="text-xs font-semibold text-gray-600 tabular-nums shrink-0">
                 {step + 1}/{IDEA_QUESTIONS.length}
               </span>
@@ -380,6 +397,7 @@ export default function IdeasPageClient() {
                     className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
                       i <= step ? "bg-electric" : "bg-gray-100"
                     }`}
+                    aria-hidden="true"
                   />
                 ))}
               </div>
@@ -480,7 +498,7 @@ export default function IdeasPageClient() {
                         type="button"
                         onClick={handleNext}
                         disabled={!canAdvance}
-                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                       >
                         Next
                       </button>
@@ -489,7 +507,7 @@ export default function IdeasPageClient() {
                         type="button"
                         onClick={handleSubmit}
                         disabled={!canSubmit}
-                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                       >
                         Generate ideas
                       </button>

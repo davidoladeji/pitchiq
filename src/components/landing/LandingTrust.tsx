@@ -23,21 +23,30 @@ const ITEMS = [
 
 export default function LandingTrust() {
   return (
-    <section className="py-16 px-6 bg-gray-50/70 border-y border-gray-100">
+    <section className="py-10 px-6 bg-navy" aria-label="Trust and security — your data stays yours">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-center text-xl sm:text-2xl font-bold text-navy tracking-tight mb-8">
-          Your data stays yours
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {ITEMS.map((item) => (
-            <div key={item.title} className="text-center p-4 rounded-xl bg-white border border-gray-100">
-              <div className="w-9 h-9 rounded-lg bg-electric/[0.06] flex items-center justify-center mx-auto mb-2.5 text-electric">
-                <svg className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-                </svg>
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-0">
+          {ITEMS.map((item, i) => (
+            <div
+              key={item.title}
+              className={`flex-1 flex items-start gap-3 px-6 py-2 ${
+                i < ITEMS.length - 1 ? "md:border-r md:border-zinc-800" : ""
+              }`}
+            >
+              <svg
+                className="w-4 h-4 shrink-0 mt-0.5 text-white/40"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+              </svg>
+              <div>
+                <h3 className="text-white text-sm font-medium leading-tight">{item.title}</h3>
+                <p className="text-zinc-500 text-xs mt-0.5">{item.desc}</p>
               </div>
-              <h3 className="font-semibold text-navy text-sm mb-0.5">{item.title}</h3>
-              <p className="text-gray-500 text-xs">{item.desc}</p>
             </div>
           ))}
         </div>

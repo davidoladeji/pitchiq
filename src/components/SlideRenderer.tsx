@@ -3,6 +3,7 @@
 import { SlideData } from "@/lib/types";
 import { getTheme, ThemeDef } from "@/lib/themes";
 import { useState, useEffect, useCallback, useImperativeHandle, forwardRef, CSSProperties } from "react";
+import CompanyLogo from "@/components/CompanyLogo";
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   LineChart, Line, AreaChart, Area,
@@ -47,7 +48,7 @@ const headingStyle: CSSProperties = {
   fontWeight: "var(--t-heading-weight)" as unknown as number,
 };
 
-function TitleSlide({ slide, companyName }: { slide: SlideData; companyName: string }) {
+function TitleSlide({ slide, companyName, accentHex }: { slide: SlideData; companyName: string; accentHex?: string }) {
   return (
     <div
       className="flex flex-col items-center justify-center h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
@@ -60,10 +61,8 @@ function TitleSlide({ slide, companyName }: { slide: SlideData; companyName: str
         aria-hidden="true"
       />
       <div className="relative z-10 flex flex-col items-center text-center max-w-3xl">
-        <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 md:mb-8 shadow-dark-card" aria-hidden="true">
-          <span className="text-xl md:text-2xl font-bold" style={{ color: "var(--t-accent-light)" }}>
-            {companyName[0]}
-          </span>
+        <div className="mb-6 md:mb-8">
+          <CompanyLogo companyName={companyName} size={56} accentColor={accentHex || "#4361ee"} />
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 tracking-tight leading-[1.1]" style={headingStyle}>
           {slide.title}
@@ -537,7 +536,7 @@ function ComparisonSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; a
   );
 }
 
-function CtaSlide({ slide, companyName }: { slide: SlideData; companyName: string }) {
+function CtaSlide({ slide, companyName, accentHex }: { slide: SlideData; companyName: string; accentHex?: string }) {
   return (
     <div
       className="flex flex-col items-center justify-center h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
@@ -563,9 +562,7 @@ function CtaSlide({ slide, companyName }: { slide: SlideData; companyName: strin
             </p>
           ))}
         </div>
-        <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-dark-card" aria-hidden="true">
-          <span className="text-base md:text-xl font-bold" style={{ color: "var(--t-accent-light)" }}>{companyName[0]}</span>
-        </div>
+        <CompanyLogo companyName={companyName} size={44} accentColor={accentHex || "#4361ee"} />
       </div>
     </div>
   );
@@ -574,7 +571,7 @@ function CtaSlide({ slide, companyName }: { slide: SlideData; companyName: strin
 function renderSlide(slide: SlideData, companyName: string, accentHex?: string) {
   switch (slide.type) {
     case "title":
-      return <TitleSlide slide={slide} companyName={companyName} />;
+      return <TitleSlide slide={slide} companyName={companyName} accentHex={accentHex} />;
     case "chart":
       return <ChartSlide slide={slide} accent={slide.accent} />;
     case "metrics":
@@ -588,7 +585,7 @@ function renderSlide(slide: SlideData, companyName: string, accentHex?: string) 
     case "comparison":
       return <ComparisonSlide slide={slide} accentHex={accentHex} />;
     case "cta":
-      return <CtaSlide slide={slide} companyName={companyName} />;
+      return <CtaSlide slide={slide} companyName={companyName} accentHex={accentHex} />;
     default:
       return <ContentSlide slide={slide} accent={slide.accent} />;
   }

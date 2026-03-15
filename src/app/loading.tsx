@@ -5,7 +5,11 @@
  */
 export default function RootLoading() {
   return (
-    <div className="min-h-screen overflow-hidden bg-white">
+    <div className="min-h-screen overflow-hidden bg-white" aria-busy="true">
+      {/* Screen reader: announce loading state (WCAG 2.1 AA) */}
+      <p className="sr-only" role="status" aria-live="polite">
+        Loading
+      </p>
       {/* Skip link present for a11y consistency (skeleton is non-interactive) */}
       <a
         href="#main"
@@ -55,10 +59,10 @@ export default function RootLoading() {
           </div>
         </section>
 
-        {/* Placeholder for below-fold (minimal so transition is quick) */}
-        <section className="py-12 px-6 bg-gray-50/50">
+        {/* Placeholder for below-fold (minimal so transition is quick) — navy-tinted for design-system consistency */}
+        <section className="py-12 px-6 bg-navy-50/50">
           <div className="max-w-4xl mx-auto">
-            <div className="h-6 w-64 rounded bg-gray-200 animate-pulse mx-auto" />
+            <div className="h-6 w-64 rounded bg-navy-100 animate-pulse mx-auto" />
           </div>
         </section>
       </main>

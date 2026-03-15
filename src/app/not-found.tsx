@@ -32,33 +32,38 @@ export default function NotFound() {
           </span>
         </Link>
 
-        {/* 404 content */}
+        {/* 404 content — h1 is semantic ("Page not found"); 404 is visual only for clarity */}
         <div className="text-center max-w-md">
-          <p className="text-electric font-semibold text-sm uppercase tracking-widest mb-4">
+          <h1 className="sr-only">Page not found</h1>
+          <p className="text-electric font-semibold text-sm uppercase tracking-widest mb-2" aria-hidden="true">
             Page not found
           </p>
-          <h1 className="text-4xl sm:text-5xl font-bold text-navy mb-3 tracking-tight">
+          <p className="text-4xl sm:text-5xl font-bold text-navy mb-3 tracking-tight" aria-hidden="true">
             404
-          </h1>
+          </p>
           <p className="text-gray-500 mb-10 text-base leading-relaxed">
             This page doesn&apos;t exist or may have been moved. Head back and
             create your pitch deck instead.
           </p>
 
-          {/* CTAs — primary + conversion secondary */}
+          {/* CTAs — primary (home) + conversion (create) with design-system gradient ring */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/"
+              aria-label="Go to PitchIQ home"
               className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-navy text-white font-semibold text-sm shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Go to PitchIQ
             </Link>
-            <Link
-              href="/create"
-              className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-6 py-3.5 rounded-xl border border-electric/30 text-electric font-semibold text-sm shadow-sm hover:bg-electric/5 hover:border-electric/50 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-            >
-              Create your deck
-            </Link>
+            <span className="block w-full sm:w-auto rounded-xl p-[2px] bg-gradient-to-r from-electric via-violet to-electric shadow-glow shadow-electric/20">
+              <Link
+                href="/create"
+                aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
+                className="min-h-[44px] w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-[10px] bg-electric text-white font-semibold text-sm shadow-sm hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/20 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                Create your deck
+              </Link>
+            </span>
           </div>
         </div>
       </main>

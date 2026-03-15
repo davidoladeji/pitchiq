@@ -184,6 +184,12 @@ export default function CreatePageClient({
                 </svg>
                 Takes about 60 seconds
               </p>
+              <p className="mt-2 text-gray-500 text-sm">
+                Already have a deck?{" "}
+                <Link href="/score" className="text-electric font-medium hover:underline">
+                  Upload &amp; score it →
+                </Link>
+              </p>
               {!showIdeaPrompt && (
                 <p className="mt-4">
                   <button

@@ -24,6 +24,8 @@ model Deck {
   isPremium     Boolean  @default(false)
   themeId       String   @default("midnight")
   piqScore      String   @default("{}") // JSON string of PIQScore
+  source        String   @default("generated") // "generated" | "uploaded"
+  originalFileName String? // original file name for uploaded decks
   userId        String?
   owner         User?    @relation("UserDecks", fields: [userId], references: [id])
   createdAt     DateTime @default(now())

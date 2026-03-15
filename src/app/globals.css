@@ -3,10 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --background: #fafafa;
+  --background: #FFFFFF;
   --foreground: #1a1a2e;
   --electric: #4361ee;
   --navy: #1a1a2e;
+  --section-py: 6rem;
+  --section-py-lg: 8rem;
 }
 
 body {
@@ -40,7 +42,7 @@ html {
   }
 }
 
-/* Premium focus styles */
+/* Focus styles */
 *:focus-visible {
   outline: 2px solid #4361ee;
   outline-offset: 2px;
@@ -48,32 +50,40 @@ html {
 }
 
 @layer utilities {
-  /* Enhanced glassmorphism — inspired by serviceplan-agents.com */
+  .section-py {
+    padding-top: var(--section-py);
+    padding-bottom: var(--section-py);
+  }
+  @media (min-width: 1024px) {
+    .section-py {
+      padding-top: var(--section-py-lg);
+      padding-bottom: var(--section-py-lg);
+    }
+  }
+
+  /* Glassmorphism */
   .glass {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(24px) saturate(140%);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
   }
 
   .glass-dark {
-    background: rgba(10, 10, 22, 0.6);
-    backdrop-filter: blur(24px) saturate(140%);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    background: rgba(26, 26, 46, 0.8);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .glass-card {
-    background: rgba(255, 255, 255, 0.54);
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      0 6px 20px rgba(0, 0, 0, 0.06);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #4361ee 0%, #7c3aed 50%, #4361ee 100%);
+    background: linear-gradient(135deg, #4361ee 0%, #8B5CF6 50%, #4361ee 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -81,28 +91,24 @@ html {
   }
 
   .text-gradient-light {
-    background: linear-gradient(135deg, #93a5f6 0%, #c4b5fd 100%);
+    background: linear-gradient(135deg, #A5B4FC 0%, #C4B5FD 50%, #A5B4FC 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  .bg-grid {
-    background-image: linear-gradient(
-        rgba(67, 97, 238, 0.03) 1px,
-        transparent 1px
-      ),
-      linear-gradient(90deg, rgba(67, 97, 238, 0.03) 1px, transparent 1px);
-    background-size: 64px 64px;
+  .bg-grid-dark {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
 
-  .bg-grid-dark {
-    background-image: linear-gradient(
-        rgba(255, 255, 255, 0.03) 1px,
-        transparent 1px
-      ),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 64px 64px;
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(67, 97, 238, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(67, 97, 238, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
 
   .bg-dots {
@@ -114,7 +120,6 @@ html {
     background-size: 24px 24px;
   }
 
-  /* Gradient border effect */
   .gradient-border {
     position: relative;
     background: white;
@@ -125,7 +130,7 @@ html {
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(67, 97, 238, 0.3), rgba(124, 58, 237, 0.2), rgba(67, 97, 238, 0.1));
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.3), rgba(139, 92, 246, 0.2), rgba(67, 97, 238, 0.1));
     z-index: -1;
   }
 
@@ -161,71 +166,12 @@ select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d1df;
+  background: #D4D4D8;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a3a3bf;
-}
-
-/* Pricing section scroll-triggered stagger (motion with purpose) */
-.pricing-reveal-wrapper .pricing-reveal-grid > * {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
-}
-.pricing-reveal-wrapper.revealed .pricing-reveal-grid > *:nth-child(1) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0ms;
-}
-.pricing-reveal-wrapper.revealed .pricing-reveal-grid > *:nth-child(2) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 100ms;
-}
-.pricing-reveal-wrapper.revealed .pricing-reveal-grid > *:nth-child(3) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 200ms;
-}
-
-/* Section reveal (How it works, Features) — scroll-triggered stagger */
-.section-reveal-wrapper .section-reveal-grid > * {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(1) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0ms;
-}
-.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(2) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 80ms;
-}
-.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(3) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 160ms;
-}
-.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(4) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 240ms;
-}
-.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(5) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 320ms;
-}
-.section-reveal-wrapper.revealed .section-reveal-grid > *:nth-child(6) {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 400ms;
+  background: #A1A1AA;
 }
 
 /* Noise texture overlay for dark sections */

@@ -16,6 +16,12 @@ const FEATURES = [
     pro: false,
   },
   {
+    title: "Upload & Score",
+    desc: "Already have a deck? Upload a PDF or PPTX and get your PIQ Score instantly.",
+    icon: "M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5",
+    pro: false,
+  },
+  {
     title: "12+ Design Themes",
     desc: "Midnight, Arctic, Ember, Forest, and more. Professionally designed for every brand.",
     icon: "M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z",
@@ -28,12 +34,6 @@ const FEATURES = [
     pro: true,
   },
   {
-    title: "Multi-Format Export",
-    desc: "Download as PDF with pixel-perfect fidelity. PPTX and Google Slides coming soon.",
-    icon: "M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3",
-    pro: false,
-  },
-  {
     title: "Shareable Links",
     desc: "Every deck gets a unique URL with live tracking. Share a link, not a dead PDF.",
     icon: "M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244",
@@ -42,60 +42,108 @@ const FEATURES = [
 ];
 
 export default function LandingFeatures() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
-      { threshold: 0.05 }
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const cards = section.querySelectorAll("[data-feature-card]");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = Number(
+              (entry.target as HTMLElement).dataset.featureIndex
+            );
+            setVisibleCards((prev) => new Set(prev).add(index));
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
     );
-    obs.observe(el);
-    return () => obs.disconnect();
+
+    cards.forEach((card) => observer.observe(card));
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <section id="features" className="py-24 md:py-32 px-6 bg-gray-50/70 border-y border-gray-100">
-      <div className="max-w-5xl mx-auto" ref={ref}>
-        <div className="text-center mb-16">
-          <p className="text-electric font-semibold text-xs uppercase tracking-[0.2em] mb-3">Features</p>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-navy tracking-tight mb-4">
+    <section
+      id="features"
+      className="py-24 sm:py-32 px-6 bg-zinc-50"
+      aria-label="Features — built for fundraising, not slides"
+    >
+      <div className="max-w-5xl mx-auto" ref={sectionRef}>
+        {/* Section header */}
+        <div className="text-center mb-20">
+          <span className="inline-block px-3.5 py-1.5 rounded-full bg-[#4361ee]/[0.08] text-[#4361ee] text-[11px] font-semibold uppercase tracking-[0.2em] mb-5">
+            Features
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-5xl font-bold text-[#1a1a2e] tracking-[-0.025em] mb-5 font-display leading-[1.1]">
             Built for fundraising, not slides
           </h2>
-          <p className="text-gray-500 text-lg max-w-lg mx-auto">
+          <p className="text-lg text-zinc-500 max-w-md mx-auto leading-relaxed">
             Every feature optimized for one goal: closing investor meetings.
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {FEATURES.map((feat, i) => (
-            <div
-              key={feat.title}
-              className={`group relative bg-white rounded-2xl p-6 border border-gray-100 hover:border-electric/15 hover:shadow-lg hover:-translate-y-1 transition-all duration-500 ${
-                inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-              }`}
-              style={{ transitionDelay: inView ? `${i * 70}ms` : "0ms" }}
-            >
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-xl bg-electric/[0.06] flex items-center justify-center shrink-0 text-electric group-hover:bg-electric group-hover:text-white transition-all duration-300">
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d={feat.icon} />
+        {/* Feature cards grid — 2 columns on desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          {FEATURES.map((feat, i) => {
+            const isVisible = visibleCards.has(i);
+            return (
+              <div
+                key={feat.title}
+                data-feature-card
+                data-feature-index={i}
+                className={`group relative bg-white rounded-xl p-8 border border-zinc-200 hover:border-[#1a1a2e]/20 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-500 ease-out cursor-default ${
+                  isVisible
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-6"
+                }`}
+                style={{
+                  transitionDelay: isVisible ? `${(i % 2) * 100 + 80}ms` : "0ms",
+                }}
+              >
+                {/* Icon */}
+                <div className="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center mb-5 text-zinc-600 group-hover:bg-[#4361ee] group-hover:text-white transition-all duration-300">
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d={feat.icon}
+                    />
                   </svg>
                 </div>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <h3 className="font-semibold text-navy text-[15px] tracking-tight">{feat.title}</h3>
-                    {feat.pro && (
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-electric/8 text-electric uppercase tracking-wider">Pro</span>
-                    )}
-                  </div>
-                  <p className="text-gray-500 text-sm leading-relaxed">{feat.desc}</p>
+
+                {/* Title + Pro badge */}
+                <div className="flex items-center gap-2.5 mb-2.5">
+                  <h3 className="font-semibold text-[#1a1a2e] text-base">
+                    {feat.title}
+                  </h3>
+                  {feat.pro && (
+                    <span className="px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#4361ee]/[0.08] text-[#4361ee] uppercase tracking-wider leading-none">
+                      Pro
+                    </span>
+                  )}
                 </div>
+
+                {/* Description */}
+                <p className="text-sm text-zinc-500 leading-relaxed">
+                  {feat.desc}
+                </p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

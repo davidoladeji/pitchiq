@@ -574,6 +574,7 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
             <button
               type="button"
               onClick={() => setError("")}
+              aria-label="Try generating your deck again"
               className="min-h-[44px] shrink-0 inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-dark transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Try again
@@ -642,7 +643,7 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
               disabled={loading || !canAdvance()}
               aria-busy={loading}
               aria-label={loading ? "Generating your pitch deck" : "Generate pitch deck"}
-              className="min-h-[44px] inline-flex items-center px-8 py-3.5 rounded-xl bg-electric text-white font-semibold hover:bg-electric-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-electric/20 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              className="min-h-[44px] inline-flex items-center px-8 py-3.5 rounded-xl bg-electric text-white font-semibold hover:bg-electric-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-electric/20 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               {loading ? (
                 <span className="flex items-center gap-2.5">

@@ -7,6 +7,11 @@ const nextConfig = {
       { protocol: "https", hostname: "media.licdn.com" },
     ],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "12mb",
+    },
+  },
 };
 
 export default nextConfig;
