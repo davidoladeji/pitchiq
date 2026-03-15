@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import { generateDeck } from "@/lib/generate-deck";
 import { scoreDeck } from "@/lib/piq-score";
@@ -15,6 +17,10 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Get the authenticated user (optional — decks can be created without login)
+    const session = await getServerSession(authOptions);
+    const userId = (session?.user as { id?: string })?.id || null;
 
     const slides = await generateDeck(body);
     const shareId = nanoid(10);
@@ -47,6 +53,7 @@ export async function POST(req: NextRequest) {
         slides: JSON.stringify(slides),
         themeId: body.themeId || "midnight",
         piqScore: JSON.stringify(piqScore),
+        userId,
       },
     });
 

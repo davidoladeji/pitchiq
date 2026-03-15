@@ -195,6 +195,52 @@ export default function DeckViewerClient() {
             showBranding={!deck.isPremium}
             themeId={deck.themeId}
           />
+
+          {/* Actions below deck */}
+          <div className="flex flex-col items-center gap-4 mt-8">
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-gray-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Dashboard
+              </Link>
+              <Link
+                href="/create"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              >
+                Create New Deck
+              </Link>
+            </div>
+
+            {/* Upgrade CTA for non-premium decks */}
+            {!deck.isPremium && (
+              <div className="w-full max-w-2xl rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-purple-50 p-5">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg className="w-5 h-5 text-electric shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                      </svg>
+                      <h3 className="font-bold text-navy text-sm">Upgrade to Pro</h3>
+                    </div>
+                    <p className="text-gray-500 text-xs sm:text-sm">
+                      Remove branding, unlock all themes, PPTX export, detailed analytics & engagement tracking.
+                    </p>
+                  </div>
+                  <Link
+                    href="/#pricing"
+                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                  >
+                    View Plans
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
