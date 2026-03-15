@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import AppNav from "@/components/AppNav";
 
 interface DeckSummary {
@@ -24,13 +25,46 @@ function parsePiqOverall(piqJson: string): number | null {
   }
 }
 
+const PLAN_LABELS: Record<string, { label: string; color: string }> = {
+  starter: { label: "Starter", color: "bg-gray-100 text-gray-600" },
+  pro: { label: "Pro", color: "bg-electric/10 text-electric" },
+  growth: { label: "Growth", color: "bg-purple-100 text-purple-700" },
+};
+
 export default function DashboardClient({
   decks,
   userName,
+  plan = "starter",
+  hasSubscription = false,
+  upgradedPlan,
 }: {
   decks: DeckSummary[];
   userName: string;
+  plan?: string;
+  hasSubscription?: boolean;
+  upgradedPlan?: string;
 }) {
+  const [managingBilling, setManagingBilling] = useState(false);
+  const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(!!upgradedPlan);
+  const isPaidPlan = plan !== "starter";
+  const planInfo = PLAN_LABELS[plan] || PLAN_LABELS.starter;
+
+  const handleManageBilling = async () => {
+    setManagingBilling(true);
+    try {
+      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch {
+      // Fallback to pricing page
+      window.location.href = "/#pricing";
+    } finally {
+      setManagingBilling(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#fafafa]">
       <a
@@ -53,17 +87,65 @@ export default function DashboardClient({
 
       <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight">
-            Hey {userName}
-          </h1>
-          <p className="text-gray-500 text-sm mb-8">
-            {decks.length === 0
-              ? "You haven't created any decks yet."
-              : `${decks.length} deck${decks.length === 1 ? "" : "s"}`}
-          </p>
+          {/* Upgrade success banner */}
+          {showUpgradeSuccess && upgradedPlan && (
+            <div className="mb-6 rounded-2xl border border-green-200 bg-green-50 p-5 sm:p-6 animate-fade-in">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-green-900 text-sm">Welcome to {PLAN_LABELS[upgradedPlan]?.label || "Pro"}!</h3>
+                    <p className="text-green-700 text-xs sm:text-sm">
+                      Your subscription is active. All your decks have been upgraded with premium features.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowUpgradeSuccess(false)}
+                  className="shrink-0 text-green-400 hover:text-green-600 transition-colors"
+                  aria-label="Dismiss"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          )}
 
-          {/* Upgrade CTA banner */}
-          {!decks.some((d) => d.isPremium) && (
+          <div className="flex items-start justify-between gap-4 mb-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-navy tracking-tight">
+              Hey {userName}
+            </h1>
+            <span className={`shrink-0 px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide ${planInfo.color}`}>
+              {planInfo.label}
+            </span>
+          </div>
+          <div className="flex items-center gap-4 mb-8">
+            <p className="text-gray-500 text-sm">
+              {decks.length === 0
+                ? "You haven't created any decks yet."
+                : `${decks.length} deck${decks.length === 1 ? "" : "s"}`}
+            </p>
+            {hasSubscription && (
+              <button
+                type="button"
+                onClick={handleManageBilling}
+                disabled={managingBilling}
+                className="text-xs text-gray-400 hover:text-electric font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded"
+              >
+                {managingBilling ? "Loading..." : "Manage billing"}
+              </button>
+            )}
+          </div>
+
+          {/* Upgrade CTA banner — only show for starter plan */}
+          {!isPaidPlan && (
             <div className="mb-6 rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-purple-50 p-5 sm:p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="min-w-0">
