@@ -1,4 +1,3 @@
-import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import Footer from "@/components/Footer";
 import LandingHero from "@/components/landing/LandingHero";

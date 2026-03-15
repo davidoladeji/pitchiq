@@ -19,6 +19,7 @@ export default function IdeasPageClient() {
   const [error, setError] = useState("");
   const [ideas, setIdeas] = useState<BusinessIdea[] | null>(null);
   const [deckLoadingId, setDeckLoadingId] = useState<number | null>(null);
+  const [autofilling, setAutofilling] = useState<Record<string, boolean>>({});
 
   const currentQuestion = IDEA_QUESTIONS[step];
   const answerPayload: IdeaQuestionAnswer[] = IDEA_QUESTIONS.map((q) => ({
@@ -51,6 +52,54 @@ export default function IdeasPageClient() {
     }, 1500);
     return () => clearInterval(interval);
   }, []);
+
+  const handleAutofill = useCallback(async (questionId: string) => {
+    setAutofilling((prev) => ({ ...prev, [questionId]: true }));
+    try {
+      const res = await fetch("/api/ideas/autofill", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ questionId, previousAnswers: answers }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.suggestion) {
+          setAnswers((prev) => ({ ...prev, [questionId]: data.suggestion }));
+        }
+      }
+    } catch {
+      // Silently fail — user can still type manually
+    } finally {
+      setAutofilling((prev) => ({ ...prev, [questionId]: false }));
+    }
+  }, [answers]);
+
+  const handleAutofillAll = useCallback(async () => {
+    const emptyQuestions = IDEA_QUESTIONS.filter((q) => !answers[q.id]?.trim());
+    if (emptyQuestions.length === 0) return;
+    emptyQuestions.forEach((q) => setAutofilling((prev) => ({ ...prev, [q.id]: true })));
+    await Promise.all(
+      emptyQuestions.map(async (q) => {
+        try {
+          const res = await fetch("/api/ideas/autofill", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ questionId: q.id, previousAnswers: answers }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.suggestion) {
+              setAnswers((prev) => ({ ...prev, [q.id]: data.suggestion }));
+            }
+          }
+        } catch {
+          // Silently fail
+        } finally {
+          setAutofilling((prev) => ({ ...prev, [q.id]: false }));
+        }
+      })
+    );
+  }, [answers]);
 
   const handleSubmit = useCallback(async () => {
     if (!canSubmit) return;
@@ -296,10 +345,25 @@ export default function IdeasPageClient() {
             </div>
           </button>
 
-          <div className="relative flex items-center gap-3 mb-6">
+          <div className="relative flex items-center gap-3 mb-4">
             <div className="flex-1 h-px bg-gray-200" />
             <span className="text-xs text-gray-400 font-medium">or answer questions</span>
             <div className="flex-1 h-px bg-gray-200" />
+          </div>
+
+          <div className="flex justify-end mb-4">
+            <button
+              type="button"
+              onClick={handleAutofillAll}
+              disabled={Object.values(autofilling).some(Boolean)}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
+              title="Fill all empty fields with AI suggestions"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+              </svg>
+              Autofill all empty fields
+            </button>
           </div>
 
           {/* Question card */}
@@ -333,9 +397,30 @@ export default function IdeasPageClient() {
               </div>
             ) : (
               <>
-                <label className="block text-base font-semibold text-navy mb-1">
-                  {currentQuestion.label}
-                </label>
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <label className="block text-base font-semibold text-navy">
+                    {currentQuestion.label}
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => handleAutofill(currentQuestion.id)}
+                    disabled={autofilling[currentQuestion.id]}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-electric bg-electric/[0.06] hover:bg-electric/[0.12] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    title="AI will suggest an answer you can refine"
+                  >
+                    {autofilling[currentQuestion.id] ? (
+                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                    ) : (
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+                      </svg>
+                    )}
+                    AI Suggest
+                  </button>
+                </div>
                 <p className="text-xs text-gray-400 mb-4">{currentQuestion.hint}</p>
 
                 {currentQuestion.id === "model" ? (
