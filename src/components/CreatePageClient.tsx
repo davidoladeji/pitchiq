@@ -42,58 +42,36 @@ export default function CreatePageClient() {
     setPdfExporting(true);
     setPdfExported(false);
     try {
-      const { default: jsPDF } = await import("jspdf");
+      const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
+        import("jspdf"),
+        import("html2canvas"),
+      ]);
 
+      const container = document.getElementById("pdf-slides-container");
       const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1280, 720] });
 
-      for (let i = 0; i < deck.slides.length; i++) {
-        const slide = deck.slides[i];
-        if (i > 0) pdf.addPage([1280, 720], "landscape");
-
-        if (slide.type === "title" || slide.type === "cta" || slide.accent) {
-          pdf.setFillColor(26, 26, 46);
-          pdf.rect(0, 0, 1280, 720, "F");
-          pdf.setTextColor(255, 255, 255);
-        } else {
-          pdf.setFillColor(255, 255, 255);
-          pdf.rect(0, 0, 1280, 720, "F");
-          pdf.setTextColor(26, 26, 46);
-        }
-
-        pdf.setFontSize(40);
-        pdf.setFont("helvetica", "bold");
-        pdf.text(slide.title, 80, 120);
-
-        if (slide.subtitle) {
-          pdf.setFontSize(20);
-          pdf.setFont("helvetica", "normal");
-          if (slide.type === "title" || slide.type === "cta" || slide.accent) {
-            pdf.setTextColor(180, 200, 255);
-          } else {
-            pdf.setTextColor(120, 120, 140);
+      if (container && container.children.length > 0) {
+        for (let i = 0; i < container.children.length; i++) {
+          if (i > 0) pdf.addPage([1280, 720], "landscape");
+          const el = container.children[i] as HTMLElement;
+          try {
+            const canvas = await html2canvas(el, {
+              width: 1280, height: 720, scale: 2,
+              useCORS: true, logging: false, backgroundColor: null,
+            });
+            pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 1280, 720);
+          } catch {
+            // text fallback
+            const slide = deck.slides[i];
+            const isDark = slide.type === "title" || slide.type === "cta" || slide.accent;
+            pdf.setFillColor(isDark ? 26 : 255, isDark ? 26 : 255, isDark ? 46 : 255);
+            pdf.rect(0, 0, 1280, 720, "F");
+            pdf.setTextColor(isDark ? 255 : 26, isDark ? 255 : 26, isDark ? 255 : 46);
+            pdf.setFontSize(40);
+            pdf.setFont("helvetica", "bold");
+            pdf.text(slide.title, 80, 120);
           }
-          pdf.text(slide.subtitle, 80, 160);
         }
-
-        pdf.setFontSize(18);
-        if (slide.type === "title" || slide.type === "cta" || slide.accent) {
-          pdf.setTextColor(220, 230, 255);
-        } else {
-          pdf.setTextColor(60, 60, 80);
-        }
-        pdf.setFont("helvetica", "normal");
-
-        let yPos = slide.subtitle ? 220 : 200;
-        for (const item of slide.content) {
-          const lines = pdf.splitTextToSize(`• ${item}`, 1100);
-          pdf.text(lines, 80, yPos);
-          yPos += lines.length * 28 + 12;
-        }
-
-        pdf.setFontSize(10);
-        pdf.setTextColor(150, 150, 170);
-        pdf.text("Made with PitchIQ", 80, 690);
-        pdf.text(`${i + 1} / ${deck.slides.length}`, 1180, 690);
       }
 
       pdf.save(`${deck.companyName}-pitch-deck.pdf`);
@@ -287,7 +265,7 @@ export default function CreatePageClient() {
               <button
                 type="button"
                 onClick={() => setDeck(null)}
-                className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl text-gray-500 font-medium hover:text-navy hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl text-gray-500 font-medium shadow-sm hover:text-navy hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
               >
                 Create Another
               </button>

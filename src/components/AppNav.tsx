@@ -211,7 +211,7 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
               href="/create"
               onClick={closeMenu}
               aria-current={pathname === "/create" ? "page" : undefined}
-              className="min-h-[44px] inline-flex items-center px-4 py-3 rounded-xl bg-electric text-white font-semibold hover:bg-electric-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              className="min-h-[44px] inline-flex items-center px-4 py-3 rounded-xl bg-electric text-white font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Create Deck
             </Link>

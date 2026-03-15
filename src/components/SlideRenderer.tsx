@@ -2,7 +2,7 @@
 
 import { SlideData } from "@/lib/types";
 import { getTheme, ThemeDef } from "@/lib/themes";
-import { useState, useEffect, useCallback, CSSProperties } from "react";
+import { useState, useEffect, useCallback, useImperativeHandle, forwardRef, CSSProperties } from "react";
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   LineChart, Line, AreaChart, Area,
@@ -72,14 +72,14 @@ function TitleSlide({ slide, companyName }: { slide: SlideData; companyName: str
 function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
   return (
     <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
       style={{
         background: accent ? "var(--t-bg-dark)" : "var(--t-bg-light)",
         color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
       }}
     >
       {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
-      <div className="mb-6 md:mb-8 relative z-10">
+      <div className="mb-4 md:mb-6 relative z-10 shrink-0">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
         {slide.subtitle && (
           <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: accent ? "var(--t-text-secondary)" : undefined }}>
@@ -87,8 +87,8 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
           </p>
         )}
       </div>
-      <div className="flex-1 flex flex-col justify-center space-y-3 md:space-y-4 relative z-10 max-w-3xl">
-        {slide.content.map((item, i) => (
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center space-y-3 md:space-y-4 relative z-10 max-w-3xl">
+        {slide.content.slice(0, 6).map((item, i) => (
           <div key={i} className="flex items-start gap-3 md:gap-4">
             <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accent ? "var(--t-accent-light)" : "var(--t-accent)" }} aria-hidden="true" />
             <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
@@ -102,7 +102,7 @@ function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
 function StatsSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
   return (
     <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
       style={{
         background: accent ? "var(--t-bg-dark)" : "var(--t-bg-light)",
         color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
@@ -243,11 +243,11 @@ function ChartSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
 
 function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
   const isDark = !!accent;
-  const metricsData = slide.metrics || [];
+  const metricsData = (slide.metrics || []).slice(0, 6);
 
   return (
     <div
-      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
       style={{
         background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
         color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
@@ -341,40 +341,39 @@ function TeamSlide({ slide }: { slide: SlideData }) {
 }
 
 function TimelineSlide({ slide }: { slide: SlideData }) {
-  const timelineData = slide.timeline || [];
+  const timelineData = (slide.timeline || []).slice(0, 5);
 
   return (
-    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
-      <div className="mb-6 md:mb-8">
+    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
+      <div className="mb-4 md:mb-6 shrink-0">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
       </div>
 
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center">
         {timelineData.length > 0 ? (
           <div className="relative">
-            {/* Timeline line */}
             <div className="absolute left-[18px] top-2 bottom-2 w-0.5" style={{ background: "color-mix(in srgb, var(--t-accent) 25%, transparent)" }} />
 
-            <div className="space-y-5 md:space-y-6">
+            <div className="space-y-3 md:space-y-4">
               {timelineData.map((item, i) => (
                 <div key={i} className="flex items-start gap-4 relative">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10 border-2 ${item.completed ? "border-emerald-400 bg-emerald-400/10" : ""}`}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 border-2 ${item.completed ? "border-emerald-400 bg-emerald-400/10" : ""}`}
                     style={!item.completed ? { borderColor: "var(--t-accent)", background: "color-mix(in srgb, var(--t-accent) 10%, transparent)" } : undefined}
                   >
                     {item.completed ? (
-                      <svg className="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: "var(--t-accent)" }} />
+                      <span className="w-2 h-2 rounded-full" style={{ background: "var(--t-accent)" }} />
                     )}
                   </div>
-                  <div className="pt-1">
-                    <p className="text-xs font-semibold uppercase tracking-wider opacity-50 mb-0.5">{item.date}</p>
-                    <p className="font-bold text-sm md:text-base">{item.title}</p>
-                    {item.description && <p className="text-xs md:text-sm opacity-60 mt-0.5">{item.description}</p>}
+                  <div className="pt-0.5 min-w-0">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider opacity-50 mb-0.5">{item.date}</p>
+                    <p className="font-bold text-sm">{item.title}</p>
+                    {item.description && <p className="text-xs opacity-60 mt-0.5 truncate">{item.description}</p>}
                   </div>
                 </div>
               ))}
@@ -396,23 +395,24 @@ function TimelineSlide({ slide }: { slide: SlideData }) {
 }
 
 function ComparisonSlide({ slide }: { slide: SlideData }) {
+  const items = slide.content.slice(0, 5);
   return (
-    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
-      <div className="mb-6 md:mb-8">
+    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
+      <div className="mb-4 md:mb-6 shrink-0">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
       </div>
-      <div className="flex-1 flex flex-col justify-center space-y-3 md:space-y-4 max-w-3xl">
-        {slide.content.map((item, i) => (
-          <div key={i} className="flex items-start gap-3 md:gap-4 p-4 md:p-5 rounded-xl border transition-colors" style={{ borderColor: "rgba(0,0,0,0.06)", background: "rgba(0,0,0,0.02)" }}>
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center space-y-2 md:space-y-3 max-w-3xl">
+        {items.map((item, i) => (
+          <div key={i} className="flex items-start gap-3 p-3 md:p-4 rounded-xl border transition-colors" style={{ borderColor: "rgba(0,0,0,0.06)", background: "rgba(0,0,0,0.02)" }}>
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+              className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0"
               style={{ background: "color-mix(in srgb, var(--t-accent) 10%, transparent)", border: "1px solid color-mix(in srgb, var(--t-accent) 20%, transparent)" }}
               aria-hidden="true"
             >
-              <span className="font-bold text-sm" style={{ color: "var(--t-accent)" }}>{i + 1}</span>
+              <span className="font-bold text-xs" style={{ color: "var(--t-accent)" }}>{i + 1}</span>
             </div>
-            <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-70 pt-0.5">{item}</p>
+            <p className="text-sm sm:text-base leading-relaxed opacity-70 pt-0.5">{item}</p>
           </div>
         ))}
       </div>
@@ -477,10 +477,22 @@ function renderSlide(slide: SlideData, companyName: string) {
   }
 }
 
-export default function SlideRenderer({ slides, companyName, showBranding = true, themeId }: SlideRendererProps) {
+export interface SlideRendererHandle {
+  getAllSlidesContainer: () => HTMLDivElement | null;
+}
+
+const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(function SlideRenderer({ slides, companyName, showBranding = true, themeId }, ref) {
   const theme = getTheme(themeId || "midnight");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const allSlidesRef = useCallback((node: HTMLDivElement | null) => {
+    allSlidesContainerRef.current = node;
+  }, []);
+  const allSlidesContainerRef = { current: null as HTMLDivElement | null };
+
+  useImperativeHandle(ref, () => ({
+    getAllSlidesContainer: () => document.getElementById("pdf-slides-container") as HTMLDivElement | null,
+  }));
 
   const goTo = useCallback(
     (index: number) => {
@@ -509,6 +521,29 @@ export default function SlideRenderer({ slides, companyName, showBranding = true
 
   return (
     <div className="relative" style={themeVars(theme)}>
+      {/* Hidden container with all slides for PDF export */}
+      <div
+        id="pdf-slides-container"
+        ref={allSlidesRef}
+        className="absolute left-[-9999px] top-0"
+        style={themeVars(theme)}
+        aria-hidden="true"
+      >
+        {slides.map((slide, i) => (
+          <div key={i} className="w-[1280px] h-[720px] relative overflow-hidden" style={themeVars(theme)}>
+            {renderSlide(slide, companyName)}
+            {showBranding && (
+              <div className="absolute bottom-3 left-4 text-[10px] opacity-25 font-medium tracking-wide" style={{ color: (slide.type === "title" || slide.type === "cta" || slide.accent) ? "var(--t-text)" : "var(--t-bg-dark)" }}>
+                Made with PitchIQ
+              </div>
+            )}
+            <div className="absolute bottom-3 right-4 text-xs opacity-30 font-medium font-mono tracking-wider" style={{ color: (slide.type === "title" || slide.type === "cta" || slide.accent) ? "var(--t-text)" : "var(--t-bg-dark)" }}>
+              {String(i + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div id="slide-container" className="relative aspect-[16/9] w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-premium-lg border border-gray-200/50">
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out ${isTransitioning ? "opacity-90" : "opacity-100"}`}>
           {renderSlide(slides[currentSlide], companyName)}
@@ -574,4 +609,6 @@ export default function SlideRenderer({ slides, companyName, showBranding = true
       </p>
     </div>
   );
-}
+});
+
+export default SlideRenderer;

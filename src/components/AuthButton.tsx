@@ -30,7 +30,8 @@ export default function AuthButton() {
       <button
         type="button"
         onClick={() => signIn()}
-        className="min-h-[44px] inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-navy hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium text-navy shadow-sm hover:bg-gray-100 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+        aria-label="Sign in to PitchIQ"
       >
         Sign in
       </button>
@@ -42,7 +43,7 @@ export default function AuthButton() {
       <button
         type="button"
         onClick={() => setMenuOpen((o) => !o)}
-        className="flex items-center gap-2 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+        className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
         aria-label="User menu"
         aria-expanded={menuOpen}
       >
@@ -74,14 +75,16 @@ export default function AuthButton() {
           <Link
             href="/dashboard"
             onClick={() => setMenuOpen(false)}
-            className="block px-4 py-2.5 text-sm text-navy hover:bg-gray-50 transition-colors"
+            className="min-h-[44px] flex items-center px-4 py-2.5 text-sm text-navy hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
+            aria-label="Go to dashboard"
           >
             Dashboard
           </Link>
           <button
             type="button"
             onClick={() => signOut()}
-            className="w-full text-left px-4 py-2.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-navy transition-colors"
+            className="min-h-[44px] w-full text-left px-4 py-2.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
+            aria-label="Sign out of PitchIQ"
           >
             Sign out
           </button>

@@ -89,7 +89,7 @@ export default function LandingPricing() {
   }, []);
 
   return (
-    <section id="pricing" className="py-24 md:py-32 px-6">
+    <section id="pricing" aria-label="Pricing and plans" className="py-24 md:py-32 px-6">
       <div className="max-w-5xl mx-auto" ref={ref}>
         <div className="text-center mb-16">
           <p className="text-electric font-semibold text-xs uppercase tracking-[0.2em] mb-3">Pricing</p>
@@ -99,11 +99,13 @@ export default function LandingPricing() {
           <p className="text-gray-500 text-lg">No surprises. Cancel anytime.</p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 items-start">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5 items-stretch">
           {TIERS.map((tier, i) => (
             <div
               key={tier.name}
-              className={`relative flex flex-col rounded-2xl p-6 transition-all duration-500 ${
+              role="group"
+              aria-label={tier.highlight ? `${tier.name} plan, most popular` : `${tier.name} plan`}
+              className={`relative flex flex-col rounded-2xl p-6 transition-all duration-500 h-full ${
                 tier.highlight
                   ? "bg-navy text-white shadow-xl ring-1 ring-white/10 lg:scale-[1.04] lg:-my-2"
                   : "bg-white border border-gray-200"
@@ -111,7 +113,7 @@ export default function LandingPricing() {
               style={{ transitionDelay: inView ? `${i * 80}ms` : "0ms" }}
             >
               {tier.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-electric text-white text-[10px] font-bold tracking-wide shadow-lg shadow-electric/30">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-electric text-white text-[10px] font-bold tracking-wide shadow-lg shadow-electric/30" aria-hidden="true">
                   Most Popular
                 </div>
               )}
@@ -146,9 +148,16 @@ export default function LandingPricing() {
 
               <Link
                 href={tier.href}
-                className={`mt-auto w-full text-center min-h-[42px] flex items-center justify-center py-2.5 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric ${
+                aria-label={
+                  tier.cta === "Contact Sales"
+                    ? "Contact sales for Enterprise plan"
+                    : tier.cta === "Start Free Trial"
+                    ? `Start free trial — ${tier.name} plan`
+                    : `Get started with ${tier.name} plan`
+                }
+                className={`mt-auto w-full text-center min-h-[44px] flex items-center justify-center py-2.5 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
                   tier.highlight
-                    ? "bg-electric text-white shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30"
+                    ? "bg-electric text-white shadow-lg shadow-electric/25 hover:shadow-xl hover:shadow-electric/30 focus-visible:ring-offset-navy"
                     : "bg-gray-50 text-navy border border-gray-200 hover:border-electric/20 hover:shadow-sm"
                 }`}
               >

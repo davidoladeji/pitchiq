@@ -15,6 +15,7 @@ export default function NotFound() {
 
       <main
         id="main"
+        tabIndex={-1}
         className="flex flex-1 flex-col items-center justify-center px-6 py-16"
         role="main"
       >
