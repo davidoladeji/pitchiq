@@ -184,6 +184,7 @@ export default function DeckViewerClient() {
             slides={deck.slides}
             companyName={deck.companyName}
             showBranding={!deck.isPremium}
+            themeId={deck.themeId}
           />
         </div>
       </div>

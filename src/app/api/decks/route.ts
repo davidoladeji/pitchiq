@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { generateDeck } from "@/lib/generate-deck";
+import { scoreDeck } from "@/lib/piq-score";
 import { DeckInput } from "@/lib/types";
 import { nanoid } from "nanoid";
 
@@ -18,6 +19,18 @@ export async function POST(req: NextRequest) {
     const slides = await generateDeck(body);
     const shareId = nanoid(10);
 
+    // Score the deck
+    const piqScore = await scoreDeck(slides, {
+      companyName: body.companyName,
+      industry: body.industry || "",
+      stage: body.stage || "",
+      fundingTarget: body.fundingTarget || "",
+      problem: body.problem,
+      solution: body.solution,
+      keyMetrics: body.keyMetrics || "",
+      teamInfo: body.teamInfo || "",
+    });
+
     const deck = await prisma.deck.create({
       data: {
         shareId,
@@ -32,6 +45,8 @@ export async function POST(req: NextRequest) {
         keyMetrics: body.keyMetrics || "",
         teamInfo: body.teamInfo || "",
         slides: JSON.stringify(slides),
+        themeId: body.themeId || "midnight",
+        piqScore: JSON.stringify(piqScore),
       },
     });
 
@@ -43,6 +58,8 @@ export async function POST(req: NextRequest) {
       slides,
       createdAt: deck.createdAt.toISOString(),
       isPremium: deck.isPremium,
+      themeId: deck.themeId,
+      piqScore,
     });
   } catch (error) {
     console.error("Deck generation error:", error);

@@ -1,12 +1,26 @@
 "use client";
 
 import { SlideData } from "@/lib/types";
-import { useState, useEffect, useCallback } from "react";
+import { getTheme, ThemeDef } from "@/lib/themes";
+import { useState, useEffect, useCallback, CSSProperties } from "react";
 
 interface SlideRendererProps {
   slides: SlideData[];
   companyName: string;
   showBranding?: boolean;
+  themeId?: string;
+}
+
+function themeVars(theme: ThemeDef): CSSProperties {
+  return {
+    "--t-bg-dark": theme.bgDark,
+    "--t-bg-light": theme.bgLight,
+    "--t-text": theme.textPrimary,
+    "--t-text-secondary": theme.textSecondary,
+    "--t-accent": theme.accent,
+    "--t-accent-light": theme.accentLight,
+    "--t-card-bg": theme.cardBg,
+  } as CSSProperties;
 }
 
 function TitleSlide({
@@ -17,12 +31,19 @@ function TitleSlide({
   companyName: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-hero-gradient text-white p-8 md:p-10 lg:p-12 relative overflow-hidden">
+    <div
+      className="flex flex-col items-center justify-center h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
+      style={{ background: "var(--t-bg-dark)", color: "var(--t-text)" }}
+    >
       <div className="absolute inset-0 bg-grid-dark opacity-15" aria-hidden="true" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[220px] bg-electric/10 rounded-full blur-[90px]" aria-hidden="true" />
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[220px] rounded-full blur-[90px] opacity-20"
+        style={{ background: "var(--t-accent)" }}
+        aria-hidden="true"
+      />
       <div className="relative z-10 flex flex-col items-center text-center max-w-3xl">
         <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6 md:mb-8 shadow-dark-card" aria-hidden="true">
-          <span className="text-xl md:text-2xl font-bold text-electric-200">
+          <span className="text-xl md:text-2xl font-bold" style={{ color: "var(--t-accent-light)" }}>
             {companyName[0]}
           </span>
         </div>
@@ -30,16 +51,13 @@ function TitleSlide({
           {slide.title}
         </h1>
         {slide.subtitle && (
-          <p className="text-base sm:text-lg md:text-xl text-blue-200/70 mb-6 md:mb-8 max-w-2xl leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 max-w-2xl leading-relaxed opacity-70" style={{ color: "var(--t-text-secondary)" }}>
             {slide.subtitle}
           </p>
         )}
         <div className="space-y-2 max-w-xl">
           {slide.content.map((item, i) => (
-            <p
-              key={i}
-              className="text-sm sm:text-base text-blue-100/50 leading-relaxed"
-            >
+            <p key={i} className="text-sm sm:text-base leading-relaxed opacity-50" style={{ color: "var(--t-text-secondary)" }}>
               {item}
             </p>
           ))}
@@ -58,9 +76,11 @@ function ContentSlide({
 }) {
   return (
     <div
-      className={`flex flex-col h-full p-8 md:p-10 lg:p-12 relative ${
-        accent ? "bg-hero-gradient text-white" : "bg-white text-navy"
-      }`}
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
+      style={{
+        background: accent ? "var(--t-bg-dark)" : "var(--t-bg-light)",
+        color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
+      }}
     >
       {accent && (
         <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />
@@ -70,11 +90,7 @@ function ContentSlide({
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p
-            className={`text-sm sm:text-base md:text-lg leading-relaxed ${
-              accent ? "text-blue-200/60" : "text-gray-500"
-            }`}
-          >
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: accent ? "var(--t-text-secondary)" : undefined }}>
             {slide.subtitle}
           </p>
         )}
@@ -83,16 +99,11 @@ function ContentSlide({
         {slide.content.map((item, i) => (
           <div key={i} className="flex items-start gap-3 md:gap-4">
             <span
-              className={`w-1 rounded-full mt-2 shrink-0 min-h-[1rem] ${
-                accent ? "bg-electric-200/60" : "bg-electric"
-              }`}
+              className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]"
+              style={{ background: accent ? "var(--t-accent-light)" : "var(--t-accent)" }}
               aria-hidden="true"
             />
-            <p
-              className={`text-sm sm:text-base md:text-lg leading-relaxed ${
-                accent ? "text-white/90" : "text-gray-600"
-              }`}
-            >
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">
               {item}
             </p>
           </div>
@@ -111,9 +122,11 @@ function StatsSlide({
 }) {
   return (
     <div
-      className={`flex flex-col h-full p-8 md:p-10 lg:p-12 relative ${
-        accent ? "bg-hero-gradient text-white" : "bg-[#fafafa] text-navy"
-      }`}
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12 relative"
+      style={{
+        background: accent ? "var(--t-bg-dark)" : "var(--t-bg-light)",
+        color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
+      }}
     >
       {accent && (
         <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />
@@ -123,11 +136,7 @@ function StatsSlide({
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p
-            className={`text-sm sm:text-base md:text-lg leading-relaxed ${
-              accent ? "text-blue-200/60" : "text-gray-500"
-            }`}
-          >
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: accent ? "var(--t-text-secondary)" : undefined }}>
             {slide.subtitle}
           </p>
         )}
@@ -136,17 +145,13 @@ function StatsSlide({
         {slide.content.map((item, i) => (
           <div
             key={i}
-            className={`p-4 md:p-6 rounded-xl flex items-center ${
-              accent
-                ? "bg-white/5 border border-white/10 shadow-inner-glow"
-                : "bg-white border border-gray-200/80 shadow-sm"
-            }`}
+            className="p-4 md:p-6 rounded-xl flex items-center"
+            style={{
+              background: accent ? "var(--t-card-bg)" : "var(--t-bg-light)",
+              border: accent ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.08)",
+            }}
           >
-            <p
-              className={`text-sm sm:text-base md:text-lg font-medium leading-relaxed ${
-                accent ? "text-white/90" : "text-navy"
-              }`}
-            >
+            <p className="text-sm sm:text-base md:text-lg font-medium leading-relaxed opacity-90">
               {item}
             </p>
           </div>
@@ -158,13 +163,16 @@ function StatsSlide({
 
 function ComparisonSlide({ slide }: { slide: SlideData }) {
   return (
-    <div className="flex flex-col h-full p-8 md:p-10 lg:p-12 bg-white text-navy">
+    <div
+      className="flex flex-col h-full p-8 md:p-10 lg:p-12"
+      style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}
+    >
       <div className="mb-6 md:mb-8">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 text-balance">
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p className="text-sm sm:text-base md:text-lg text-gray-500 leading-relaxed">
+          <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">
             {slide.subtitle}
           </p>
         )}
@@ -173,14 +181,19 @@ function ComparisonSlide({ slide }: { slide: SlideData }) {
         {slide.content.map((item, i) => (
           <div
             key={i}
-            className="flex items-start gap-3 md:gap-4 p-4 md:p-5 rounded-xl bg-gray-50/80 border border-gray-100 hover:border-electric/20 transition-colors"
+            className="flex items-start gap-3 md:gap-4 p-4 md:p-5 rounded-xl border transition-colors"
+            style={{ borderColor: "rgba(0,0,0,0.06)", background: "rgba(0,0,0,0.02)" }}
           >
-            <div className="w-8 h-8 rounded-lg bg-electric/10 border border-electric/20 flex items-center justify-center shrink-0" aria-hidden="true">
-              <span className="text-electric font-bold text-sm">
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: "color-mix(in srgb, var(--t-accent) 10%, transparent)", border: "1px solid color-mix(in srgb, var(--t-accent) 20%, transparent)" }}
+              aria-hidden="true"
+            >
+              <span className="font-bold text-sm" style={{ color: "var(--t-accent)" }}>
                 {i + 1}
               </span>
             </div>
-            <p className="text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed pt-0.5">
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-70 pt-0.5">
               {item}
             </p>
           </div>
@@ -198,30 +211,34 @@ function CtaSlide({
   companyName: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-navy-900 via-navy to-electric-dark text-white p-8 md:p-10 lg:p-12 relative overflow-hidden">
+    <div
+      className="flex flex-col items-center justify-center h-full p-8 md:p-10 lg:p-12 relative overflow-hidden"
+      style={{ background: "var(--t-bg-dark)", color: "var(--t-text)" }}
+    >
       <div className="absolute inset-0 bg-grid-dark opacity-15" aria-hidden="true" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[220px] bg-electric/8 rounded-full blur-[90px]" aria-hidden="true" />
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[220px] rounded-full blur-[90px] opacity-15"
+        style={{ background: "var(--t-accent)" }}
+        aria-hidden="true"
+      />
       <div className="relative z-10 flex flex-col items-center text-center max-w-2xl">
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 tracking-tight leading-tight text-balance">
           {slide.title}
         </h2>
         {slide.subtitle && (
-          <p className="text-lg md:text-xl text-blue-200/60 mb-6 md:mb-8 leading-relaxed">
+          <p className="text-lg md:text-xl mb-6 md:mb-8 leading-relaxed opacity-60" style={{ color: "var(--t-text-secondary)" }}>
             {slide.subtitle}
           </p>
         )}
         <div className="space-y-2 md:space-y-3 mb-8 max-w-xl">
           {slide.content.map((item, i) => (
-            <p
-              key={i}
-              className="text-sm sm:text-base md:text-lg text-blue-100/50 leading-relaxed"
-            >
+            <p key={i} className="text-sm sm:text-base md:text-lg leading-relaxed opacity-50" style={{ color: "var(--t-text-secondary)" }}>
               {item}
             </p>
           ))}
         </div>
         <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shadow-dark-card" aria-hidden="true">
-          <span className="text-base md:text-xl font-bold text-electric-200">
+          <span className="text-base md:text-xl font-bold" style={{ color: "var(--t-accent-light)" }}>
             {companyName[0]}
           </span>
         </div>
@@ -249,7 +266,9 @@ export default function SlideRenderer({
   slides,
   companyName,
   showBranding = true,
+  themeId,
 }: SlideRendererProps) {
+  const theme = getTheme(themeId || "midnight");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -289,7 +308,7 @@ export default function SlideRenderer({
   }, [currentSlide, goTo]);
 
   return (
-    <div className="relative">
+    <div className="relative" style={themeVars(theme)}>
       {/* Slide display */}
       <div
         id="slide-container"

@@ -1,0 +1,163 @@
+export interface ThemeDef {
+  id: string;
+  name: string;
+  bgDark: string;
+  bgLight: string;
+  textPrimary: string;
+  textSecondary: string;
+  accent: string;
+  accentLight: string;
+  cardBg: string;
+  fontFamily: string;
+}
+
+export const THEMES: ThemeDef[] = [
+  {
+    id: "midnight",
+    name: "Midnight",
+    bgDark: "#1a1a2e",
+    bgLight: "#ffffff",
+    textPrimary: "#ffffff",
+    textSecondary: "#b4c8ff",
+    accent: "#4361ee",
+    accentLight: "#6b8aff",
+    cardBg: "rgba(255,255,255,0.05)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "arctic",
+    name: "Arctic",
+    bgDark: "#0f172a",
+    bgLight: "#f0f9ff",
+    textPrimary: "#ffffff",
+    textSecondary: "#94a3b8",
+    accent: "#38bdf8",
+    accentLight: "#7dd3fc",
+    cardBg: "rgba(255,255,255,0.06)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "ember",
+    name: "Ember",
+    bgDark: "#1c1017",
+    bgLight: "#fff7ed",
+    textPrimary: "#ffffff",
+    textSecondary: "#fdba74",
+    accent: "#f97316",
+    accentLight: "#fb923c",
+    cardBg: "rgba(255,255,255,0.05)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "forest",
+    name: "Forest",
+    bgDark: "#0f1a14",
+    bgLight: "#f0fdf4",
+    textPrimary: "#ffffff",
+    textSecondary: "#86efac",
+    accent: "#22c55e",
+    accentLight: "#4ade80",
+    cardBg: "rgba(255,255,255,0.05)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "sunset",
+    name: "Sunset",
+    bgDark: "#1a0f1e",
+    bgLight: "#fdf4ff",
+    textPrimary: "#ffffff",
+    textSecondary: "#d8b4fe",
+    accent: "#a855f7",
+    accentLight: "#c084fc",
+    cardBg: "rgba(255,255,255,0.05)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "monochrome",
+    name: "Monochrome",
+    bgDark: "#111111",
+    bgLight: "#fafafa",
+    textPrimary: "#ffffff",
+    textSecondary: "#a1a1aa",
+    accent: "#ffffff",
+    accentLight: "#e4e4e7",
+    cardBg: "rgba(255,255,255,0.06)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "ocean",
+    name: "Ocean",
+    bgDark: "#0c1929",
+    bgLight: "#eff6ff",
+    textPrimary: "#ffffff",
+    textSecondary: "#93c5fd",
+    accent: "#3b82f6",
+    accentLight: "#60a5fa",
+    cardBg: "rgba(255,255,255,0.05)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "lavender",
+    name: "Lavender",
+    bgDark: "#1e1b2e",
+    bgLight: "#faf5ff",
+    textPrimary: "#ffffff",
+    textSecondary: "#c4b5fd",
+    accent: "#8b5cf6",
+    accentLight: "#a78bfa",
+    cardBg: "rgba(255,255,255,0.05)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "slate",
+    name: "Slate",
+    bgDark: "#1e293b",
+    bgLight: "#f8fafc",
+    textPrimary: "#ffffff",
+    textSecondary: "#94a3b8",
+    accent: "#64748b",
+    accentLight: "#94a3b8",
+    cardBg: "rgba(255,255,255,0.06)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "coral",
+    name: "Coral",
+    bgDark: "#1a0f0f",
+    bgLight: "#fff1f2",
+    textPrimary: "#ffffff",
+    textSecondary: "#fda4af",
+    accent: "#f43f5e",
+    accentLight: "#fb7185",
+    cardBg: "rgba(255,255,255,0.05)",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "minimal",
+    name: "Minimal",
+    bgDark: "#ffffff",
+    bgLight: "#ffffff",
+    textPrimary: "#111827",
+    textSecondary: "#6b7280",
+    accent: "#111827",
+    accentLight: "#374151",
+    cardBg: "#f9fafb",
+    fontFamily: "system-ui, sans-serif",
+  },
+  {
+    id: "bold",
+    name: "Bold",
+    bgDark: "#000000",
+    bgLight: "#ffffff",
+    textPrimary: "#ffffff",
+    textSecondary: "#fbbf24",
+    accent: "#eab308",
+    accentLight: "#fbbf24",
+    cardBg: "rgba(255,255,255,0.08)",
+    fontFamily: "system-ui, sans-serif",
+  },
+];
+
+export function getTheme(id: string): ThemeDef {
+  return THEMES.find((t) => t.id === id) || THEMES[0];
+}

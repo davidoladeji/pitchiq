@@ -5,6 +5,8 @@ import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import DeckForm from "@/components/DeckForm";
 import SlideRenderer from "@/components/SlideRenderer";
+import PIQScoreCard from "@/components/PIQScoreCard";
+import ExportMenu from "@/components/ExportMenu";
 import { DeckData } from "@/lib/types";
 
 export default function CreatePageClient() {
@@ -231,9 +233,14 @@ export default function CreatePageClient() {
               </p>
             </div>
 
+            {deck.piqScore && (
+              <PIQScoreCard score={deck.piqScore} />
+            )}
+
             <SlideRenderer
               slides={deck.slides}
               companyName={deck.companyName}
+              themeId={deck.themeId}
             />
 
             {/* Live region: announces copy success to screen readers (WCAG 2.1 AA) */}
@@ -243,27 +250,7 @@ export default function CreatePageClient() {
               </p>
             )}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 pt-4">
-              <button
-                type="button"
-                onClick={handleExportPdf}
-                disabled={pdfExporting}
-                aria-busy={pdfExporting}
-                aria-label={pdfExporting ? "Preparing PDF" : pdfExported ? "PDF downloaded" : "Download PDF"}
-                className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl bg-navy text-white font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 disabled:opacity-70 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:hover:shadow-sm"
-              >
-                {pdfExporting ? (
-                  "Preparing PDF…"
-                ) : pdfExported ? (
-                  <span className="inline-flex items-center gap-2 text-green-500">
-                    <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Downloaded!
-                  </span>
-                ) : (
-                  "Download PDF"
-                )}
-              </button>
+              <ExportMenu deck={deck} />
               <button
                 type="button"
                 onClick={handleCopyLink}

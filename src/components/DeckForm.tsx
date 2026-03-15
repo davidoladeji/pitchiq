@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { DeckInput, DeckData } from "@/lib/types";
+import { THEMES } from "@/lib/themes";
 import FormField, { inputClass } from "@/components/ui/FormField";
 
 interface DeckFormProps {
@@ -13,6 +14,7 @@ const STEPS = [
   { label: "Details", description: "Funding & stage", icon: "02" },
   { label: "Story", description: "Problem & solution", icon: "03" },
   { label: "Traction", description: "Metrics & team", icon: "04" },
+  { label: "Design", description: "Theme & brand", icon: "05" },
 ];
 
 function StepIndicator({
@@ -101,6 +103,7 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
     solution: "",
     keyMetrics: "",
     teamInfo: "",
+    themeId: "midnight",
   });
 
   const update = useCallback((field: keyof DeckInput, value: string) => {
@@ -116,8 +119,9 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
       case 2:
         return form.problem.trim() && form.solution.trim();
       case 3:
-        // Require last stage (Traction) details so generation only starts after final stage is complete
         return form.keyMetrics.trim().length > 0 && form.teamInfo.trim().length > 0;
+      case 4:
+        return true; // theme always has a default
       default:
         return false;
     }
@@ -356,6 +360,58 @@ export default function DeckForm({ onGenerated }: DeckFormProps) {
                 placeholder="Founder backgrounds, key hires, domain expertise..."
                 className={`${inputClass} resize-none`}
               />
+            </FormField>
+          </div>
+        )}
+
+        {/* Step 5: Design & Brand */}
+        {step === 4 && !loading && (
+          <div className="space-y-6 animate-fade-in">
+            <FormField label="Choose a Theme" hint="Pick a visual theme for your deck slides">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+                {THEMES.map((theme) => (
+                  <button
+                    key={theme.id}
+                    type="button"
+                    onClick={() => update("themeId", theme.id)}
+                    className={`group relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
+                      form.themeId === theme.id
+                        ? "border-electric bg-electric/5 shadow-sm"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div
+                      className="w-full aspect-[16/9] rounded-lg overflow-hidden flex items-end"
+                      style={{ background: theme.bgDark }}
+                    >
+                      <div className="w-full px-2 pb-1.5">
+                        <div
+                          className="h-1 rounded-full mb-1"
+                          style={{ background: theme.accent, width: "60%" }}
+                        />
+                        <div
+                          className="h-0.5 rounded-full opacity-40"
+                          style={{ background: theme.textSecondary, width: "80%" }}
+                        />
+                      </div>
+                    </div>
+                    <span
+                      className={`text-xs font-medium ${
+                        form.themeId === theme.id ? "text-electric" : "text-gray-500"
+                      }`}
+                    >
+                      {theme.name}
+                    </span>
+                    {form.themeId === theme.id && (
+                      <div className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-electric flex items-center justify-center">
+                        <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
             </FormField>
           </div>
         )}

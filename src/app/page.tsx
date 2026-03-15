@@ -24,7 +24,7 @@ export default function Home() {
         {/* Hero */}
         <section
           className="relative pt-32 pb-32 md:pt-40 md:pb-40 px-6 bg-hero-gradient overflow-hidden noise-overlay"
-          aria-label="PitchIQ hero"
+          aria-label="PitchIQ hero — get your PIQ Score and generate your deck"
         >
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-electric/8 rounded-full blur-[120px] pointer-events-none" />
           <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-violet/6 rounded-full blur-[110px] pointer-events-none" />
@@ -69,7 +69,7 @@ export default function Home() {
               </div>
               <Link
                 href="#how-it-works"
-                aria-label="See how PitchIQ works — three steps"
+                aria-label="See how PitchIQ works — four steps"
                 className="min-h-[44px] w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl border border-white/15 text-white/80 font-semibold text-lg shadow-sm hover:bg-white/5 hover:border-white/25 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a16]"
               >
                 See How It Works
@@ -99,7 +99,7 @@ export default function Home() {
         {/* Demo Preview — PIQ Score gauge */}
         <section
           className="relative -mt-20 pb-24 px-6 z-10"
-          aria-label="Product preview"
+          aria-label="Product preview — example PIQ Score and deck"
         >
           <DemoPreviewReveal>
             <div className="relative group">
@@ -158,7 +158,7 @@ export default function Home() {
         <section
           id="how-it-works"
           className="py-28 md:py-32 px-6"
-          aria-label="How it works"
+          aria-label="How it works — four steps to fundraising clarity"
         >
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-20">

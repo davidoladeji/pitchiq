@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState, useCallback, useEffect } from "react";
+import AuthButton from "@/components/AuthButton";
 
 const SCROLL_THRESHOLD_PX = 80;
 
@@ -26,6 +28,7 @@ const logoBlock = (
 );
 
 export default function AppNav({ variant = "app", actions }: AppNavProps) {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -69,7 +72,10 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
       >
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {logoBlock}
-          {actions}
+          <div className="flex items-center gap-2 sm:gap-3">
+            {actions}
+            <AuthButton />
+          </div>
         </div>
       </nav>
     );
@@ -89,24 +95,29 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
           <div className="hidden md:flex items-center gap-1">
             <a
               href="#features"
+              aria-label="Jump to Features section"
               className="min-h-[44px] min-w-[44px] inline-flex items-center px-3 text-sm text-gray-500 hover:text-navy transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Features
             </a>
             <a
               href="#pricing"
+              aria-label="Jump to Pricing section"
               className="min-h-[44px] min-w-[44px] inline-flex items-center px-3 text-sm text-gray-500 hover:text-navy transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Pricing
             </a>
             <Link
               href="/ideas"
+              aria-current={pathname === "/ideas" ? "page" : undefined}
               className="min-h-[44px] inline-flex items-center px-3 py-2.5 rounded-lg text-sm text-gray-500 hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Get Ideas
             </Link>
+            <AuthButton />
             <Link
               href="/create"
+              aria-current={pathname === "/create" ? "page" : undefined}
               className="min-h-[44px] inline-flex items-center px-6 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Create Deck
@@ -117,12 +128,14 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
           <div className="flex md:hidden items-center gap-2">
             <Link
               href="/ideas"
+              aria-current={pathname === "/ideas" ? "page" : undefined}
               className="min-h-[44px] inline-flex items-center px-3 py-2.5 rounded-lg text-navy text-sm font-medium hover:bg-gray-100 transition-colors focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Ideas
             </Link>
             <Link
               href="/create"
+              aria-current={pathname === "/create" ? "page" : undefined}
               className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Create Deck
@@ -172,6 +185,7 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
             <a
               href="#features"
               onClick={closeMenu}
+              aria-label="Jump to Features section"
               className="min-h-[44px] inline-flex items-center px-4 py-3 rounded-xl text-navy font-medium hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Features
@@ -179,10 +193,27 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
             <a
               href="#pricing"
               onClick={closeMenu}
+              aria-label="Jump to Pricing section"
               className="min-h-[44px] inline-flex items-center px-4 py-3 rounded-xl text-navy font-medium hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
             >
               Pricing
             </a>
+            <Link
+              href="/ideas"
+              onClick={closeMenu}
+              aria-current={pathname === "/ideas" ? "page" : undefined}
+              className="min-h-[44px] inline-flex items-center px-4 py-3 rounded-xl text-navy font-medium hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            >
+              Get Ideas
+            </Link>
+            <Link
+              href="/create"
+              onClick={closeMenu}
+              aria-current={pathname === "/create" ? "page" : undefined}
+              className="min-h-[44px] inline-flex items-center px-4 py-3 rounded-xl bg-electric text-white font-semibold hover:bg-electric-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            >
+              Create Deck
+            </Link>
           </div>
         </div>
       </div>

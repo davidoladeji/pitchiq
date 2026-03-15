@@ -26,6 +26,14 @@ export async function GET(
       },
     });
 
+    let piqScore;
+    try {
+      piqScore = JSON.parse(deck.piqScore);
+      if (!piqScore.overall) piqScore = undefined;
+    } catch {
+      piqScore = undefined;
+    }
+
     return NextResponse.json({
       id: deck.id,
       shareId: deck.shareId,
@@ -34,6 +42,8 @@ export async function GET(
       slides: JSON.parse(deck.slides),
       createdAt: deck.createdAt.toISOString(),
       isPremium: deck.isPremium,
+      themeId: deck.themeId,
+      piqScore,
     });
   } catch (error) {
     console.error("Deck fetch error:", error);
