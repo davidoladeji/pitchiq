@@ -28,8 +28,6 @@ export default function CreatePageClient({
   const limits = getPlanLimits(userPlan);
   const [deck, setDeck] = useState<DeckData | null>(null);
   const [copied, setCopied] = useState(false);
-  const [pdfExporting, setPdfExporting] = useState(false);
-  const [pdfExported, setPdfExported] = useState(false);
   const deckRef = useRef<HTMLDivElement>(null);
   const [showIdeaPrompt, setShowIdeaPrompt] = useState(false);
   const [mode, setMode] = useState<CreateMode>("form");
@@ -63,51 +61,6 @@ export default function CreatePageClient({
 
   /** Live region for copy success — screen readers announce when link is copied (WCAG 2.1 AA). */
   const copySuccessAnnouncement = copied ? "Share link copied to clipboard." : "";
-
-  const handleExportPdf = async () => {
-    if (!deck) return;
-    setPdfExporting(true);
-    setPdfExported(false);
-    try {
-      const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
-        import("jspdf"),
-        import("html2canvas"),
-      ]);
-
-      const container = document.getElementById("pdf-slides-container");
-      const pdf = new jsPDF({ orientation: "landscape", unit: "px", format: [1280, 720] });
-
-      if (container && container.children.length > 0) {
-        for (let i = 0; i < container.children.length; i++) {
-          if (i > 0) pdf.addPage([1280, 720], "landscape");
-          const el = container.children[i] as HTMLElement;
-          try {
-            const canvas = await html2canvas(el, {
-              width: 1280, height: 720, scale: 2,
-              useCORS: true, logging: false, backgroundColor: null,
-            });
-            pdf.addImage(canvas.toDataURL("image/jpeg", 0.92), "JPEG", 0, 0, 1280, 720);
-          } catch {
-            // text fallback
-            const slide = deck.slides[i];
-            const isDark = slide.type === "title" || slide.type === "cta" || slide.accent;
-            pdf.setFillColor(isDark ? 26 : 255, isDark ? 26 : 255, isDark ? 46 : 255);
-            pdf.rect(0, 0, 1280, 720, "F");
-            pdf.setTextColor(isDark ? 255 : 26, isDark ? 255 : 26, isDark ? 255 : 46);
-            pdf.setFontSize(40);
-            pdf.setFont("helvetica", "bold");
-            pdf.text(slide.title, 80, 120);
-          }
-        }
-      }
-
-      pdf.save(`${deck.companyName}-pitch-deck.pdf`);
-      setPdfExported(true);
-      setTimeout(() => setPdfExported(false), 2000);
-    } finally {
-      setPdfExporting(false);
-    }
-  };
 
   if (status === "loading") {
     return (
