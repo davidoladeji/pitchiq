@@ -15,8 +15,8 @@ interface AdminUser {
 
 const PLAN_BADGES: Record<string, { bg: string; text: string }> = {
   starter: { bg: "bg-white/5", text: "text-white/40" },
-  pro: { bg: "bg-[#4361ee]/15", text: "text-[#4361ee]" },
-  growth: { bg: "bg-purple-500/15", text: "text-purple-400" },
+  pro: { bg: "bg-electric/15", text: "text-electric" },
+  growth: { bg: "bg-violet/15", text: "text-violet" },
   enterprise: { bg: "bg-amber-500/15", text: "text-amber-400" },
 };
 
@@ -96,13 +96,16 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
           const style = PLAN_BADGES[plan] || PLAN_BADGES.starter;
           return (
             <button
+              type="button"
               key={plan}
               onClick={() => setFilterPlan(filterPlan === plan ? "all" : plan)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${
                 filterPlan === plan
                   ? `${style.bg} ${style.text} ring-1 ring-current`
                   : `${style.bg} ${style.text} opacity-60 hover:opacity-100`
               }`}
+              aria-label={`Filter by ${plan} plan`}
+              aria-pressed={filterPlan === plan}
             >
               {plan}: {count}
             </button>
@@ -110,8 +113,10 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
         })}
         {filterPlan !== "all" && (
           <button
+            type="button"
             onClick={() => setFilterPlan("all")}
-            className="px-3 py-1.5 rounded-lg text-xs text-white/30 hover:text-white/50 transition-colors"
+            className="px-3 py-1.5 rounded-lg text-xs text-white/30 hover:text-white/50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+            aria-label="Clear plan filter"
           >
             Clear filter
           </button>
@@ -125,7 +130,8 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by email or name..."
-          className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 outline-none focus:border-[#4361ee] w-full max-w-md"
+          className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 w-full max-w-md"
+          aria-label="Search users by email or name"
         />
       </div>
 
@@ -170,10 +176,11 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
                           <select
                             value={editRole}
                             onChange={(e) => setEditRole(e.target.value)}
-                            className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-xs text-white outline-none focus:border-[#4361ee]"
+                            className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-xs text-white outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+                            aria-label="Edit user role"
                           >
-                            <option value="user" className="bg-[#0a0a1a]">user</option>
-                            <option value="admin" className="bg-[#0a0a1a]">admin</option>
+                            <option value="user" className="bg-navy-950">user</option>
+                            <option value="admin" className="bg-navy-950">admin</option>
                           </select>
                         ) : (
                           <span className={`inline-flex items-center rounded-lg px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${roleStyle.bg} ${roleStyle.text}`}>
@@ -186,12 +193,13 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
                           <select
                             value={editPlan}
                             onChange={(e) => setEditPlan(e.target.value)}
-                            className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-xs text-white outline-none focus:border-[#4361ee]"
+                            className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-xs text-white outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+                            aria-label="Edit user plan"
                           >
-                            <option value="starter" className="bg-[#0a0a1a]">starter</option>
-                            <option value="pro" className="bg-[#0a0a1a]">pro</option>
-                            <option value="growth" className="bg-[#0a0a1a]">growth</option>
-                            <option value="enterprise" className="bg-[#0a0a1a]">enterprise</option>
+                            <option value="starter" className="bg-navy-950">starter</option>
+                            <option value="pro" className="bg-navy-950">pro</option>
+                            <option value="growth" className="bg-navy-950">growth</option>
+                            <option value="enterprise" className="bg-navy-950">enterprise</option>
                           </select>
                         ) : (
                           <div className="flex items-center gap-1.5">
@@ -221,24 +229,31 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
                           {isEditing ? (
                             <>
                               <button
+                                type="button"
                                 onClick={() => saveEdit(u.id)}
                                 disabled={saving}
-                                className="px-2.5 py-1 rounded-lg bg-[#4361ee] text-xs font-semibold text-white hover:bg-[#3651de] disabled:opacity-50 transition-colors"
+                                className="px-2.5 py-1 rounded-lg bg-electric text-xs font-semibold text-white hover:bg-electric-600 disabled:opacity-50 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+                                aria-label={saving ? "Saving" : "Save changes"}
+                                aria-busy={saving}
                               >
                                 {saving ? "..." : "Save"}
                               </button>
                               <button
+                                type="button"
                                 onClick={() => setEditingId(null)}
                                 disabled={saving}
-                                className="px-2.5 py-1 rounded-lg bg-white/5 text-xs text-white/50 hover:text-white transition-colors disabled:opacity-50"
+                                className="px-2.5 py-1 rounded-lg bg-white/5 text-xs text-white/50 hover:text-white transition-colors disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+                                aria-label="Cancel edit"
                               >
                                 Cancel
                               </button>
                             </>
                           ) : (
                             <button
+                              type="button"
                               onClick={() => startEdit(u)}
-                              className="px-2.5 py-1 rounded-lg bg-white/5 text-xs text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+                              className="px-2.5 py-1 rounded-lg bg-white/5 text-xs text-white/50 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+                              aria-label={`Edit user ${u.email}`}
                             >
                               Edit
                             </button>

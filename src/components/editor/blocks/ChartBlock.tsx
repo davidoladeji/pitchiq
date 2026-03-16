@@ -155,7 +155,7 @@ export default function ChartBlock({
     <div
       className={`relative group transition-all rounded-xl overflow-hidden ${
         isSelected
-          ? "ring-2 ring-[#4361ee] ring-offset-2"
+          ? "ring-2 ring-electric ring-offset-2"
           : "hover:ring-1 hover:ring-white/20"
       }`}
       onClick={onSelect}
@@ -180,7 +180,7 @@ export default function ChartBlock({
                   }}
                   className={`px-2.5 py-1 text-xs rounded-md transition-colors ${
                     chartType === opt.value
-                      ? "bg-[#4361ee] text-white"
+                      ? "bg-electric text-white"
                       : "bg-white/5 text-white/60 hover:bg-white/10"
                   }`}
                 >
@@ -214,13 +214,13 @@ export default function ChartBlock({
                     type="text"
                     value={row.label}
                     onChange={(e) => handleDataChange(i, "label", e.target.value)}
-                    className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-[#4361ee]/50"
+                    className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-electric/50"
                   />
                   <input
                     type="number"
                     value={row.value}
                     onChange={(e) => handleDataChange(i, "value", e.target.value)}
-                    className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-[#4361ee]/50"
+                    className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-electric/50"
                   />
                   <button
                     type="button"
@@ -228,8 +228,9 @@ export default function ChartBlock({
                       e.stopPropagation();
                       removeRow(i);
                     }}
-                    className="w-7 h-7 flex items-center justify-center rounded text-white/30 hover:text-red-400 hover:bg-white/5 transition-colors"
+                    className="w-7 h-7 flex items-center justify-center rounded text-white/30 hover:text-red-400 hover:bg-white/5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
                     title="Remove row"
+                    aria-label="Remove row"
                   >
                     <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor">
                       <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />

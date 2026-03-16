@@ -114,7 +114,8 @@ export default function DashboardApiKeys({
           </p>
           <a
             href="/pricing"
-            className="inline-block px-4 py-2 text-sm font-semibold text-white bg-electric rounded-lg hover:bg-electric/90 transition"
+            className="inline-block px-4 py-2 text-sm font-semibold text-white bg-electric rounded-lg hover:bg-electric-600 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            aria-label="Upgrade to Enterprise for API access"
           >
             Upgrade to Enterprise
           </a>
@@ -134,7 +135,8 @@ export default function DashboardApiKeys({
         </div>
         <a
           href="/docs/api"
-          className="text-xs text-electric hover:underline font-medium"
+          className="text-xs text-electric hover:underline font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
+          aria-label="View API documentation"
         >
           View Docs
         </a>
@@ -151,15 +153,19 @@ export default function DashboardApiKeys({
               {revealedKey}
             </code>
             <button
+              type="button"
               onClick={handleCopy}
-              className="flex-shrink-0 px-3 py-2 text-xs font-semibold rounded-lg bg-navy text-white hover:bg-navy-700 transition"
+              className="flex-shrink-0 px-3 py-2 text-xs font-semibold rounded-lg bg-navy text-white hover:bg-navy-700 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label={copied ? "Copied" : "Copy API key"}
             >
               {copied ? "Copied!" : "Copy"}
             </button>
           </div>
           <button
+            type="button"
             onClick={() => setRevealedKey(null)}
-            className="mt-2 text-xs text-amber-600 hover:text-amber-800"
+            className="mt-2 text-xs text-amber-600 hover:text-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
+            aria-label="Dismiss revealed key message"
           >
             Dismiss
           </button>
@@ -173,13 +179,16 @@ export default function DashboardApiKeys({
           placeholder="Key name (optional)"
           value={newKeyName}
           onChange={(e) => setNewKeyName(e.target.value)}
-          className="flex-1 text-sm border border-navy-200 rounded-lg px-3 py-2 text-navy placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-electric/30 focus:border-electric"
+          className="flex-1 text-sm border border-navy-200 rounded-lg px-3 py-2 text-navy placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-electric/30 focus:border-electric focus-visible:ring-offset-0"
           maxLength={100}
+          aria-label="API key name (optional)"
         />
         <button
+          type="button"
           onClick={handleCreate}
           disabled={creating}
-          className="flex-shrink-0 px-4 py-2 text-sm font-semibold rounded-lg bg-electric text-white hover:bg-electric/90 transition disabled:opacity-50"
+          className="flex-shrink-0 px-4 py-2 text-sm font-semibold rounded-lg bg-electric text-white hover:bg-electric-600 transition disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          aria-label={creating ? "Creating API key" : "Create API key"}
         >
           {creating ? "Creating..." : "Create Key"}
         </button>
@@ -234,8 +243,10 @@ export default function DashboardApiKeys({
               </div>
               {!k.revoked && (
                 <button
+                  type="button"
                   onClick={() => handleRevoke(k.id)}
-                  className="flex-shrink-0 text-xs text-red-500 hover:text-red-700 font-medium transition"
+                  className="flex-shrink-0 text-xs text-red-500 hover:text-red-700 font-medium transition focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
+                  aria-label={`Revoke API key ${k.name}`}
                 >
                   Revoke
                 </button>

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 function CodeBlock({ children, title }: { children: string; title?: string }) {
   return (
-    <div className="rounded-xl overflow-hidden border border-navy-700/50 bg-[#0d0d1a]">
+    <div className="rounded-xl overflow-hidden border border-navy-700/50 bg-navy-950">
       {title && (
         <div className="px-4 py-2 bg-navy-800/50 border-b border-navy-700/50 text-xs font-mono text-navy-400">
           {title}
@@ -83,12 +83,12 @@ export default function ApiDocsPage() {
   const baseUrl = "https://getpitchiq.com";
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a] text-white">
+    <div className="min-h-screen bg-navy-950 text-white">
       {/* Header */}
       <header className="border-b border-navy-800/50">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="flex items-center gap-3 mb-2">
-            <a href="/" className="text-electric hover:underline text-sm font-medium">
+            <a href="/" className="text-electric hover:underline text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 rounded">
               PitchIQ
             </a>
             <span className="text-navy-600">/</span>
@@ -112,7 +112,7 @@ export default function ApiDocsPage() {
               <a
                 key={s}
                 href={`#${s.toLowerCase().replace(/\s+/g, "-")}`}
-                className="text-sm px-3 py-1.5 rounded-lg bg-navy-800/50 text-navy-300 hover:text-white hover:bg-navy-700/50 transition"
+                className="text-sm px-3 py-1.5 rounded-lg bg-navy-800/50 text-navy-300 hover:text-white hover:bg-navy-700/50 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
               >
                 {s}
               </a>
@@ -452,7 +452,7 @@ const result = await res.json();`}</CodeBlock>
         <div className="border-t border-navy-800/50 pt-8 text-center text-navy-500 text-sm">
           <p>
             Need help? Contact{" "}
-            <a href="mailto:support@getpitchiq.com" className="text-electric hover:underline">
+            <a href="mailto:support@getpitchiq.com" className="text-electric hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 rounded">
               support@getpitchiq.com
             </a>
           </p>

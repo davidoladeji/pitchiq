@@ -65,7 +65,7 @@ export default function PitchSimulator({ onClose }: PitchSimulatorProps) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
       <div
-        className="bg-[#0f0f23] border border-white/10 rounded-2xl shadow-2xl w-[90vw] max-w-2xl max-h-[85vh] flex flex-col overflow-hidden"
+        className="bg-navy-950 border border-white/10 rounded-2xl shadow-2xl w-[90vw] max-w-2xl max-h-[85vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -85,8 +85,10 @@ export default function PitchSimulator({ onClose }: PitchSimulatorProps) {
               </div>
             </div>
             <button
+              type="button"
               onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Close Pitch Simulator"
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -111,8 +113,10 @@ export default function PitchSimulator({ onClose }: PitchSimulatorProps) {
                 that real investors would ask. Each comes with a suggested improvement.
               </p>
               <button
+                type="button"
                 onClick={runSimulation}
-                className="px-6 py-3 rounded-xl bg-electric hover:bg-electric-light text-white text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                aria-label="Start pitch simulation"
+                className="px-6 py-3 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-bold transition-all shadow-lg hover:shadow-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
               >
                 Start Simulation
               </button>
@@ -214,8 +218,8 @@ export default function PitchSimulator({ onClose }: PitchSimulatorProps) {
                         </div>
 
                         {/* Suggestion */}
-                        <div className="p-3 rounded-xl bg-[#4361ee]/10 border border-[#4361ee]/20">
-                          <p className="text-[10px] text-[#4361ee] uppercase tracking-wider font-semibold mb-1">
+                        <div className="p-3 rounded-xl bg-electric/10 border border-electric/20">
+                          <p className="text-[10px] text-electric uppercase tracking-wider font-semibold mb-1">
                             Suggested improvement
                           </p>
                           <p className="text-xs text-white/70 leading-relaxed">

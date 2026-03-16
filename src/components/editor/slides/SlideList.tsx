@@ -50,7 +50,7 @@ function ContextMenu({ state, onClose, onDuplicate, onDelete, onAddAbove, onAddB
   return (
     <div
       ref={menuRef}
-      className="fixed z-[100] min-w-[180px] bg-[#0f0f23] rounded-xl shadow-2xl border border-white/10 py-1.5 overflow-hidden"
+      className="fixed z-[100] min-w-[180px] bg-navy-950 rounded-xl shadow-2xl border border-white/10 py-1.5 overflow-hidden"
       style={{ top: state.y, left: state.x }}
     >
       {items.map((item, i) => (
@@ -117,7 +117,7 @@ function SortableSlideItem({
       style={style}
       className={`relative group flex items-center gap-2 p-2 rounded-xl cursor-pointer transition-all ${
         isSelected
-          ? "ring-2 ring-[#4361ee] bg-white/[0.06]"
+          ? "ring-2 ring-electric bg-white/[0.06]"
           : "hover:bg-white/[0.04]"
       }`}
       onClick={() => onSelect(index)}
@@ -141,7 +141,7 @@ function SortableSlideItem({
       </div>
 
       {/* Slide number badge */}
-      <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-[#0f0f23] border border-white/10 flex items-center justify-center z-10">
+      <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-navy-950 border border-white/10 flex items-center justify-center z-10">
         <span className="text-[9px] font-bold text-white/50">{index + 1}</span>
       </div>
 

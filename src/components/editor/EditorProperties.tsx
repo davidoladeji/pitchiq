@@ -147,7 +147,7 @@ function SlideProperties({
             type="checkbox"
             checked={slide.accent || false}
             onChange={(e) => updateSlide(slideIndex, { accent: e.target.checked })}
-            className="w-4 h-4 rounded border-navy-300 text-electric focus:ring-[#4361ee]/20"
+            className="w-4 h-4 rounded border-navy-300 text-electric focus:ring-electric/20"
           />
           <span className="text-sm text-navy-600">Use dark accent background</span>
         </label>

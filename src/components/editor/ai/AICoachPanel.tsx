@@ -106,7 +106,7 @@ export default function AICoachPanel({ onClose }: AICoachPanelProps) {
   const weakCount = result?.feedback.filter((f) => f.rating === "weak").length || 0;
 
   return (
-    <div className="h-full flex flex-col bg-[#0f0f23] border-l border-white/10">
+    <div className="h-full flex flex-col bg-navy-950 border-l border-white/10">
       {/* Header */}
       <div className="p-4 border-b border-white/10 shrink-0">
         <div className="flex items-center justify-between">
@@ -122,8 +122,10 @@ export default function AICoachPanel({ onClose }: AICoachPanelProps) {
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Close AI Coach panel"
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -140,9 +142,11 @@ export default function AICoachPanel({ onClose }: AICoachPanelProps) {
             Slide {selectedSlideIndex + 1}: <span className="text-white/70 font-medium">{slide?.title || "Untitled"}</span>
           </div>
           <button
+            type="button"
             onClick={runCoach}
             disabled={loading}
-            className="w-full py-2.5 rounded-xl bg-electric hover:bg-electric-light text-white text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            aria-label={loading ? "Analyzing slide" : result && analyzedSlideIndex === selectedSlideIndex ? "Re-analyze this slide" : "Analyze this slide with AI Coach"}
+            className="w-full py-2.5 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
           >
             {loading ? (
               <>
@@ -205,9 +209,9 @@ export default function AICoachPanel({ onClose }: AICoachPanelProps) {
 
             {/* Overall tip */}
             {result.overallTip && (
-              <div className="p-3 rounded-xl bg-[#4361ee]/10 border border-[#4361ee]/20">
+              <div className="p-3 rounded-xl bg-electric/10 border border-electric/20">
                 <div className="flex items-start gap-2">
-                  <svg className="w-4 h-4 text-[#4361ee] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-electric shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                   <p className="text-xs text-white/80 leading-relaxed">{result.overallTip}</p>

@@ -67,12 +67,12 @@ export default function DashboardPitchPractice({
       <section className="rounded-2xl border border-navy-100 bg-white p-6">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-bold text-navy flex items-center gap-2">
-            <svg className="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
             </svg>
             Pitch Practice
           </h2>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">
             Growth
           </span>
         </div>
@@ -92,7 +92,7 @@ export default function DashboardPitchPractice({
     <section className="rounded-2xl border border-navy-100 bg-white p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-bold text-navy flex items-center gap-2">
-          <svg className="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
           </svg>
           Pitch Practice
@@ -100,7 +100,8 @@ export default function DashboardPitchPractice({
         {practiceLink && (
           <Link
             href={practiceLink}
-            className="px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold hover:bg-electric-light transition-colors"
+            className="px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold hover:bg-electric-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            aria-label="Practice a deck with AI feedback"
           >
             Practice a Deck
           </Link>

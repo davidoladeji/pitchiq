@@ -351,7 +351,7 @@ export default function LandingPricing() {
             aria-label="Growth plan"
             className="relative flex flex-col rounded-2xl border border-purple-300 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-purple-400"
           >
-            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-gradient-to-r from-purple-500 to-electric text-white text-[11px] font-semibold tracking-wide">
+            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide">
               Best Value
             </div>
             <h3 className="text-base font-bold tracking-tight text-navy">{growthTier.name}</h3>

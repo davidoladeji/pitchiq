@@ -97,12 +97,12 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
     : null;
 
   return (
-    <div className="h-full flex flex-col bg-[#0f0f23] border-l border-white/10">
+    <div className="h-full flex flex-col bg-navy-950 border-l border-white/10">
       {/* Header */}
       <div className="p-4 border-b border-white/10 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-electric to-violet flex items-center justify-center">
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -113,8 +113,10 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-7 h-7 flex items-center justify-center rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Close Investor Lens panel"
+            className="w-7 h-7 flex items-center justify-center rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -131,9 +133,11 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
             Slide {selectedSlideIndex + 1}: <span className="text-white/70 font-medium">{slide?.title || "Untitled"}</span>
           </div>
           <button
+            type="button"
             onClick={runLens}
             disabled={loading}
-            className="w-full py-2.5 rounded-xl bg-electric hover:bg-electric-light text-white text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            aria-label={loading ? "Evaluating slide" : result && analyzedSlideIndex === selectedSlideIndex ? "Re-evaluate this slide" : "Evaluate this slide with Investor Lens"}
+            className="w-full py-2.5 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
           >
             {loading ? (
               <>
@@ -156,7 +160,7 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
           </button>
 
           {result && analyzedSlideIndex !== selectedSlideIndex && (
-            <p className="text-[10px] text-blue-400/70 mt-2 text-center">
+            <p className="text-[10px] text-electric/70 mt-2 text-center">
               Results are for slide {(analyzedSlideIndex ?? 0) + 1}. Click to evaluate the current slide.
             </p>
           )}
@@ -219,7 +223,7 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
                       <p className="text-[10px] text-white/30 uppercase tracking-wider font-semibold mb-1">
                         Suggestion
                       </p>
-                      <p className="text-xs text-[#4361ee]/80 leading-relaxed">
+                      <p className="text-xs text-electric/80 leading-relaxed">
                         {evaluation.suggestion}
                       </p>
                     </div>

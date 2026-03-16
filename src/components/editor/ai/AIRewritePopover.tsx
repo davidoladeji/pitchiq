@@ -74,20 +74,22 @@ export default function AIRewritePopover({
 
   return (
     <div
-      className="bg-[#1a1a2e] border border-white/15 rounded-2xl shadow-2xl w-[320px] overflow-hidden"
+      className="bg-navy border border-white/15 rounded-2xl shadow-2xl w-[320px] overflow-hidden"
       style={style}
     >
       {/* Header */}
       <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <svg className="w-4 h-4 text-[#4361ee]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-4 h-4 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
           <span className="text-sm font-bold text-white">AI Rewrite</span>
         </div>
         <button
+          type="button"
           onClick={onClose}
-          className="w-6 h-6 flex items-center justify-center rounded text-white/30 hover:text-white hover:bg-white/10 transition-colors"
+          aria-label="Close AI Rewrite"
+          className="w-6 h-6 flex items-center justify-center rounded text-white/30 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -114,11 +116,14 @@ export default function AIRewritePopover({
           {STYLES.map((s) => (
             <button
               key={s.id}
+              type="button"
               onClick={() => runRewrite(s.id)}
               disabled={loading}
-              className={`px-3 py-2 rounded-lg text-left transition-all border ${
+              aria-label={`Rewrite as ${s.label}`}
+              aria-pressed={selectedStyle === s.id && (rewritten || loading) ? "true" : "false"}
+              className={`px-3 py-2 rounded-lg text-left transition-all border focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${
                 selectedStyle === s.id && (rewritten || loading)
-                  ? "bg-[#4361ee]/15 border-[#4361ee]/30 text-white"
+                  ? "bg-electric/15 border-electric/30 text-white"
                   : "bg-white/5 border-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
               } disabled:opacity-50`}
             >
@@ -132,7 +137,7 @@ export default function AIRewritePopover({
       {/* Loading */}
       {loading && (
         <div className="px-4 py-4 text-center">
-          <svg className="w-5 h-5 text-[#4361ee] animate-spin mx-auto mb-2" fill="none" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-electric animate-spin mx-auto mb-2" fill="none" viewBox="0 0 24 24" aria-hidden>
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
@@ -158,17 +163,21 @@ export default function AIRewritePopover({
           </p>
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={() => {
                 onApply(rewritten);
                 onClose();
               }}
-              className="flex-1 py-2 rounded-lg bg-[#4361ee] hover:bg-[#3651de] text-white text-xs font-semibold transition-colors"
+              aria-label="Apply rewritten text"
+              className="flex-1 py-2 rounded-lg bg-electric hover:bg-electric-600 text-white text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
             >
               Apply
             </button>
             <button
+              type="button"
               onClick={() => runRewrite(selectedStyle)}
-              className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white/60 text-xs font-medium transition-colors"
+              aria-label="Retry rewrite"
+              className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white/60 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
             >
               Retry
             </button>

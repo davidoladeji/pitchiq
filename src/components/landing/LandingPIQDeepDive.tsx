@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PIQ_DIMENSIONS, GRADE_SCALE, SCORING_GUIDELINES } from "@/lib/piq-dimensions";
+import { PIQ_DIMENSIONS, GRADE_SCALE } from "@/lib/piq-dimensions";
+import { ELECTRIC_HEX, EMERALD_HEX, AMBER_HEX, RED_HEX } from "@/lib/design-tokens";
 
 /* ── Example scores for the radar chart ──────────────────────────────── */
 
@@ -15,6 +16,9 @@ const EXAMPLE_SCORES: Record<string, number> = {
   design: 90,
   credibility: 73,
 };
+
+const OVERALL_SCORE = 77.6;
+const OVERALL_GRADE = "B+";
 
 /* ── Radar chart helpers ─────────────────────────────────────────────── */
 
@@ -56,7 +60,6 @@ function labelPosition(
   index: number
 ): { x: number; y: number; anchor: "start" | "middle" | "end" } {
   const [x, y] = polarToXY(cx, cy, radius, index);
-  // Determine text-anchor based on horizontal position
   const angle = ANGLE_OFFSET + index * ANGLE_STEP;
   const cos = Math.cos(angle);
   let anchor: "start" | "middle" | "end" = "middle";
@@ -65,16 +68,30 @@ function labelPosition(
   return { x, y, anchor };
 }
 
+/* ── Dimension pill color mapping (design-system hex) ─────────────────── */
+
+function scoreColor(score: number): string {
+  if (score >= 85) return EMERALD_HEX;
+  if (score >= 75) return ELECTRIC_HEX;
+  if (score >= 65) return AMBER_HEX;
+  return RED_HEX;
+}
+
+function scoreBgClass(score: number): string {
+  if (score >= 85) return "bg-emerald-50 text-emerald-700 border-emerald-200";
+  if (score >= 75) return "bg-electric-50 text-electric border-electric/20";
+  if (score >= 65) return "bg-amber-50 text-amber-700 border-amber-200";
+  return "bg-red-50 text-red-600 border-red-200";
+}
+
 /* ── Component ───────────────────────────────────────────────────────── */
 
 export default function LandingPIQDeepDive() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
   const gradeRef = useRef<HTMLDivElement>(null);
 
   const [headerVisible, setHeaderVisible] = useState(false);
   const [chartVisible, setChartVisible] = useState(false);
-  const [cardsVisible, setCardsVisible] = useState(false);
   const [gradeVisible, setGradeVisible] = useState(false);
 
   /* Scroll-triggered visibility */
@@ -102,22 +119,20 @@ export default function LandingPIQDeepDive() {
 
     observe(sectionRef.current, (v) => {
       setHeaderVisible(v);
-      // Slight delay for chart animation
       setTimeout(() => setChartVisible(v), 300);
     });
-    observe(cardsRef.current, setCardsVisible, 0.05);
     observe(gradeRef.current, setGradeVisible, 0.1);
 
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   /* Radar chart dimensions */
-  const svgSize = 380;
+  const svgSize = 340;
   const cx = svgSize / 2;
   const cy = svgSize / 2;
-  const maxR = 140;
+  const maxR = 120;
   const rings = [maxR * 0.33, maxR * 0.66, maxR];
-  const labelR = maxR + 32;
+  const labelR = maxR + 30;
 
   /* Condensed grade scale — pick a representative subset for the bar */
   const gradeBarEntries = GRADE_SCALE.filter((g) =>
@@ -127,250 +142,247 @@ export default function LandingPIQDeepDive() {
   return (
     <section
       ref={sectionRef}
-      className="section-py px-4 sm:px-6 bg-white"
+      className="py-16 sm:py-20 px-4 sm:px-6 bg-white"
       aria-label="PIQ Score methodology deep dive"
     >
-      <div className="max-w-6xl mx-auto">
-        {/* ── Section header ──────────────────────────────────────────── */}
+      <div className="max-w-5xl mx-auto">
+        {/* ── Section header (compact) ────────────────────────────────── */}
         <div
-          className="text-center mb-16 transition-all duration-700 ease-out"
+          className="text-center mb-10 transition-all duration-700 ease-out"
           style={{
             opacity: headerVisible ? 1 : 0,
             transform: headerVisible ? "translateY(0)" : "translateY(24px)",
           }}
         >
-          <span className="inline-block px-3.5 py-1.5 rounded-full bg-electric/10 text-electric text-[11px] font-semibold uppercase tracking-[0.2em] mb-5">
+          <span className="inline-block px-3.5 py-1.5 rounded-full bg-electric/10 text-electric text-[11px] font-semibold uppercase tracking-[0.2em] mb-4">
             PIQ Score
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-navy tracking-[-0.02em] mb-4">
+          <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy tracking-[-0.02em] mb-3">
             Your deck&apos;s fundability, quantified
           </h2>
-          <p className="text-navy-500 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed">
+          <p className="text-navy-500 text-base max-w-xl mx-auto font-light leading-relaxed">
             Our AI evaluates your pitch across 8 investor-critical dimensions,
-            weighted by what VCs actually care about. No guesswork — just a clear
-            roadmap to a fundable deck.
+            weighted by what VCs actually care about.
           </p>
         </div>
 
-        {/* ── Radar chart + legend row ────────────────────────────────── */}
+        {/* ── Main 2-panel card ────────────────────────────────────────── */}
         <div
-          className="flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16 mb-20 transition-all duration-700 ease-out"
+          className="rounded-2xl bg-gradient-to-br from-electric-50 to-violet-50 relative overflow-hidden p-6 sm:p-8 mb-10 transition-all duration-700 ease-out"
           style={{
             opacity: headerVisible ? 1 : 0,
             transform: headerVisible ? "translateY(0)" : "translateY(24px)",
           }}
         >
-          {/* SVG radar chart */}
-          <div className="relative flex-shrink-0">
-            <svg
-              viewBox={`0 0 ${svgSize} ${svgSize}`}
-              className="w-[320px] h-[320px] sm:w-[380px] sm:h-[380px]"
-              aria-label="Radar chart showing example PIQ Score across 8 dimensions"
-              role="img"
-            >
-              {/* Grid rings */}
-              {rings.map((r, i) => (
-                <polygon
-                  key={`ring-${i}`}
-                  points={octagonPoints(cx, cy, r)}
-                  fill="none"
-                  className="stroke-navy-200"
-                  strokeWidth={i === rings.length - 1 ? 1.5 : 0.75}
-                />
-              ))}
+          {/* Decorative blob */}
+          <div
+            className="absolute -right-6 -top-6 w-32 h-32 rounded-full opacity-[0.15] bg-electric"
+            aria-hidden="true"
+          />
 
-              {/* Axis lines */}
-              {PIQ_DIMENSIONS.map((_, i) => {
-                const [x, y] = polarToXY(cx, cy, maxR, i);
-                return (
-                  <line
-                    key={`axis-${i}`}
-                    x1={cx}
-                    y1={cy}
-                    x2={x}
-                    y2={y}
+          {/* Decorative SVG wave */}
+          <svg
+            className="absolute bottom-0 left-0 w-full opacity-[0.06]"
+            viewBox="0 0 400 80"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M0 40c40-20 80 10 120 0s80-30 120-10 80 20 120 0 40-10 40-10v60H0z"
+              fill="currentColor"
+              className="text-electric"
+            />
+          </svg>
+
+          <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-start gap-8">
+            {/* ── Left: Radar chart ──────────────────────────────────── */}
+            <div className="flex-shrink-0">
+              <svg
+                viewBox={`0 0 ${svgSize} ${svgSize}`}
+                className="w-[280px] h-[280px] sm:w-[340px] sm:h-[340px]"
+                aria-label="Radar chart showing example PIQ Score across 8 dimensions"
+                role="img"
+              >
+                {/* Grid rings */}
+                {rings.map((r, i) => (
+                  <polygon
+                    key={`ring-${i}`}
+                    points={octagonPoints(cx, cy, r)}
+                    fill="none"
                     className="stroke-navy-200"
-                    strokeWidth={0.75}
+                    strokeWidth={i === rings.length - 1 ? 1.5 : 0.75}
                   />
-                );
-              })}
+                ))}
 
-              {/* Score fill area */}
-              <polygon
-                points={scorePolygonPoints(cx, cy, maxR)}
-                className="fill-electric/10 stroke-electric transition-all duration-1000 ease-out origin-center"
-                strokeWidth={2}
-                strokeLinejoin="round"
-                style={{
-                  opacity: chartVisible ? 1 : 0,
-                  transform: chartVisible ? "scale(1)" : "scale(0)",
-                  transformOrigin: `${cx}px ${cy}px`,
-                }}
-              />
+                {/* Axis lines */}
+                {PIQ_DIMENSIONS.map((_, i) => {
+                  const [x, y] = polarToXY(cx, cy, maxR, i);
+                  return (
+                    <line
+                      key={`axis-${i}`}
+                      x1={cx}
+                      y1={cy}
+                      x2={x}
+                      y2={y}
+                      className="stroke-navy-200"
+                      strokeWidth={0.75}
+                    />
+                  );
+                })}
 
-              {/* Score dots */}
-              {PIQ_DIMENSIONS.map((dim, i) => {
-                const score = EXAMPLE_SCORES[dim.id] ?? 50;
-                const r = (score / 100) * maxR;
-                const [x, y] = polarToXY(cx, cy, r, i);
-                return (
-                  <circle
-                    key={`dot-${i}`}
-                    cx={x}
-                    cy={y}
-                    r={4}
-                    className="fill-electric stroke-white transition-all duration-1000 ease-out"
-                    strokeWidth={2}
-                    style={{
-                      opacity: chartVisible ? 1 : 0,
-                    }}
-                  />
-                );
-              })}
-
-              {/* Dimension labels */}
-              {PIQ_DIMENSIONS.map((dim, i) => {
-                const { x, y, anchor } = labelPosition(cx, cy, labelR, i);
-                const score = EXAMPLE_SCORES[dim.id] ?? 50;
-                return (
-                  <g key={`label-${i}`}>
-                    <text
-                      x={x}
-                      y={y - 6}
-                      textAnchor={anchor}
-                      className="fill-navy text-[11px] font-semibold"
-                      style={{ fontSize: 11 }}
-                    >
-                      {dim.label.split(" ")[0]}
-                    </text>
-                    <text
-                      x={x}
-                      y={y + 8}
-                      textAnchor={anchor}
-                      className="fill-electric text-[10px] font-bold"
-                      style={{ fontSize: 10 }}
-                    >
-                      {score}
-                    </text>
-                  </g>
-                );
-              })}
-            </svg>
-          </div>
-
-          {/* Legend / summary sidebar */}
-          <div className="max-w-sm text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 mb-4">
-              <span className="text-5xl font-display font-bold text-navy">
-                77.6
-              </span>
-              <span className="text-sm text-navy-500 leading-tight">
-                Overall
-                <br />
-                PIQ Score
-              </span>
-            </div>
-            <p className="text-navy-500 text-sm leading-relaxed mb-6">
-              This example deck scores <strong className="text-navy">B+</strong> overall.
-              Strong design and team presentation, but competitive differentiation
-              and financials need work before investor meetings.
-            </p>
-            <div className="space-y-2">
-              {SCORING_GUIDELINES.map((g) => (
-                <div key={g.range} className="flex items-baseline gap-3 text-sm">
-                  <span className="font-mono text-xs text-electric font-semibold w-14 shrink-0">
-                    {g.range}
-                  </span>
-                  <span className="text-navy-500">
-                    <span className="font-medium text-navy">{g.label}</span>
-                    {" — "}
-                    {g.description}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Dimension cards grid ────────────────────────────────────── */}
-        <div ref={cardsRef} className="mb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {PIQ_DIMENSIONS.map((dim, i) => {
-              const score = EXAMPLE_SCORES[dim.id] ?? 50;
-              return (
-                <div
-                  key={dim.id}
-                  className="group bg-white rounded-xl border border-navy-200 p-6 hover:border-electric/20 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-300"
+                {/* Score fill area */}
+                <polygon
+                  points={scorePolygonPoints(cx, cy, maxR)}
+                  className="fill-electric/10 stroke-electric transition-all duration-1000 ease-out origin-center"
+                  strokeWidth={2}
+                  strokeLinejoin="round"
                   style={{
-                    opacity: cardsVisible ? 1 : 0,
-                    transform: cardsVisible
-                      ? "translateY(0)"
-                      : "translateY(16px)",
-                    transitionDelay: cardsVisible ? `${i * 60}ms` : "0ms",
-                    transitionDuration: "500ms",
-                    transitionTimingFunction: "cubic-bezier(0.25,0.46,0.45,0.94)",
+                    opacity: chartVisible ? 1 : 0,
+                    transform: chartVisible ? "scale(1)" : "scale(0)",
+                    transformOrigin: `${cx}px ${cy}px`,
                   }}
-                >
-                  <div className="flex items-start gap-4">
-                    {/* Icon */}
-                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-electric/10 flex items-center justify-center text-electric">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={1.5}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
+                />
+
+                {/* Score dots */}
+                {PIQ_DIMENSIONS.map((dim, i) => {
+                  const score = EXAMPLE_SCORES[dim.id] ?? 50;
+                  const r = (score / 100) * maxR;
+                  const [x, y] = polarToXY(cx, cy, r, i);
+                  return (
+                    <circle
+                      key={`dot-${i}`}
+                      cx={x}
+                      cy={y}
+                      r={3.5}
+                      className="fill-electric stroke-white transition-all duration-1000 ease-out"
+                      strokeWidth={2}
+                      style={{
+                        opacity: chartVisible ? 1 : 0,
+                      }}
+                    />
+                  );
+                })}
+
+                {/* Dimension labels */}
+                {PIQ_DIMENSIONS.map((dim, i) => {
+                  const { x, y, anchor } = labelPosition(cx, cy, labelR, i);
+                  const score = EXAMPLE_SCORES[dim.id] ?? 50;
+                  return (
+                    <g key={`label-${i}`}>
+                      <text
+                        x={x}
+                        y={y - 5}
+                        textAnchor={anchor}
+                        className="fill-navy text-[10px] font-semibold"
+                        style={{ fontSize: 10 }}
                       >
-                        <path d={dim.icon} />
-                      </svg>
-                    </div>
+                        {dim.label.split(" ")[0]}
+                      </text>
+                      <text
+                        x={x}
+                        y={y + 7}
+                        textAnchor={anchor}
+                        className="fill-electric text-[9px] font-bold"
+                        style={{ fontSize: 9 }}
+                      >
+                        {score}
+                      </text>
+                    </g>
+                  );
+                })}
+              </svg>
+            </div>
 
-                    <div className="flex-1 min-w-0">
-                      {/* Title + weight badge */}
-                      <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
-                        <h3 className="text-[15px] font-semibold text-navy">
-                          {dim.label}
-                        </h3>
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-electric/10 text-electric text-[10px] font-bold tracking-wide">
-                          {dim.weight}%
-                        </span>
-                        <span className="ml-auto text-xs font-mono font-bold text-navy">
-                          {score}/100
-                        </span>
-                      </div>
+            {/* ── Right: Score summary + dimension pills ─────────────── */}
+            <div className="flex-1 min-w-0 w-full lg:pt-2">
+              {/* Overall score */}
+              <div className="flex items-center gap-3 mb-5">
+                <span className="text-5xl font-display font-bold text-navy">
+                  {OVERALL_SCORE}
+                </span>
+                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-electric/10 border border-electric/20 text-electric text-sm font-bold">
+                  {OVERALL_GRADE}
+                </span>
+                <span className="text-sm text-navy-500 leading-tight">
+                  Overall<br />PIQ Score
+                </span>
+              </div>
 
-                      {/* Description */}
-                      <p className="text-[13px] text-navy-500 leading-relaxed mb-3">
-                        {dim.description}
-                      </p>
+              <p className="text-navy-500 text-sm leading-relaxed mb-5 max-w-md">
+                Strong design and team presentation, but competitive
+                differentiation and financials need work before investor meetings.
+              </p>
 
-                      {/* Tip */}
-                      <div className="flex items-start gap-2 bg-amber-50 rounded-lg px-3 py-2.5">
+              {/* 8 dimension rows */}
+              <div className="space-y-2">
+                {PIQ_DIMENSIONS.map((dim, i) => {
+                  const score = EXAMPLE_SCORES[dim.id] ?? 50;
+                  const barWidth = `${score}%`;
+                  const color = scoreColor(score);
+                  return (
+                    <div
+                      key={dim.id}
+                      className="flex items-center gap-3 transition-all duration-500 ease-out"
+                      style={{
+                        opacity: chartVisible ? 1 : 0,
+                        transform: chartVisible
+                          ? "translateX(0)"
+                          : "translateX(12px)",
+                        transitionDelay: chartVisible ? `${i * 80}ms` : "0ms",
+                      }}
+                    >
+                      {/* Icon */}
+                      <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/70 border border-navy-200/40 flex items-center justify-center text-navy-500">
                         <svg
-                          className="w-4 h-4 text-amber-500 shrink-0 mt-0.5"
+                          width="15"
+                          height="15"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          strokeWidth={2}
+                          strokeWidth={1.5}
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           aria-hidden="true"
                         >
-                          <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                          <path d={dim.icon} />
                         </svg>
-                        <p className="text-[12px] text-amber-800 leading-relaxed">
-                          {dim.tip}
-                        </p>
                       </div>
+
+                      {/* Label */}
+                      <span className="text-[13px] font-medium text-navy w-28 sm:w-36 shrink-0 truncate">
+                        {dim.label}
+                      </span>
+
+                      {/* Score bar */}
+                      <div className="flex-1 h-2 bg-white/60 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-1000 ease-out"
+                          style={{
+                            width: chartVisible ? barWidth : "0%",
+                            backgroundColor: color,
+                            transitionDelay: chartVisible
+                              ? `${300 + i * 80}ms`
+                              : "0ms",
+                          }}
+                        />
+                      </div>
+
+                      {/* Score badge */}
+                      <span
+                        className={`text-[12px] font-bold w-10 text-right shrink-0 tabular-nums px-1.5 py-0.5 rounded-md border ${scoreBgClass(score)}`}
+                      >
+                        {score}
+                      </span>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+
+              {/* Weight note */}
+              <p className="text-[11px] text-navy-400 mt-4">
+                Weighted by investor priority — Narrative, Market &amp; Financials carry the most weight.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -383,18 +395,20 @@ export default function LandingPIQDeepDive() {
             transform: gradeVisible ? "translateY(0)" : "translateY(20px)",
           }}
         >
-          <h3 className="text-center text-lg sm:text-xl font-display font-bold text-navy mb-2">
+          <h3 className="text-center text-base sm:text-lg font-display font-bold text-navy mb-1.5">
             Grade Scale
           </h3>
-          <p className="text-center text-sm text-navy-500 mb-8 max-w-lg mx-auto">
+          <p className="text-center text-[13px] text-navy-500 mb-5 max-w-md mx-auto">
             Your overall PIQ Score maps to a letter grade investors instantly understand.
           </p>
 
           {/* Bar */}
-          <div className="max-w-3xl mx-auto">
-            <div className="flex rounded-xl overflow-hidden h-10 shadow-sm border border-navy-200">
-              {GRADE_SCALE.map((g) => {
+          <div className="max-w-2xl mx-auto">
+            <div className="flex h-9 overflow-hidden gap-[2px]">
+              {GRADE_SCALE.map((g, i) => {
                 const span = g.max - g.min + 1;
+                const isFirst = i === 0;
+                const isLast = i === GRADE_SCALE.length - 1;
                 return (
                   <div
                     key={g.grade}
@@ -402,10 +416,16 @@ export default function LandingPIQDeepDive() {
                     style={{
                       width: `${span}%`,
                       backgroundColor: g.color,
+                      borderRadius: isFirst
+                        ? "8px 0 0 8px"
+                        : isLast
+                          ? "0 8px 8px 0"
+                          : "0",
+                      opacity: 0.85,
                     }}
                     title={`${g.grade}: ${g.min}–${g.max} (${g.label})`}
                   >
-                    <span className="text-white text-[10px] sm:text-xs font-bold drop-shadow-sm">
+                    <span className="text-white text-[10px] sm:text-[11px] font-bold drop-shadow-sm">
                       {g.grade}
                     </span>
                   </div>
@@ -414,7 +434,7 @@ export default function LandingPIQDeepDive() {
             </div>
 
             {/* Labels under bar */}
-            <div className="flex mt-2">
+            <div className="flex mt-1.5 gap-[2px]">
               {GRADE_SCALE.map((g) => {
                 const span = g.max - g.min + 1;
                 return (
@@ -423,7 +443,7 @@ export default function LandingPIQDeepDive() {
                     className="text-center"
                     style={{ width: `${span}%` }}
                   >
-                    <span className="text-[9px] sm:text-[10px] text-navy-500 font-medium hidden sm:inline">
+                    <span className="text-[9px] text-navy-400 font-medium hidden sm:inline">
                       {g.min}–{g.max}
                     </span>
                   </div>
@@ -432,11 +452,11 @@ export default function LandingPIQDeepDive() {
             </div>
 
             {/* Compact legend row */}
-            <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1.5 mt-5 text-xs text-navy-500">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 mt-4 text-[11px] text-navy-500">
               {gradeBarEntries.map((g) => (
                 <span key={g.grade} className="flex items-center gap-1.5">
                   <span
-                    className="w-2.5 h-2.5 rounded-full"
+                    className="w-2 h-2 rounded-full"
                     style={{ backgroundColor: g.color }}
                   />
                   <span className="font-semibold text-navy">{g.grade}</span>

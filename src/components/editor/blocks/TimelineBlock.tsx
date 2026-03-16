@@ -42,7 +42,7 @@ function InlineEdit({
       suppressContentEditableWarning
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      className={`outline-none focus:ring-2 focus:ring-[#4361ee]/50 rounded transition-shadow ${className || ""}`}
+      className={`outline-none focus:ring-2 focus:ring-electric/50 rounded transition-shadow ${className || ""}`}
       style={style}
     >
       {value}
@@ -88,7 +88,7 @@ export default function TimelineBlock({
     <div
       className={`relative group flex items-start gap-4 transition-all rounded-lg p-2 ${
         isSelected
-          ? "ring-2 ring-[#4361ee] ring-offset-2"
+          ? "ring-2 ring-electric ring-offset-2"
           : "hover:ring-1 hover:ring-white/20"
       }`}
       onClick={onSelect}

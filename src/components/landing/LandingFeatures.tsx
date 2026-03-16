@@ -41,6 +41,51 @@ const FEATURES = [
   },
 ];
 
+const CARD_THEMES = [
+  {
+    bg: "bg-gradient-to-br from-electric-50 to-violet-50",
+    blob: "bg-electric",
+    iconBg: "bg-electric/10",
+    iconBorder: "border-electric/20",
+    iconColor: "text-electric",
+  },
+  {
+    bg: "bg-gradient-to-br from-violet-50 to-purple-50",
+    blob: "bg-violet-400",
+    iconBg: "bg-violet-100",
+    iconBorder: "border-violet-200",
+    iconColor: "text-violet-600",
+  },
+  {
+    bg: "bg-gradient-to-br from-amber-50 to-orange-50",
+    blob: "bg-amber-400",
+    iconBg: "bg-amber-100",
+    iconBorder: "border-amber-200",
+    iconColor: "text-amber-600",
+  },
+  {
+    bg: "bg-gradient-to-br from-rose-50 to-pink-50",
+    blob: "bg-rose-400",
+    iconBg: "bg-rose-100",
+    iconBorder: "border-rose-200",
+    iconColor: "text-rose-600",
+  },
+  {
+    bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
+    blob: "bg-emerald-400",
+    iconBg: "bg-emerald-100",
+    iconBorder: "border-emerald-200",
+    iconColor: "text-emerald-600",
+  },
+  {
+    bg: "bg-gradient-to-br from-sky-50 to-blue-50",
+    blob: "bg-sky-400",
+    iconBg: "bg-sky-100",
+    iconBorder: "border-sky-200",
+    iconColor: "text-sky-600",
+  },
+];
+
 export default function LandingFeatures() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
@@ -89,26 +134,50 @@ export default function LandingFeatures() {
           </p>
         </div>
 
-        {/* Feature cards grid — 2 columns on desktop */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {/* Feature cards grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {FEATURES.map((feat, i) => {
+            const theme = CARD_THEMES[i % CARD_THEMES.length];
             const isVisible = visibleCards.has(i);
+            const staggerDelay = isVisible
+              ? `${(i % 3) * 100 + 80}ms`
+              : "0ms";
+
             return (
               <div
                 key={feat.title}
                 data-feature-card
                 data-feature-index={i}
-                className={`group relative bg-white rounded-xl p-8 border border-navy-200 hover:border-navy/20 hover:shadow-card-hover transition-all duration-500 ease-out cursor-default ${
+                className={`group relative rounded-2xl p-7 overflow-hidden cursor-default transition-all duration-500 ease-out ${theme.bg} ${
                   isVisible
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 translate-y-6"
                 }`}
-                style={{
-                  transitionDelay: isVisible ? `${(i % 2) * 100 + 80}ms` : "0ms",
-                }}
+                style={{ transitionDelay: staggerDelay }}
               >
+                {/* Decorative blob */}
+                <div
+                  className={`absolute -right-6 -top-6 w-32 h-32 rounded-full opacity-[0.15] ${theme.blob}`}
+                  aria-hidden="true"
+                />
+
+                {/* SVG wave */}
+                <svg
+                  className="absolute bottom-0 left-0 w-full opacity-[0.06]"
+                  viewBox="0 0 400 60"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M0 30 Q50 0 100 30 T200 30 T300 30 T400 30 V60 H0Z"
+                    fill="currentColor"
+                  />
+                </svg>
+
                 {/* Icon */}
-                <div className="w-10 h-10 rounded-lg bg-navy-100 flex items-center justify-center mb-5 text-navy-500 group-hover:bg-electric group-hover:text-white transition-all duration-300">
+                <div
+                  className={`w-11 h-11 rounded-xl flex items-center justify-center mb-4 border ${theme.iconBg} ${theme.iconBorder} ${theme.iconColor}`}
+                >
                   <svg
                     className="w-5 h-5"
                     fill="none"
@@ -126,8 +195,8 @@ export default function LandingFeatures() {
                 </div>
 
                 {/* Title + Pro badge */}
-                <div className="flex items-center gap-2.5 mb-2.5">
-                  <h3 className="font-semibold text-navy text-base">
+                <div className="flex items-center gap-2.5 mb-2">
+                  <h3 className="text-lg font-semibold text-navy">
                     {feat.title}
                   </h3>
                   {feat.pro && (
@@ -138,7 +207,7 @@ export default function LandingFeatures() {
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-navy-500 leading-relaxed">
+                <p className="text-sm text-navy-600 leading-relaxed relative">
                   {feat.desc}
                 </p>
               </div>

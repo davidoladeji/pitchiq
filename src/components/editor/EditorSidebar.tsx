@@ -78,7 +78,7 @@ function SortableSlide(props: {
       onContextMenu={onContextMenu}
       className={`group relative cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
         isSelected
-          ? "ring-2 ring-[#4361ee] border-[#4361ee]"
+          ? "ring-2 ring-electric border-electric"
           : "border-white/5 hover:border-white/15"
       }`}
     >
@@ -212,24 +212,28 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
   const slideIds = slides.map((_, i) => `slide-${i}`);
 
   return (
-    <div className="h-full bg-[#12122b] border-r border-white/10 flex flex-col overflow-hidden">
+    <div className="h-full bg-navy-900 border-r border-white/10 flex flex-col overflow-hidden">
       {/* Tabs */}
       <div className="flex border-b border-white/10 shrink-0">
         <button
+          type="button"
           onClick={() => setTab("slides")}
-          className={`flex-1 py-2.5 text-xs font-semibold transition-colors ${
+          aria-selected={tab === "slides"}
+          className={`flex-1 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 ${
             tab === "slides"
-              ? "text-white border-b-2 border-[#4361ee]"
+              ? "text-white border-b-2 border-electric"
               : "text-white/40 hover:text-white/60"
           }`}
         >
           Slides
         </button>
         <button
+          type="button"
           onClick={() => setTab("blocks")}
-          className={`flex-1 py-2.5 text-xs font-semibold transition-colors ${
+          aria-selected={tab === "blocks"}
+          className={`flex-1 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 ${
             tab === "blocks"
-              ? "text-white border-b-2 border-[#4361ee]"
+              ? "text-white border-b-2 border-electric"
               : "text-white/40 hover:text-white/60"
           }`}
         >
@@ -265,7 +269,8 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
                 <select
                   value={addSlideType}
                   onChange={(e) => setAddSlideType(e.target.value as SlideData["type"])}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg text-white text-[11px] px-2 py-1.5 outline-none focus:border-[#4361ee]"
+                  aria-label="Slide type for new slide"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg text-white text-[11px] px-2 py-1.5 outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
                 >
                   {SLIDE_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>
@@ -275,8 +280,10 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
                 </select>
               </div>
               <button
+                type="button"
                 onClick={handleAddSlide}
-                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#4361ee] hover:bg-[#3651de] text-white text-xs font-semibold transition-colors"
+                aria-label="Add new slide"
+                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-electric hover:bg-electric-600 text-white text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
               >
                 <svg
                   className="w-3.5 h-3.5"
@@ -322,15 +329,18 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
             onClick={closeContextMenu}
           />
           <div
-            className="fixed z-[101] bg-[#1a1a2e] border border-white/10 rounded-xl shadow-xl py-1 min-w-[140px]"
+            className="fixed z-[101] bg-navy border border-white/10 rounded-xl shadow-xl py-1 min-w-[140px]"
             style={{ left: contextMenu.x, top: contextMenu.y }}
+            role="menu"
           >
             <button
+              type="button"
+              role="menuitem"
               onClick={() => {
                 duplicateSlide(contextMenu.index);
                 closeContextMenu();
               }}
-              className="w-full flex items-center gap-2 px-3 py-2 text-white text-xs hover:bg-white/5 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 text-white text-xs hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
             >
               <svg
                 className="w-3.5 h-3.5 text-white/40"
@@ -348,12 +358,15 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
               Duplicate
             </button>
             <button
+              type="button"
+              role="menuitem"
               onClick={() => {
                 removeSlide(contextMenu.index);
                 closeContextMenu();
               }}
               disabled={slides.length <= 1}
-              className="w-full flex items-center gap-2 px-3 py-2 text-red-400 text-xs hover:bg-white/5 transition-colors disabled:opacity-30"
+              aria-label="Delete slide"
+              className="w-full flex items-center gap-2 px-3 py-2 text-red-400 text-xs hover:bg-white/5 transition-colors disabled:opacity-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
             >
               <svg
                 className="w-3.5 h-3.5"

@@ -3,15 +3,13 @@
 import Link from "next/link";
 import { PIQScore } from "@/lib/types";
 import { PIQ_DIMENSIONS } from "@/lib/piq-dimensions";
+import { scoreColorHex } from "@/lib/design-tokens";
 
 /* ── Helpers ───────────────────────────────────────────── */
 
-/** Hex for SVG stroke/inline style; values match design-system tokens (emerald/electric/amber/red). */
+/** Hex for SVG stroke/inline style; uses design-system token single source of truth. */
 function scoreColor(score: number): string {
-  if (score >= 80) return "#22c55e";
-  if (score >= 60) return "#4361ee";
-  if (score >= 40) return "#f59e0b";
-  return "#ef4444";
+  return scoreColorHex(score);
 }
 
 function scoreBadgeClass(score: number): string {

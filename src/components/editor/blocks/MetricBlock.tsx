@@ -47,7 +47,7 @@ function EditableField({
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
       className={`outline-none transition-shadow rounded ${
-        focused ? "ring-2 ring-[#4361ee]/50" : ""
+        focused ? "ring-2 ring-electric/50" : ""
       } ${className || ""}`}
       style={style}
       data-placeholder={placeholder}
@@ -98,7 +98,7 @@ export default function MetricBlock({
     <div
       className={`relative group transition-all rounded-xl p-4 md:p-6 flex flex-col justify-center ${
         isSelected
-          ? "ring-2 ring-[#4361ee] ring-offset-2"
+          ? "ring-2 ring-electric ring-offset-2"
           : "hover:ring-1 hover:ring-white/20"
       }`}
       style={{
