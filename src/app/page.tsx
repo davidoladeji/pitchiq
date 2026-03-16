@@ -2,10 +2,12 @@ import AppNav from "@/components/AppNav";
 import Footer from "@/components/Footer";
 import LandingHero from "@/components/landing/LandingHero";
 import LandingDemo from "@/components/landing/LandingDemo";
+import LandingNumbers from "@/components/landing/LandingNumbers";
 import LandingTransformation from "@/components/landing/LandingTransformation";
 import LandingSteps from "@/components/landing/LandingSteps";
 import LandingPersonas from "@/components/landing/LandingPersonas";
 import LandingFeatures from "@/components/landing/LandingFeatures";
+import LandingSocialProof from "@/components/landing/LandingSocialProof";
 import LandingPricing from "@/components/landing/LandingPricing";
 import LandingTrust from "@/components/landing/LandingTrust";
 import LandingCTA from "@/components/landing/LandingCTA";
@@ -26,10 +28,12 @@ export default function Home() {
       <main id="main" tabIndex={-1}>
         <LandingHero />
         <LandingDemo />
+        <LandingNumbers />
         <LandingTransformation />
         <LandingSteps />
         <LandingPersonas />
         <LandingFeatures />
+        <LandingSocialProof />
         <LandingPricing />
         <LandingTrust />
         <LandingCTA />

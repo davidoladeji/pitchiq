@@ -2,42 +2,52 @@
 
 import { useEffect, useRef, useState } from "react";
 
+/* Flat monochrome SVG icons */
+const IconRocket = ({ color }: { color: string }) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
+    <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
+    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+  </svg>
+);
+
+const IconBolt = ({ color }: { color: string }) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+  </svg>
+);
+
+const IconHandshake = ({ color }: { color: string }) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 00-3-3.87" />
+    <path d="M16 3.13a4 4 0 010 7.75" />
+  </svg>
+);
+
 const PERSONAS = [
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z" />
-        <path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z" />
-        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
-        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
-      </svg>
-    ),
+    icon: IconRocket,
     title: "The First-Time Founder",
-    forLabel: "Pre-seed founders, bootstrappers, solo builders",
-    desc: "You need a polished deck but can\u2019t afford a designer. PitchIQ gives you investor-grade slides in 60 seconds.",
+    forAudience: "Pre-seed founders, bootstrappers, solo builders",
+    desc: "You\u2019re building something real but haven\u2019t raised before. You need a deck that looks professional and tells the right story \u2014 without spending weeks on design or $5k on a consultant. PitchIQ generates investor-ready slides from your answers in 60 seconds.",
+    accent: "#4361ee",
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
-      </svg>
-    ),
+    icon: IconBolt,
     title: "The Serial Operator",
-    forLabel: "Repeat founders, VCs, accelerator leads",
-    desc: "You need decks fast, with data-driven structure. Generate, score, iterate \u2014 at the speed you work.",
+    forAudience: "Repeat founders, VCs, accelerator leads",
+    desc: "You\u2019ve done this before and know what matters: speed, structure, and data. You need decks fast \u2014 for portfolio companies, demo days, or your next raise. Generate, score, and iterate at the pace you actually work.",
+    accent: "#F59E0B",
   },
   {
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-        <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 00-3-3.87" />
-        <path d="M16 3.13a4 4 0 010 7.75" />
-      </svg>
-    ),
+    icon: IconHandshake,
     title: "The Advisor & Consultant",
-    forLabel: "Mentors, coaches, fractional CTOs",
-    desc: "Help portfolio companies polish their pitch. One link, instant feedback, professional output.",
+    forAudience: "Mentors, coaches, fractional CTOs",
+    desc: "You help founders get funded. Instead of manually reviewing messy decks, send them a PitchIQ link. They get an instant score, you get structured feedback to work from, and everyone saves hours.",
+    accent: "#10B981",
   },
 ];
 
@@ -63,7 +73,7 @@ export default function LandingPersonas() {
             obs.disconnect();
           }
         },
-        { threshold: 0.2 }
+        { threshold: 0.15 }
       );
       obs.observe(el);
       observers.push(obs);
@@ -74,58 +84,79 @@ export default function LandingPersonas() {
 
   return (
     <section
-      className="section-py px-4 sm:px-6"
-      style={{ backgroundColor: "#10141b" }}
+      style={{ backgroundColor: "#0b111d" }}
+      className="py-24 sm:py-32 px-4 sm:px-6"
       aria-label="Who PitchIQ is built for"
     >
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-display font-bold">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight">
+            <span className="text-white/60">Built for people who</span>
+            <br />
             <span className="bg-gradient-to-r from-[#4361ee] to-[#A855F7] bg-clip-text text-transparent">
-              Built for people who move fast
+              can&apos;t afford a bad first impression
             </span>
           </h2>
+          <p className="mt-5 text-base sm:text-lg text-white/40 max-w-xl mx-auto">
+            Whether you&apos;re raising for the first time or helping someone
+            who is.
+          </p>
         </div>
 
-        {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Cards — stacked vertically */}
+        <div className="flex flex-col gap-5">
           {PERSONAS.map((persona, i) => (
             <div
               key={persona.title}
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
-              className="p-8 rounded-2xl text-center transition-all duration-700 ease-out"
+              className="bg-white/[0.04] border border-white/[0.06] backdrop-blur-sm rounded-2xl overflow-hidden transition-all duration-700 ease-out"
               style={{
-                backgroundColor: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.08)",
                 opacity: visibleCards[i] ? 1 : 0,
-                transform: visibleCards[i] ? "translateY(0)" : "translateY(16px)",
-                transitionDelay: visibleCards[i] ? `${i * 100}ms` : "0ms",
+                transform: visibleCards[i] ? "translateY(0)" : "translateY(24px)",
+                transitionDelay: visibleCards[i] ? `${i * 120}ms` : "0ms",
               }}
             >
-              {/* Icon */}
-              <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-[#4361ee]/20 to-[#A855F7]/20 border border-[#4361ee]/20 flex items-center justify-center mb-5">
-                {persona.icon}
+              <div className="flex flex-col md:flex-row">
+                {/* Left side — ~65% */}
+                <div className="flex-1 p-8 sm:p-10 md:w-[65%]">
+                  {/* Icon */}
+                  <div
+                    className="w-14 h-14 rounded-xl flex items-center justify-center mb-6"
+                    style={{
+                      backgroundColor: `${persona.accent}15`,
+                      border: `1px solid ${persona.accent}25`,
+                    }}
+                  >
+                    <persona.icon color={persona.accent} />
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-4">
+                    {persona.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-[15px] sm:text-base text-white/50 leading-relaxed max-w-lg">
+                    {persona.desc}
+                  </p>
+                </div>
+
+                {/* Right side — ~35% */}
+                <div className="md:w-[35%] border-t md:border-t-0 md:border-l border-white/[0.06] bg-white/[0.02] p-8 sm:p-10 flex flex-col justify-center">
+                  <span
+                    className="text-[11px] uppercase tracking-[0.2em] font-semibold mb-3 block"
+                    style={{ color: persona.accent }}
+                  >
+                    For
+                  </span>
+                  <span className="text-lg sm:text-xl font-bold text-white leading-snug">
+                    {persona.forAudience}
+                  </span>
+                </div>
               </div>
-
-              {/* Title */}
-              <h3 className="text-xl font-bold mb-3">
-                <span className="bg-gradient-to-r from-[#4361ee] to-[#A855F7] bg-clip-text text-transparent">
-                  {persona.title}
-                </span>
-              </h3>
-
-              {/* For label */}
-              <p className="text-xs uppercase tracking-[0.15em] text-[#4361ee] font-semibold mb-3">
-                For: {persona.forLabel}
-              </p>
-
-              {/* Description */}
-              <p className="text-sm text-[#A0A0B8] leading-relaxed">
-                {persona.desc}
-              </p>
             </div>
           ))}
         </div>
