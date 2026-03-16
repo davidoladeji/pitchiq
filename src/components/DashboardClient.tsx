@@ -10,6 +10,7 @@ import DashboardDeckGrid from "@/components/dashboard/DashboardDeckGrid";
 import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
 import DashboardActivityFeed, { type ActivityItem } from "@/components/dashboard/DashboardActivityFeed";
 import DashboardABTests from "@/components/dashboard/DashboardABTests";
+import DashboardInvestorCRM from "@/components/dashboard/DashboardInvestorCRM";
 import PlanCompareModal from "@/components/PlanCompareModal";
 
 interface DeckSummary {
@@ -236,6 +237,9 @@ export default function DashboardClient({
             decks={decks.map((d) => ({ shareId: d.shareId, title: d.title }))}
             plan={plan}
           />
+
+          {/* Investor CRM (Growth+ only) */}
+          <DashboardInvestorCRM plan={plan} />
 
           {/* Two-column layout: deck grid + sidebar */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

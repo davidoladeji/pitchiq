@@ -21,7 +21,7 @@ body {
 
 ::selection {
   background: rgba(67, 97, 238, 0.2);
-  color: #1a1a2e;
+  color: var(--foreground);
 }
 
 html {
@@ -47,9 +47,9 @@ body {
   }
 }
 
-/* Focus styles */
+/* Focus styles — design-system token */
 *:focus-visible {
-  outline: 2px solid #4361ee;
+  outline: 2px solid var(--electric);
   outline-offset: 2px;
   border-radius: 4px;
 }

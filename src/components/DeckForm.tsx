@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { DeckInput, DeckData } from "@/lib/types";
 import { THEMES } from "@/lib/themes";
 import FormField, { inputClass } from "@/components/ui/FormField";
@@ -11,6 +11,7 @@ import { getPlanLimits } from "@/lib/plan-limits";
 interface DeckFormProps {
   onGenerated: (deck: DeckData) => void;
   userPlan?: string;
+  templateDefaults?: Partial<DeckInput>;
 }
 
 const STEPS = [
@@ -94,7 +95,7 @@ function StepIndicator({
 }
 
 
-export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckFormProps) {
+export default function DeckForm({ onGenerated, userPlan = "starter", templateDefaults }: DeckFormProps) {
   const planLimits = getPlanLimits(userPlan);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -110,7 +111,15 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
     keyMetrics: "",
     teamInfo: "",
     themeId: "midnight",
+    ...templateDefaults,
   });
+
+  // Merge template defaults when a new template is selected
+  useEffect(() => {
+    if (templateDefaults) {
+      setForm((prev) => ({ ...prev, ...templateDefaults }));
+    }
+  }, [templateDefaults]);
 
   const update = useCallback((field: keyof DeckInput, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));

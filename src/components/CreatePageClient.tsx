@@ -10,8 +10,10 @@ import SlideRenderer from "@/components/SlideRenderer";
 import PIQScoreCard from "@/components/PIQScoreCard";
 import ExportMenu from "@/components/ExportMenu";
 import PlanCompareModal from "@/components/PlanCompareModal";
+import TemplateBrowser from "@/components/TemplateBrowser";
 import { DeckData } from "@/lib/types";
 import { getPlanLimits } from "@/lib/plan-limits";
+import { type DeckTemplate, applyTemplate } from "@/lib/templates";
 
 type CreateMode = "form" | "github";
 
@@ -33,6 +35,7 @@ export default function CreatePageClient({
   const [mode, setMode] = useState<CreateMode>("form");
   const [hasGithub, setHasGithub] = useState(false);
   const [showPlanModal, setShowPlanModal] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<DeckTemplate | null>(null);
 
   useEffect(() => {
     fetch("/api/auth/has-github")
@@ -309,9 +312,45 @@ export default function CreatePageClient({
               )}
             </div>
 
+            {/* Template browser (above form when no template selected) */}
+            {mode === "form" && !selectedTemplate && (
+              <div className="bg-white rounded-2xl shadow-sm border border-navy-100 p-6 sm:p-8 mb-6">
+                <TemplateBrowser
+                  onSelect={(template) => setSelectedTemplate(template)}
+                />
+              </div>
+            )}
+
+            {/* Selected template indicator */}
+            {selectedTemplate && (
+              <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-electric/5 border border-electric/15">
+                <svg className={`w-5 h-5 ${selectedTemplate.color}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d={selectedTemplate.icon} />
+                </svg>
+                <span className="text-sm font-medium text-navy">
+                  Using <strong>{selectedTemplate.name}</strong> template
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedTemplate(null)}
+                  className="ml-auto text-xs text-navy-400 hover:text-navy font-medium"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+
             <div className="bg-white rounded-2xl shadow-sm border border-navy-100 p-6 sm:p-8 md:p-10">
               {mode === "form" && (
-                <DeckForm onGenerated={handleGenerated} userPlan={userPlan} />
+                <DeckForm
+                  onGenerated={handleGenerated}
+                  userPlan={userPlan}
+                  templateDefaults={
+                    selectedTemplate
+                      ? applyTemplate(selectedTemplate, {})
+                      : undefined
+                  }
+                />
               )}
               {mode === "github" && (
                 <GitHubRepoForm onGenerated={handleGenerated} userPlan={userPlan} />
