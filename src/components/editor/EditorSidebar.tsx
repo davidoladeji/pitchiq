@@ -40,16 +40,7 @@ const BLOCK_TEMPLATES = [
   { type: "comparison-row", label: "Comparison", icon: "M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" },
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function SortableSlide({
-  slide,
-  index,
-  isSelected,
-  themeId,
-  companyName,
-  onSelect,
-  onContextMenu,
-}: {
+function SortableSlide(props: {
   slide: SlideData;
   index: number;
   isSelected: boolean;
@@ -58,6 +49,7 @@ function SortableSlide({
   onSelect: () => void;
   onContextMenu: (e: React.MouseEvent) => void;
 }) {
+  const { slide, index, isSelected, themeId, onSelect, onContextMenu } = props;
   const {
     attributes,
     listeners,

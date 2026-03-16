@@ -120,18 +120,7 @@ export default function EditorCanvas() {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function EditableSlide({
-  slide,
-  slideIndex,
-  companyName,
-  theme,
-  isDark,
-  selectedBlockId,
-  onUpdateSlide,
-  onSelectBlock,
-  onUpdateBlock,
-}: {
+function EditableSlide(props: {
   slide: SlideData;
   slideIndex: number;
   companyName: string;
@@ -142,6 +131,7 @@ function EditableSlide({
   onSelectBlock: (blockId: string | null) => void;
   onUpdateBlock: (slideIndex: number, blockId: string, patch: Partial<SlideBlock>) => void;
 }) {
+  const { slide, slideIndex, theme, isDark, selectedBlockId, onUpdateSlide, onSelectBlock, onUpdateBlock } = props;
   const bg = isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)";
   const fg = isDark ? "var(--t-text)" : "var(--t-bg-dark)";
   const sub = isDark ? "var(--t-text-secondary)" : undefined;
@@ -432,16 +422,7 @@ function EditableSlide({
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function EditableBlock({
-  block,
-  isSelected,
-  slideIndex,
-  onSelect,
-  onUpdate,
-  theme,
-  isDark,
-}: {
+function EditableBlock(props: {
   block: SlideBlock;
   isSelected: boolean;
   slideIndex: number;
@@ -450,6 +431,7 @@ function EditableBlock({
   theme: ThemeDef;
   isDark: boolean;
 }) {
+  const { block, isSelected, onSelect, onUpdate, theme, isDark } = props;
   const accent = isDark ? "var(--t-accent-light)" : "var(--t-accent)";
 
   function handleContentBlur(e: React.FocusEvent) {

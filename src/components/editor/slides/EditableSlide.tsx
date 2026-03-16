@@ -315,16 +315,12 @@ function renderEditorBlock(
 
 // ─── Per-type Editable Slide Content ────────────────────────────────
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function EditableTitleSlide({
-  slide,
-  onUpdate,
-  accentHex,
-}: {
+function EditableTitleSlide(props: {
   slide: SlideData;
   onUpdate: (patch: Partial<SlideData>) => void;
   accentHex: string;
 }) {
+  const { slide, onUpdate } = props;
   return (
     <div
       className="flex flex-col items-center justify-center h-full p-12 relative overflow-hidden"
