@@ -2,6 +2,7 @@ import AppNav from "@/components/AppNav";
 import Footer from "@/components/Footer";
 import LandingHero from "@/components/landing/LandingHero";
 import LandingDemo from "@/components/landing/LandingDemo";
+import LandingPIQDeepDive from "@/components/landing/LandingPIQDeepDive";
 import LandingNumbers from "@/components/landing/LandingNumbers";
 import LandingTransformation from "@/components/landing/LandingTransformation";
 import LandingSteps from "@/components/landing/LandingSteps";
@@ -28,6 +29,7 @@ export default function Home() {
       <main id="main" tabIndex={-1}>
         <LandingHero />
         <LandingDemo />
+        <LandingPIQDeepDive />
         <LandingNumbers />
         <LandingTransformation />
         <LandingSteps />

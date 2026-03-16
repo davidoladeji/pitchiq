@@ -24,7 +24,28 @@ export interface TimelineItem {
   completed?: boolean;
 }
 
+/** Block types for the pitch deck editor */
+export type SlideBlockType =
+  | "text"
+  | "metric"
+  | "chart"
+  | "team-member"
+  | "timeline-item"
+  | "image"
+  | "quote"
+  | "logo-grid"
+  | "comparison-row";
+
+/** An individually addressable block within a slide (used by the editor) */
+export interface SlideBlock {
+  id: string; // nanoid
+  type: SlideBlockType;
+  content: string; // primary text content
+  properties: Record<string, unknown>; // type-specific props (fontSize, color, chartData, etc.)
+}
+
 export interface SlideData {
+  id?: string; // stable slide ID for editor reference
   title: string;
   subtitle?: string;
   content: string[];
@@ -41,6 +62,7 @@ export interface SlideData {
   timeline?: TimelineItem[];
   imageUrl?: string;
   imagePrompt?: string; // For Thesys image generation
+  editorBlocks?: SlideBlock[]; // structured block data for editor (when present, editor uses this)
 }
 
 export interface DeckInput {

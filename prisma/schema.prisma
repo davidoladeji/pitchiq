@@ -28,10 +28,20 @@ model Deck {
   originalFileName String? // original file name for uploaded decks
   userId        String?
   owner         User?    @relation("UserDecks", fields: [userId], references: [id])
+  workspaceId   String?
+  workspace     Workspace? @relation(fields: [workspaceId], references: [id])
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   views         View[]
   transactions  Transaction[]
+  versions      DeckVersion[]
+  parentVariants DeckVariant[] @relation("ParentDeck")
+  asVariant     DeckVariant?  @relation("VariantDeck")
+  alerts        DeckAlert[]
+  comments      SlideComment[]
+
+  @@index([userId])
+  @@index([workspaceId])
 }
 
 model View {
@@ -43,9 +53,12 @@ model View {
   slideViews  String   @default("[]") // JSON: [{slideIndex, timeSpent}]
   totalTime   Int      @default(0) // seconds
   createdAt   DateTime @default(now())
+
+  @@index([deckId])
+  @@index([createdAt])
 }
 
-// --- Admin & payments (UPH-53) ---
+// --- Admin & payments ---
 enum Role {
   user
   admin
@@ -59,7 +72,7 @@ model User {
   name                 String?
   image                String?
   role                 Role      @default(user)
-  plan                 String    @default("starter") // starter | pro | growth
+  plan                 String    @default("starter") // starter | pro | growth | enterprise
   stripeCustomerId     String?   @unique
   stripeSubscriptionId String?
   planExpiresAt        DateTime?
@@ -69,6 +82,11 @@ model User {
   sessions             Session[]
   decks                Deck[]    @relation("UserDecks")
   transactions         Transaction[]
+  ownedWorkspaces      Workspace[]       @relation("OwnedWorkspaces")
+  workspaceMemberships WorkspaceMember[]
+  comments             SlideComment[]
+  activityLogs         ActivityLog[]
+  abTests              ABTest[]
 }
 
 model Account {
@@ -130,4 +148,131 @@ model Setting {
   key       String   @unique // e.g. stripe_secret_key, stripe_publishable_key
   value     String   // secret keys never returned to client; admin can overwrite
   updatedAt DateTime @updatedAt
+}
+
+// --- Version history for editor ---
+model DeckVersion {
+  id         String   @id @default(uuid())
+  deckId     String
+  deck       Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  version    Int
+  slides     String   // JSON snapshot of slides at this version
+  piqScore   String   @default("{}") // PIQ score at this version
+  changeNote String?  // auto-generated or user-provided
+  createdAt  DateTime @default(now())
+
+  @@index([deckId, version])
+}
+
+// --- Deck variants for investor targeting ---
+model DeckVariant {
+  id            String   @id @default(uuid())
+  parentDeckId  String
+  parentDeck    Deck     @relation("ParentDeck", fields: [parentDeckId], references: [id], onDelete: Cascade)
+  variantDeckId String   @unique
+  variantDeck   Deck     @relation("VariantDeck", fields: [variantDeckId], references: [id], onDelete: Cascade)
+  investorType  String   // vc | angel | accelerator
+  createdAt     DateTime @default(now())
+}
+
+// --- A/B testing ---
+model ABTest {
+  id        String   @id @default(uuid())
+  shareSlug String   @unique
+  deckAId   String
+  deckBId   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+// --- Follow-up alerts ---
+model DeckAlert {
+  id        String   @id @default(uuid())
+  deckId    String
+  deck      Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  type      String   // "high_engagement" | "new_view"
+  viewId    String?
+  notified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([deckId])
+}
+
+// --- Team collaboration ---
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  ownerId   String
+  owner     User     @relation("OwnedWorkspaces", fields: [ownerId], references: [id])
+  members   WorkspaceMember[]
+  invites   WorkspaceInvite[]
+  decks     Deck[]
+  activities ActivityLog[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model WorkspaceMember {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  role        String    // "owner" | "editor" | "viewer"
+  joinedAt    DateTime  @default(now())
+
+  @@unique([workspaceId, userId])
+}
+
+model WorkspaceInvite {
+  id          String    @id @default(uuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  email       String
+  role        String    @default("editor")
+  token       String    @unique
+  expiresAt   DateTime
+  accepted    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+}
+
+// --- Slide comments ---
+model SlideComment {
+  id         String   @id @default(uuid())
+  deckId     String
+  deck       Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  slideIndex Int
+  blockId    String?  // optional: comment on specific block
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  content    String
+  resolved   Boolean  @default(false)
+  parentId   String?  // thread replies
+  parent     SlideComment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies    SlideComment[] @relation("CommentReplies")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([deckId, slideIndex])
+}
+
+// --- Activity log ---
+model ActivityLog {
+  id          String     @id @default(uuid())
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
+  deckId      String?
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  action      String     // "deck.created" | "deck.edited" | "comment.added" | "member.invited" | etc.
+  metadata    String     @default("{}") // JSON details
+  createdAt   DateTime   @default(now())
+
+  @@index([workspaceId, createdAt])
+  @@index([deckId, createdAt])
+  @@index([userId, createdAt])
 }

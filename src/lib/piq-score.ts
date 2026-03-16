@@ -1,15 +1,7 @@
 import { SlideData, PIQScore, PIQDimension } from "@/lib/types";
+import { PIQ_DIMENSIONS } from "@/lib/piq-dimensions";
 
-const DIMENSIONS = [
-  { id: "narrative", label: "Narrative Structure", weight: 15 },
-  { id: "market", label: "Market Sizing", weight: 15 },
-  { id: "differentiation", label: "Competitive Differentiation", weight: 12 },
-  { id: "financials", label: "Financial Clarity", weight: 15 },
-  { id: "team", label: "Team Presentation", weight: 10 },
-  { id: "ask", label: "Ask Justification", weight: 13 },
-  { id: "design", label: "Design Quality", weight: 10 },
-  { id: "credibility", label: "Data Credibility", weight: 10 },
-];
+const DIMENSIONS = PIQ_DIMENSIONS.map(({ id, label, weight }) => ({ id, label, weight }));
 
 function getGrade(score: number): string {
   if (score >= 95) return "A+";
