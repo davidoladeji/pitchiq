@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState, useCallback, useEffect } from "react";
 import AuthButton from "@/components/AuthButton";
 
@@ -14,7 +13,6 @@ interface AppNavProps {
 }
 
 export default function AppNav({ variant = "app" }: AppNavProps) {
-  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -265,7 +263,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
               href="/create"
               onClick={closeMenu}
               aria-label="Get started — create your pitch deck"
-              className="w-full text-center py-3.5 rounded-full bg-electric hover:bg-electric-light text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+              className="w-full text-center py-3.5 rounded-full bg-electric hover:bg-electric-600 text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
             >
               Get Started
             </Link>
