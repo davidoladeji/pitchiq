@@ -238,12 +238,23 @@ export default function PitchPracticeClient({
         }
       };
 
-      recognition.onerror = () => {
+      recognition.onerror = (e: { error: string }) => {
+        // Don't stop on "no-speech" — just keep listening
+        if (e.error === "no-speech" || e.error === "aborted") return;
         setIsListening(false);
       };
 
       recognition.onend = () => {
-        setIsListening(false);
+        // Auto-restart if we're still in practice phase and haven't manually stopped
+        if (recognitionRef.current === recognition) {
+          try {
+            recognition.start();
+          } catch {
+            setIsListening(false);
+          }
+        } else {
+          setIsListening(false);
+        }
       };
 
       recognition.start();
@@ -307,6 +318,14 @@ export default function PitchPracticeClient({
       transcriptsRef.current = {};
       slideStartRef.current = Date.now();
       setPhase("practice");
+
+      // Auto-start mic if speech recognition is supported
+      if (speechSupported) {
+        // Small delay to let the practice UI render first
+        setTimeout(() => {
+          startListening();
+        }, 500);
+      }
     } catch {
       setApiError("Network error. Please try again.");
     }
@@ -506,6 +525,35 @@ export default function PitchPracticeClient({
                 ~{Math.round((isCustom ? customMinutes * 60 : targetDuration) / slideCount)}s per slide recommended
               </p>
             </div>
+
+            {/* Mic info */}
+            {speechSupported && (
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-electric/5 border border-electric/10">
+                <svg className="w-5 h-5 text-electric shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-medium text-navy">Microphone will be used</p>
+                  <p className="text-xs text-navy-500 mt-0.5">
+                    Your browser will ask for mic access. Speech is transcribed locally for AI feedback on pacing and clarity.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {!speechSupported && (
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-100">
+                <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+                <div>
+                  <p className="text-sm font-medium text-navy">Microphone not available</p>
+                  <p className="text-xs text-navy-500 mt-0.5">
+                    Your browser doesn&apos;t support speech recognition. You can still practice with slide timing feedback.
+                  </p>
+                </div>
+              </div>
+            )}
 
             {apiError && (
               <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-700">
