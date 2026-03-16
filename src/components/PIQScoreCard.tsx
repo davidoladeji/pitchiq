@@ -6,6 +6,7 @@ import { PIQ_DIMENSIONS } from "@/lib/piq-dimensions";
 
 /* ── Helpers ───────────────────────────────────────────── */
 
+/** Hex for SVG stroke/inline style; values match design-system tokens (emerald/electric/amber/red). */
 function scoreColor(score: number): string {
   if (score >= 80) return "#22c55e";
   if (score >= 60) return "#4361ee";
@@ -22,7 +23,7 @@ function scoreBadgeClass(score: number): string {
 
 function borderColorClass(score: number): string {
   if (score >= 80) return "border-l-emerald-500";
-  if (score >= 60) return "border-l-blue-500";
+  if (score >= 60) return "border-l-electric";
   if (score >= 40) return "border-l-amber-500";
   return "border-l-red-500";
 }
@@ -158,8 +159,7 @@ export default function PIQScoreCard({
               {/* Data fill polygon */}
               <polygon
                 points={radarPoints}
-                fill="rgba(67, 97, 238, 0.15)"
-                stroke="#4361ee"
+                className="fill-electric/15 stroke-electric"
                 strokeWidth={2}
                 strokeLinejoin="round"
               />
@@ -168,7 +168,7 @@ export default function PIQScoreCard({
               {score.dimensions.map((dim, i) => {
                 const r = (dim.score / 100) * maxR;
                 const [x, y] = polarToXY(cx, cy, r, i);
-                return <circle key={dim.id} cx={x} cy={y} r={3} fill="#4361ee" />;
+                return <circle key={dim.id} cx={x} cy={y} r={3} className="fill-electric" />;
               })}
 
               {/* Dimension labels around the radar */}
@@ -292,8 +292,7 @@ export default function PIQScoreCard({
                 })}
                 <polygon
                   points={octagonPoints(cx, cy, maxR * 0.6)}
-                  fill="rgba(67, 97, 238, 0.1)"
-                  stroke="#94a3b8"
+                  className="fill-electric/10 stroke-navy-400"
                   strokeWidth={2}
                   strokeLinejoin="round"
                 />

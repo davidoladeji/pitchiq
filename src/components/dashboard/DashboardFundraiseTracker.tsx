@@ -24,12 +24,12 @@ interface InvestorContact {
 }
 
 const STATUSES = [
-  { value: "identified", label: "Identified", color: "bg-gray-100 text-gray-600" },
-  { value: "contacted", label: "Contacted", color: "bg-blue-100 text-blue-700" },
+  { value: "identified", label: "Identified", color: "bg-navy-100 text-navy-600" },
+  { value: "contacted", label: "Contacted", color: "bg-electric/15 text-electric" },
   { value: "meeting", label: "Meeting", color: "bg-indigo-100 text-indigo-700" },
   { value: "due_diligence", label: "Due Diligence", color: "bg-amber-100 text-amber-700" },
-  { value: "term_sheet", label: "Term Sheet", color: "bg-purple-100 text-purple-700" },
-  { value: "committed", label: "Committed", color: "bg-green-100 text-green-700" },
+  { value: "term_sheet", label: "Term Sheet", color: "bg-violet/15 text-violet" },
+  { value: "committed", label: "Committed", color: "bg-emerald/15 text-emerald" },
   { value: "passed", label: "Passed", color: "bg-red-100 text-red-600" },
 ];
 

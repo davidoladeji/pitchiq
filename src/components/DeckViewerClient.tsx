@@ -226,6 +226,17 @@ export default function DeckViewerClient() {
               {deck && (
                 <ExportMenu deck={deck} userPlan={ownerPlan} />
               )}
+              {isOwner && (ownerPlan === "growth" || ownerPlan === "enterprise") && (
+                <Link
+                  href={`/practice/${shareId}`}
+                  className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-electric/20 bg-electric/5 text-electric text-sm font-semibold hover:bg-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+                  </svg>
+                  Practice Pitch
+                </Link>
+              )}
               <Link
                 href="/dashboard"
                 className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"

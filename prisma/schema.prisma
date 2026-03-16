@@ -39,6 +39,7 @@ model Deck {
   asVariant     DeckVariant?  @relation("VariantDeck")
   alerts        DeckAlert[]
   comments      SlideComment[]
+  practiceSessions PitchPracticeSession[]
 
   @@index([userId])
   @@index([workspaceId])
@@ -88,6 +89,10 @@ model User {
   activityLogs         ActivityLog[]
   abTests              ABTest[]
   investorContacts     InvestorContact[]
+  apiKeys              ApiKey[]
+  batchJobs            BatchJob[]
+  customDomains        CustomDomain[]
+  practiceSessions     PitchPracticeSession[]
 }
 
 model Account {
@@ -210,11 +215,12 @@ model Workspace {
   ownerId     String
   owner       User     @relation("OwnedWorkspaces", fields: [ownerId], references: [id])
   brandConfig String   @default("{}") // JSON: { logoUrl, primaryColor, accentColor, companyName, hidePitchiqBranding }
-  members   WorkspaceMember[]
-  invites   WorkspaceInvite[]
-  decks     Deck[]
-  activities ActivityLog[]
-  createdAt DateTime @default(now())
+  members       WorkspaceMember[]
+  invites       WorkspaceInvite[]
+  decks         Deck[]
+  activities    ActivityLog[]
+  customDomains CustomDomain[]
+  createdAt     DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
@@ -306,4 +312,78 @@ model ActivityLog {
   @@index([workspaceId, createdAt])
   @@index([deckId, createdAt])
   @@index([userId, createdAt])
+}
+
+// --- API keys ---
+model ApiKey {
+  id         String    @id @default(uuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String    @default("Default")
+  keyHash    String    @unique
+  keyPrefix  String    // first 8 chars for display: "piq_abc1..."
+  scopes     String    @default("[]") // JSON array: ["decks:read","decks:write","score","batch"]
+  lastUsedAt DateTime?
+  expiresAt  DateTime?
+  revoked    Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+
+  @@index([userId])
+  @@index([keyHash])
+}
+
+// --- Batch scoring ---
+model BatchJob {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String   @default("Untitled Batch")
+  status     String   @default("pending") // pending | processing | completed | failed
+  totalDecks Int      @default(0)
+  completed  Int      @default(0)
+  failed     Int      @default(0)
+  results    String   @default("[]") // JSON: [{ fileName, shareId?, score, grade, error? }]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, status])
+}
+
+// --- Custom domains ---
+model CustomDomain {
+  id                String    @id @default(uuid())
+  userId            String
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspaceId       String?
+  workspace         Workspace? @relation(fields: [workspaceId], references: [id])
+  domain            String    @unique
+  status            String    @default("pending") // pending | verifying | active | failed
+  verificationToken String    @unique
+  verifiedAt        DateTime?
+  sslStatus         String    @default("pending") // pending | active
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([domain])
+}
+
+// --- Pitch practice sessions ---
+model PitchPracticeSession {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deckId       String
+  deck         Deck     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  duration     Int      @default(0) // total seconds
+  slideTimings String   @default("[]") // JSON: [{slideIndex, duration, transcript?}]
+  aiFeedback   String   @default("{}") // JSON: { overall, pacing, clarity, confidence, suggestions[] }
+  status       String   @default("in_progress") // in_progress | completed | abandoned
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+  @@index([deckId])
+  @@index([userId, deckId])
 }

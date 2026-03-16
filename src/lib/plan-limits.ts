@@ -33,6 +33,10 @@ export interface PlanLimits {
   customDomain: boolean;
   apiAccess: boolean;
   batchScoring: boolean;
+  maxApiKeys: number;
+  apiRateLimit: number; // requests per minute
+  maxBatchSize: number;
+  pitchPractice: boolean;
 }
 
 const ALL_THEME_IDS = THEMES.map((t) => t.id);
@@ -64,6 +68,10 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     customDomain: false,
     apiAccess: false,
     batchScoring: false,
+    maxApiKeys: 0,
+    apiRateLimit: 0,
+    maxBatchSize: 0,
+    pitchPractice: false,
   },
   pro: {
     maxDecks: Infinity,
@@ -91,6 +99,10 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     customDomain: false,
     apiAccess: false,
     batchScoring: false,
+    maxApiKeys: 0,
+    apiRateLimit: 0,
+    maxBatchSize: 0,
+    pitchPractice: false,
   },
   growth: {
     maxDecks: Infinity,
@@ -118,6 +130,10 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     customDomain: true,
     apiAccess: false,
     batchScoring: false,
+    maxApiKeys: 0,
+    apiRateLimit: 0,
+    maxBatchSize: 0,
+    pitchPractice: true,
   },
   enterprise: {
     maxDecks: Infinity,
@@ -145,6 +161,10 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     customDomain: true,
     apiAccess: true,
     batchScoring: true,
+    maxApiKeys: 10,
+    apiRateLimit: 100,
+    maxBatchSize: 50,
+    pitchPractice: true,
   },
 };
 

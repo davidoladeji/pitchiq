@@ -12,6 +12,10 @@ import DashboardActivityFeed, { type ActivityItem } from "@/components/dashboard
 import DashboardABTests from "@/components/dashboard/DashboardABTests";
 import DashboardInvestorCRM from "@/components/dashboard/DashboardInvestorCRM";
 import DashboardFundraiseTracker from "@/components/dashboard/DashboardFundraiseTracker";
+import DashboardApiKeys from "@/components/dashboard/DashboardApiKeys";
+import DashboardBatchJobs from "@/components/dashboard/DashboardBatchJobs";
+import DashboardCustomDomain from "@/components/dashboard/DashboardCustomDomain";
+import DashboardPitchPractice from "@/components/dashboard/DashboardPitchPractice";
 import PlanCompareModal from "@/components/PlanCompareModal";
 
 interface DeckSummary {
@@ -231,7 +235,7 @@ export default function DashboardClient({
           <DashboardOverview decks={decks} totalViews={totalViews} plan={plan} />
 
           {/* Quick actions */}
-          <DashboardQuickActions />
+          <DashboardQuickActions plan={plan} />
 
           {/* A/B Testing (Growth+ only) */}
           <DashboardABTests
@@ -244,6 +248,18 @@ export default function DashboardClient({
 
           {/* Fundraise Tracker (Growth+ only) */}
           <DashboardFundraiseTracker plan={plan} />
+
+          {/* Pitch Practice (Growth+ only) */}
+          <DashboardPitchPractice plan={plan} decks={decks.map((d) => ({ shareId: d.shareId, title: d.title }))} />
+
+          {/* Batch Scoring (Enterprise only) */}
+          <DashboardBatchJobs plan={plan} />
+
+          {/* Custom Domain (Growth+ only) */}
+          <DashboardCustomDomain plan={plan} />
+
+          {/* API Keys (Enterprise only) */}
+          <DashboardApiKeys hasApiAccess={limits.apiAccess} />
 
           {/* Two-column layout: deck grid + sidebar */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
