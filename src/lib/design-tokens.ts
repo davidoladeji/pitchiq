@@ -10,6 +10,9 @@ export const EMERALD_HEX = "#22c55e";
 export const AMBER_HEX = "#f59e0b";
 export const RED_HEX = "#ef4444";
 
+/** Navy-500 for Recharts/SVG axis tick text (matches Tailwind navy.500). */
+export const NAVY_500_HEX = "#505068";
+
 /** Chart/series palette (Recharts, SVG) — electric, violet, emerald, amber, red, cyan, pink */
 export const CHART_COLORS = [
   ELECTRIC_HEX,

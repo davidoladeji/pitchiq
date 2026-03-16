@@ -33,6 +33,7 @@ export default function DeckUploader({
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [sizeWarning, setSizeWarning] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const validateFile = useCallback(
@@ -58,6 +59,7 @@ export default function DeckUploader({
         return;
       }
       setError(null);
+      setSizeWarning(file.size > 4 * 1024 * 1024);
       setSelectedFile(file);
       onFileSelected(file);
     },
@@ -97,6 +99,7 @@ export default function DeckUploader({
   const handleRemove = useCallback(() => {
     setSelectedFile(null);
     setError(null);
+    setSizeWarning(false);
     if (inputRef.current) inputRef.current.value = "";
   }, []);
 
@@ -190,6 +193,15 @@ export default function DeckUploader({
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
           </svg>
           {error}
+        </p>
+      )}
+
+      {sizeWarning && !error && (
+        <p className="mt-2 text-sm text-amber-600 flex items-center gap-1.5">
+          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126z" />
+          </svg>
+          Large files may fail to upload. Consider compressing your file.
         </p>
       )}
     </div>

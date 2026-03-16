@@ -1,16 +1,22 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import {
+  ELECTRIC_HEX,
+  VIOLET_HEX,
+  AMBER_HEX,
+  EMERALD_HEX,
+} from "@/lib/design-tokens";
 
 const DIMENSIONS = [
-  { label: "Narrative", score: 82, color: "#4361ee" },
-  { label: "Market Sizing", score: 71, color: "#A855F7" },
-  { label: "Differentiation", score: 88, color: "#4361ee" },
-  { label: "Financials", score: 65, color: "#F59E0B" },
-  { label: "Team", score: 90, color: "#10B981" },
-  { label: "Ask", score: 76, color: "#A855F7" },
-  { label: "Design", score: 85, color: "#4361ee" },
-  { label: "Credibility", score: 79, color: "#10B981" },
+  { label: "Narrative", score: 82, color: ELECTRIC_HEX },
+  { label: "Market Sizing", score: 71, color: VIOLET_HEX },
+  { label: "Differentiation", score: 88, color: ELECTRIC_HEX },
+  { label: "Financials", score: 65, color: AMBER_HEX },
+  { label: "Team", score: 90, color: EMERALD_HEX },
+  { label: "Ask", score: 76, color: VIOLET_HEX },
+  { label: "Design", score: 85, color: ELECTRIC_HEX },
+  { label: "Credibility", score: 79, color: EMERALD_HEX },
 ];
 
 const OVERALL = 78;
@@ -64,8 +70,11 @@ export default function LandingDemo() {
               : "opacity-0 translate-y-12 scale-[0.97]"
           }`}
         >
-          {/* Minimal browser chrome — just the 3 dots */}
-          <div className="flex items-center gap-2 px-5 py-3.5 bg-navy border-b border-white/[0.06]">
+          {/* Minimal browser chrome — decorative traffic-light dots */}
+          <div
+            className="flex items-center gap-2 px-5 py-3.5 bg-navy border-b border-white/[0.06]"
+            aria-hidden="true"
+          >
             <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
             <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
             <div className="w-3 h-3 rounded-full bg-[#28C840]" />
@@ -110,8 +119,8 @@ export default function LandingDemo() {
                         x2="100%"
                         y2="0%"
                       >
-                        <stop offset="0%" stopColor="#4361ee" />
-                        <stop offset="100%" stopColor="#A855F7" />
+                        <stop offset="0%" stopColor={ELECTRIC_HEX} />
+                        <stop offset="100%" stopColor={VIOLET_HEX} />
                       </linearGradient>
                     </defs>
                   </svg>

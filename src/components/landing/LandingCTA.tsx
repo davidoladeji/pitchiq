@@ -48,9 +48,23 @@ export default function LandingCTA() {
           <Link
             href="/create"
             aria-label="Generate your pitch deck for free — no signup required"
-            className="min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-xl bg-electric hover:bg-electric-light text-white font-semibold text-lg shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+            className="group min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-glow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Generate Your Deck &mdash; Free
+            <svg
+              className="w-5 h-5 ml-2.5 group-hover:translate-x-1 transition-transform duration-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+              />
+            </svg>
           </Link>
         </div>
         <p

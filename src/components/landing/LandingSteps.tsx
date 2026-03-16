@@ -59,7 +59,7 @@ export default function LandingSteps() {
   return (
     <section
       id="how-it-works"
-      className="section-py bg-white px-6"
+      className="section-py bg-background px-6"
       aria-label="How it works — four steps to fundraising clarity"
     >
       <div className="max-w-4xl mx-auto">

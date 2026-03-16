@@ -111,11 +111,14 @@ export default function CreatePageClient({
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-navy-50">
+      <div className="min-h-screen bg-navy-50" aria-busy="true">
         <AppNav />
         <div className="min-h-[60vh] flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin" />
+          <div className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin" aria-hidden="true" />
         </div>
+        <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          Loading
+        </span>
       </div>
     );
   }
@@ -147,7 +150,7 @@ export default function CreatePageClient({
       {/* Skip link — WCAG 2.1 AA */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-electric focus:text-white focus:outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2"
+        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       >
         Skip to main content
       </a>

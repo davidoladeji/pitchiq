@@ -60,19 +60,24 @@ export default async function PracticePage({
     slides = [];
   }
 
-  // Load past sessions for this deck
-  const pastSessions = await prisma.pitchPracticeSession.findMany({
-    where: { userId, deckId: deck.id },
-    orderBy: { createdAt: "desc" },
-    take: 10,
-    select: {
-      id: true,
-      duration: true,
-      aiFeedback: true,
-      status: true,
-      createdAt: true,
-    },
-  });
+  // Load past sessions for this deck (table may not exist if migration hasn't run)
+  let pastSessions: { id: string; duration: number; aiFeedback: string; status: string; createdAt: Date }[] = [];
+  try {
+    pastSessions = await prisma.pitchPracticeSession.findMany({
+      where: { userId, deckId: deck.id },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      select: {
+        id: true,
+        duration: true,
+        aiFeedback: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+  } catch {
+    pastSessions = [];
+  }
 
   const formattedSessions = pastSessions.map((s) => {
     let score: number | null = null;

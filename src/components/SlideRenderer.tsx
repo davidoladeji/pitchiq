@@ -40,6 +40,7 @@ function themeVars(theme: ThemeDef): CSSProperties {
     "--t-card-bg": theme.cardBg,
     "--t-heading-font": theme.headingFont,
     "--t-heading-weight": String(theme.headingWeight),
+    "--t-text-on-light": theme.textOnLight,
   } as CSSProperties;
 }
 
@@ -87,7 +88,7 @@ function TitleSlide({ slide, companyName, accentHex }: { slide: SlideData; compa
 function ContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
   const layout = slide.layout || "default";
   const bg = accent ? "var(--t-bg-dark)" : "var(--t-bg-light)";
-  const fg = accent ? "var(--t-text)" : "var(--t-bg-dark)";
+  const fg = accent ? "var(--t-text)" : "var(--t-text-on-light)";
   const accentColor = accent ? "var(--t-accent-light)" : "var(--t-accent)";
   const subColor = accent ? "var(--t-text-secondary)" : undefined;
   const items = slide.content.slice(0, 8);
@@ -215,7 +216,7 @@ function StatsSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
       className={`flex flex-col h-full ${dense ? "p-3 sm:p-4 md:p-6 lg:p-8" : "p-4 sm:p-6 md:p-8 lg:p-12"} relative overflow-hidden`}
       style={{
         background: accent ? "var(--t-bg-dark)" : "var(--t-bg-light)",
-        color: accent ? "var(--t-text)" : "var(--t-bg-dark)",
+        color: accent ? "var(--t-text)" : "var(--t-text-on-light)",
       }}
     >
       {accent && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
@@ -254,7 +255,7 @@ function ChartSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
       className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative"
       style={{
         background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
-        color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
+        color: isDark ? "var(--t-text)" : "var(--t-text-on-light)",
       }}
     >
       {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
@@ -361,7 +362,7 @@ function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
       className={`flex flex-col h-full ${dense ? "p-3 sm:p-4 md:p-6 lg:p-8" : "p-4 sm:p-6 md:p-8 lg:p-12"} relative overflow-hidden`}
       style={{
         background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
-        color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
+        color: isDark ? "var(--t-text)" : "var(--t-text-on-light)",
       }}
     >
       {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
@@ -386,7 +387,7 @@ function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
                 }}
               >
                 <p className={`${dense ? "text-[10px] md:text-xs" : "text-xs md:text-sm"} uppercase tracking-wider font-semibold opacity-50 mb-0.5`}>{metric.label}</p>
-                <p className={`${dense ? "text-lg md:text-xl lg:text-2xl" : "text-2xl md:text-3xl lg:text-4xl"} font-bold tracking-tight`} style={{ color: isDark ? "var(--t-text)" : "var(--t-bg-dark)" }}>
+                <p className={`${dense ? "text-lg md:text-xl lg:text-2xl" : "text-2xl md:text-3xl lg:text-4xl"} font-bold tracking-tight`} style={{ color: isDark ? "var(--t-text)" : "var(--t-text-on-light)" }}>
                   {metric.value}
                 </p>
                 {metric.change && (
@@ -418,7 +419,7 @@ function TeamSlide({ slide }: { slide: SlideData }) {
   const dense = teamData.length > 4 || slide.content.length > 4;
 
   return (
-    <div className={`flex flex-col h-full ${dense ? "p-3 sm:p-4 md:p-6 lg:p-8" : "p-4 sm:p-6 md:p-8 lg:p-12"}`} style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
+    <div className={`flex flex-col h-full ${dense ? "p-3 sm:p-4 md:p-6 lg:p-8" : "p-4 sm:p-6 md:p-8 lg:p-12"}`} style={{ background: "var(--t-bg-light)", color: "var(--t-text-on-light)" }}>
       <div className={`${dense ? "mb-3 md:mb-4" : "mb-6 md:mb-8"}`}>
         <h2 className={`${dense ? "text-xl sm:text-2xl md:text-3xl" : "text-2xl sm:text-3xl md:text-4xl"} tracking-tight mb-2 text-balance`} style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && <p className={`${dense ? "text-xs sm:text-sm" : "text-sm sm:text-base md:text-lg"} opacity-60 leading-relaxed`}>{slide.subtitle}</p>}
@@ -461,7 +462,7 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
       className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden"
       style={{
         background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
-        color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
+        color: isDark ? "var(--t-text)" : "var(--t-text-on-light)",
       }}
     >
       {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
@@ -522,7 +523,7 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
 function ComparisonSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; accentHex?: string }) {
   const items = slide.content.slice(0, 6);
   return (
-    <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-bg-dark)" }}>
+    <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-text-on-light)" }}>
       <div className="mb-4 md:mb-6 shrink-0">
         <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
         {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
@@ -656,11 +657,11 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
           <div key={i} className="w-[1280px] h-[720px] relative overflow-hidden" style={themeVars(theme)}>
             {renderSlide(slide, companyName, theme.accent)}
             {showBranding && (
-              <div className="absolute bottom-3 left-4 text-[10px] opacity-25 font-medium tracking-wide" style={{ color: (slide.type === "title" || slide.type === "cta" || slide.accent) ? "var(--t-text)" : "var(--t-bg-dark)" }}>
+              <div className="absolute bottom-3 left-4 text-[10px] opacity-25 font-medium tracking-wide" style={{ color: (slide.type === "title" || slide.type === "cta" || slide.accent) ? "var(--t-text)" : "var(--t-text-on-light)" }}>
                 Made with PitchIQ
               </div>
             )}
-            <div className="absolute bottom-3 right-4 text-xs opacity-30 font-medium font-mono tracking-wider" style={{ color: (slide.type === "title" || slide.type === "cta" || slide.accent) ? "var(--t-text)" : "var(--t-bg-dark)" }}>
+            <div className="absolute bottom-3 right-4 text-xs opacity-30 font-medium font-mono tracking-wider" style={{ color: (slide.type === "title" || slide.type === "cta" || slide.accent) ? "var(--t-text)" : "var(--t-text-on-light)" }}>
               {String(i + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
             </div>
           </div>

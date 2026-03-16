@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+
 import { useState, useEffect } from "react";
 import AppNav from "@/components/AppNav";
 import { getPlanLimits } from "@/lib/plan-limits";
@@ -108,35 +108,11 @@ export default function DashboardClient({
     <div className="min-h-screen bg-navy-50">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:ring-2 focus:ring-electric focus:ring-offset-2 focus:ring-offset-white focus:bg-white focus:font-medium focus:text-navy"
+        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:bg-white focus-visible:font-medium focus-visible:text-navy"
       >
         Skip to main content
       </a>
-      <AppNav
-        actions={
-          atDeckLimit && !isPaidPlan ? (
-            <button
-              type="button"
-              onClick={() => setShowPlanModal(true)}
-              aria-label="Upgrade to create more decks"
-              className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-electric hover:bg-electric-light text-white text-sm font-semibold shadow-sm hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-              </svg>
-              Upgrade for More
-            </button>
-          ) : (
-            <Link
-              href="/create"
-              aria-label="Create new pitch deck"
-              className="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            >
-              New Deck
-            </Link>
-          )
-        }
-      />
+      <AppNav />
 
       <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none">
         <div className="max-w-6xl mx-auto space-y-6">

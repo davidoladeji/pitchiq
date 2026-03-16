@@ -78,11 +78,11 @@ const CARD_THEMES = [
     iconColor: "text-emerald-600",
   },
   {
-    bg: "bg-gradient-to-br from-sky-50 to-blue-50",
-    blob: "bg-sky-400",
-    iconBg: "bg-sky-100",
-    iconBorder: "border-sky-200",
-    iconColor: "text-sky-600",
+    bg: "bg-gradient-to-br from-electric-50 to-violet-50",
+    blob: "bg-electric-400",
+    iconBg: "bg-electric-100",
+    iconBorder: "border-electric-200",
+    iconColor: "text-electric-600",
   },
 ];
 

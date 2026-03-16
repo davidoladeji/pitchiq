@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 
-const VALID_PLANS = ["starter", "pro", "growth"] as const;
+const VALID_PLANS = ["starter", "pro", "growth", "enterprise"] as const;
 const VALID_ROLES = ["user", "admin"] as const;
+const PAID_PLANS: string[] = ["pro", "growth", "enterprise"];
 
 export async function PATCH(
   req: NextRequest,
@@ -17,7 +18,7 @@ export async function PATCH(
 
   try {
     const body = await req.json();
-    const updates: Record<string, string> = {};
+    const updates: Record<string, unknown> = {};
 
     if (body.plan !== undefined) {
       if (!VALID_PLANS.includes(body.plan)) {
@@ -46,11 +47,34 @@ export async function PATCH(
       );
     }
 
+    // Handle plan-specific side effects
+    if (updates.plan) {
+      const newPlan = updates.plan as string;
+
+      if (newPlan === "starter") {
+        // Downgrading to starter: clear subscription info
+        updates.stripeSubscriptionId = null;
+        updates.planExpiresAt = null;
+      } else {
+        // Admin setting a paid plan without Stripe: no expiry
+        updates.planExpiresAt = null;
+      }
+    }
+
     const user = await prisma.user.update({
       where: { id: params.id },
       data: updates,
       select: { id: true, email: true, role: true, plan: true, createdAt: true },
     });
+
+    // Update isPremium flag on all user's decks when plan changes
+    if (updates.plan) {
+      const isPremium = PAID_PLANS.includes(updates.plan as string);
+      await prisma.deck.updateMany({
+        where: { userId: params.id },
+        data: { isPremium },
+      });
+    }
 
     return NextResponse.json(user);
   } catch (error) {

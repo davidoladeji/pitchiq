@@ -11,6 +11,7 @@ export interface ThemeDef {
   fontFamily: string;
   headingFont: string;
   headingWeight: number;
+  textOnLight: string;
 }
 
 export const THEMES: ThemeDef[] = [
@@ -27,6 +28,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Inter', system-ui, sans-serif",
     headingWeight: 800,
+    textOnLight: "#1a1a2e",
   },
   {
     id: "arctic",
@@ -41,6 +43,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Inter', system-ui, sans-serif",
     headingWeight: 800,
+    textOnLight: "#0f172a",
   },
   {
     id: "ember",
@@ -55,6 +58,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Space Grotesk', system-ui, sans-serif",
     headingWeight: 700,
+    textOnLight: "#1c1017",
   },
   {
     id: "forest",
@@ -69,6 +73,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'DM Sans', system-ui, sans-serif",
     headingWeight: 700,
+    textOnLight: "#0f1a14",
   },
   {
     id: "sunset",
@@ -83,6 +88,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'DM Sans', system-ui, sans-serif",
     headingWeight: 700,
+    textOnLight: "#1a0f1e",
   },
   {
     id: "monochrome",
@@ -97,6 +103,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
     headingWeight: 800,
+    textOnLight: "#111111",
   },
   {
     id: "ocean",
@@ -111,6 +118,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Inter', system-ui, sans-serif",
     headingWeight: 800,
+    textOnLight: "#0c1929",
   },
   {
     id: "lavender",
@@ -125,6 +133,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'DM Sans', system-ui, sans-serif",
     headingWeight: 700,
+    textOnLight: "#1e1b2e",
   },
   {
     id: "slate",
@@ -139,6 +148,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
     headingWeight: 800,
+    textOnLight: "#1e293b",
   },
   {
     id: "coral",
@@ -153,6 +163,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Space Grotesk', system-ui, sans-serif",
     headingWeight: 700,
+    textOnLight: "#1a0f0f",
   },
   {
     id: "minimal",
@@ -167,6 +178,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Plus Jakarta Sans', system-ui, sans-serif",
     headingWeight: 800,
+    textOnLight: "#111827",
   },
   {
     id: "bold",
@@ -181,6 +193,7 @@ export const THEMES: ThemeDef[] = [
     fontFamily: "system-ui, sans-serif",
     headingFont: "'Space Grotesk', system-ui, sans-serif",
     headingWeight: 900,
+    textOnLight: "#000000",
   },
 ];
 

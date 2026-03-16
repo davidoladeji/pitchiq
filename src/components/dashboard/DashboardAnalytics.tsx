@@ -9,6 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { ELECTRIC_HEX, VIOLET_HEX, NAVY_500_HEX } from "@/lib/design-tokens";
 
 interface DailyView {
   date: string;
@@ -76,20 +77,20 @@ export default function DashboardAnalytics({
             <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="viewGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#4361ee" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#7c3aed" stopOpacity={0.02} />
+                  <stop offset="0%" stopColor={ELECTRIC_HEX} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={VIOLET_HEX} stopOpacity={0.02} />
                 </linearGradient>
               </defs>
               <XAxis
                 dataKey="date"
                 tickFormatter={formatDate}
-                tick={{ fontSize: 10, fill: "#505068" }}
+                tick={{ fontSize: 10, fill: NAVY_500_HEX }}
                 axisLine={false}
                 tickLine={false}
                 interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fontSize: 10, fill: "#505068" }}
+                tick={{ fontSize: 10, fill: NAVY_500_HEX }}
                 axisLine={false}
                 tickLine={false}
                 allowDecimals={false}
@@ -98,11 +99,11 @@ export default function DashboardAnalytics({
               <Area
                 type="monotone"
                 dataKey="count"
-                stroke="#4361ee"
+                stroke={ELECTRIC_HEX}
                 strokeWidth={2}
                 fill="url(#viewGradient)"
                 dot={false}
-                activeDot={{ r: 4, fill: "#4361ee", strokeWidth: 0 }}
+                activeDot={{ r: 4, fill: ELECTRIC_HEX, strokeWidth: 0 }}
               />
             </AreaChart>
           </ResponsiveContainer>

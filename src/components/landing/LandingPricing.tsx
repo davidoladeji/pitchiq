@@ -84,10 +84,11 @@ const TIERS: Tier[] = [
   },
   {
     name: "Enterprise",
-    price: "Custom",
-    unit: "",
+    price: "$399",
+    unit: "/mo",
     desc: "For teams & programs",
     highlight: false,
+    plan: "enterprise",
     features: [
       "Everything in Growth",
       "Team collaboration",
@@ -98,8 +99,8 @@ const TIERS: Tier[] = [
       "SSO / SAML",
       "Dedicated support",
     ],
-    cta: "Contact Sales",
-    href: "#",
+    cta: "Start Free Trial",
+    href: "/create",
   },
 ];
 
@@ -214,7 +215,7 @@ export default function LandingPricing() {
   const enterpriseTier = TIERS[3];
 
   return (
-    <section id="pricing" aria-label="Pricing and plans" className="section-py px-6 bg-white">
+    <section id="pricing" aria-label="Pricing and plans" className="section-py px-6 bg-background">
       <div className="max-w-5xl mx-auto" ref={ref}>
         {/* Header */}
         <div className="text-center mb-16">
@@ -327,12 +328,16 @@ export default function LandingPricing() {
           <button
             type="button"
             onClick={() => setShowAllPlans(!showAllPlans)}
+            aria-expanded={showAllPlans}
+            aria-controls="growth-enterprise-plans"
+            aria-label={showAllPlans ? "Hide Growth and Enterprise plans" : "Show Growth and Enterprise plans"}
             className="inline-flex items-center gap-2 text-sm text-navy-500 hover:text-electric font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg px-4 py-2"
           >
             {showAllPlans ? "Hide" : "See"} Growth &amp; Enterprise plans
             <svg
               className={`w-4 h-4 transition-transform duration-300 ${showAllPlans ? "rotate-180" : ""}`}
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+              aria-hidden
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
@@ -341,6 +346,7 @@ export default function LandingPricing() {
 
         {/* ── Growth + Enterprise cards ── */}
         <div
+          id="growth-enterprise-plans"
           className={`grid md:grid-cols-2 gap-6 items-stretch max-w-3xl mx-auto transition-all duration-500 ease-out ${
             showAllPlans ? "mt-8 pt-4 max-h-[2000px] opacity-100" : "mt-0 max-h-0 opacity-0 overflow-hidden"
           }`}
@@ -349,7 +355,7 @@ export default function LandingPricing() {
           <div
             role="group"
             aria-label="Growth plan"
-            className="relative flex flex-col rounded-2xl border border-purple-300 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-purple-400"
+            className="relative flex flex-col rounded-2xl border border-violet/40 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-violet"
           >
             <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide">
               Best Value
@@ -363,7 +369,7 @@ export default function LandingPricing() {
             <ul className="space-y-3 mb-8 flex-1">
               {growthTier.features.map((f) => (
                 <li key={f} className="flex items-center gap-3 text-sm">
-                  <svg className="w-4 h-4 shrink-0 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
+                  <svg className="w-4 h-4 shrink-0 text-violet" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-navy-500">{f}</span>
@@ -406,6 +412,7 @@ export default function LandingPricing() {
             <p className="text-xs mt-1 mb-6 text-navy-500">{enterpriseTier.desc}</p>
             <div className="flex items-baseline gap-0.5 mb-8">
               <span className="text-4xl font-bold tracking-tight text-navy">{enterpriseTier.price}</span>
+              <span className="text-sm text-navy-500">{enterpriseTier.unit}</span>
             </div>
             <ul className="space-y-3 mb-8 flex-1">
               {enterpriseTier.features.map((f) => (
@@ -417,13 +424,15 @@ export default function LandingPricing() {
                 </li>
               ))}
             </ul>
-            <a
-              href="mailto:hello@pitchiq.com?subject=Enterprise%20Plan%20Inquiry"
-              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              aria-label="Contact sales for Enterprise plan"
+            <button
+              type="button"
+              onClick={() => handleCheckout("enterprise")}
+              disabled={!!loadingPlan}
+              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
+              aria-label="Start free trial for Enterprise plan"
             >
-              {enterpriseTier.cta}
-            </a>
+              {loadingPlan === "enterprise" ? "Redirecting..." : enterpriseTier.cta}
+            </button>
           </div>
         </div>
 
@@ -436,15 +445,19 @@ export default function LandingPricing() {
           <button
             type="button"
             onClick={() => setShowCompare(!showCompare)}
+            aria-expanded={showCompare}
+            aria-controls="pricing-compare-table"
+            aria-label={showCompare ? "Hide feature comparison table" : "Show feature comparison table"}
             className="inline-flex items-center gap-2 text-sm font-semibold text-electric hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg px-5 py-2.5 border border-electric/20 hover:border-electric/40 bg-electric/5 hover:bg-electric/10"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
             </svg>
             {showCompare ? "Hide" : "Compare all"} features
             <svg
               className={`w-4 h-4 transition-transform duration-300 ${showCompare ? "rotate-180" : ""}`}
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+              aria-hidden
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
@@ -453,6 +466,7 @@ export default function LandingPricing() {
 
         {/* ── Feature comparison table ── */}
         <div
+          id="pricing-compare-table"
           className={`overflow-hidden transition-all duration-500 ease-out ${
             showCompare ? "mt-8 max-h-[3000px] opacity-100" : "mt-0 max-h-0 opacity-0"
           }`}
@@ -475,12 +489,12 @@ export default function LandingPricing() {
                       <div className="text-[10px] text-navy-400 mt-0.5">$29/mo</div>
                     </th>
                     <th className="px-3 py-4 text-center w-[16%]">
-                      <div className="text-xs font-bold text-purple-600">Growth</div>
+                      <div className="text-xs font-bold text-violet">Growth</div>
                       <div className="text-[10px] text-navy-400 mt-0.5">$79/mo</div>
                     </th>
                     <th className="px-3 py-4 text-center w-[16%]">
                       <div className="text-xs font-bold text-navy">Enterprise</div>
-                      <div className="text-[10px] text-navy-400 mt-0.5">Custom</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">$399/mo</div>
                     </th>
                   </tr>
                 </thead>
@@ -493,7 +507,7 @@ export default function LandingPricing() {
                       <td className="px-5 py-3 text-sm text-navy-600 font-medium">{row.label}</td>
                       <td className="px-3 py-3 text-center"><CompareCell value={row.starter} /></td>
                       <td className="px-3 py-3 text-center bg-electric/[0.03]"><CompareCell value={row.pro} /></td>
-                      <td className="px-3 py-3 text-center bg-purple-50/50"><CompareCell value={row.growth} /></td>
+                      <td className="px-3 py-3 text-center bg-violet/5"><CompareCell value={row.growth} /></td>
                       <td className="px-3 py-3 text-center"><CompareCell value={row.enterprise} /></td>
                     </tr>
                   ))}
@@ -531,12 +545,14 @@ export default function LandingPricing() {
                       </button>
                     </td>
                     <td className="px-3 py-4 text-center">
-                      <a
-                        href="mailto:hello@pitchiq.com?subject=Enterprise%20Plan%20Inquiry"
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      <button
+                        type="button"
+                        onClick={() => handleCheckout("enterprise")}
+                        disabled={!!loadingPlan}
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
                       >
-                        Contact
-                      </a>
+                        {loadingPlan === "enterprise" ? "..." : "Start Trial"}
+                      </button>
                     </td>
                   </tr>
                 </tfoot>
