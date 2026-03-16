@@ -89,7 +89,7 @@ export async function POST(
     });
 
     // Send invite email
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = new URL(req.url).origin;
     const joinUrl = `${appUrl}/api/workspace/${params.slug}/join?token=${token}`;
 
     await sendEmail({

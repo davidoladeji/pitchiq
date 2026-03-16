@@ -159,7 +159,7 @@ async function triggerHighEngagementAlert(
   });
 
   // Send email
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://www.usepitchiq.com");
   const view = await prisma.view.findUnique({
     where: { id: viewId },
     select: { totalTime: true },

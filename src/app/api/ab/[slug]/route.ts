@@ -30,8 +30,8 @@ export async function GET(
       return NextResponse.json({ error: "Deck not found" }, { status: 404 });
     }
 
-    const base = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
-    return NextResponse.redirect(`${base}/deck/${deck.shareId}`);
+    const url = new URL(`/deck/${deck.shareId}`, req.url);
+    return NextResponse.redirect(url.toString());
   } catch (err) {
     console.error("[ab-redirect] Error:", err);
     return NextResponse.json({ error: "Failed to redirect" }, { status: 500 });

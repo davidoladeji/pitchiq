@@ -14,7 +14,7 @@ export async function GET(
   try {
     const session = await getServerSession(authOptions);
     const userId = (session?.user as { id?: string })?.id;
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = new URL(req.url).origin;
 
     if (!userId) {
       // Redirect to sign in, then back here
@@ -77,7 +77,7 @@ export async function GET(
     return NextResponse.redirect(`${appUrl}/workspace/${params.slug}`);
   } catch (err) {
     console.error("[workspace-join] Error:", err);
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const appUrl = new URL(req.url).origin;
     return NextResponse.redirect(`${appUrl}/dashboard?error=join_failed`);
   }
 }

@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     const stripe = await getStripe();
-    const base = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    const base = new URL(req.url).origin;
 
     // Get or create Stripe customer
     let customerId: string | undefined;
