@@ -202,16 +202,7 @@ export default function IdeasPageClient() {
     return (
       <div className="min-h-screen bg-navy-50">
         <a href="#main" className={skipLinkClass}>Skip to main content</a>
-        <AppNav
-          actions={
-            <Link
-              href="/create"
-              className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-            >
-              Create Deck
-            </Link>
-          }
-        />
+        <AppNav />
 
         <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
@@ -319,14 +310,6 @@ export default function IdeasPageClient() {
     <div className="min-h-screen bg-navy-50">
       <a href="#main" className={skipLinkClass}>Skip to main content</a>
       <AppNav
-        actions={
-          <Link
-            href="/create"
-            className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg text-navy text-sm font-medium hover:bg-navy-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-          >
-            Create Deck
-          </Link>
-        }
       />
 
       <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">

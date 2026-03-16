@@ -454,33 +454,40 @@ function TeamSlide({ slide }: { slide: SlideData }) {
 }
 
 function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; accentHex?: string }) {
-  const timelineData = (slide.timeline || []).slice(0, 5);
+  const timelineData = (slide.timeline || []).slice(0, 6);
   const isDark = !!slide.accent;
+  const dense = timelineData.length > 3 || slide.content.length > 4;
+  const padCls = dense ? "p-3 sm:p-4 md:p-6 lg:p-8" : "p-4 sm:p-6 md:p-8 lg:p-12";
+  const headCls = dense ? "text-xl sm:text-2xl md:text-3xl" : "text-2xl sm:text-3xl md:text-4xl";
+  const subCls = dense ? "text-xs sm:text-sm" : "text-sm sm:text-base md:text-lg";
+  const nodeCls = dense ? "w-7 h-7" : "w-9 h-9";
+  const dotCls = dense ? "w-2 h-2" : "w-2.5 h-2.5";
+  const lineLeft = dense ? "left-[14px]" : "left-[18px]";
 
   return (
     <div
-      className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden"
+      className={`flex flex-col h-full ${padCls} overflow-hidden`}
       style={{
         background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
         color: isDark ? "var(--t-text)" : "var(--t-text-on-light)",
       }}
     >
       {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
-      <div className="mb-4 md:mb-6 shrink-0 relative z-10">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
-        {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>{slide.subtitle}</p>}
+      <div className={`${dense ? "mb-2 md:mb-3" : "mb-4 md:mb-6"} shrink-0 relative z-10`}>
+        <h2 className={`${headCls} tracking-tight mb-1 text-balance`} style={headingStyle}>{slide.title}</h2>
+        {slide.subtitle && <p className={`${subCls} opacity-60 leading-relaxed`} style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>{slide.subtitle}</p>}
       </div>
 
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center relative z-10">
+      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-center relative z-10">
         {timelineData.length > 0 ? (
           <div className="relative">
-            <div className="absolute left-[18px] top-2 bottom-2 w-0.5" style={{ background: hexToRgba(accentHex, 0.25) }} />
+            <div className={`absolute ${lineLeft} top-2 bottom-2 w-0.5`} style={{ background: hexToRgba(accentHex, 0.25) }} />
 
-            <div className="space-y-3 md:space-y-4">
+            <div className={dense ? "space-y-1.5 md:space-y-2" : "space-y-3 md:space-y-4"}>
               {timelineData.map((item, i) => (
-                <div key={i} className="flex items-start gap-4 relative">
+                <div key={i} className={`flex items-start ${dense ? "gap-3" : "gap-4"} relative`}>
                   <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 z-10"
+                    className={`${nodeCls} rounded-full flex items-center justify-center shrink-0 z-10`}
                     style={{
                       borderWidth: "2px",
                       borderStyle: "solid",
@@ -489,28 +496,28 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
                     }}
                   >
                     {item.completed ? (
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#10b981" strokeWidth={3}>
+                      <svg className={dense ? "w-3 h-3" : "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke="#10b981" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ background: accentHex }} />
+                      <span className={`${dotCls} rounded-full`} style={{ background: accentHex }} />
                     )}
                   </div>
-                  <div className="pt-1 min-w-0 flex-1">
+                  <div className={`${dense ? "pt-0.5" : "pt-1"} min-w-0 flex-1`}>
                     <p className="text-xs font-bold uppercase tracking-wider mb-0.5" style={{ color: accentHex }}>{item.date}</p>
-                    <p className="font-bold text-sm md:text-base">{item.title}</p>
-                    {item.description && <p className="text-xs md:text-sm opacity-60 mt-0.5">{item.description}</p>}
+                    <p className={`font-bold ${dense ? "text-xs md:text-sm" : "text-sm md:text-base"}`}>{item.title}</p>
+                    {item.description && <p className={`${dense ? "text-[10px] md:text-xs" : "text-xs md:text-sm"} opacity-60 mt-0.5`}>{item.description}</p>}
                   </div>
                 </div>
               ))}
             </div>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className={dense ? "space-y-1.5" : "space-y-3"}>
             {slide.content.map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accentHex }} aria-hidden="true" />
-                <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[0.75rem]" style={{ background: accentHex }} aria-hidden="true" />
+                <p className={`${dense ? "text-xs sm:text-sm md:text-base" : "text-sm sm:text-base md:text-lg"} leading-relaxed opacity-90`}>{item}</p>
               </div>
             ))}
           </div>
@@ -521,24 +528,32 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
 }
 
 function ComparisonSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; accentHex?: string }) {
-  const items = slide.content.slice(0, 6);
+  const items = slide.content.slice(0, 8);
+  const dense = items.length > 4;
+  const padCls = dense ? "p-3 sm:p-4 md:p-6 lg:p-8" : "p-4 sm:p-6 md:p-8 lg:p-12";
+  const headCls = dense ? "text-xl sm:text-2xl md:text-3xl" : "text-2xl sm:text-3xl md:text-4xl";
+  const subCls = dense ? "text-xs sm:text-sm" : "text-sm sm:text-base md:text-lg";
+  const textCls = dense ? "text-xs sm:text-sm" : "text-sm sm:text-base";
+  const itemPad = dense ? "p-2 md:p-2.5" : "p-3 md:p-4";
+  const badgeCls = dense ? "w-6 h-6" : "w-8 h-8";
+
   return (
-    <div className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden" style={{ background: "var(--t-bg-light)", color: "var(--t-text-on-light)" }}>
-      <div className="mb-4 md:mb-6 shrink-0">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
-        {slide.subtitle && <p className="text-sm sm:text-base md:text-lg opacity-60 leading-relaxed">{slide.subtitle}</p>}
+    <div className={`flex flex-col h-full ${padCls} overflow-hidden`} style={{ background: "var(--t-bg-light)", color: "var(--t-text-on-light)" }}>
+      <div className={`${dense ? "mb-2 md:mb-3" : "mb-4 md:mb-6"} shrink-0`}>
+        <h2 className={`${headCls} tracking-tight mb-1 text-balance`} style={headingStyle}>{slide.title}</h2>
+        {slide.subtitle && <p className={`${subCls} opacity-60 leading-relaxed`}>{slide.subtitle}</p>}
       </div>
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center space-y-2 md:space-y-3">
+      <div className={`flex-1 min-h-0 overflow-y-auto flex flex-col justify-center ${dense ? "space-y-1 md:space-y-1.5" : "space-y-2 md:space-y-3"}`}>
         {items.map((item, i) => (
-          <div key={i} className="flex items-start gap-3 p-3 md:p-4 rounded-xl" style={{ border: "1px solid rgba(0,0,0,0.08)", background: "rgba(0,0,0,0.02)" }}>
+          <div key={i} className={`flex items-start gap-2.5 ${itemPad} rounded-xl`} style={{ border: "1px solid rgba(0,0,0,0.08)", background: "rgba(0,0,0,0.02)" }}>
             <div
-              className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+              className={`${badgeCls} rounded-lg flex items-center justify-center shrink-0`}
               style={{ background: hexToRgba(accentHex, 0.1), border: `1px solid ${hexToRgba(accentHex, 0.2)}` }}
               aria-hidden="true"
             >
-              <span className="font-bold text-xs" style={{ color: accentHex }}>{i + 1}</span>
+              <span className={`font-bold ${dense ? "text-[10px]" : "text-xs"}`} style={{ color: accentHex }}>{i + 1}</span>
             </div>
-            <p className="text-sm sm:text-base leading-relaxed pt-1">{item}</p>
+            <p className={`${textCls} leading-relaxed ${dense ? "pt-0.5" : "pt-1"}`}>{item}</p>
           </div>
         ))}
       </div>

@@ -11,11 +11,9 @@ type NavVariant = "landing" | "app";
 
 interface AppNavProps {
   variant?: NavVariant;
-  /** Render right-side actions (e.g. copy link, export buttons) */
-  actions?: React.ReactNode;
 }
 
-export default function AppNav({ variant = "app", actions }: AppNavProps) {
+export default function AppNav({ variant = "app" }: AppNavProps) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -177,7 +175,6 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
         >
           {logo}
           <div className="flex items-center gap-2">
-            {actions}
             <AuthButton />
           </div>
         </div>

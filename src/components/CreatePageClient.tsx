@@ -154,52 +154,7 @@ export default function CreatePageClient({
       >
         Skip to main content
       </a>
-      <AppNav
-        actions={
-          deck ? (
-            <div className="flex items-center gap-2 sm:gap-3">
-              <button
-                type="button"
-                onClick={handleCopyLink}
-                aria-label={copied ? "Link copied to clipboard" : "Copy share link"}
-                className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg border border-navy-200 text-sm font-medium text-navy hover:border-navy-300 shadow-sm hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              >
-                {copied ? (
-                  <span className="flex items-center gap-1.5 text-electric">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Copied
-                  </span>
-                ) : (
-                  "Copy Link"
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={handleExportPdf}
-                disabled={pdfExporting}
-                aria-busy={pdfExporting}
-                aria-label={pdfExporting ? "Preparing PDF" : pdfExported ? "PDF downloaded" : "Export PDF"}
-                className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg bg-navy text-white text-sm font-medium shadow-sm hover:bg-navy-800 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 disabled:opacity-70 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:hover:shadow-sm"
-              >
-                {pdfExporting ? (
-                  "Preparing PDF…"
-                ) : pdfExported ? (
-                  <span className="inline-flex items-center gap-1.5 text-green-400">
-                    <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    Downloaded
-                  </span>
-                ) : (
-                  "Export PDF"
-                )}
-              </button>
-            </div>
-          ) : undefined
-        }
-      />
+      <AppNav />
 
       <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
         {!deck && deckCount >= limits.maxDecks && (

@@ -60,9 +60,7 @@ export default function DeckViewerClient() {
         >
           Skip to main content
         </a>
-        <AppNav
-          actions={<div className="h-9 w-28 rounded-lg bg-navy-100 animate-pulse" />}
-        />
+        <AppNav />
         <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
@@ -143,22 +141,7 @@ export default function DeckViewerClient() {
 
   return (
     <div className="min-h-screen bg-navy-50">
-      <AppNav
-        actions={
-          <div className="flex items-center gap-2">
-            {deck && (
-              <ExportMenu deck={deck} userPlan={ownerPlan} className="[&_button]:min-h-[36px] [&_button]:py-1.5 [&_button]:px-4 [&_button]:text-xs [&_button]:rounded-lg" />
-            )}
-            <Link
-              href="/create"
-              aria-label="Create your own pitch deck"
-              className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-navy text-white text-sm font-medium shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-            >
-              Create Your Own
-            </Link>
-          </div>
-        }
-      />
+      <AppNav />
 
       <div className="pt-24 pb-16 px-4 sm:px-6 animate-fade-in">
         <div className="max-w-5xl mx-auto">
