@@ -424,15 +424,31 @@ export default function LandingPricing() {
                 </li>
               ))}
             </ul>
-            <button
-              type="button"
-              onClick={() => handleCheckout("enterprise")}
-              disabled={!!loadingPlan}
-              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
-              aria-label="Start free trial for Enterprise plan"
-            >
-              {loadingPlan === "enterprise" ? "Redirecting..." : enterpriseTier.cta}
-            </button>
+            {(() => {
+              const isLoading = loadingPlan === "enterprise";
+              return (
+                <button
+                  type="button"
+                  onClick={() => handleCheckout("enterprise")}
+                  disabled={!!loadingPlan}
+                  aria-busy={isLoading}
+                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:hover:translate-y-0"
+                  aria-label="Start free trial for Enterprise plan"
+                >
+                  {isLoading ? (
+                    <span className="inline-flex items-center gap-2">
+                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24" aria-hidden>
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Setting up...
+                    </span>
+                  ) : (
+                    enterpriseTier.cta
+                  )}
+                </button>
+              );
+            })()}
           </div>
         </div>
 

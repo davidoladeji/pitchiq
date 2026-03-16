@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { ELECTRIC_HEX, AMBER_HEX, EMERALD_HEX } from "@/lib/design-tokens";
 
 /* Flat monochrome SVG icons */
 const IconRocket = ({ color }: { color: string }) => (
@@ -33,21 +34,21 @@ const PERSONAS = [
     title: "The First-Time Founder",
     forAudience: "Pre-seed founders, bootstrappers, solo builders",
     desc: "You\u2019re building something real but haven\u2019t raised before. You need a deck that looks professional and tells the right story \u2014 without spending weeks on design or $5k on a consultant. PitchIQ generates investor-ready slides from your answers in 60 seconds.",
-    accent: "#4361ee",
+    accent: ELECTRIC_HEX,
   },
   {
     icon: IconBolt,
     title: "The Serial Operator",
     forAudience: "Repeat founders, VCs, accelerator leads",
     desc: "You\u2019ve done this before and know what matters: speed, structure, and data. You need decks fast \u2014 for portfolio companies, demo days, or your next raise. Generate, score, and iterate at the pace you actually work.",
-    accent: "#F59E0B",
+    accent: AMBER_HEX,
   },
   {
     icon: IconHandshake,
     title: "The Advisor & Consultant",
     forAudience: "Mentors, coaches, fractional CTOs",
     desc: "You help founders get funded. Instead of manually reviewing messy decks, send them a PitchIQ link. They get an instant score, you get structured feedback to work from, and everyone saves hours.",
-    accent: "#10B981",
+    accent: EMERALD_HEX,
   },
 ];
 
@@ -90,12 +91,10 @@ export default function LandingPersonas() {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight">
-            <span className="text-white/70">Built for people who</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight text-white">
+            Built for founders who measure
             <br />
-            <span className="bg-gradient-to-r from-electric to-violet bg-clip-text text-transparent">
-              can&apos;t afford a bad first impression
-            </span>
+            before they pitch
           </h2>
           <p className="mt-5 text-base sm:text-lg text-white/70 max-w-xl mx-auto">
             Whether you&apos;re raising for the first time or helping someone

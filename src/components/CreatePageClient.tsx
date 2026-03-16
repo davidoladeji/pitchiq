@@ -89,7 +89,11 @@ export default function CreatePageClient({
             </div>
             <h2 className="text-2xl font-bold text-navy mb-2">Sign in to create your deck</h2>
             <p className="text-navy-500 mb-6 max-w-md">Create a free account to generate investor-ready pitch decks with AI.</p>
-            <a href="/auth/signin?callbackUrl=/create" className="inline-flex items-center px-6 py-3 rounded-full bg-electric text-white font-semibold hover:opacity-90 transition-opacity">
+            <a
+              href="/auth/signin?callbackUrl=/create"
+              className="inline-flex items-center min-h-[44px] px-6 py-3 rounded-full bg-electric text-white font-semibold hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label="Sign in to create your pitch deck"
+            >
               Sign in to get started
             </a>
           </div>
@@ -116,7 +120,8 @@ export default function CreatePageClient({
                 <button
                   type="button"
                   onClick={() => setShowPlanModal(true)}
-                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  aria-label="Upgrade to Pro for unlimited decks"
                 >
                   Upgrade Now
                 </button>
@@ -163,7 +168,7 @@ export default function CreatePageClient({
                   <p className="text-navy text-sm mb-3">Answer a few questions and we&apos;ll suggest viable business ideas, then you can turn one into a deck.</p>
                   <Link
                     href="/ideas"
-                    className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     Start idea generator
                   </Link>
@@ -237,7 +242,8 @@ export default function CreatePageClient({
                 <button
                   type="button"
                   onClick={() => setSelectedTemplate(null)}
-                  className="ml-auto text-xs text-navy-400 hover:text-navy font-medium"
+                  className="ml-auto min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-xs text-navy-400 hover:text-navy font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
+                  aria-label="Clear selected template"
                 >
                   Clear
                 </button>
@@ -359,7 +365,7 @@ export default function CreatePageClient({
 
             {/* Upgrade CTA */}
             {!deck.isPremium && (
-              <div className="max-w-2xl mx-auto rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-purple-50 p-6 animate-fade-in-up stagger-5">
+              <div className="max-w-2xl mx-auto rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-violet-50 p-6 animate-fade-in-up stagger-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -375,7 +381,8 @@ export default function CreatePageClient({
                   <button
                     type="button"
                     onClick={() => setShowPlanModal(true)}
-                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    aria-label="View plans and upgrade to Pro"
                   >
                     View Plans
                   </button>

@@ -159,11 +159,11 @@ export default function LandingPIQDeepDive() {
             PIQ Score
           </span>
           <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy tracking-[-0.02em] mb-3">
-            Your deck&apos;s fundability, quantified
+            Your fundability, quantified
           </h2>
           <p className="text-navy-500 text-base max-w-xl mx-auto font-light leading-relaxed">
-            Our AI evaluates your pitch across 8 investor-critical dimensions,
-            weighted by what VCs actually care about.
+            PitchIQ evaluates your startup across 8 investor-critical dimensions,
+            weighted by the same criteria venture capitalists use to make funding decisions.
           </p>
         </div>
 

@@ -65,11 +65,10 @@ export default function LandingHero() {
           }`}
         >
           <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-75" />
-            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-electric" />
+            <span className="inline-flex rounded-full h-1.5 w-1.5 bg-electric" />
           </span>
           <span className="text-sm text-white/70 font-medium tracking-wide">
-            AI-Powered Fundraising Intelligence
+            Fundraising Intelligence Platform
           </span>
         </div>
 
@@ -79,11 +78,11 @@ export default function LandingHero() {
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          Know your deck&apos;s
+          Know your startup&apos;s
           <br />
           <span className="text-gradient">fundability score</span>
           <br />
-          before investors do
+          before investors see your deck
         </h1>
 
         {/* Subtitle — white/70 for WCAG 2.1 AA contrast on dark navy */}
@@ -92,8 +91,8 @@ export default function LandingHero() {
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          Upload your pitch deck, get a 0&ndash;100 fundability score across 8
-          dimensions, and know exactly what to fix &mdash; in under 60 seconds.
+          Upload your deck and receive a 0&ndash;100 PIQ Score across 8
+          investor-grade dimensions &mdash; the same criteria VCs use to evaluate startups.
         </p>
 
         {/* Single CTA */}
@@ -104,8 +103,8 @@ export default function LandingHero() {
         >
           <Link
             href="/create"
-            aria-label="Get your PIQ Score — create your pitch deck in 60 seconds"
-            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-glow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            aria-label="Get your PIQ Score — analyze your deck's fundability"
+            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all duration-300 hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Get Your PIQ Score
             <svg
@@ -131,13 +130,13 @@ export default function LandingHero() {
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          Free to start &middot; No credit card &middot; Privacy-first
+          Free analysis &middot; No credit card &middot; Your data stays private
         </p>
 
         {/* Scroll cue — conversion: clear next step for users who don't CTA yet */}
         <a
           href="#how-it-works"
-          className={`min-h-[44px] inline-flex items-center justify-center gap-2 text-sm text-white/60 hover:text-white/90 transition-all duration-1000 ease-out delay-1000 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy rounded-lg px-3 ${
+          className={`min-h-[44px] inline-flex items-center justify-center gap-2 text-sm text-white/60 hover:text-white/90 transition-all duration-1000 ease-out delay-1000 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg px-3 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
           aria-label="See how PitchIQ works — three steps to your deck"

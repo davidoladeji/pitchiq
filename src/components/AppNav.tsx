@@ -69,7 +69,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
       className={`flex items-center gap-2 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"}`}
       aria-label="PitchIQ home"
     >
-      <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br from-electric to-violet shadow-md shadow-electric/25">
+      <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-navy">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M3 13V3h4.5a3.5 3.5 0 010 7H5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           <path d="M11 8l2-2.5L15 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
@@ -107,12 +107,12 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
     );
   };
 
-  /* --- CTA button --- */
+  /* --- CTA button — translate-only feedback to match hero, LandingCTA, Footer (motion with purpose) --- */
   const ctaButton = (
     <Link
       href="/create"
       aria-label="Get started — create your pitch deck"
-      className={`inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"} ${
+      className={`inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"} ${
         isLanding
           ? "bg-white text-navy hover:bg-navy-100 hover:shadow-md"
           : "bg-navy text-white hover:bg-navy/80 hover:shadow-md"
@@ -265,7 +265,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
               href="/create"
               onClick={closeMenu}
               aria-label="Get started — create your pitch deck"
-              className="w-full text-center py-3.5 rounded-full bg-electric hover:bg-electric-light text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+              className="w-full text-center py-3.5 rounded-full bg-electric hover:bg-electric-light text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
             >
               Get Started
             </Link>

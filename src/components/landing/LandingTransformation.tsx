@@ -51,7 +51,7 @@ const WITH_CARDS: CardData[] = [
 
 const CARD_STYLES = [
   {
-    gradient: "bg-gradient-to-br from-electric-50 to-violet-50",
+    gradient: "bg-navy-50 border border-navy-100",
     blob: "bg-electric",
     iconBg: "bg-electric/10 border-electric/20",
     iconColor: "text-electric",
@@ -62,10 +62,10 @@ const CARD_STYLES = [
     ),
   },
   {
-    gradient: "bg-gradient-to-br from-violet-50 to-purple-50",
-    blob: "bg-violet-400",
-    iconBg: "bg-violet-100 border-violet-200",
-    iconColor: "text-violet-600",
+    gradient: "bg-white border border-navy-100",
+    blob: "bg-electric",
+    iconBg: "bg-electric/10 border-electric/20",
+    iconColor: "text-electric",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3l1.912 5.813h6.088l-4.956 3.574 1.912 5.813L12 14.626 7.044 18.2l1.912-5.813L4 8.813h6.088z" />
@@ -73,10 +73,10 @@ const CARD_STYLES = [
     ),
   },
   {
-    gradient: "bg-gradient-to-br from-amber-50 to-orange-50",
-    blob: "bg-amber-400",
-    iconBg: "bg-amber-100 border-amber-200",
-    iconColor: "text-amber-600",
+    gradient: "bg-navy-50 border border-navy-100",
+    blob: "bg-navy-300",
+    iconBg: "bg-navy-100 border-navy-200",
+    iconColor: "text-navy-600",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="12" width="4" height="9" />
@@ -86,10 +86,10 @@ const CARD_STYLES = [
     ),
   },
   {
-    gradient: "bg-gradient-to-br from-rose-50 to-pink-50",
-    blob: "bg-rose-400",
-    iconBg: "bg-rose-100 border-rose-200",
-    iconColor: "text-rose-600",
+    gradient: "bg-white border border-navy-100",
+    blob: "bg-navy-300",
+    iconBg: "bg-navy-100 border-navy-200",
+    iconColor: "text-navy-600",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="23 4 23 10 17 10" />
@@ -168,10 +168,10 @@ export default function LandingTransformation() {
           }}
         >
           <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy mb-3">
-            Stop guessing. Start pitching.
+            Stop guessing. Start measuring.
           </h2>
           <p className="text-navy-500 text-base max-w-lg mx-auto mb-8">
-            See how PitchIQ replaces the chaos with a single, streamlined flow.
+            See how PitchIQ replaces intuition with data-driven fundraising intelligence.
           </p>
 
           {/* ── Pill toggle ────────────────────────────────────────── */}

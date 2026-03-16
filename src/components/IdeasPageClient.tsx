@@ -260,7 +260,8 @@ export default function IdeasPageClient() {
                     type="button"
                     onClick={() => handleCheckDeckForIdea(idea, i)}
                     disabled={deckLoadingId !== null}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-lg hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    aria-label={deckLoadingId === i ? "Building deck…" : `Turn ${idea.name} into a pitch deck`}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-lg hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     {deckLoadingId === i ? (
                       <>
@@ -326,7 +327,7 @@ export default function IdeasPageClient() {
             type="button"
             onClick={handleSurpriseMe}
             disabled={loading}
-            className="w-full mb-6 p-4 rounded-2xl border-2 border-dashed border-electric/20 bg-electric/[0.02] hover:bg-electric/[0.05] hover:border-electric/30 transition-all text-left group disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99]"
+            className="w-full mb-6 p-4 rounded-2xl border-2 border-dashed border-electric/20 bg-electric/[0.02] hover:bg-electric/[0.05] hover:border-electric/30 transition-all text-left group disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-electric/10 flex items-center justify-center shrink-0 group-hover:bg-electric group-hover:text-white text-electric transition-all">

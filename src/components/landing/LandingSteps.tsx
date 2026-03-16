@@ -69,7 +69,7 @@ export default function LandingSteps() {
             HOW IT WORKS
           </p>
           <h2 className="text-display-lg font-display text-navy">
-            From idea to scored deck
+            From upload to fundability score
             <br />
             in 60 seconds
           </h2>

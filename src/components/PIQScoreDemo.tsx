@@ -1,16 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CHART_COLORS, ELECTRIC_HEX, EMERALD_HEX, AMBER_HEX, VIOLET_HEX } from "@/lib/design-tokens";
 
 const DIMENSIONS = [
-  { label: "Narrative", score: 82, color: "#4361ee" },
-  { label: "Market Sizing", score: 71, color: "#7c3aed" },
-  { label: "Differentiation", score: 88, color: "#4361ee" },
-  { label: "Financials", score: 65, color: "#f59e0b" },
-  { label: "Team", score: 90, color: "#10b981" },
-  { label: "Ask", score: 76, color: "#7c3aed" },
-  { label: "Design", score: 85, color: "#4361ee" },
-  { label: "Credibility", score: 79, color: "#10b981" },
+  { label: "Narrative", score: 82, color: ELECTRIC_HEX },
+  { label: "Market Sizing", score: 71, color: CHART_COLORS[1] },
+  { label: "Differentiation", score: 88, color: ELECTRIC_HEX },
+  { label: "Financials", score: 65, color: AMBER_HEX },
+  { label: "Team", score: 90, color: EMERALD_HEX },
+  { label: "Ask", score: 76, color: CHART_COLORS[1] },
+  { label: "Design", score: 85, color: ELECTRIC_HEX },
+  { label: "Credibility", score: 79, color: EMERALD_HEX },
 ];
 
 const OVERALL_SCORE = 78;
@@ -52,8 +53,8 @@ function ScoreGauge({ score, animate }: { score: number; animate: boolean }) {
         />
         <defs>
           <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#4361ee" />
-            <stop offset="100%" stopColor="#7c3aed" />
+            <stop offset="0%" stopColor={ELECTRIC_HEX} />
+            <stop offset="100%" stopColor={VIOLET_HEX} />
           </linearGradient>
         </defs>
       </svg>
@@ -62,7 +63,7 @@ function ScoreGauge({ score, animate }: { score: number; animate: boolean }) {
         <span className="text-4xl md:text-5xl font-bold text-white tabular-nums">
           {animate ? score : 0}
         </span>
-        <span className="text-xs text-blue-200/60 font-medium uppercase tracking-wider mt-1">
+        <span className="text-xs text-white/60 font-medium uppercase tracking-wider mt-1">
           PIQ Score
         </span>
       </div>
@@ -97,7 +98,7 @@ export default function PIQScoreDemo({ animate }: { animate: boolean }) {
             </div>
             <div>
               <p className="text-sm font-semibold text-white">Acme Corp</p>
-              <p className="text-[11px] text-blue-200/50">Series A &middot; FinTech</p>
+              <p className="text-[11px] text-white/50">Series A &middot; FinTech</p>
             </div>
           </div>
         </div>
@@ -114,7 +115,7 @@ export default function PIQScoreDemo({ animate }: { animate: boolean }) {
               }`}
               style={{ transitionDelay: `${i * 80}ms` }}
             >
-              <span className="text-[11px] text-blue-200/60 w-[88px] shrink-0 text-right font-medium">
+              <span className="text-[11px] text-white/60 w-[88px] shrink-0 text-right font-medium">
                 {dim.label}
               </span>
               <div className="flex-1 h-2 rounded-full bg-white/8 overflow-hidden">

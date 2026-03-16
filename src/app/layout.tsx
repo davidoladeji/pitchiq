@@ -1,33 +1,31 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Inter, Space_Grotesk, DM_Sans, Plus_Jakarta_Sans } from "next/font/google";
+import { JetBrains_Mono, Inter } from "next/font/google";
 import Providers from "@/components/Providers";
+import { NAVY_HEX } from "@/lib/design-tokens";
 import "./globals.css";
 
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], display: "swap", variable: "--font-geist-mono" });
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
-const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], display: "swap", variable: "--font-space-grotesk" });
-const dmSans = DM_Sans({ subsets: ["latin"], display: "swap", variable: "--font-dm-sans" });
-const plusJakarta = Plus_Jakarta_Sans({ subsets: ["latin"], display: "swap", variable: "--font-plus-jakarta" });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://getpitchiq.com"),
-  title: "PitchIQ — AI-Powered Pitch Deck Generator",
+  metadataBase: new URL("https://www.usepitchiq.com"),
+  title: "PitchIQ — Fundraising Intelligence Platform",
   description:
-    "Generate investor-ready pitch decks in 60 seconds. Open-source AI fundraising intelligence.",
+    "Get your startup\u2019s PIQ Score \u2014 a 0\u2013100 fundability rating across 8 investor-grade dimensions. Measure, improve, and track your fundraising readiness.",
   openGraph: {
-    title: "PitchIQ — AI-Powered Pitch Deck Generator",
+    title: "PitchIQ — Fundraising Intelligence Platform",
     description:
-      "Generate investor-ready pitch decks in 60 seconds. Open-source AI fundraising intelligence.",
+      "Get your startup\u2019s PIQ Score \u2014 a 0\u2013100 fundability rating across 8 investor-grade dimensions. Measure, improve, and track your fundraising readiness.",
     type: "website",
     url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    title: "PitchIQ — AI-Powered Pitch Deck Generator",
+    title: "PitchIQ — Fundraising Intelligence Platform",
     description:
-      "Generate investor-ready pitch decks in 60 seconds. Open-source AI fundraising intelligence.",
+      "Get your startup\u2019s PIQ Score \u2014 a 0\u2013100 fundability rating across 8 investor-grade dimensions. Measure, improve, and track your fundraising readiness.",
   },
-  themeColor: "#1a1a2e",
+  themeColor: NAVY_HEX,
 };
 
 export default function RootLayout({
@@ -36,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${jetbrainsMono.variable} ${inter.variable} ${spaceGrotesk.variable} ${dmSans.variable} ${plusJakarta.variable}`}>
+    <html lang="en" className={`${jetbrainsMono.variable} ${inter.variable}`}>
       <body className="antialiased">
         {/* Skip to main — WCAG 2.1 AA; first focusable on every page */}
         <a

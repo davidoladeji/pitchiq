@@ -10,22 +10,20 @@ export default function Footer() {
       <div className="max-w-5xl mx-auto py-12 px-6">
         {/* Primary CTA — conversion moment, design-system match to hero/final CTA; deep-link for campaigns */}
         <div id="footer-cta" className="flex justify-center mb-10">
-          <span className="inline-block p-[2px] rounded-full bg-gradient-to-r from-electric via-violet to-electric shadow-glow shadow-electric/20">
-            <Link
-              href="/create"
-              aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
-              className="inline-flex items-center justify-center min-h-[44px] px-8 rounded-full bg-electric text-white font-semibold text-sm shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/20 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            >
-              Create your deck
-            </Link>
-          </span>
+          <Link
+            href="/create"
+            aria-label="Get your PIQ Score — analyze your deck's fundability"
+            className="inline-flex items-center justify-center min-h-[44px] px-8 py-3 rounded-full bg-electric text-white font-semibold text-sm transition-all hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          >
+            Get Your PIQ Score
+          </Link>
         </div>
 
         {/* Top row */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center shadow-md shadow-electric/25 bg-gradient-to-br from-electric to-violet">
+            <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-navy">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3 13V3h4.5a3.5 3.5 0 010 7H5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M11 8l2-2.5L15 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
@@ -81,6 +79,13 @@ export default function Footer() {
             >
               Pricing
             </a>
+            <Link
+              href="/piq-score"
+              aria-label="Learn how the PIQ Score works"
+              className="text-sm text-navy-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
+            >
+              PIQ Score
+            </Link>
           </nav>
         </div>
 

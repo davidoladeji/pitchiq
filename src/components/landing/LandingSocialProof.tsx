@@ -110,7 +110,7 @@ export default function LandingSocialProof() {
           }}
         >
           <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy">
-            Founders love PitchIQ
+            Trusted by data-driven founders
           </h2>
         </div>
 

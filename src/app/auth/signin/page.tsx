@@ -43,7 +43,7 @@ export default function SignInPage() {
               aria-label="PitchIQ home"
               className="inline-flex items-center gap-2.5 mb-6 min-h-[44px] min-w-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
-              <div className="w-10 h-10 rounded-xl bg-electric-gradient flex items-center justify-center shadow-glow">
+              <div className="w-10 h-10 rounded-xl bg-navy flex items-center justify-center">
                 <span className="text-white font-bold text-lg">P</span>
               </div>
               <span className="font-bold text-2xl tracking-tight text-navy">

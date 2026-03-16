@@ -51,9 +51,9 @@ const config: Config = {
         foreground: "var(--foreground)",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
-        display: ["var(--font-space-grotesk)", "Inter", "system-ui", "sans-serif"],
+        sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "Geist Mono", "ui-monospace", "monospace"],
+        display: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
       },
       fontSize: {
         "display-xl": ["clamp(3.5rem, 8vw, 6rem)", { lineHeight: "1.05", letterSpacing: "-0.04em" }],
