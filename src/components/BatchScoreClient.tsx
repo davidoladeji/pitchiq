@@ -72,17 +72,13 @@ function statusBadge(status: string): { label: string; classes: string } {
   }
 }
 
-export default function BatchScoreClient({
-  plan,
-  batchEnabled,
-  maxBatchSize,
-  initialJobs,
-}: {
+export default function BatchScoreClient(props: {
   plan: string;
   batchEnabled: boolean;
   maxBatchSize: number;
   initialJobs: BatchJob[];
 }) {
+  const { batchEnabled, maxBatchSize, initialJobs } = props;
   const [files, setFiles] = useState<File[]>([]);
   const [batchName, setBatchName] = useState("");
   const [dragActive, setDragActive] = useState(false);

@@ -141,7 +141,7 @@ const shapes: ShapeGen[] = [
     </>
   ),
   // 10: Split-tone diagonal
-  (_h, primary, tint) => (
+  (_h, primary, _tint) => (
     <>
       <rect x="6" y="6" width="52" height="52" rx="14" fill={primary} />
       <polygon points="6,6 58,6 58,58" fill="#000" opacity="0.1"

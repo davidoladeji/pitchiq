@@ -93,6 +93,7 @@ export default function PitchPracticeClient({
   const [currentSlide, setCurrentSlide] = useState(0);
   const [totalElapsed, setTotalElapsed] = useState(0);
   const [slideElapsed, setSlideElapsed] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [slideTimings, setSlideTimings] = useState<SlideTiming[]>([]);
   const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [isListening, setIsListening] = useState(false);
