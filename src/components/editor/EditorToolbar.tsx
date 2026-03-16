@@ -289,8 +289,8 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
           onClick={() => setAiOpen(!aiOpen)}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${
             activeAIPanel
-              ? "bg-gradient-to-r from-electric to-violet ring-2 ring-electric/50 ring-offset-1 ring-offset-navy-950"
-              : "bg-gradient-to-r from-electric to-violet hover:from-electric-600 hover:to-violet"
+              ? "bg-electric ring-2 ring-electric/50 ring-offset-1 ring-offset-navy-950"
+              : "bg-electric hover:bg-electric-light"
           }`}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

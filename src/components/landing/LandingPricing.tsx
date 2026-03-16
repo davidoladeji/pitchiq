@@ -147,13 +147,13 @@ const COMPARE_ROWS: CompareRow[] = [
 function CompareCell({ value }: { value: string | boolean }) {
   if (value === true) {
     return (
-      <svg className="w-5 h-5 text-electric mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+      <svg className="w-5 h-5 text-electric mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
       </svg>
     );
   }
   if (value === false) {
-    return <span className="block w-1.5 h-1.5 rounded-full bg-navy-200 mx-auto" />;
+    return <span className="block w-1.5 h-1.5 rounded-full bg-navy-200 mx-auto" aria-hidden />;
   }
   return <span className="text-navy-600 text-xs font-medium">{value}</span>;
 }
@@ -250,7 +250,7 @@ export default function LandingPricing() {
             <ul className="space-y-3 mb-8 flex-1">
               {starterTier.features.map((f) => (
                 <li key={f} className="flex items-center gap-3 text-sm">
-                  <svg className="w-4 h-4 shrink-0 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <svg className="w-4 h-4 shrink-0 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-navy-500">{f}</span>
@@ -259,7 +259,8 @@ export default function LandingPricing() {
             </ul>
             <Link
               href={starterTier.href}
-              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy-100 text-navy transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy-100 text-navy transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label="Get started with Starter plan — create your first deck"
             >
               {starterTier.cta}
             </Link>
@@ -283,7 +284,7 @@ export default function LandingPricing() {
             <ul className="space-y-3 mb-8 flex-1">
               {proTier.features.map((f) => (
                 <li key={f} className="flex items-center gap-3 text-sm">
-                  <svg className="w-4 h-4 shrink-0 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <svg className="w-4 h-4 shrink-0 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-navy-500">{f}</span>
@@ -298,7 +299,7 @@ export default function LandingPricing() {
                   onClick={() => handleCheckout(proTier.plan!)}
                   disabled={!!loadingPlan}
                   aria-busy={isLoading}
-                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
+                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
                 >
                   {isLoading ? (
                     <span className="inline-flex items-center gap-2">
@@ -340,8 +341,8 @@ export default function LandingPricing() {
 
         {/* ── Growth + Enterprise cards ── */}
         <div
-          className={`grid md:grid-cols-2 gap-6 items-stretch max-w-3xl mx-auto overflow-hidden transition-all duration-500 ease-out ${
-            showAllPlans ? "mt-8 max-h-[2000px] opacity-100" : "mt-0 max-h-0 opacity-0"
+          className={`grid md:grid-cols-2 gap-6 items-stretch max-w-3xl mx-auto transition-all duration-500 ease-out ${
+            showAllPlans ? "mt-8 pt-4 max-h-[2000px] opacity-100" : "mt-0 max-h-0 opacity-0 overflow-hidden"
           }`}
         >
           {/* Growth */}
@@ -362,7 +363,7 @@ export default function LandingPricing() {
             <ul className="space-y-3 mb-8 flex-1">
               {growthTier.features.map((f) => (
                 <li key={f} className="flex items-center gap-3 text-sm">
-                  <svg className="w-4 h-4 shrink-0 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <svg className="w-4 h-4 shrink-0 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-navy-500">{f}</span>
@@ -377,7 +378,7 @@ export default function LandingPricing() {
                   onClick={() => handleCheckout(growthTier.plan!)}
                   disabled={!!loadingPlan}
                   aria-busy={isLoading}
-                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-purple-600 to-electric text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
+                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-electric hover:bg-electric-light text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
                 >
                   {isLoading ? (
                     <span className="inline-flex items-center gap-2">
@@ -409,7 +410,7 @@ export default function LandingPricing() {
             <ul className="space-y-3 mb-8 flex-1">
               {enterpriseTier.features.map((f) => (
                 <li key={f} className="flex items-center gap-3 text-sm">
-                  <svg className="w-4 h-4 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <svg className="w-4 h-4 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-navy-500">{f}</span>
@@ -418,7 +419,8 @@ export default function LandingPricing() {
             </ul>
             <a
               href="mailto:hello@pitchiq.com?subject=Enterprise%20Plan%20Inquiry"
-              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label="Contact sales for Enterprise plan"
             >
               {enterpriseTier.cta}
             </a>
@@ -503,7 +505,7 @@ export default function LandingPricing() {
                     <td className="px-3 py-4 text-center">
                       <Link
                         href="/create"
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy-100 text-navy hover:-translate-y-0.5 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy-100 text-navy hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       >
                         Get Started
                       </Link>
@@ -513,7 +515,7 @@ export default function LandingPricing() {
                         type="button"
                         onClick={() => handleCheckout("pro")}
                         disabled={!!loadingPlan}
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
                       >
                         {loadingPlan === "pro" ? "..." : "Start Trial"}
                       </button>
@@ -523,7 +525,7 @@ export default function LandingPricing() {
                         type="button"
                         onClick={() => handleCheckout("growth")}
                         disabled={!!loadingPlan}
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-600 to-electric text-white hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-electric hover:bg-electric-light text-white hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
                       >
                         {loadingPlan === "growth" ? "..." : "Start Trial"}
                       </button>
@@ -531,7 +533,7 @@ export default function LandingPricing() {
                     <td className="px-3 py-4 text-center">
                       <a
                         href="mailto:hello@pitchiq.com?subject=Enterprise%20Plan%20Inquiry"
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       >
                         Contact
                       </a>

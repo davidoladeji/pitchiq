@@ -288,7 +288,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                       aria-label={loadingPlan ? "Setting up checkout…" : p.cta}
                       className={`mt-auto w-full text-center py-2.5 rounded-lg text-xs font-semibold transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-70 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99] ${
                         p.plan === "growth"
-                          ? "bg-gradient-to-r from-purple-600 to-electric text-white"
+                          ? "bg-electric hover:bg-electric-light text-white"
                           : "bg-navy text-white"
                       }`}
                     >

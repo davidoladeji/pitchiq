@@ -112,7 +112,7 @@ export default function PitchSimulator({ onClose }: PitchSimulatorProps) {
               </p>
               <button
                 onClick={runSimulation}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-400 hover:to-rose-500 text-white text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+                className="px-6 py-3 rounded-xl bg-electric hover:bg-electric-light text-white text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
               >
                 Start Simulation
               </button>

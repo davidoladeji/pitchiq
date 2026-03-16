@@ -13,7 +13,7 @@ export default function Footer() {
             <Link
               href="/create"
               aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
-              className="inline-flex items-center justify-center min-h-[44px] px-8 rounded-full bg-electric text-white font-semibold text-sm shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/20 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="inline-flex items-center justify-center min-h-[44px] px-8 rounded-full bg-electric text-white font-semibold text-sm shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/20 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Create your deck
             </Link>

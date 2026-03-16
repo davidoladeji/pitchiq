@@ -34,14 +34,15 @@ export default function LandingHero() {
       {/* Grid overlay */}
       <div className="absolute inset-0 bg-grid-dark pointer-events-none opacity-40" />
 
-      {/* Animated gradient orb — electric #4361ee */}
+      {/* Animated gradient orb — design-system electric */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] sm:w-[500px] sm:h-[500px] md:w-[800px] md:h-[800px] rounded-full pointer-events-none animate-glow-pulse"
         style={{
           background:
-            "radial-gradient(circle, rgba(67,97,238,0.15) 0%, rgba(67,97,238,0.06) 40%, transparent 70%)",
+            "radial-gradient(circle, rgba(var(--electric-rgb), 0.15) 0%, rgba(var(--electric-rgb), 0.06) 40%, transparent 70%)",
           filter: "blur(100px)",
         }}
+        aria-hidden="true"
       />
 
       {/* Secondary subtle orb */}
@@ -49,9 +50,10 @@ export default function LandingHero() {
         className="absolute bottom-[10%] right-[15%] w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] md:w-[400px] md:h-[400px] rounded-full pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(67,97,238,0.06) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(var(--electric-rgb), 0.06) 0%, transparent 70%)",
           filter: "blur(80px)",
         }}
+        aria-hidden="true"
       />
 
       {/* Content */}
@@ -102,8 +104,8 @@ export default function LandingHero() {
         >
           <Link
             href="/create"
-            aria-label="Get your PIQ Score"
-            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-glow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+            aria-label="Get your PIQ Score — create your pitch deck in 60 seconds"
+            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-glow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
           >
             Get Your PIQ Score
             <svg

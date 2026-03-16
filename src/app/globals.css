@@ -6,6 +6,7 @@
   --background: #FFFFFF;
   --foreground: #1a1a2e;
   --electric: #4361ee;
+  --electric-rgb: 67, 97, 238;
   --navy: #1a1a2e;
   --violet: #8B5CF6;
   --electric-light: #A8BCFC;
@@ -25,7 +26,7 @@ body {
 }
 
 ::selection {
-  background: rgba(67, 97, 238, 0.2);
+  background: rgba(var(--electric-rgb), 0.2);
   color: var(--foreground);
 }
 
@@ -116,15 +117,15 @@ body {
 
   .bg-grid {
     background-image:
-      linear-gradient(rgba(67, 97, 238, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(67, 97, 238, 0.04) 1px, transparent 1px);
+      linear-gradient(rgba(var(--electric-rgb), 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(var(--electric-rgb), 0.04) 1px, transparent 1px);
     background-size: 48px 48px;
   }
 
   .bg-dots {
     background-image: radial-gradient(
       circle,
-      rgba(67, 97, 238, 0.06) 1px,
+      rgba(var(--electric-rgb), 0.06) 1px,
       transparent 1px
     );
     background-size: 24px 24px;
@@ -140,7 +141,7 @@ body {
     position: absolute;
     inset: -1px;
     border-radius: inherit;
-    background: linear-gradient(135deg, rgba(67, 97, 238, 0.3), rgba(139, 92, 246, 0.2), rgba(67, 97, 238, 0.1));
+    background: linear-gradient(135deg, rgba(var(--electric-rgb), 0.3), rgba(139, 92, 246, 0.2), rgba(var(--electric-rgb), 0.1));
     z-index: -1;
   }
 

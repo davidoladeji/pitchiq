@@ -133,7 +133,7 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
           <button
             onClick={runLens}
             disabled={loading}
-            className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-400 hover:to-purple-400 text-white text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-2.5 rounded-xl bg-electric hover:bg-electric-light text-white text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading ? (
               <>

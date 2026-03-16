@@ -263,7 +263,7 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
               href="/create"
               onClick={closeMenu}
               aria-label="Get started — create your pitch deck"
-              className="w-full text-center py-3.5 rounded-full bg-gradient-to-r from-electric to-violet text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+              className="w-full text-center py-3.5 rounded-full bg-electric hover:bg-electric-light text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow active:scale-[0.99] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
             >
               Get Started
             </Link>

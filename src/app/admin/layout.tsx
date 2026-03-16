@@ -1,14 +1,30 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { AdminLogoutButton } from "./AdminLogoutButton";
 import AdminSidebarNav from "./AdminSidebarNav";
 
 export const dynamic = "force-dynamic";
+
+const SESSION_COOKIE = "pitchiq_admin_session";
 
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  // Check for admin session cookie — hide sidebar on login page
+  const cookieStore = cookies();
+  const hasSession = !!cookieStore.get(SESSION_COOKIE)?.value;
+
+  if (!hasSession) {
+    // Render just the content without sidebar (login page)
+    return (
+      <div className="min-h-screen bg-navy-950">
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-navy-950 flex">
       {/* Sidebar */}

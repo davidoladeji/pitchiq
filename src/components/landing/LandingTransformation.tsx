@@ -51,10 +51,10 @@ const WITH_CARDS: CardData[] = [
 
 const CARD_STYLES = [
   {
-    gradient: "bg-gradient-to-br from-blue-50 to-indigo-50",
-    blob: "bg-blue-400",
-    iconBg: "bg-blue-100 border-blue-200",
-    iconColor: "text-blue-600",
+    gradient: "bg-gradient-to-br from-electric-50 to-violet-50",
+    blob: "bg-electric",
+    iconBg: "bg-electric/10 border-electric/20",
+    iconColor: "text-electric",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z" />

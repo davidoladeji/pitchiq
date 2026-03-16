@@ -45,16 +45,13 @@ export default function LandingCTA() {
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <span className="inline-block rounded-xl p-[2px] bg-gradient-to-r from-electric via-violet to-electric shadow-glow shadow-electric/20">
-            <Link
-              href="/create"
-              aria-label="Generate your pitch deck for free — no signup required"
-              className="group/inner relative min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-[10px] bg-electric text-white font-semibold text-lg transition-all hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/20 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
-            >
-              <span className="relative z-10">Generate Your Deck &mdash; Free</span>
-              <div className="absolute inset-0 rounded-[10px] bg-gradient-to-r from-electric to-violet opacity-0 group-hover/inner:opacity-100 transition-opacity duration-300" aria-hidden="true" />
-            </Link>
-          </span>
+          <Link
+            href="/create"
+            aria-label="Generate your pitch deck for free — no signup required"
+            className="min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-xl bg-electric hover:bg-electric-light text-white font-semibold text-lg shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+          >
+            Generate Your Deck &mdash; Free
+          </Link>
         </div>
         <p
           className={`mt-5 text-sm text-white/50 transition-all duration-700 ease-out delay-300 ${

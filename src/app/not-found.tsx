@@ -55,15 +55,13 @@ export default function NotFound() {
             >
               Go to PitchIQ
             </Link>
-            <span className="block w-full sm:w-auto rounded-xl p-[2px] bg-gradient-to-r from-electric via-violet to-electric shadow-glow shadow-electric/20">
-              <Link
-                href="/create"
-                aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
-                className="min-h-[44px] w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-[10px] bg-electric text-white font-semibold text-sm shadow-sm hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/20 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              >
-                Create your deck
-              </Link>
-            </span>
+            <Link
+              href="/create"
+              aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
+              className="min-h-[44px] w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-electric hover:bg-electric-light text-white font-semibold text-sm shadow-lg hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              Create your deck
+            </Link>
           </div>
         </div>
       </main>

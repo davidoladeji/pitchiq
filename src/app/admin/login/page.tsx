@@ -90,7 +90,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-gradient-to-r from-electric to-violet px-4 py-3 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50 transition-all mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+            className="w-full rounded-xl bg-electric hover:bg-electric-light px-4 py-3 text-sm font-semibold text-white disabled:opacity-50 transition-all mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
