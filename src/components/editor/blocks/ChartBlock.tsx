@@ -36,6 +36,7 @@ export default function ChartBlock({
 }: ChartBlockProps) {
   const chartType = (properties.chartType as ChartType) || "bar";
   const data = (properties.data as ChartDataPoint[]) || [];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const yAxisLabel = (properties.yAxisLabel as string) || "";
   const [isEditing, setIsEditing] = useState(false);
 

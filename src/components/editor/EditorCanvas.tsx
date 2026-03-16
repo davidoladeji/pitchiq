@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState, useEffect, CSSProperties } from "react";
+import { useRef, useState, useEffect, CSSProperties } from "react";
 import { useEditorStore } from "./state/editorStore";
 import { getTheme, ThemeDef } from "@/lib/themes";
 import { SlideData, SlideBlock } from "@/lib/types";
@@ -123,7 +123,7 @@ export default function EditorCanvas() {
 function EditableSlide({
   slide,
   slideIndex,
-  companyName,
+  companyName: _companyName,
   theme,
   isDark,
   selectedBlockId,
@@ -434,7 +434,7 @@ function EditableSlide({
 function EditableBlock({
   block,
   isSelected,
-  slideIndex,
+  slideIndex: _slideIndex,
   onSelect,
   onUpdate,
   theme,

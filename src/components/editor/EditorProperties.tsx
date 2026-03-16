@@ -1,13 +1,13 @@
 "use client";
 
 import { useEditorStore } from "./state/editorStore";
-import { SlideData, SlideBlock, SlideBlockType } from "@/lib/types";
+import { SlideData, SlideBlock } from "@/lib/types";
 
 interface EditorPropertiesProps {
   plan: string;
 }
 
-export default function EditorProperties({ plan }: EditorPropertiesProps) {
+export default function EditorProperties({ plan: _plan }: EditorPropertiesProps) {
   const slides = useEditorStore((s) => s.slides);
   const selectedSlideIndex = useEditorStore((s) => s.selectedSlideIndex);
   const selectedBlockId = useEditorStore((s) => s.selectedBlockId);

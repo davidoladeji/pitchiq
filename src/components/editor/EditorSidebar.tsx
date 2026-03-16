@@ -45,7 +45,7 @@ function SortableSlide({
   index,
   isSelected,
   themeId,
-  companyName,
+  companyName: _companyName,
   onSelect,
   onContextMenu,
 }: {
@@ -174,7 +174,7 @@ function DraggableBlockTemplate({
   );
 }
 
-export default function EditorSidebar({ plan }: EditorSidebarProps) {
+export default function EditorSidebar({ plan: _plan }: EditorSidebarProps) {
   const slides = useEditorStore((s) => s.slides);
   const selectedSlideIndex = useEditorStore((s) => s.selectedSlideIndex);
   const themeId = useEditorStore((s) => s.themeId);

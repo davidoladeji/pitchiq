@@ -125,7 +125,7 @@ export function createDefaultBlock(type: SlideBlockType): SlideBlock {
       };
 
     default: {
-      const _exhaustive: never = type;
+      const _exhaustive: never = type; // eslint-disable-line @typescript-eslint/no-unused-vars
       return {
         id,
         type: "text",

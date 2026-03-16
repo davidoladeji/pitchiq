@@ -318,7 +318,7 @@ function renderEditorBlock(
 function EditableTitleSlide({
   slide,
   onUpdate,
-  accentHex,
+  accentHex: _accentHex,
 }: {
   slide: SlideData;
   onUpdate: (patch: Partial<SlideData>) => void;
@@ -961,6 +961,7 @@ export default function EditableSlide({
   }, []);
 
   // If the slide has editorBlocks, render the blocks-based editing for block-supporting types
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const hasBlocks = slide.editorBlocks && slide.editorBlocks.length > 0;
 
   const blockProps = {

@@ -27,11 +27,12 @@ interface EditorShellProps {
   userName: string;
 }
 
-export default function EditorShell({ deck, plan, userName }: EditorShellProps) {
+export default function EditorShell({ deck, plan, userName: _userName }: EditorShellProps) {
   const initDeck = useEditorStore((s) => s.initDeck);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);
   const save = useEditorStore((s) => s.save);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const removeSlide = useEditorStore((s) => s.removeSlide);
   const removeBlock = useEditorStore((s) => s.removeBlock);
   const selectedBlockId = useEditorStore((s) => s.selectedBlockId);
