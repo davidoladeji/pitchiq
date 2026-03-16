@@ -86,7 +86,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
   const navLink = (
     href: string,
     label: string,
-    opts?: { anchor?: boolean; current?: boolean }
+    opts?: { anchor?: boolean; current?: boolean; badge?: string }
   ) => {
     const Tag = opts?.anchor ? "a" : Link;
     return (
@@ -95,9 +95,14 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
         {...(opts?.current !== undefined
           ? { "aria-current": opts.current ? ("page" as const) : undefined }
           : {})}
-        className={`text-[13px] font-medium px-3.5 py-1.5 rounded-full transition-colors duration-200 ${textColor} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"}`}
+        className={`text-[13px] font-medium px-3.5 py-1.5 rounded-full transition-colors duration-200 ${textColor} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"} ${opts?.badge ? "inline-flex items-center gap-1" : ""}`}
       >
         {label}
+        {opts?.badge && (
+          <sup className="text-[8px] font-bold tracking-wider text-electric leading-none -top-0.5 relative">
+            {opts.badge}
+          </sup>
+        )}
       </Tag>
     );
   };
@@ -147,7 +152,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
   const mobileLink = (
     href: string,
     label: string,
-    opts?: { anchor?: boolean; current?: boolean }
+    opts?: { anchor?: boolean; current?: boolean; badge?: string }
   ) => {
     const Tag = opts?.anchor ? "a" : Link;
     return (
@@ -160,6 +165,11 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
         className="block px-2 py-4 text-2xl font-display font-semibold text-white/90 hover:text-white transition-colors border-b border-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
       >
         {label}
+        {opts?.badge && (
+          <sup className="text-[10px] font-bold tracking-wider text-electric ml-1 -top-2 relative">
+            {opts.badge}
+          </sup>
+        )}
       </Tag>
     );
   };
@@ -196,6 +206,8 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
 
           {/* Center: desktop links */}
           <div className="hidden md:flex items-center gap-0.5">
+            {navLink("#about", "About", { anchor: true, badge: "PIQ" })}
+            {navLink("#how-it-works", "How", { anchor: true })}
             {navLink("#features", "Features", { anchor: true })}
             {navLink("#pricing", "Pricing", { anchor: true })}
           </div>
@@ -238,17 +250,10 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
           }`}
         >
           <div className="flex flex-col">
+            {mobileLink("#about", "About", { anchor: true, badge: "PIQ" })}
+            {mobileLink("#how-it-works", "How", { anchor: true })}
             {mobileLink("#features", "Features", { anchor: true })}
             {mobileLink("#pricing", "Pricing", { anchor: true })}
-            {mobileLink("/ideas", "Get Ideas", {
-              current: pathname === "/ideas",
-            })}
-            {mobileLink("/score", "Score Deck", {
-              current: pathname === "/score",
-            })}
-            {mobileLink("/create", "Create Deck", {
-              current: pathname === "/create",
-            })}
           </div>
 
           {/* Bottom section */}

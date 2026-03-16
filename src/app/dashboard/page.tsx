@@ -108,7 +108,6 @@ export default async function DashboardPage({
       decks={serialized}
       userName={session.user.name || "there"}
       plan={user?.plan || "starter"}
-      hasSubscription={!!user?.stripeSubscriptionId}
       upgradedPlan={searchParams.upgraded}
       activities={activities}
     />

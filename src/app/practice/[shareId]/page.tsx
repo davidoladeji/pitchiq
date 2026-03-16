@@ -100,7 +100,7 @@ export default async function PracticePage({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main className="max-w-3xl mx-auto px-4 pt-24 pb-16 text-center">
+        <main id="main" tabIndex={-1} className="max-w-3xl mx-auto px-4 pt-24 pb-16 text-center">
           <div className="rounded-2xl border border-navy-100 bg-white p-10 space-y-4">
             <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center mx-auto">
               <svg className="w-8 h-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -131,7 +131,7 @@ export default async function PracticePage({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main className="max-w-3xl mx-auto px-4 pt-24 pb-16 text-center">
+        <main id="main" tabIndex={-1} className="max-w-3xl mx-auto px-4 pt-24 pb-16 text-center">
           <div className="rounded-2xl border border-navy-100 bg-white p-10 space-y-4">
             <h1 className="text-2xl font-bold text-navy">No Slides Found</h1>
             <p className="text-navy-500">This deck has no slides to practice with.</p>

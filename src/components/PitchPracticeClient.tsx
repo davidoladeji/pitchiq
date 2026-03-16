@@ -427,7 +427,7 @@ export default function PitchPracticeClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8">
+        <main id="main" tabIndex={-1} className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8">
           {/* Header */}
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
@@ -818,7 +818,7 @@ export default function PitchPracticeClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main className="max-w-5xl mx-auto px-4 py-8 space-y-8">
+      <main id="main" tabIndex={-1} className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-bold text-navy">Practice Review</h1>

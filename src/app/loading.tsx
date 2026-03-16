@@ -5,7 +5,7 @@
  */
 export default function RootLoading() {
   return (
-    <div className="min-h-screen overflow-hidden bg-white" aria-busy="true">
+    <div className="min-h-screen overflow-hidden bg-background" aria-busy="true">
       {/* Screen reader: announce loading state (WCAG 2.1 AA) */}
       <p className="sr-only" role="status" aria-live="polite">
         Loading

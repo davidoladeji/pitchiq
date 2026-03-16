@@ -38,6 +38,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${jetbrainsMono.variable} ${inter.variable} ${spaceGrotesk.variable} ${dmSans.variable} ${plusJakarta.variable}`}>
       <body className="antialiased">
+        {/* Skip to main — WCAG 2.1 AA; first focusable on every page */}
+        <a
+          href="#main"
+          className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        >
+          Skip to main content
+        </a>
         <Providers>{children}</Providers>
       </body>
     </html>

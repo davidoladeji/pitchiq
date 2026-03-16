@@ -73,7 +73,7 @@ export default function WorkspaceListClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>

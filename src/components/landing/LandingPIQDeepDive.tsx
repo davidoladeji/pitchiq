@@ -141,6 +141,7 @@ export default function LandingPIQDeepDive() {
 
   return (
     <section
+      id="about"
       ref={sectionRef}
       className="py-16 sm:py-20 px-4 sm:px-6 bg-white"
       aria-label="PIQ Score methodology deep dive"

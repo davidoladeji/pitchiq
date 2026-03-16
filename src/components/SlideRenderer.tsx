@@ -2,6 +2,7 @@
 
 import { SlideData } from "@/lib/types";
 import { getTheme, ThemeDef } from "@/lib/themes";
+import { CHART_COLORS, ELECTRIC_HEX, EMERALD_HEX } from "@/lib/design-tokens";
 import { useState, useEffect, useCallback, useImperativeHandle, forwardRef, CSSProperties } from "react";
 import CompanyLogo from "@/components/CompanyLogo";
 import {
@@ -17,8 +18,6 @@ interface SlideRendererProps {
   showBranding?: boolean;
   themeId?: string;
 }
-
-const CHART_COLORS = ["#4361ee", "#7c3aed", "#10b981", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899"];
 
 /** Convert hex color to rgba string — html2canvas-safe replacement for color-mix() */
 function hexToRgba(hex: string, alpha: number): string {
@@ -63,7 +62,7 @@ function TitleSlide({ slide, companyName, accentHex }: { slide: SlideData; compa
       />
       <div className="relative z-10 flex flex-col items-center text-center max-w-3xl">
         <div className="mb-6 md:mb-8">
-          <CompanyLogo companyName={companyName} size={56} accentColor={accentHex || "#4361ee"} />
+          <CompanyLogo companyName={companyName} size={56} accentColor={accentHex || ELECTRIC_HEX} />
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 tracking-tight leading-[1.1]" style={headingStyle}>
           {slide.title}
@@ -306,21 +305,21 @@ function ChartSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
                 <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8", fontSize: 11 }} />
                 <Tooltip contentStyle={{ background: isDark ? "rgba(15,23,42,0.95)" : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : "#0f172a", fontSize: "13px" }} />
-                <Line type="monotone" dataKey="value" stroke="#4361ee" strokeWidth={3} dot={{ fill: "#4361ee", r: 5 }} activeDot={{ r: 7 }} />
+                <Line type="monotone" dataKey="value" stroke={ELECTRIC_HEX} strokeWidth={3} dot={{ fill: ELECTRIC_HEX, r: 5 }} activeDot={{ r: 7 }} />
               </LineChart>
             ) : chart.type === "area" ? (
               <AreaChart data={chart.data}>
                 <defs>
                   <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4361ee" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#4361ee" stopOpacity={0} />
+                    <stop offset="5%" stopColor={ELECTRIC_HEX} stopOpacity={0.3} />
+                    <stop offset="95%" stopColor={ELECTRIC_HEX} stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"} />
                 <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8", fontSize: 11 }} />
                 <Tooltip contentStyle={{ background: isDark ? "rgba(15,23,42,0.95)" : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : "#0f172a", fontSize: "13px" }} />
-                <Area type="monotone" dataKey="value" stroke="#4361ee" strokeWidth={3} fill="url(#areaGrad)" dot={{ fill: "#4361ee", r: 4 }} />
+                <Area type="monotone" dataKey="value" stroke={ELECTRIC_HEX} strokeWidth={3} fill="url(#areaGrad)" dot={{ fill: ELECTRIC_HEX, r: 4 }} />
               </AreaChart>
             ) : (
               <BarChart data={chart.data}>
@@ -453,7 +452,7 @@ function TeamSlide({ slide }: { slide: SlideData }) {
   );
 }
 
-function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; accentHex?: string }) {
+function TimelineSlide({ slide, accentHex = ELECTRIC_HEX }: { slide: SlideData; accentHex?: string }) {
   const timelineData = (slide.timeline || []).slice(0, 6);
   const isDark = !!slide.accent;
   const dense = timelineData.length > 3 || slide.content.length > 4;
@@ -491,12 +490,12 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
                     style={{
                       borderWidth: "2px",
                       borderStyle: "solid",
-                      borderColor: item.completed ? "#34d399" : accentHex,
-                      background: item.completed ? "rgba(52,211,153,0.1)" : hexToRgba(accentHex, 0.1),
+                      borderColor: item.completed ? EMERALD_HEX : accentHex,
+                      background: item.completed ? hexToRgba(EMERALD_HEX, 0.1) : hexToRgba(accentHex, 0.1),
                     }}
                   >
                     {item.completed ? (
-                      <svg className={dense ? "w-3 h-3" : "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke="#10b981" strokeWidth={3}>
+                      <svg className={dense ? "w-3 h-3" : "w-4 h-4"} fill="none" viewBox="0 0 24 24" stroke={EMERALD_HEX} strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     ) : (
@@ -527,7 +526,7 @@ function TimelineSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; acc
   );
 }
 
-function ComparisonSlide({ slide, accentHex = "#4361ee" }: { slide: SlideData; accentHex?: string }) {
+function ComparisonSlide({ slide, accentHex = ELECTRIC_HEX }: { slide: SlideData; accentHex?: string }) {
   const items = slide.content.slice(0, 8);
   const dense = items.length > 4;
   const padCls = dense ? "p-3 sm:p-4 md:p-6 lg:p-8" : "p-4 sm:p-6 md:p-8 lg:p-12";
@@ -587,7 +586,7 @@ function CtaSlide({ slide, companyName, accentHex }: { slide: SlideData; company
             </p>
           ))}
         </div>
-        <CompanyLogo companyName={companyName} size={44} accentColor={accentHex || "#4361ee"} />
+        <CompanyLogo companyName={companyName} size={44} accentColor={accentHex || ELECTRIC_HEX} />
       </div>
     </div>
   );

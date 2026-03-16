@@ -2,6 +2,7 @@
 
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import { getPlanLimits } from "@/lib/plan-limits";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
@@ -34,33 +35,36 @@ const PLAN_LABELS: Record<string, { label: string; color: string }> = {
   starter: { label: "Starter", color: "bg-navy-100 text-navy-600" },
   pro: { label: "Pro", color: "bg-electric/10 text-electric" },
   growth: { label: "Growth", color: "bg-purple-100 text-purple-700" },
+  enterprise: { label: "Enterprise", color: "bg-amber-100 text-amber-700" },
 };
 
 export default function DashboardClient({
   decks,
   userName,
   plan = "starter",
-  hasSubscription = false,
   upgradedPlan,
   activities = [],
 }: {
   decks: DeckSummary[];
   userName: string;
   plan?: string;
-  hasSubscription?: boolean;
   upgradedPlan?: string;
   activities?: ActivityItem[];
 }) {
-  const [managingBilling, setManagingBilling] = useState(false);
   const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(!!upgradedPlan);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [dailyViews, setDailyViews] = useState<{ date: string; count: number }[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(true);
   const [totalViewsFromApi, setTotalViewsFromApi] = useState<number | null>(null);
 
-  const isPaidPlan = plan !== "starter";
-  const planInfo = PLAN_LABELS[plan] || PLAN_LABELS.starter;
-  const limits = getPlanLimits(plan);
+  // If user just completed checkout, use upgraded plan as effective plan
+  // (webhook may not have fired yet when the redirect lands)
+  const effectivePlan = upgradedPlan && ["pro", "growth", "enterprise"].includes(upgradedPlan)
+    ? upgradedPlan
+    : plan;
+  const isPaidPlan = effectivePlan !== "starter";
+  const planInfo = PLAN_LABELS[effectivePlan] || PLAN_LABELS.starter;
+  const limits = getPlanLimits(effectivePlan);
 
   // Total views from deck data as fallback
   const totalViewsFromDecks = decks.reduce((sum, d) => sum + d.viewCount, 0);
@@ -88,21 +92,6 @@ export default function DashboardClient({
     return () => { cancelled = true; };
   }, []);
 
-  const handleManageBilling = async () => {
-    setManagingBilling(true);
-    try {
-      const res = await fetch("/api/stripe/portal", { method: "POST" });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch {
-      window.location.href = "/#pricing";
-    } finally {
-      setManagingBilling(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-navy-50">
       <a
@@ -129,15 +118,13 @@ export default function DashboardClient({
                       ? `${decks.length} of ${limits.maxDecks} deck${limits.maxDecks === 1 ? "" : "s"} used`
                       : `${decks.length} deck${decks.length === 1 ? "" : "s"}`}
                 </p>
-                {hasSubscription && (
-                  <button
-                    type="button"
-                    onClick={handleManageBilling}
-                    disabled={managingBilling}
+                {isPaidPlan && (
+                  <Link
+                    href="/billing"
                     className="text-xs text-navy-500 hover:text-electric font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
                   >
-                    {managingBilling ? "Loading..." : "Manage billing"}
-                  </button>
+                    Manage billing
+                  </Link>
                 )}
               </div>
             </div>
@@ -207,52 +194,52 @@ export default function DashboardClient({
           )}
 
           {/* Overview stats */}
-          <DashboardOverview decks={decks} totalViews={totalViews} plan={plan} />
+          <DashboardOverview decks={decks} totalViews={totalViews} plan={effectivePlan} />
 
           {/* Quick actions */}
-          <DashboardQuickActions plan={plan} />
+          <DashboardQuickActions plan={effectivePlan} />
 
           {/* A/B Testing (Growth+ only) */}
           <DashboardABTests
             decks={decks.map((d) => ({ shareId: d.shareId, title: d.title }))}
-            plan={plan}
+            plan={effectivePlan}
           />
 
           {/* Investor CRM (Growth+ only) */}
-          <DashboardInvestorCRM plan={plan} />
+          <DashboardInvestorCRM plan={effectivePlan} />
 
           {/* Fundraise Tracker (Growth+ only) */}
-          <DashboardFundraiseTracker plan={plan} />
+          <DashboardFundraiseTracker plan={effectivePlan} />
 
           {/* Pitch Practice (Growth+ only) */}
-          <DashboardPitchPractice plan={plan} decks={decks.map((d) => ({ shareId: d.shareId, title: d.title }))} />
+          <DashboardPitchPractice plan={effectivePlan} decks={decks.map((d) => ({ shareId: d.shareId, title: d.title }))} />
 
           {/* Batch Scoring (Enterprise only) */}
-          <DashboardBatchJobs plan={plan} />
+          <DashboardBatchJobs plan={effectivePlan} />
 
           {/* Custom Domain (Growth+ only) */}
-          <DashboardCustomDomain plan={plan} />
+          <DashboardCustomDomain plan={effectivePlan} />
 
           {/* API Keys (Enterprise only) */}
           <DashboardApiKeys hasApiAccess={limits.apiAccess} />
 
           {/* Two-column layout: deck grid + sidebar */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
             {/* Main column: 2/3 */}
-            <div className="lg:col-span-2">
-              <DashboardDeckGrid decks={decks} plan={plan} />
+            <div className="lg:col-span-2 min-w-0">
+              <DashboardDeckGrid decks={decks} plan={effectivePlan} />
             </div>
 
             {/* Sidebar: 1/3 */}
-            <div className="space-y-6">
+            <div className="space-y-6 min-w-0">
               <DashboardAnalytics
                 dailyViews={dailyViews}
-                plan={plan}
+                plan={effectivePlan}
                 loading={analyticsLoading}
               />
               <DashboardActivityFeed
                 activities={activities}
-                plan={plan}
+                plan={effectivePlan}
               />
             </div>
           </div>
@@ -263,7 +250,7 @@ export default function DashboardClient({
       <PlanCompareModal
         open={showPlanModal}
         onClose={() => setShowPlanModal(false)}
-        currentPlan={plan}
+        currentPlan={effectivePlan}
         highlightPlan="pro"
       />
     </div>

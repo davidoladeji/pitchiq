@@ -110,7 +110,7 @@ export default function WorkspaceDashboardClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="flex items-start justify-between gap-4 mb-8">

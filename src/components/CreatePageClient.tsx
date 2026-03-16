@@ -80,7 +80,7 @@ export default function CreatePageClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main className="pt-24 pb-16 px-4 sm:px-6">
+        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
             <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -100,13 +100,6 @@ export default function CreatePageClient({
 
   return (
     <div className="min-h-screen bg-navy-50">
-      {/* Skip link — WCAG 2.1 AA */}
-      <a
-        href="#main"
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      >
-        Skip to main content
-      </a>
       <AppNav />
 
       <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">

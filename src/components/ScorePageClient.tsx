@@ -205,7 +205,7 @@ export default function ScorePageClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main className="pt-24 pb-16 px-4 sm:px-6">
+        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
             <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -357,7 +357,7 @@ export default function ScorePageClient({
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
                 <Link
                   href="/create"
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -372,7 +372,7 @@ export default function ScorePageClient({
                     setFile(null);
                     setProgress(0);
                   }}
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-navy-200 text-navy text-sm font-semibold hover:border-navy-300 shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-navy-200 text-navy text-sm font-semibold hover:border-navy-300 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   Score Another Deck
                 </button>
@@ -380,7 +380,7 @@ export default function ScorePageClient({
 
               {/* Upgrade CTA for free users */}
               {userPlan === "starter" && (
-                <div className="max-w-xl mx-auto rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-purple-50 p-6">
+                <div className="max-w-xl mx-auto rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-violet-50 p-6">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-navy text-sm mb-1">Unlock full insights</h3>
@@ -392,7 +392,7 @@ export default function ScorePageClient({
                     <button
                       type="button"
                       onClick={() => setShowPlanModal(true)}
-                      className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     >
                       View Plans
                     </button>

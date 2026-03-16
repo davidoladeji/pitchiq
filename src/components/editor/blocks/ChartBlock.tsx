@@ -2,13 +2,12 @@
 
 import { useState, useCallback } from "react";
 import type { ChartDataPoint } from "@/lib/types";
+import { CHART_COLORS, ELECTRIC_HEX } from "@/lib/design-tokens";
 import {
   BarChart, Bar, PieChart, Pie, Cell,
   LineChart, Line, AreaChart, Area,
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from "recharts";
-
-const CHART_COLORS = ["#4361ee", "#7c3aed", "#10b981", "#f59e0b", "#ef4444", "#06b6d4", "#ec4899"];
 
 interface ChartBlockProps {
   content: string;
@@ -118,21 +117,21 @@ export default function ChartBlock({
             <XAxis dataKey="label" tick={tickStyle} axisLine={false} tickLine={false} />
             <YAxis tick={tickStyle} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Line type="monotone" dataKey="value" stroke="#4361ee" strokeWidth={3} dot={{ fill: "#4361ee", r: 4 }} />
+            <Line type="monotone" dataKey="value" stroke={ELECTRIC_HEX} strokeWidth={3} dot={{ fill: ELECTRIC_HEX, r: 4 }} />
           </LineChart>
         ) : chartType === "area" ? (
           <AreaChart data={data}>
             <defs>
               <linearGradient id="editorAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#4361ee" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#4361ee" stopOpacity={0} />
+                <stop offset="5%" stopColor={ELECTRIC_HEX} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={ELECTRIC_HEX} stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke={gridStroke} />
             <XAxis dataKey="label" tick={tickStyle} axisLine={false} tickLine={false} />
             <YAxis tick={tickStyle} axisLine={false} tickLine={false} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Area type="monotone" dataKey="value" stroke="#4361ee" strokeWidth={3} fill="url(#editorAreaGrad)" />
+            <Area type="monotone" dataKey="value" stroke={ELECTRIC_HEX} strokeWidth={3} fill="url(#editorAreaGrad)" />
           </AreaChart>
         ) : (
           <BarChart data={data}>

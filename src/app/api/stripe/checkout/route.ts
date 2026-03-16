@@ -22,6 +22,11 @@ const PLAN_PRICES: Record<string, { priceId?: string; amount: number; name: stri
     amount: 7900,
     name: "PitchIQ Growth",
   },
+  enterprise: {
+    priceId: process.env.STRIPE_ENTERPRISE_PRICE_ID,
+    amount: 39900,
+    name: "PitchIQ Enterprise",
+  },
 };
 
 export async function POST(req: NextRequest) {
@@ -41,7 +46,7 @@ export async function POST(req: NextRequest) {
     const planConfig = PLAN_PRICES[plan];
     if (!planConfig) {
       return NextResponse.json(
-        { error: "Invalid plan. Choose 'pro' or 'growth'." },
+        { error: "Invalid plan. Choose 'pro', 'growth', or 'enterprise'." },
         { status: 400 }
       );
     }

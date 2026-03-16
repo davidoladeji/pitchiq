@@ -15,7 +15,6 @@ interface PlanCard {
   badge?: string;
   features: string[];
   cta: string;
-  isEnterprise?: boolean;
 }
 
 const PLANS: PlanCard[] = [
@@ -83,12 +82,12 @@ const PLANS: PlanCard[] = [
   },
   {
     name: "Enterprise",
-    price: "Custom",
-    unit: "",
+    plan: "enterprise",
+    price: "$399",
+    unit: "/mo",
     desc: "For teams & programs",
     color: "text-amber-600",
     bgAccent: "bg-amber-50",
-    isEnterprise: true,
     features: [
       "Everything in Growth, plus:",
       "Team collaboration & workspaces",
@@ -99,7 +98,7 @@ const PLANS: PlanCard[] = [
       "SSO / SAML authentication",
       "Dedicated support & onboarding",
     ],
-    cta: "Contact Sales",
+    cta: "Upgrade to Enterprise",
   },
 ];
 
@@ -267,14 +266,6 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                     <div className="mt-auto w-full text-center py-2.5 rounded-lg bg-navy-100 text-navy-400 text-xs font-semibold">
                       Your current plan
                     </div>
-                  ) : p.isEnterprise ? (
-                    <a
-                      href="mailto:hello@pitchiq.com?subject=Enterprise%20Plan%20Inquiry"
-                      className="mt-auto w-full text-center py-2.5 rounded-lg bg-navy text-white text-xs font-semibold hover:bg-navy/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99]"
-                      aria-label="Contact sales for Enterprise plan"
-                    >
-                      {p.cta}
-                    </a>
                   ) : isDowngrade ? (
                     <div className="mt-auto w-full text-center py-2.5 rounded-lg bg-navy-50 text-navy-300 text-xs font-semibold cursor-not-allowed">
                       Included in your plan
