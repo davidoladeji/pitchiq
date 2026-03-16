@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import DeckReportButton from "@/components/dashboard/DeckReportButton";
 
 interface DeckSummary {
   id: string;
@@ -72,7 +73,7 @@ function ScoreRing({ score }: { score: number }) {
   );
 }
 
-export default function DashboardDeckGrid({ decks }: { decks: DeckSummary[] }) {
+export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: DeckSummary[]; plan?: string }) {
   if (decks.length === 0) {
     return (
       <section aria-label="Your decks">
@@ -152,6 +153,11 @@ export default function DashboardDeckGrid({ decks }: { decks: DeckSummary[] }) {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 shrink-0">
+                  {(plan === "growth" || plan === "enterprise") && (
+                    <span className="hidden sm:inline-flex">
+                      <DeckReportButton shareId={deck.shareId} />
+                    </span>
+                  )}
                   <Link
                     href={`/editor/${deck.shareId}`}
                     className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-lg border border-navy-200 text-xs font-medium text-navy-500 hover:border-electric/30 hover:text-electric transition-all"

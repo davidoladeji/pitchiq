@@ -87,6 +87,7 @@ model User {
   comments             SlideComment[]
   activityLogs         ActivityLog[]
   abTests              ABTest[]
+  investorContacts     InvestorContact[]
 }
 
 model Account {
@@ -203,11 +204,12 @@ model DeckAlert {
 
 // --- Team collaboration ---
 model Workspace {
-  id        String   @id @default(uuid())
-  name      String
-  slug      String   @unique
-  ownerId   String
-  owner     User     @relation("OwnedWorkspaces", fields: [ownerId], references: [id])
+  id          String   @id @default(uuid())
+  name        String
+  slug        String   @unique
+  ownerId     String
+  owner       User     @relation("OwnedWorkspaces", fields: [ownerId], references: [id])
+  brandConfig String   @default("{}") // JSON: { logoUrl, primaryColor, accentColor, companyName, hidePitchiqBranding }
   members   WorkspaceMember[]
   invites   WorkspaceInvite[]
   decks     Deck[]
@@ -258,6 +260,35 @@ model SlideComment {
   updatedAt  DateTime @updatedAt
 
   @@index([deckId, slideIndex])
+}
+
+// --- Fundraise tracker ---
+model InvestorContact {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  firm      String?
+  email     String?
+  status    String   @default("identified") // identified | contacted | meeting | due_diligence | term_sheet | committed | passed
+  notes     String   @default("")
+  outreach  Outreach[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, status])
+}
+
+model Outreach {
+  id        String   @id @default(uuid())
+  contactId String
+  contact   InvestorContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  type      String   // email | meeting | call | note
+  content   String
+  sentAt    DateTime @default(now())
+
+  @@index([contactId])
 }
 
 // --- Activity log ---

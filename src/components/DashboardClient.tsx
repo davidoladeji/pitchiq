@@ -11,6 +11,7 @@ import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
 import DashboardActivityFeed, { type ActivityItem } from "@/components/dashboard/DashboardActivityFeed";
 import DashboardABTests from "@/components/dashboard/DashboardABTests";
 import DashboardInvestorCRM from "@/components/dashboard/DashboardInvestorCRM";
+import DashboardFundraiseTracker from "@/components/dashboard/DashboardFundraiseTracker";
 import PlanCompareModal from "@/components/PlanCompareModal";
 
 interface DeckSummary {
@@ -241,11 +242,14 @@ export default function DashboardClient({
           {/* Investor CRM (Growth+ only) */}
           <DashboardInvestorCRM plan={plan} />
 
+          {/* Fundraise Tracker (Growth+ only) */}
+          <DashboardFundraiseTracker plan={plan} />
+
           {/* Two-column layout: deck grid + sidebar */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main column: 2/3 */}
             <div className="lg:col-span-2">
-              <DashboardDeckGrid decks={decks} />
+              <DashboardDeckGrid decks={decks} plan={plan} />
             </div>
 
             {/* Sidebar: 1/3 */}

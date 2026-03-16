@@ -7,6 +7,11 @@
   --foreground: #1a1a2e;
   --electric: #4361ee;
   --navy: #1a1a2e;
+  --violet: #8B5CF6;
+  --electric-light: #A8BCFC;
+  --violet-light: #C4B5FD;
+  --navy-200: #D0D0DA;
+  --navy-300: #A8A8B8;
   --section-py: 6rem;
   --section-py-lg: 8rem;
 }
@@ -88,7 +93,7 @@ body {
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #4361ee 0%, #8B5CF6 50%, #4361ee 100%);
+    background: linear-gradient(135deg, var(--electric) 0%, var(--violet) 50%, var(--electric) 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -96,7 +101,7 @@ body {
   }
 
   .text-gradient-light {
-    background: linear-gradient(135deg, #A5B4FC 0%, #C4B5FD 50%, #A5B4FC 100%);
+    background: linear-gradient(135deg, var(--electric-light) 0%, var(--violet-light) 50%, var(--electric-light) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -171,12 +176,12 @@ select {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4D4D8;
+  background: var(--navy-200);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #A1A1AA;
+  background: var(--navy-300);
 }
 
 /* Noise texture overlay for dark sections */

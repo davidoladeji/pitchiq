@@ -15,6 +15,7 @@ export interface PlanLimits {
   abTesting: boolean;
   followUpAlerts: boolean;
   investorCRM: boolean;
+  fundraiseTracker: boolean;
 
   /* Editor features */
   editor: boolean;
@@ -49,6 +50,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     abTesting: false,
     followUpAlerts: false,
     investorCRM: false,
+    fundraiseTracker: false,
     editor: false,
     aiCoachingPerSlide: false,
     investorLens: false,
@@ -75,6 +77,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     abTesting: false,
     followUpAlerts: false,
     investorCRM: false,
+    fundraiseTracker: false,
     editor: true,
     aiCoachingPerSlide: true,
     investorLens: false,
@@ -101,6 +104,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     abTesting: true,
     followUpAlerts: true,
     investorCRM: true,
+    fundraiseTracker: true,
     editor: true,
     aiCoachingPerSlide: true,
     investorLens: true,
@@ -127,6 +131,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     abTesting: true,
     followUpAlerts: true,
     investorCRM: true,
+    fundraiseTracker: true,
     editor: true,
     aiCoachingPerSlide: true,
     investorLens: true,
