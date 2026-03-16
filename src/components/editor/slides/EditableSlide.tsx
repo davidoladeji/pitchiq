@@ -54,18 +54,18 @@ function FormattingToolbar({
   onAlignChange: (a: string) => void;
 }) {
   return (
-    <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 bg-[#0f0f23] rounded-lg shadow-xl border border-white/10 p-1 flex gap-1">
+    <div className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 bg-navy-950 rounded-lg shadow-xl border border-white/10 p-1 flex gap-1">
       <button
         type="button"
         onMouseDown={(e) => { e.preventDefault(); onToggleBold(); }}
-        className={`w-7 h-7 flex items-center justify-center rounded text-xs font-bold transition-colors ${bold ? "bg-[#4361ee] text-white" : "text-white/70 hover:bg-white/10"}`}
+        className={`w-7 h-7 flex items-center justify-center rounded text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${bold ? "bg-electric text-white" : "text-white/70 hover:bg-white/10"}`}
       >
         B
       </button>
       <button
         type="button"
         onMouseDown={(e) => { e.preventDefault(); onToggleItalic(); }}
-        className={`w-7 h-7 flex items-center justify-center rounded text-xs italic transition-colors ${italic ? "bg-[#4361ee] text-white" : "text-white/70 hover:bg-white/10"}`}
+        className={`w-7 h-7 flex items-center justify-center rounded text-xs italic transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${italic ? "bg-electric text-white" : "text-white/70 hover:bg-white/10"}`}
       >
         I
       </button>
@@ -75,7 +75,7 @@ function FormattingToolbar({
           key={a}
           type="button"
           onMouseDown={(e) => { e.preventDefault(); onAlignChange(a); }}
-          className={`w-7 h-7 flex items-center justify-center rounded transition-colors ${align === a ? "bg-[#4361ee] text-white" : "text-white/70 hover:bg-white/10"}`}
+          className={`w-7 h-7 flex items-center justify-center rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${align === a ? "bg-electric text-white" : "text-white/70 hover:bg-white/10"}`}
           title={`Align ${a}`}
         >
           <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor">
@@ -147,7 +147,7 @@ function InlineEditable({
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         className={`outline-none transition-shadow rounded ${
-          focused ? "ring-2 ring-[#4361ee]/50" : ""
+          focused ? "ring-2 ring-electric/50" : ""
         } ${className || ""} ${isEmpty && !focused ? "opacity-30" : ""}`}
         style={{
           ...style,
@@ -178,7 +178,7 @@ function BlockWrapper({
     <div
       className={`relative group transition-all rounded-lg ${
         isSelected
-          ? "ring-2 ring-[#4361ee] ring-offset-2"
+          ? "ring-2 ring-electric ring-offset-2"
           : "hover:ring-1 hover:ring-white/20"
       }`}
       onClick={(e) => {
@@ -190,10 +190,10 @@ function BlockWrapper({
       {/* Resize handles (visual only) */}
       {isSelected && (
         <>
-          <div className="absolute -top-1 -left-1 w-2.5 h-2.5 bg-[#4361ee] rounded-full border-2 border-white cursor-nw-resize" />
-          <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#4361ee] rounded-full border-2 border-white cursor-ne-resize" />
-          <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 bg-[#4361ee] rounded-full border-2 border-white cursor-sw-resize" />
-          <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-[#4361ee] rounded-full border-2 border-white cursor-se-resize" />
+          <div className="absolute -top-1 -left-1 w-2.5 h-2.5 bg-electric rounded-full border-2 border-white cursor-nw-resize" />
+          <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-electric rounded-full border-2 border-white cursor-ne-resize" />
+          <div className="absolute -bottom-1 -left-1 w-2.5 h-2.5 bg-electric rounded-full border-2 border-white cursor-sw-resize" />
+          <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-electric rounded-full border-2 border-white cursor-se-resize" />
         </>
       )}
     </div>

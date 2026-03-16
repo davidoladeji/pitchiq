@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
@@ -10,7 +10,7 @@ import PlanCompareModal from "@/components/PlanCompareModal";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { PIQScore } from "@/lib/types";
 
-type PageState = "idle" | "uploading" | "result" | "error";
+type PageState = "idle" | "uploading" | "parsing" | "scoring" | "result" | "error";
 
 export default function ScorePageClient({
   userPlan = "starter",
@@ -27,18 +27,116 @@ export default function ScorePageClient({
   const [slideCount, setSlideCount] = useState(0);
   const [detectedName, setDetectedName] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [extendEnabled, setExtendEnabled] = useState<boolean | null>(null);
+
+  // Check if Extend.ai is available on mount
+  useEffect(() => {
+    fetch("/api/upload")
+      .then((r) => r.json())
+      .then((d) => setExtendEnabled(d.extendEnabled === true))
+      .catch(() => setExtendEnabled(false));
+  }, []);
 
   const handleFileSelected = useCallback((f: File) => {
     setFile(f);
     setScore(null);
     setState("idle");
     setErrorMsg("");
+    setProgress(0);
   }, []);
 
   const handleScore = async () => {
     if (!file) return;
-    setState("uploading");
     setErrorMsg("");
+    setProgress(0);
+
+    if (extendEnabled) {
+      // Two-step flow: Upload to Extend → Score with fileId
+      await handleExtendFlow();
+    } else {
+      // Direct FormData upload
+      await handleLocalFlow();
+    }
+  };
+
+  async function handleExtendFlow() {
+    if (!file) return;
+
+    // Step 1: Upload
+    setState("uploading");
+    setProgress(10);
+
+    let fileId: string;
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      setProgress(40);
+
+      if (!uploadRes.ok) {
+        const data = await uploadRes.json();
+        if (data.useLocalUpload) {
+          // Extend not configured — fall back to local
+          return handleLocalFlow();
+        }
+        setErrorMsg(data.error || "Upload failed.");
+        setState("error");
+        return;
+      }
+
+      const uploadData = await uploadRes.json();
+      fileId = uploadData.fileId;
+    } catch {
+      setErrorMsg("Upload failed. Please try again.");
+      setState("error");
+      return;
+    }
+
+    // Step 2: Score with fileId
+    setState("scoring");
+    setProgress(60);
+
+    try {
+      const scoreRes = await fetch("/api/score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileId,
+          companyName: companyName.trim() || undefined,
+        }),
+      });
+
+      setProgress(90);
+
+      const data = await scoreRes.json();
+
+      if (!scoreRes.ok) {
+        setErrorMsg(data.error || "Scoring failed.");
+        setState("error");
+        return;
+      }
+
+      setScore(data.piqScore);
+      setSlideCount(data.slideCount);
+      setDetectedName(data.companyName);
+      setProgress(100);
+      setState("result");
+    } catch {
+      setErrorMsg("Network error. Please try again.");
+      setState("error");
+    }
+  }
+
+  async function handleLocalFlow() {
+    if (!file) return;
+    setState("uploading");
+    setProgress(20);
 
     try {
       const formData = new FormData();
@@ -47,7 +145,9 @@ export default function ScorePageClient({
         formData.append("companyName", companyName.trim());
       }
 
+      setProgress(40);
       const res = await fetch("/api/score", { method: "POST", body: formData });
+      setProgress(80);
       const data = await res.json();
 
       if (!res.ok) {
@@ -59,12 +159,24 @@ export default function ScorePageClient({
       setScore(data.piqScore);
       setSlideCount(data.slideCount);
       setDetectedName(data.companyName);
+      setProgress(100);
       setState("result");
     } catch {
       setErrorMsg("Network error. Please try again.");
       setState("error");
     }
-  };
+  }
+
+  const isProcessing = state === "uploading" || state === "parsing" || state === "scoring";
+
+  const statusLabel =
+    state === "uploading"
+      ? "Uploading document…"
+      : state === "parsing"
+        ? "Parsing document…"
+        : state === "scoring"
+          ? "AI is scoring your deck…"
+          : "Analyzing…";
 
   if (status === "loading") {
     return (
@@ -133,29 +245,47 @@ export default function ScorePageClient({
             <div className="bg-white rounded-2xl shadow-sm border border-navy-100 p-6 sm:p-8 animate-fade-in">
               <DeckUploader
                 onFileSelected={handleFileSelected}
-                disabled={state === "uploading"}
-                isUploading={state === "uploading"}
+                disabled={isProcessing}
+                isUploading={isProcessing}
               />
 
+              {/* Progress bar */}
+              {isProcessing && (
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-navy-600 font-medium">{statusLabel}</span>
+                    <span className="text-navy-400">{progress}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-navy-100 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-electric transition-all duration-500 ease-out"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
               {/* Optional company name */}
-              <div className="mt-5">
-                <label
-                  htmlFor="company-name"
-                  className="block text-sm font-medium text-navy-700 mb-1.5"
-                >
-                  Company name{" "}
-                  <span className="text-navy-500 font-normal">(optional — auto-detected from deck)</span>
-                </label>
-                <input
-                  id="company-name"
-                  type="text"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  placeholder="e.g. Acme Inc."
-                  disabled={state === "uploading"}
-                  className="w-full px-4 py-2.5 rounded-xl border border-navy-200 text-sm text-navy placeholder:text-navy-500 focus:border-electric focus:ring-2 focus:ring-electric/20 outline-none transition-all disabled:opacity-50"
-                />
-              </div>
+              {!isProcessing && (
+                <div className="mt-5">
+                  <label
+                    htmlFor="company-name"
+                    className="block text-sm font-medium text-navy-700 mb-1.5"
+                  >
+                    Company name{" "}
+                    <span className="text-navy-500 font-normal">(optional — auto-detected from deck)</span>
+                  </label>
+                  <input
+                    id="company-name"
+                    type="text"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    placeholder="e.g. Acme Inc."
+                    disabled={isProcessing}
+                    className="w-full px-4 py-2.5 rounded-xl border border-navy-200 text-sm text-navy placeholder:text-navy-500 focus:border-electric focus:ring-2 focus:ring-electric/20 outline-none transition-all disabled:opacity-50"
+                  />
+                </div>
+              )}
 
               {/* Error */}
               {state === "error" && errorMsg && (
@@ -165,29 +295,22 @@ export default function ScorePageClient({
               )}
 
               {/* Score button */}
-              <button
-                type="button"
-                onClick={handleScore}
-                disabled={!file || state === "uploading"}
-                className="mt-6 w-full min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
-              >
-                {state === "uploading" ? (
-                  <>
-                    <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
-                    Analyzing…
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
-                    </svg>
-                    Score My Deck
-                  </>
-                )}
-              </button>
+              {!isProcessing && (
+                <button
+                  type="button"
+                  onClick={handleScore}
+                  disabled={!file || isProcessing}
+                  className="mt-6 w-full min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+                  </svg>
+                  Score My Deck
+                </button>
+              )}
 
               {/* Free tier info */}
-              {userPlan === "starter" && (
+              {userPlan === "starter" && !isProcessing && (
                 <p className="mt-3 text-center text-xs text-navy-500">
                   Free: overall score + grade.{" "}
                   <button type="button" onClick={() => setShowPlanModal(true)} className="text-electric hover:underline">
@@ -235,6 +358,7 @@ export default function ScorePageClient({
                     setState("idle");
                     setScore(null);
                     setFile(null);
+                    setProgress(0);
                   }}
                   className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-navy-200 text-navy text-sm font-semibold hover:border-navy-300 shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
