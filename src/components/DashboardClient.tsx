@@ -61,7 +61,6 @@ export default function DashboardClient({
   const isPaidPlan = plan !== "starter";
   const planInfo = PLAN_LABELS[plan] || PLAN_LABELS.starter;
   const limits = getPlanLimits(plan);
-  const atDeckLimit = decks.length >= limits.maxDecks;
 
   // Total views from deck data as fallback
   const totalViewsFromDecks = decks.reduce((sum, d) => sum + d.viewCount, 0);
