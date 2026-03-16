@@ -42,14 +42,14 @@ function StepIndicator({
             <div
               key={i}
               className={`h-1.5 rounded-full transition-all duration-500 ${
-                i <= currentStep ? "bg-electric w-6" : "bg-gray-200 w-1.5"
+                i <= currentStep ? "bg-electric w-6" : "bg-navy-200 w-1.5"
               }`}
             />
           ))}
         </div>
         <p className="text-xs font-semibold text-navy">
           {STEPS[currentStep].label}
-          <span className="text-gray-500 font-normal ml-1">{STEPS[currentStep].description}</span>
+          <span className="text-navy-500 font-normal ml-1">{STEPS[currentStep].description}</span>
         </p>
       </div>
 
@@ -64,7 +64,7 @@ function StepIndicator({
                     ? "bg-electric text-white shadow-sm"
                     : i === currentStep
                     ? "bg-navy text-white shadow-lg shadow-navy/20 ring-4 ring-navy/5"
-                    : "bg-gray-100 text-gray-300 border border-gray-200"
+                    : "bg-navy-100 text-navy-300 border border-navy-200"
                 }`}
                 {...(i === currentStep ? { "aria-current": "step" as const } : {})}
               >
@@ -77,14 +77,14 @@ function StepIndicator({
                 )}
               </div>
               <div className="hidden md:block min-w-0">
-                <p className={`text-xs font-semibold truncate transition-colors ${i <= currentStep ? "text-navy" : "text-gray-300"}`}>
+                <p className={`text-xs font-semibold truncate transition-colors ${i <= currentStep ? "text-navy" : "text-navy-300"}`}>
                   {step.label}
                 </p>
-                <p className="text-[10px] text-gray-500 truncate">{step.description}</p>
+                <p className="text-[10px] text-navy-500 truncate">{step.description}</p>
               </div>
             </div>
             {i < totalSteps - 1 && (
-              <div className={`h-px flex-1 mx-2 transition-all duration-500 ${i < currentStep ? "bg-electric" : "bg-gray-200"}`} />
+              <div className={`h-px flex-1 mx-2 transition-all duration-500 ${i < currentStep ? "bg-electric" : "bg-navy-200"}`} />
             )}
           </div>
         ))}
@@ -214,10 +214,10 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
   return (
     <form onSubmit={handleSubmit}>
       {/* Sticky step bar — stays visible below nav while scrolling (founder-first, reduces drop-off) */}
-      <div className="sticky top-16 z-40 -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 md:-mx-10 md:-mt-10 px-6 sm:px-8 md:px-10 pt-6 sm:pt-8 md:pt-10 pb-4 bg-white border-b border-gray-100 shadow-sm transition-shadow duration-200">
+      <div className="sticky top-16 z-40 -mx-6 -mt-6 sm:-mx-8 sm:-mt-8 md:-mx-10 md:-mt-10 px-6 sm:px-8 md:px-10 pt-6 sm:pt-8 md:pt-10 pb-4 bg-white border-b border-navy-100 shadow-sm transition-shadow duration-200">
         <StepIndicator currentStep={step} totalSteps={STEPS.length} />
         {/* Progress bar */}
-        <div className="h-1 bg-gray-100 rounded-full mt-4 overflow-hidden">
+        <div className="h-1 bg-navy-100 rounded-full mt-4 overflow-hidden">
           <div
             className="h-full bg-navy rounded-full transition-all duration-500 ease-out"
             style={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
@@ -321,11 +321,11 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
                     className={`min-h-[44px] flex flex-col items-center justify-center gap-1.5 p-4 rounded-xl border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
                       form.investorType === opt.value
                         ? "border-navy bg-navy/[0.03] text-navy shadow-sm"
-                        : "border-gray-200 text-gray-500 hover:border-gray-300 hover:text-navy"
+                        : "border-navy-200 text-navy-500 hover:border-navy-300 hover:text-navy"
                     }`}
                   >
                     <span className="text-sm font-bold">{opt.label}</span>
-                    <span className="text-[10px] text-gray-500">
+                    <span className="text-[10px] text-navy-500">
                       {opt.desc}
                     </span>
                   </button>
@@ -495,10 +495,10 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
                       disabled={isLocked}
                       className={`group relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
                         isLocked
-                          ? "border-gray-100 opacity-60 cursor-not-allowed"
+                          ? "border-navy-100 opacity-60 cursor-not-allowed"
                           : form.themeId === theme.id
                           ? "border-electric bg-electric/5 shadow-sm"
-                          : "border-gray-200 hover:border-gray-300"
+                          : "border-navy-200 hover:border-navy-300"
                       }`}
                     >
                       <div
@@ -526,8 +526,8 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
                       <span
                         className={`text-xs font-medium ${
                           isLocked
-                            ? "text-gray-400"
-                            : form.themeId === theme.id ? "text-electric" : "text-gray-500"
+                            ? "text-navy-400"
+                            : form.themeId === theme.id ? "text-electric" : "text-navy-500"
                         }`}
                       >
                         {theme.name}
@@ -584,14 +584,14 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
       )}
 
       {/* Navigation */}
-      <div className="flex items-center justify-between mt-10 pt-6 border-t border-gray-100">
+      <div className="flex items-center justify-between mt-10 pt-6 border-t border-navy-100">
         <button
           type="button"
           onClick={handleBack}
-          className={`min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
+          className={`min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
             step === 0
               ? "opacity-0 pointer-events-none"
-              : "text-gray-500 hover:text-navy hover:bg-gray-50"
+              : "text-navy-500 hover:text-navy hover:bg-navy-50"
           }`}
         >
           <span className="flex items-center gap-1.5">
@@ -669,8 +669,8 @@ export default function DeckForm({ onGenerated, userPlan = "starter" }: DeckForm
                 "Generate Pitch Deck"
               )}
             </button>
-            <p className="text-gray-500 text-sm">No signup · No credit card</p>
-            <p className="text-gray-600 text-xs mt-1">We don&apos;t store your pitch — generate and share, no account needed.</p>
+            <p className="text-navy-500 text-sm">No signup · No credit card</p>
+            <p className="text-navy-600 text-xs mt-1">We don&apos;t store your pitch — generate and share, no account needed.</p>
           </div>
         )}
       </div>

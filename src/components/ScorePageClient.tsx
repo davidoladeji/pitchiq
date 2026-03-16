@@ -6,6 +6,7 @@ import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import DeckUploader from "@/components/DeckUploader";
 import PIQScoreCard from "@/components/PIQScoreCard";
+import PlanCompareModal from "@/components/PlanCompareModal";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { PIQScore } from "@/lib/types";
 
@@ -18,6 +19,7 @@ export default function ScorePageClient({
 }) {
   const { status } = useSession();
   const limits = getPlanLimits(userPlan);
+  const [showPlanModal, setShowPlanModal] = useState(false);
   const [state, setState] = useState<PageState>("idle");
   const [file, setFile] = useState<File | null>(null);
   const [companyName, setCompanyName] = useState("");
@@ -66,7 +68,7 @@ export default function ScorePageClient({
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-navy-50">
         <AppNav />
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin" />
@@ -77,18 +79,18 @@ export default function ScorePageClient({
 
   if (status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-navy-50">
         <AppNav />
         <main className="pt-24 pb-16 px-4 sm:px-6">
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-            <div className="w-16 h-16 rounded-2xl bg-[#4361ee]/10 flex items-center justify-center mb-6">
-              <svg className="w-8 h-8 text-[#4361ee]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-navy mb-2">Sign in to score your deck</h2>
-            <p className="text-gray-500 mb-6 max-w-md">Create a free account to get an instant fundability score with actionable feedback.</p>
-            <a href="/auth/signin?callbackUrl=/score" className="inline-flex items-center px-6 py-3 rounded-full bg-[#4361ee] text-white font-semibold hover:opacity-90 transition-opacity">
+            <p className="text-navy-500 mb-6 max-w-md">Create a free account to get an instant fundability score with actionable feedback.</p>
+            <a href="/auth/signin?callbackUrl=/score" className="inline-flex items-center px-6 py-3 rounded-full bg-electric text-white font-semibold hover:opacity-90 transition-opacity">
               Sign in to get started
             </a>
           </div>
@@ -98,7 +100,7 @@ export default function ScorePageClient({
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-navy-50">
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-electric focus:text-white focus:outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2"
@@ -120,7 +122,7 @@ export default function ScorePageClient({
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
               Score Your Pitch Deck
             </h1>
-            <p className="text-gray-600 text-base sm:text-lg max-w-lg mx-auto">
+            <p className="text-navy-600 text-base sm:text-lg max-w-lg mx-auto">
               Upload your existing deck and get an instant fundability score
               with actionable feedback from our AI evaluator.
             </p>
@@ -128,7 +130,7 @@ export default function ScorePageClient({
 
           {/* Upload card */}
           {state !== "result" && (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 animate-fade-in">
+            <div className="bg-white rounded-2xl shadow-sm border border-navy-100 p-6 sm:p-8 animate-fade-in">
               <DeckUploader
                 onFileSelected={handleFileSelected}
                 disabled={state === "uploading"}
@@ -139,10 +141,10 @@ export default function ScorePageClient({
               <div className="mt-5">
                 <label
                   htmlFor="company-name"
-                  className="block text-sm font-medium text-gray-700 mb-1.5"
+                  className="block text-sm font-medium text-navy-700 mb-1.5"
                 >
                   Company name{" "}
-                  <span className="text-gray-400 font-normal">(optional — auto-detected from deck)</span>
+                  <span className="text-navy-500 font-normal">(optional — auto-detected from deck)</span>
                 </label>
                 <input
                   id="company-name"
@@ -151,7 +153,7 @@ export default function ScorePageClient({
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder="e.g. Acme Inc."
                   disabled={state === "uploading"}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-navy placeholder:text-gray-500 focus:border-electric focus:ring-2 focus:ring-electric/20 outline-none transition-all disabled:opacity-50"
+                  className="w-full px-4 py-2.5 rounded-xl border border-navy-200 text-sm text-navy placeholder:text-navy-500 focus:border-electric focus:ring-2 focus:ring-electric/20 outline-none transition-all disabled:opacity-50"
                 />
               </div>
 
@@ -186,11 +188,11 @@ export default function ScorePageClient({
 
               {/* Free tier info */}
               {userPlan === "starter" && (
-                <p className="mt-3 text-center text-xs text-gray-400">
+                <p className="mt-3 text-center text-xs text-navy-500">
                   Free: overall score + grade.{" "}
-                  <Link href="/#pricing" className="text-electric hover:underline">
+                  <button type="button" onClick={() => setShowPlanModal(true)} className="text-electric hover:underline">
                     Upgrade to Pro
-                  </Link>{" "}
+                  </button>{" "}
                   for full dimension breakdown & recommendations.
                 </p>
               )}
@@ -210,7 +212,7 @@ export default function ScorePageClient({
                 <h2 className="text-xl font-bold text-navy">
                   {detectedName || companyName || "Your Deck"}
                 </h2>
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-navy-500 text-sm mt-1">
                   {slideCount} slide{slideCount !== 1 ? "s" : ""} analyzed
                 </p>
               </div>
@@ -220,7 +222,7 @@ export default function ScorePageClient({
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
                 <Link
                   href="/create"
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -234,7 +236,7 @@ export default function ScorePageClient({
                     setScore(null);
                     setFile(null);
                   }}
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm font-semibold hover:border-gray-300 shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-navy-200 text-navy text-sm font-semibold hover:border-navy-300 shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   Score Another Deck
                 </button>
@@ -246,17 +248,18 @@ export default function ScorePageClient({
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                     <div className="flex-1 min-w-0">
                       <h3 className="font-bold text-navy text-sm mb-1">Unlock full insights</h3>
-                      <p className="text-gray-500 text-xs sm:text-sm">
+                      <p className="text-navy-500 text-xs sm:text-sm">
                         See dimension-by-dimension breakdown, specific feedback, and actionable
                         recommendations to improve your score.
                       </p>
                     </div>
-                    <Link
-                      href="/#pricing"
-                      className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all"
+                    <button
+                      type="button"
+                      onClick={() => setShowPlanModal(true)}
+                      className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     >
                       View Plans
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
@@ -264,6 +267,13 @@ export default function ScorePageClient({
           )}
         </div>
       </main>
+
+      <PlanCompareModal
+        open={showPlanModal}
+        onClose={() => setShowPlanModal(false)}
+        currentPlan={userPlan}
+        highlightPlan="pro"
+      />
     </div>
   );
 }

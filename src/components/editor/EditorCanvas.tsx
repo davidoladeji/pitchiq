@@ -373,7 +373,7 @@ function EditableSlide({
                       }}
                     >
                       {item.completed ? (
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#10b981" strokeWidth={3}>
+                        <svg className="w-4 h-4 text-emerald" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
                       ) : (
@@ -465,7 +465,7 @@ function EditableBlock({
       }}
       className={`relative rounded-lg transition-all cursor-pointer ${
         isSelected
-          ? "outline outline-2 outline-[#4361ee] outline-offset-2"
+          ? "outline outline-2 outline-electric outline-offset-2"
           : "hover:outline hover:outline-1 hover:outline-white/20 hover:outline-offset-2"
       }`}
     >
@@ -621,7 +621,7 @@ function EditableBlock({
 
       {/* Selected indicator */}
       {isSelected && (
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#4361ee] rounded-full border-2 border-white pointer-events-none" />
+        <div className="absolute -top-1 -right-1 w-3 h-3 bg-electric rounded-full border-2 border-white pointer-events-none" />
       )}
     </div>
   );

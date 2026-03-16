@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import AdminUsersTable from "@/components/AdminUsersTable";
+import AdminUsersClient from "./AdminUsersClient";
 
 export const dynamic = "force-dynamic";
 
@@ -9,26 +9,35 @@ export default async function AdminUsersPage() {
   const session = await getSession();
   if (!session || session.role !== "admin") redirect("/admin/login");
 
-  let users: { id: string; email: string; role: string; plan: string; createdAt: Date }[];
+  let users;
   try {
     users = await prisma.user.findMany({
       orderBy: { createdAt: "desc" },
-      select: { id: true, email: true, role: true, plan: true, createdAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        plan: true,
+        createdAt: true,
+        stripeSubscriptionId: true,
+        _count: { select: { decks: true } },
+      },
     });
   } catch {
     redirect("/admin");
   }
 
-  // Serialize dates for client component
-  const serializedUsers = users.map((u) => ({
-    ...u,
+  const serialized = users.map((u) => ({
+    id: u.id,
+    email: u.email,
+    name: u.name,
+    role: u.role as string,
+    plan: u.plan,
     createdAt: u.createdAt.toISOString(),
+    hasSubscription: !!u.stripeSubscriptionId,
+    deckCount: u._count.decks,
   }));
 
-  return (
-    <div>
-      <h1 className="mb-6 text-2xl font-semibold text-gray-900">Users</h1>
-      <AdminUsersTable initialUsers={serializedUsers} />
-    </div>
-  );
+  return <AdminUsersClient initialUsers={serialized} />;
 }

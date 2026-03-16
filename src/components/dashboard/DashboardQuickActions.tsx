@@ -12,8 +12,8 @@ const actions = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
       </svg>
     ),
-    color: "text-[#4361ee]",
-    bgColor: "bg-[#4361ee]/10",
+    color: "text-electric",
+    bgColor: "bg-electric/10",
   },
   {
     label: "Upload & Score",
@@ -48,29 +48,29 @@ const actions = [
         <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
       </svg>
     ),
-    color: "text-[#09090B]",
-    bgColor: "bg-gray-100",
+    color: "text-navy",
+    bgColor: "bg-navy-100",
   },
 ];
 
 export default function DashboardQuickActions() {
   return (
     <section aria-label="Quick actions">
-      <h2 className="text-lg font-bold text-[#09090B] font-display mb-4">Quick Actions</h2>
+      <h2 className="text-lg font-bold text-navy font-display mb-4">Quick Actions</h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {actions.map((action) => (
           <Link
             key={action.label}
             href={action.href}
-            className="group bg-white rounded-2xl border border-[#e5e7eb] p-4 sm:p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all"
           >
             <div className={`w-10 h-10 rounded-xl ${action.bgColor} flex items-center justify-center mb-3 ${action.color} group-hover:scale-110 transition-transform`}>
               {action.icon}
             </div>
-            <h3 className="text-sm font-bold text-[#09090B] group-hover:text-[#4361ee] transition-colors">
+            <h3 className="text-sm font-bold text-navy group-hover:text-electric transition-colors">
               {action.label}
             </h3>
-            <p className="text-xs text-[#6b7280] mt-0.5 line-clamp-2">
+            <p className="text-xs text-navy-500 mt-0.5 line-clamp-2">
               {action.description}
             </p>
           </Link>

@@ -63,7 +63,7 @@ export default function GitHubRepoForm({ onGenerated, userPlan = "starter" }: Gi
               </div>
               <div className="text-center">
                 <p className="text-sm font-semibold text-navy">Analyzing repository...</p>
-                <p className="text-xs text-gray-500 mt-1">Extracting README, languages, contributors & more</p>
+                <p className="text-xs text-navy-500 mt-1">Extracting README, languages, contributors & more</p>
               </div>
               <div className="w-full max-w-xs space-y-3">
                 <div className="h-2 rounded-full bg-navy-100 animate-pulse" style={{ width: "100%" }} />
@@ -83,7 +83,7 @@ export default function GitHubRepoForm({ onGenerated, userPlan = "starter" }: Gi
                 </svg>
                 <div>
                   <p className="text-navy text-sm font-semibold">Generate a pitch deck from any GitHub repo</p>
-                  <p className="text-gray-500 text-xs mt-1">
+                  <p className="text-navy-500 text-xs mt-1">
                     We&apos;ll extract the README, tech stack, stars, contributors, and more to auto-generate a complete investor deck.
                   </p>
                 </div>
@@ -120,10 +120,10 @@ export default function GitHubRepoForm({ onGenerated, userPlan = "starter" }: Gi
                       disabled={isLocked}
                       className={`group relative flex flex-col items-center gap-2 p-3 rounded-xl border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
                         isLocked
-                          ? "border-gray-100 opacity-60 cursor-not-allowed"
+                          ? "border-navy-100 opacity-60 cursor-not-allowed"
                           : themeId === theme.id
                           ? "border-electric bg-electric/5 shadow-sm"
-                          : "border-gray-200 hover:border-gray-300"
+                          : "border-navy-200 hover:border-navy-300"
                       }`}
                     >
                       <div
@@ -151,8 +151,8 @@ export default function GitHubRepoForm({ onGenerated, userPlan = "starter" }: Gi
                       <span
                         className={`text-xs font-medium ${
                           isLocked
-                            ? "text-gray-400"
-                            : themeId === theme.id ? "text-electric" : "text-gray-500"
+                            ? "text-navy-400"
+                            : themeId === theme.id ? "text-electric" : "text-navy-500"
                         }`}
                       >
                         {theme.name}
@@ -209,14 +209,14 @@ export default function GitHubRepoForm({ onGenerated, userPlan = "starter" }: Gi
       )}
 
       {/* Submit */}
-      <div className="flex items-center justify-end mt-10 pt-6 border-t border-gray-100">
+      <div className="flex items-center justify-end mt-10 pt-6 border-t border-navy-100">
         <div className="flex flex-col items-end gap-2">
           <button
             type="submit"
             disabled={loading || !isValidUrl}
             aria-busy={loading}
             aria-label={loading ? "Generating your pitch deck from repository" : "Generate pitch deck from repository"}
-            className="min-h-[44px] inline-flex items-center px-8 py-3.5 rounded-xl bg-electric text-white font-semibold hover:bg-electric-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-electric/20 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            className="min-h-[44px] inline-flex items-center px-8 py-3.5 rounded-xl bg-electric text-white font-semibold hover:bg-electric-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-electric/20 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             {loading ? (
               <span className="flex items-center gap-2.5">

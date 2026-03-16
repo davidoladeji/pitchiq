@@ -5,7 +5,7 @@
  */
 export default function DeckViewerLoading() {
   return (
-    <div className="min-h-screen bg-[#fafafa]" aria-busy="true">
+    <div className="min-h-screen bg-navy-50" aria-busy="true">
       {/* Screen reader: announce loading state (WCAG 2.1 AA) */}
       <p className="sr-only" role="status" aria-live="polite">
         Loading

@@ -9,6 +9,7 @@ import GitHubRepoForm from "@/components/GitHubRepoForm";
 import SlideRenderer from "@/components/SlideRenderer";
 import PIQScoreCard from "@/components/PIQScoreCard";
 import ExportMenu from "@/components/ExportMenu";
+import PlanCompareModal from "@/components/PlanCompareModal";
 import { DeckData } from "@/lib/types";
 import { getPlanLimits } from "@/lib/plan-limits";
 
@@ -31,6 +32,7 @@ export default function CreatePageClient({
   const [showIdeaPrompt, setShowIdeaPrompt] = useState(false);
   const [mode, setMode] = useState<CreateMode>("form");
   const [hasGithub, setHasGithub] = useState(false);
+  const [showPlanModal, setShowPlanModal] = useState(false);
 
   useEffect(() => {
     fetch("/api/auth/has-github")
@@ -106,7 +108,7 @@ export default function CreatePageClient({
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-navy-50">
         <AppNav />
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin" />
@@ -117,18 +119,18 @@ export default function CreatePageClient({
 
   if (status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-navy-50">
         <AppNav />
         <main className="pt-24 pb-16 px-4 sm:px-6">
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-            <div className="w-16 h-16 rounded-2xl bg-[#4361ee]/10 flex items-center justify-center mb-6">
-              <svg className="w-8 h-8 text-[#4361ee]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mb-6">
+              <svg className="w-8 h-8 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-navy mb-2">Sign in to create your deck</h2>
-            <p className="text-gray-500 mb-6 max-w-md">Create a free account to generate investor-ready pitch decks with AI.</p>
-            <a href="/auth/signin?callbackUrl=/create" className="inline-flex items-center px-6 py-3 rounded-full bg-[#4361ee] text-white font-semibold hover:opacity-90 transition-opacity">
+            <p className="text-navy-500 mb-6 max-w-md">Create a free account to generate investor-ready pitch decks with AI.</p>
+            <a href="/auth/signin?callbackUrl=/create" className="inline-flex items-center px-6 py-3 rounded-full bg-electric text-white font-semibold hover:opacity-90 transition-opacity">
               Sign in to get started
             </a>
           </div>
@@ -138,7 +140,7 @@ export default function CreatePageClient({
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-navy-50">
       {/* Skip link — WCAG 2.1 AA */}
       <a
         href="#main"
@@ -154,7 +156,7 @@ export default function CreatePageClient({
                 type="button"
                 onClick={handleCopyLink}
                 aria-label={copied ? "Link copied to clipboard" : "Copy share link"}
-                className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-navy hover:border-gray-300 shadow-sm hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg border border-navy-200 text-sm font-medium text-navy hover:border-navy-300 shadow-sm hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 {copied ? (
                   <span className="flex items-center gap-1.5 text-electric">
@@ -204,12 +206,13 @@ export default function CreatePageClient({
                     You&apos;ve used your 1 free deck. Upgrade to Pro for unlimited decks, all themes, full PIQ coaching & more.
                   </p>
                 </div>
-                <Link
-                  href="/#pricing"
+                <button
+                  type="button"
+                  onClick={() => setShowPlanModal(true)}
                   className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all"
                 >
                   Upgrade Now
-                </Link>
+                </button>
               </div>
             </div>
           </div>
@@ -221,17 +224,17 @@ export default function CreatePageClient({
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
                 Create Your Pitch Deck
               </h1>
-              <p className="text-gray-600 text-base sm:text-lg max-w-lg mx-auto">
+              <p className="text-navy-600 text-base sm:text-lg max-w-lg mx-auto">
                 Describe your startup and we&apos;ll generate a polished,
                 investor-ready pitch deck in seconds.
               </p>
-              <p className="mt-3 text-gray-600 text-sm inline-flex items-center justify-center gap-1.5">
+              <p className="mt-3 text-navy-600 text-sm inline-flex items-center justify-center gap-1.5">
                 <svg className="w-4 h-4 shrink-0 text-electric/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Takes about 60 seconds
               </p>
-              <p className="mt-2 text-gray-500 text-sm">
+              <p className="mt-2 text-navy-500 text-sm">
                 Already have a deck?{" "}
                 <Link href="/score" className="text-electric font-medium hover:underline">
                   Upload &amp; score it →
@@ -260,7 +263,7 @@ export default function CreatePageClient({
                   <button
                     type="button"
                     onClick={() => setShowIdeaPrompt(false)}
-                    className="ml-3 text-gray-500 text-sm font-medium hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded"
+                    className="ml-3 text-navy-500 text-sm font-medium hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
                   >
                     Dismiss
                   </button>
@@ -275,10 +278,10 @@ export default function CreatePageClient({
                 role="tab"
                 aria-selected={mode === "form"}
                 onClick={() => setMode("form")}
-                className={`min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
+                className={`min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                   mode === "form"
                     ? "bg-navy text-white shadow-sm"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-navy"
+                    : "bg-navy-100 text-navy-500 hover:bg-navy-200 hover:text-navy"
                 }`}
               >
                 <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -292,10 +295,10 @@ export default function CreatePageClient({
                   role="tab"
                   aria-selected={mode === "github"}
                   onClick={() => setMode("github")}
-                  className={`min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${
+                  className={`min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                     mode === "github"
                       ? "bg-navy text-white shadow-sm"
-                      : "bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-navy"
+                      : "bg-navy-100 text-navy-500 hover:bg-navy-200 hover:text-navy"
                   }`}
                 >
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -306,7 +309,7 @@ export default function CreatePageClient({
               )}
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8 md:p-10">
+            <div className="bg-white rounded-2xl shadow-sm border border-navy-100 p-6 sm:p-8 md:p-10">
               {mode === "form" && (
                 <DeckForm onGenerated={handleGenerated} userPlan={userPlan} />
               )}
@@ -332,7 +335,7 @@ export default function CreatePageClient({
               <h1 className="text-xl sm:text-2xl font-bold text-navy mb-2 tracking-tight">
                 {deck.title}
               </h1>
-              <p className="text-gray-500 text-sm">
+              <p className="text-navy-500 text-sm">
                 {deck.slides.length} slides generated
               </p>
             </div>
@@ -363,7 +366,7 @@ export default function CreatePageClient({
                 type="button"
                 onClick={handleCopyLink}
                 aria-label={copied ? "Link copied to clipboard" : "Copy shareable link"}
-                className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-gray-200 text-navy font-semibold shadow-sm hover:border-gray-300 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border-2 border-navy-200 text-navy font-semibold shadow-sm hover:border-navy-300 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 {copied ? (
                   <>
@@ -381,7 +384,7 @@ export default function CreatePageClient({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="View shareable deck in new tab — see what investors will see"
-                className="min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-gray-200 text-navy font-medium hover:border-electric/40 hover:text-electric shadow-sm hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-navy-200 text-navy font-medium hover:border-electric/40 hover:text-electric shadow-sm hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 <span>View shareable deck</span>
                 <svg className="w-4 h-4 shrink-0 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -391,21 +394,21 @@ export default function CreatePageClient({
               <button
                 type="button"
                 onClick={() => setDeck(null)}
-                className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl text-gray-500 font-medium shadow-sm hover:text-navy hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl text-navy-500 font-medium shadow-sm hover:text-navy hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 Create Another
               </button>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 p-3 sm:p-4 flex items-center gap-3 max-w-xl mx-auto animate-fade-in-up stagger-5">
-              <div className="flex-1 text-xs sm:text-sm text-gray-500 truncate font-mono">
+            <div className="bg-white rounded-xl border border-navy-200 p-3 sm:p-4 flex items-center gap-3 max-w-xl mx-auto animate-fade-in-up stagger-5">
+              <div className="flex-1 text-xs sm:text-sm text-navy-500 truncate font-mono">
                 {shareUrl}
               </div>
               <button
                 type="button"
                 onClick={handleCopyLink}
                 aria-label={copied ? "Link copied to clipboard" : "Copy share URL"}
-                className="shrink-0 min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-gray-50 text-xs sm:text-sm font-medium text-navy hover:bg-gray-100 border border-gray-200 shadow-sm hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="shrink-0 min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-3 py-1.5 rounded-lg bg-navy-50 text-xs sm:text-sm font-medium text-navy hover:bg-navy-100 border border-navy-200 shadow-sm hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 {copied ? "Copied!" : "Copy"}
               </button>
@@ -422,16 +425,17 @@ export default function CreatePageClient({
                       </svg>
                       <h3 className="font-bold text-navy text-sm">Want more from your deck?</h3>
                     </div>
-                    <p className="text-gray-500 text-xs sm:text-sm">
+                    <p className="text-navy-500 text-xs sm:text-sm">
                       Upgrade to Pro for unlimited decks, full PIQ coaching, all themes, PPTX export, brand customization & remove &quot;Made with PitchIQ&quot; branding.
                     </p>
                   </div>
-                  <Link
-                    href="/#pricing"
+                  <button
+                    type="button"
+                    onClick={() => setShowPlanModal(true)}
                     className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
                   >
                     View Plans
-                  </Link>
+                  </button>
                 </div>
               </div>
             )}
@@ -440,7 +444,7 @@ export default function CreatePageClient({
             <div className="text-center animate-fade-in-up stagger-5">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 text-sm text-gray-500 font-medium hover:text-electric transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded"
+                className="inline-flex items-center gap-2 text-sm text-navy-500 font-medium hover:text-electric transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -451,6 +455,13 @@ export default function CreatePageClient({
           </div>
         )}
       </main>
+
+      <PlanCompareModal
+        open={showPlanModal}
+        onClose={() => setShowPlanModal(false)}
+        currentPlan={userPlan}
+        highlightPlan="pro"
+      />
     </div>
   );
 }

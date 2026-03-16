@@ -24,8 +24,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center shadow-md shadow-[#4361ee]/25"
-                 style={{ background: "linear-gradient(135deg, #4361ee 0%, #8B5CF6 100%)" }}>
+            <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center shadow-md shadow-electric/25 bg-gradient-to-br from-electric to-violet">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3 13V3h4.5a3.5 3.5 0 010 7H5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M11 8l2-2.5L15 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />

@@ -10,7 +10,12 @@ export async function GET(
   try {
     const deck = await prisma.deck.findUnique({
       where: { shareId: params.shareId },
-      include: { owner: { select: { id: true, plan: true } } },
+      include: {
+        owner: { select: { id: true, plan: true } },
+        parentVariants: {
+          include: { variantDeck: { select: { shareId: true, title: true, piqScore: true } } },
+        },
+      },
     });
 
     if (!deck) {
@@ -55,6 +60,21 @@ export async function GET(
       piqScore,
       isOwner,
       ownerPlan,
+      variants: isOwner
+        ? deck.parentVariants.map((v) => {
+            let score = null;
+            try {
+              const p = JSON.parse(v.variantDeck.piqScore);
+              score = p.overall ?? null;
+            } catch { /* empty */ }
+            return {
+              shareId: v.variantDeck.shareId,
+              title: v.variantDeck.title,
+              investorType: v.investorType,
+              piqScore: score,
+            };
+          })
+        : undefined,
     });
   } catch (error) {
     console.error("Deck fetch error:", error);

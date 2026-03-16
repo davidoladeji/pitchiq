@@ -6,6 +6,7 @@ import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import SlideRenderer from "@/components/SlideRenderer";
 import ExportMenu from "@/components/ExportMenu";
+import DeckVariants from "@/components/DeckVariants";
 import { DeckData } from "@/lib/types";
 
 export default function DeckViewerClient() {
@@ -13,6 +14,8 @@ export default function DeckViewerClient() {
   const shareId = params?.shareId as string;
   const [deck, setDeck] = useState<DeckData | null>(null);
   const [ownerPlan, setOwnerPlan] = useState("starter");
+  const [isOwner, setIsOwner] = useState(false);
+  const [variants, setVariants] = useState<{ shareId: string; title: string; investorType: string; piqScore: number | null }[]>([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -37,6 +40,8 @@ export default function DeckViewerClient() {
         const data = await res.json();
         setDeck(data);
         if (data.ownerPlan) setOwnerPlan(data.ownerPlan);
+        if (data.isOwner) setIsOwner(true);
+        if (data.variants) setVariants(data.variants);
       } catch {
         setError("This deck doesn't exist or has been removed.");
       } finally {
@@ -48,7 +53,7 @@ export default function DeckViewerClient() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#fafafa]" aria-busy="true" aria-label="Loading deck">
+      <div className="min-h-screen bg-navy-50" aria-busy="true" aria-label="Loading deck">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-electric focus:text-white focus:outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2 focus:ring-offset-white"
@@ -95,10 +100,10 @@ export default function DeckViewerClient() {
 
   if (error || !deck) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-[#fafafa] px-6">
-        <div className="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mb-6">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-navy-50 px-6">
+        <div className="w-16 h-16 rounded-2xl bg-navy-100 flex items-center justify-center mb-6">
           <svg
-            className="w-8 h-8 text-gray-300"
+            className="w-8 h-8 text-navy-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -115,7 +120,7 @@ export default function DeckViewerClient() {
         <h1 className="text-2xl font-bold text-navy mb-2 tracking-tight">
           Deck not found
         </h1>
-        <p className="text-gray-500 mb-8 text-center max-w-sm">{error}</p>
+        <p className="text-navy-500 mb-8 text-center max-w-sm">{error}</p>
         <div className="flex flex-col sm:flex-row items-center gap-3">
           <Link
             href="/create"
@@ -127,7 +132,7 @@ export default function DeckViewerClient() {
           <Link
             href="/"
             aria-label="Go to PitchIQ home"
-            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border border-gray-200 text-navy font-medium shadow-sm hover:border-gray-300 hover:bg-gray-50 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border border-navy-200 text-navy font-medium shadow-sm hover:border-navy-300 hover:bg-navy-50 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             Go to PitchIQ
           </Link>
@@ -137,7 +142,7 @@ export default function DeckViewerClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-navy-50">
       <AppNav
         actions={
           <div className="flex items-center gap-2">
@@ -161,12 +166,12 @@ export default function DeckViewerClient() {
             <h1 className="text-xl sm:text-2xl font-bold text-navy mb-1 tracking-tight">
               {deck.title}
             </h1>
-            <p className="text-gray-500 text-sm mb-4">{deck.slides.length} slides</p>
+            <p className="text-navy-500 text-sm mb-4">{deck.slides.length} slides</p>
             {/* Share strip — same copy-success pattern as Create (trust through polish, design system) */}
             {shareUrl && (
               <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
-                <span className="text-gray-500 text-sm">Share this deck</span>
-                <div className="flex items-center w-full sm:w-auto max-w-full sm:max-w-md rounded-xl border border-gray-200 bg-white px-3 py-2 gap-2">
+                <span className="text-navy-500 text-sm">Share this deck</span>
+                <div className="flex items-center w-full sm:w-auto max-w-full sm:max-w-md rounded-xl border border-navy-200 bg-white px-3 py-2 gap-2">
                   <span className="flex-1 min-w-0 truncate text-sm text-navy" aria-hidden="true">
                     {shareUrl.replace(/^https?:\/\//, "")}
                   </span>
@@ -197,6 +202,17 @@ export default function DeckViewerClient() {
             )}
           </div>
 
+          {/* Investor variants (Growth+ owners only) */}
+          {isOwner && (
+            <div className="mb-6">
+              <DeckVariants
+                shareId={shareId}
+                variants={variants}
+                ownerPlan={ownerPlan}
+              />
+            </div>
+          )}
+
           <SlideRenderer
             slides={deck.slides}
             companyName={deck.companyName}
@@ -212,7 +228,7 @@ export default function DeckViewerClient() {
               )}
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-gray-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -238,7 +254,7 @@ export default function DeckViewerClient() {
                       </svg>
                       <h3 className="font-bold text-navy text-sm">Upgrade to Pro</h3>
                     </div>
-                    <p className="text-gray-500 text-xs sm:text-sm">
+                    <p className="text-navy-500 text-xs sm:text-sm">
                       Remove branding, unlock all themes, PPTX export, detailed analytics & engagement tracking.
                     </p>
                   </div>

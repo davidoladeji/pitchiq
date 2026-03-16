@@ -155,7 +155,7 @@ export default function LandingTransformation() {
   return (
     <section
       ref={sectionRef}
-      className="py-20 sm:py-28 px-4 sm:px-6 bg-[#f7f8f9]"
+      className="section-py px-4 sm:px-6 bg-navy-50"
       aria-label="How PitchIQ transforms your pitch workflow"
     >
       <div className="max-w-4xl mx-auto">
@@ -167,22 +167,22 @@ export default function LandingTransformation() {
             transform: headingVisible ? "translateY(0)" : "translateY(20px)",
           }}
         >
-          <h2 className="text-3xl sm:text-4xl font-display font-bold text-[#09090B] mb-3">
+          <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy mb-3">
             Stop guessing. Start pitching.
           </h2>
-          <p className="text-gray-500 text-base max-w-lg mx-auto mb-8">
+          <p className="text-navy-500 text-base max-w-lg mx-auto mb-8">
             See how PitchIQ replaces the chaos with a single, streamlined flow.
           </p>
 
           {/* ── Pill toggle ────────────────────────────────────────── */}
-          <div className="inline-flex items-center bg-white rounded-full p-1 shadow-sm border border-gray-200">
+          <div className="inline-flex items-center bg-white rounded-full p-1 shadow-sm border border-navy-200">
             <button
               type="button"
               onClick={() => switchTab("before")}
-              className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 ${
+              className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                 activeTab === "before"
-                  ? "bg-[#09090B] text-white"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-navy text-white"
+                  : "text-navy-500 hover:text-navy-700"
               }`}
             >
               Before
@@ -190,10 +190,10 @@ export default function LandingTransformation() {
             <button
               type="button"
               onClick={() => switchTab("with")}
-              className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 flex items-center ${
+              className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                 activeTab === "with"
-                  ? "bg-[#4361ee] text-white"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-electric text-white"
+                  : "text-navy-500 hover:text-navy-700"
               }`}
             >
               <SparkleIcon />
@@ -244,10 +244,10 @@ export default function LandingTransformation() {
                 </div>
 
                 {/* Text */}
-                <h3 className="text-lg font-semibold text-[#09090B] mb-1.5 relative z-10">
+                <h3 className="text-lg font-semibold text-navy mb-1.5 relative z-10">
                   {card.heading}
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed relative z-10">
+                <p className="text-sm text-navy-600 leading-relaxed relative z-10">
                   {card.desc}
                 </p>
               </div>

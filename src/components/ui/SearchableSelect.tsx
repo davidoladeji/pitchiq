@@ -100,7 +100,7 @@ export default function SearchableSelect({ options, value, onChange, placeholder
         <button
           type="button"
           onClick={() => setOpen(!open)}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 transition-colors p-1"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-navy-500 hover:text-navy-600 transition-colors p-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           tabIndex={-1}
           aria-label="Toggle dropdown"
         >
@@ -115,7 +115,7 @@ export default function SearchableSelect({ options, value, onChange, placeholder
           ref={listRef}
           id="industry-listbox"
           role="listbox"
-          className="absolute z-50 mt-1 w-full max-h-56 overflow-auto rounded-xl bg-white border border-gray-200 shadow-lg py-1 text-sm"
+          className="absolute z-50 mt-1 w-full max-h-56 overflow-auto rounded-xl bg-white border border-navy-200 shadow-lg py-1 text-sm"
         >
           {filtered.map((option, i) => (
             <li
@@ -126,8 +126,8 @@ export default function SearchableSelect({ options, value, onChange, placeholder
                 i === highlightIndex
                   ? "bg-electric/[0.08] text-electric"
                   : option === value
-                  ? "bg-gray-50 text-navy font-medium"
-                  : "text-gray-700 hover:bg-gray-50"
+                  ? "bg-navy-50 text-navy font-medium"
+                  : "text-navy-700 hover:bg-navy-50"
               }`}
               onMouseEnter={() => setHighlightIndex(i)}
               onMouseDown={(e) => {
@@ -142,7 +142,7 @@ export default function SearchableSelect({ options, value, onChange, placeholder
       )}
 
       {open && filtered.length === 0 && query.trim() && (
-        <div className="absolute z-50 mt-1 w-full rounded-xl bg-white border border-gray-200 shadow-lg py-3 px-4 text-sm text-gray-500">
+        <div className="absolute z-50 mt-1 w-full rounded-xl bg-white border border-navy-200 shadow-lg py-3 px-4 text-sm text-navy-500">
           No match — using &ldquo;{query}&rdquo; as custom industry
         </div>
       )}

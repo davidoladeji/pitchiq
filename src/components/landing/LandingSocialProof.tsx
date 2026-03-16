@@ -96,7 +96,7 @@ export default function LandingSocialProof() {
   return (
     <section
       ref={sectionRef}
-      className="py-20 sm:py-28 px-4 sm:px-6 bg-[#f7f8f9]"
+      className="section-py px-4 sm:px-6 bg-navy-50"
       aria-label="What founders say about PitchIQ"
     >
       <div className="max-w-5xl mx-auto">
@@ -108,7 +108,7 @@ export default function LandingSocialProof() {
             transform: headingVisible ? "translateY(0)" : "translateY(20px)",
           }}
         >
-          <h2 className="text-3xl sm:text-4xl font-display font-bold text-[#09090B]">
+          <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy">
             Founders love PitchIQ
           </h2>
         </div>
@@ -121,7 +121,7 @@ export default function LandingSocialProof() {
               ref={(el) => {
                 cardRefs.current[i] = el;
               }}
-              className="break-inside-avoid bg-white border border-gray-100 rounded-xl p-6 shadow-sm transition-all duration-700 ease-out"
+              className="break-inside-avoid bg-white border border-navy-100 rounded-xl p-6 shadow-sm transition-all duration-700 ease-out"
               style={{
                 opacity: visibleCards[i] ? 1 : 0,
                 transform: visibleCards[i] ? "translateY(0)" : "translateY(16px)",
@@ -130,22 +130,22 @@ export default function LandingSocialProof() {
             >
               {/* Decorative quote mark */}
               <span
-                className="block text-4xl leading-none text-gray-200 font-serif select-none"
+                className="block text-4xl leading-none text-navy-200 font-serif select-none"
                 aria-hidden="true"
               >
                 &ldquo;
               </span>
 
               {/* Quote */}
-              <p className="text-sm text-gray-700 leading-relaxed mt-1">
+              <p className="text-sm text-navy-700 leading-relaxed mt-1">
                 &ldquo;{t.quote}&rdquo;
               </p>
 
               {/* Attribution */}
-              <p className="text-sm font-semibold text-[#09090B] mt-4">
+              <p className="text-sm font-semibold text-navy mt-4">
                 {t.name}
               </p>
-              <p className="text-xs text-gray-500">{t.role}</p>
+              <p className="text-xs text-navy-500">{t.role}</p>
             </div>
           ))}
         </div>

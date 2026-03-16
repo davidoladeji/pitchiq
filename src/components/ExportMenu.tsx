@@ -212,29 +212,29 @@ export default function ExportMenu({ deck, className = "", userPlan = "starter" 
       </button>
 
       {open && (
-        <div className="absolute bottom-full mb-2 right-0 w-48 sm:w-52 bg-white rounded-xl border border-gray-100 shadow-premium-lg py-1 z-50">
+        <div className="absolute bottom-full mb-2 right-0 w-48 sm:w-52 bg-white rounded-xl border border-navy-100 shadow-premium-lg py-1 z-50">
           <button
             type="button"
             onClick={() => handleExport("pdf")}
             aria-label="Download deck as PDF"
-            className="w-full min-h-[44px] text-left px-4 py-2.5 text-sm text-navy hover:bg-gray-50 transition-colors flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
+            className="w-full min-h-[44px] text-left px-4 py-2.5 text-sm text-navy hover:bg-navy-50 transition-colors flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset focus-visible:ring-offset-white"
           >
             <span className="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center text-xs font-bold">PDF</span>
             Download PDF
             {limits.pdfWatermark && (
-              <span className="ml-auto text-[9px] text-gray-400 font-medium">Watermarked</span>
+              <span className="ml-auto text-[9px] text-navy-500 font-medium">Watermarked</span>
             )}
           </button>
-          <div className="border-t border-gray-100 mt-1 pt-1">
-            <div className="px-4 py-2.5 text-sm text-gray-500 flex items-center gap-3">
+          <div className="border-t border-navy-100 mt-1 pt-1">
+            <div className="px-4 py-2.5 text-sm text-navy-500 flex items-center gap-3">
               <span className="w-8 h-8 rounded-lg bg-orange-50 text-orange-300 flex items-center justify-center text-xs font-bold">PPT</span>
               PPTX Export
-              <span className="ml-auto text-[10px] text-gray-500 font-medium">{limits.pptxExport ? "Soon" : "Pro"}</span>
+              <span className="ml-auto text-[10px] text-navy-500 font-medium">{limits.pptxExport ? "Soon" : "Pro"}</span>
             </div>
-            <div className="px-4 py-2.5 text-sm text-gray-500 flex items-center gap-3">
-              <span className="w-8 h-8 rounded-lg bg-gray-50 text-gray-300 flex items-center justify-center text-xs font-bold">G</span>
+            <div className="px-4 py-2.5 text-sm text-navy-500 flex items-center gap-3">
+              <span className="w-8 h-8 rounded-lg bg-navy-50 text-navy-400 flex items-center justify-center text-xs font-bold">G</span>
               Google Slides
-              <span className="ml-auto text-[10px] text-gray-500 font-medium">Soon</span>
+              <span className="ml-auto text-[10px] text-navy-500 font-medium">Soon</span>
             </div>
           </div>
         </div>

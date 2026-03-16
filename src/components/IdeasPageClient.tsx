@@ -200,7 +200,7 @@ export default function IdeasPageClient() {
   // ── Results view ──
   if (ideas && ideas.length > 0) {
     return (
-      <div className="min-h-screen bg-[#fafafa]">
+      <div className="min-h-screen bg-navy-50">
         <a href="#main" className={skipLinkClass}>Skip to main content</a>
         <AppNav
           actions={
@@ -222,14 +222,14 @@ export default function IdeasPageClient() {
             >
               Here are your ideas
             </h1>
-            <p className="text-gray-500 text-sm mb-8">
+            <p className="text-navy-500 text-sm mb-8">
               Pick one to turn into a full pitch deck with PIQ Score.
             </p>
             <div className="space-y-5">
               {ideas.map((idea, i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:border-electric/20 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300"
+                  className="bg-white rounded-2xl border border-navy-100 p-6 shadow-sm hover:border-electric/20 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300"
                 >
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div>
@@ -242,17 +242,17 @@ export default function IdeasPageClient() {
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-3 mb-3">
-                    <div className="rounded-xl bg-gray-50 p-3">
-                      <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider mb-1">Problem</p>
-                      <p className="text-gray-600 text-sm leading-relaxed">{idea.problem}</p>
+                    <div className="rounded-xl bg-navy-50 p-3">
+                      <p className="text-[11px] text-navy-500 font-semibold uppercase tracking-wider mb-1">Problem</p>
+                      <p className="text-navy-600 text-sm leading-relaxed">{idea.problem}</p>
                     </div>
-                    <div className="rounded-xl bg-gray-50 p-3">
-                      <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider mb-1">Solution</p>
-                      <p className="text-gray-600 text-sm leading-relaxed">{idea.solution}</p>
+                    <div className="rounded-xl bg-navy-50 p-3">
+                      <p className="text-[11px] text-navy-500 font-semibold uppercase tracking-wider mb-1">Solution</p>
+                      <p className="text-navy-600 text-sm leading-relaxed">{idea.solution}</p>
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 mb-4">
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-navy-500 mb-4">
                     <span className="inline-flex items-center gap-1">
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
                       {idea.targetCustomer}
@@ -294,7 +294,7 @@ export default function IdeasPageClient() {
               <button
                 type="button"
                 onClick={resetAll}
-                className="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-xl border border-gray-200 text-navy text-sm font-medium hover:border-gray-300 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="min-h-[44px] inline-flex items-center px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-navy-300 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 Start over
               </button>
@@ -302,7 +302,7 @@ export default function IdeasPageClient() {
                 type="button"
                 onClick={handleSurpriseMe}
                 disabled={loading}
-                className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 text-navy text-sm font-medium hover:border-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 <svg className="w-4 h-4 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" /></svg>
                 Surprise me again
@@ -316,13 +316,13 @@ export default function IdeasPageClient() {
 
   // ── Question wizard view ──
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-navy-50">
       <a href="#main" className={skipLinkClass}>Skip to main content</a>
       <AppNav
         actions={
           <Link
             href="/create"
-            className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg text-navy text-sm font-medium hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg text-navy text-sm font-medium hover:bg-navy-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Create Deck
           </Link>
@@ -334,7 +334,7 @@ export default function IdeasPageClient() {
           <h1 className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight">
             Find your next startup idea
           </h1>
-          <p className="text-gray-500 text-sm mb-6">
+          <p className="text-navy-500 text-sm mb-6">
             Answer a few questions and AI will suggest tailored ideas. Or skip the questions entirely.
           </p>
 
@@ -343,7 +343,7 @@ export default function IdeasPageClient() {
             type="button"
             onClick={handleSurpriseMe}
             disabled={loading}
-            className="w-full mb-6 p-4 rounded-2xl border-2 border-dashed border-electric/20 bg-electric/[0.02] hover:bg-electric/[0.05] hover:border-electric/30 transition-all text-left group disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 active:scale-[0.99]"
+            className="w-full mb-6 p-4 rounded-2xl border-2 border-dashed border-electric/20 bg-electric/[0.02] hover:bg-electric/[0.05] hover:border-electric/30 transition-all text-left group disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99]"
           >
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-electric/10 flex items-center justify-center shrink-0 group-hover:bg-electric group-hover:text-white text-electric transition-all">
@@ -353,15 +353,15 @@ export default function IdeasPageClient() {
               </div>
               <div>
                 <p className="font-semibold text-navy text-sm">Surprise me</p>
-                <p className="text-gray-500 text-xs">Skip the questions &mdash; get random, creative ideas instantly</p>
+                <p className="text-navy-500 text-xs">Skip the questions &mdash; get random, creative ideas instantly</p>
               </div>
             </div>
           </button>
 
           <div className="relative flex items-center gap-3 mb-4">
-            <div className="flex-1 h-px bg-gray-200" />
-            <span className="text-xs text-gray-500 font-medium">or answer questions</span>
-            <div className="flex-1 h-px bg-gray-200" />
+            <div className="flex-1 h-px bg-navy-200" />
+            <span className="text-xs text-navy-500 font-medium">or answer questions</span>
+            <div className="flex-1 h-px bg-navy-200" />
           </div>
 
           <div className="flex justify-end mb-4">
@@ -380,14 +380,14 @@ export default function IdeasPageClient() {
           </div>
 
           {/* Question card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-navy-100 p-6 sm:p-8">
             {/* Progress */}
             <div
               className="flex items-center gap-3 mb-6"
               role="group"
               aria-label={`Question ${step + 1} of ${IDEA_QUESTIONS.length}`}
             >
-              <span className="text-xs font-semibold text-gray-600 tabular-nums shrink-0">
+              <span className="text-xs font-semibold text-navy-600 tabular-nums shrink-0">
                 {step + 1}/{IDEA_QUESTIONS.length}
               </span>
               <div className="flex-1 flex gap-1">
@@ -395,7 +395,7 @@ export default function IdeasPageClient() {
                   <div
                     key={i}
                     className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
-                      i <= step ? "bg-electric" : "bg-gray-100"
+                      i <= step ? "bg-electric" : "bg-navy-100"
                     }`}
                     aria-hidden="true"
                   />
@@ -439,7 +439,7 @@ export default function IdeasPageClient() {
                     AI Suggest
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mb-4">{currentQuestion.hint}</p>
+                <p className="text-xs text-navy-500 mb-4">{currentQuestion.hint}</p>
 
                 {currentQuestion.id === "model" ? (
                   <select
@@ -478,7 +478,7 @@ export default function IdeasPageClient() {
                     type="button"
                     onClick={handleBack}
                     disabled={step === 0}
-                    className="min-h-[44px] px-4 py-2.5 rounded-xl text-gray-500 text-sm font-medium hover:text-navy disabled:opacity-30 disabled:pointer-events-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="min-h-[44px] px-4 py-2.5 rounded-xl text-navy-500 text-sm font-medium hover:text-navy disabled:opacity-30 disabled:pointer-events-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     Back
                   </button>
@@ -488,7 +488,7 @@ export default function IdeasPageClient() {
                       <button
                         type="button"
                         onClick={() => setStep((s) => s + 1)}
-                        className="min-h-[44px] px-4 py-2.5 rounded-xl text-gray-500 text-sm font-medium hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                        className="min-h-[44px] px-4 py-2.5 rounded-xl text-navy-500 text-sm font-medium hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       >
                         Skip
                       </button>
@@ -498,7 +498,7 @@ export default function IdeasPageClient() {
                         type="button"
                         onClick={handleNext}
                         disabled={!canAdvance}
-                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       >
                         Next
                       </button>
@@ -507,7 +507,7 @@ export default function IdeasPageClient() {
                         type="button"
                         onClick={handleSubmit}
                         disabled={!canSubmit}
-                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       >
                         Generate ideas
                       </button>
@@ -519,7 +519,7 @@ export default function IdeasPageClient() {
           </div>
 
           <p className="mt-6 text-center">
-            <Link href="/create" className="text-electric text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded">
+            <Link href="/create" className="text-electric text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded">
               Already have an idea? Create your deck
             </Link>
           </p>

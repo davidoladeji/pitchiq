@@ -68,11 +68,11 @@ function StatCell({ stat, active, isLast }: { stat: Stat; active: boolean; isLas
     <div
       className={`py-2 ${!isLast ? "md:border-r md:border-white/10" : ""}`}
     >
-      <div className="text-4xl sm:text-5xl font-display font-bold bg-gradient-to-r from-[#4361ee] to-[#A855F7] bg-clip-text text-transparent">
+      <div className="text-4xl sm:text-5xl font-display font-bold bg-gradient-to-r from-electric to-violet bg-clip-text text-transparent">
         {formatNumber(count)}
         {stat.suffix}
       </div>
-      <div className="text-xs sm:text-sm text-gray-400 mt-1">{stat.label}</div>
+      <div className="text-xs sm:text-sm text-blue-100/70 mt-1">{stat.label}</div>
     </div>
   );
 }
@@ -101,8 +101,7 @@ export default function LandingNumbers() {
   return (
     <section
       ref={sectionRef}
-      style={{ backgroundColor: "#0b111d" }}
-      className="py-16 sm:py-20 px-4 sm:px-6"
+      className="section-py bg-navy px-4 sm:px-6"
       aria-label="PitchIQ in numbers"
     >
       <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto text-center">

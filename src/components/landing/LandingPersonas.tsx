@@ -84,21 +84,20 @@ export default function LandingPersonas() {
 
   return (
     <section
-      style={{ backgroundColor: "#0b111d" }}
-      className="py-24 sm:py-32 px-4 sm:px-6"
+      className="section-py px-4 sm:px-6 bg-navy"
       aria-label="Who PitchIQ is built for"
     >
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight">
-            <span className="text-white/60">Built for people who</span>
+            <span className="text-blue-100/70">Built for people who</span>
             <br />
-            <span className="bg-gradient-to-r from-[#4361ee] to-[#A855F7] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-electric to-violet bg-clip-text text-transparent">
               can&apos;t afford a bad first impression
             </span>
           </h2>
-          <p className="mt-5 text-base sm:text-lg text-white/40 max-w-xl mx-auto">
+          <p className="mt-5 text-base sm:text-lg text-blue-100/70 max-w-xl mx-auto">
             Whether you&apos;re raising for the first time or helping someone
             who is.
           </p>

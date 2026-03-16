@@ -3,10 +3,13 @@
 import { useEffect, useCallback, useState } from "react";
 import { DeckData } from "@/lib/types";
 import { useEditorStore } from "./state/editorStore";
-import EditorToolbar from "./EditorToolbar";
+import EditorToolbar, { type AIPanel } from "./EditorToolbar";
 import EditorSidebar from "./EditorSidebar";
 import EditorCanvas from "./EditorCanvas";
 import EditorProperties from "./EditorProperties";
+import AICoachPanel from "./ai/AICoachPanel";
+import InvestorLensPanel from "./ai/InvestorLensPanel";
+import PitchSimulator from "./ai/PitchSimulator";
 import {
   DndContext,
   DragEndEvent,
@@ -38,6 +41,7 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
 
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [mobilePanel, setMobilePanel] = useState<"canvas" | "slides" | "properties">("canvas");
+  const [activeAIPanel, setActiveAIPanel] = useState<AIPanel>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -138,18 +142,18 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="h-screen w-screen bg-[#1a1a2e] flex flex-col overflow-hidden">
-        <EditorToolbar plan={plan} />
+      <div className="h-screen w-screen bg-navy flex flex-col overflow-hidden">
+        <EditorToolbar plan={plan} activeAIPanel={activeAIPanel} onToggleAIPanel={setActiveAIPanel} />
 
         {/* Mobile tab bar */}
-        <div className="flex lg:hidden border-b border-white/10 bg-[#0f0f23]">
+        <div className="flex lg:hidden border-b border-white/10 bg-navy-950">
           {(["slides", "canvas", "properties"] as const).map((panel) => (
             <button
               key={panel}
               onClick={() => setMobilePanel(panel)}
-              className={`flex-1 py-2.5 text-xs font-medium capitalize transition-colors ${
+              className={`flex-1 py-2.5 text-xs font-medium capitalize transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${
                 mobilePanel === panel
-                  ? "text-white border-b-2 border-[#4361ee]"
+                  ? "text-white border-b-2 border-electric"
                   : "text-white/40 hover:text-white/60"
               }`}
             >
@@ -177,20 +181,31 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
             <EditorCanvas />
           </div>
 
-          {/* Right properties panel - desktop always, mobile conditional */}
+          {/* Right panel - properties or AI panel */}
           <div
             className={`w-full lg:w-[300px] lg:block shrink-0 ${
               mobilePanel === "properties" ? "block" : "hidden"
             }`}
           >
-            <EditorProperties plan={plan} />
+            {activeAIPanel === "coach" ? (
+              <AICoachPanel onClose={() => setActiveAIPanel(null)} />
+            ) : activeAIPanel === "investor-lens" ? (
+              <InvestorLensPanel onClose={() => setActiveAIPanel(null)} />
+            ) : (
+              <EditorProperties plan={plan} />
+            )}
           </div>
         </div>
+
+        {/* Pitch Simulator modal overlay */}
+        {activeAIPanel === "simulator" && (
+          <PitchSimulator onClose={() => setActiveAIPanel(null)} />
+        )}
       </div>
 
       <DragOverlay>
         {activeDragId && activeDragId.startsWith("block-template-") ? (
-          <div className="px-3 py-2 bg-[#4361ee] text-white text-xs font-medium rounded-lg shadow-lg opacity-90">
+          <div className="px-3 py-2 bg-electric text-white text-xs font-medium rounded-lg shadow-lg opacity-90">
             {activeDragId.replace("block-template-", "").replace("-", " ")}
           </div>
         ) : null}

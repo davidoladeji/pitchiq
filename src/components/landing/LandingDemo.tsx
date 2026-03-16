@@ -72,7 +72,7 @@ export default function LandingDemo() {
           </div>
 
           {/* Content area */}
-          <div className="bg-[#18181B] p-4 sm:p-8 md:p-12">
+          <div className="bg-navy p-4 sm:p-8 md:p-12">
             <div className="flex flex-col md:flex-row items-center gap-10 md:gap-14">
               {/* Score gauge */}
               <div className="flex flex-col items-center shrink-0">

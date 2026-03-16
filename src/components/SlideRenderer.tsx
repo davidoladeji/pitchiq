@@ -382,7 +382,7 @@ function MetricsSlide({ slide, accent }: { slide: SlideData; accent?: boolean })
                   {metric.value}
                 </p>
                 {metric.change && (
-                  <p className={`text-xs md:text-sm font-semibold mt-1 ${metric.trend === "up" ? "text-emerald-400" : metric.trend === "down" ? "text-red-400" : isDark ? "text-gray-400" : "text-gray-500"}`}>
+                  <p className={`text-xs md:text-sm font-semibold mt-1 ${metric.trend === "up" ? "text-emerald-400" : metric.trend === "down" ? "text-red-400" : isDark ? "text-navy-400" : "text-navy-500"}`}>
                     {metric.trend === "up" ? "\u2191" : metric.trend === "down" ? "\u2193" : "\u2192"} {metric.change}
                   </p>
                 )}
@@ -658,7 +658,7 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
         ))}
       </div>
 
-      <div id="slide-container" className="relative aspect-[16/9] w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-premium-lg border border-gray-200/50">
+      <div id="slide-container" className="relative aspect-[16/9] w-full max-w-5xl mx-auto rounded-2xl overflow-hidden shadow-premium-lg border border-navy-200/50">
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out ${isTransitioning ? "opacity-90" : "opacity-100"}`}>
           {renderSlide(slides[currentSlide], companyName, theme.accent)}
         </div>
@@ -695,7 +695,7 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
       </p>
 
       <div className="flex items-center justify-center gap-4 mt-6" role="group" aria-label="Slide navigation">
-        <button onClick={() => goTo(currentSlide - 1)} disabled={currentSlide === 0} className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-gray-200 text-navy disabled:opacity-25 hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white" aria-label="Previous slide">
+        <button onClick={() => goTo(currentSlide - 1)} disabled={currentSlide === 0} className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-navy-200 text-navy disabled:opacity-25 hover:border-navy-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white" aria-label="Previous slide">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
@@ -707,7 +707,7 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
               key={i}
               onClick={() => goTo(i)}
               className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
-                i === currentSlide ? "bg-navy w-6 h-2.5" : "bg-gray-200 hover:bg-gray-300 w-2.5 h-2.5"
+                i === currentSlide ? "bg-navy w-6 h-2.5" : "bg-navy-200 hover:bg-navy-300 w-2.5 h-2.5"
               }`}
               aria-label={`Go to slide ${i + 1}`}
               aria-current={i === currentSlide ? "true" : undefined}
@@ -715,16 +715,16 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
           ))}
         </div>
 
-        <button onClick={() => goTo(currentSlide + 1)} disabled={currentSlide === slides.length - 1} className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-gray-200 text-navy disabled:opacity-25 hover:border-gray-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white" aria-label="Next slide">
+        <button onClick={() => goTo(currentSlide + 1)} disabled={currentSlide === slides.length - 1} className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-navy-200 text-navy disabled:opacity-25 hover:border-navy-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white" aria-label="Next slide">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
 
-      <p className="text-center text-xs text-gray-500 mt-3 hidden md:block">
-        Use <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-xs font-mono">&larr;</kbd>{" "}
-        <kbd className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-500 text-xs font-mono">&rarr;</kbd> to navigate
+      <p className="text-center text-xs text-navy-500 mt-3 hidden md:block">
+        Use <kbd className="px-1.5 py-0.5 rounded bg-navy-100 border border-navy-200 text-navy-500 text-xs font-mono">&larr;</kbd>{" "}
+        <kbd className="px-1.5 py-0.5 rounded bg-navy-100 border border-navy-200 text-navy-500 text-xs font-mono">&rarr;</kbd> to navigate
       </p>
     </div>
   );

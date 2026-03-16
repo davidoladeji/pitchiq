@@ -22,7 +22,7 @@ export default function AuthButton() {
   }, [menuOpen]);
 
   if (status === "loading") {
-    return <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />;
+    return <div className="w-8 h-8 rounded-full bg-navy-200 animate-pulse" aria-hidden="true" />;
   }
 
   if (!session) {
@@ -53,7 +53,7 @@ export default function AuthButton() {
             alt=""
             width={32}
             height={32}
-            className="w-8 h-8 rounded-full border border-gray-200"
+            className="w-8 h-8 rounded-full border border-navy-200"
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-electric/10 border border-electric/20 flex items-center justify-center text-electric text-sm font-bold">
@@ -63,19 +63,19 @@ export default function AuthButton() {
       </button>
 
       {menuOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl border border-gray-100 shadow-premium-lg py-2 z-50">
-          <div className="px-4 py-2 border-b border-gray-100">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl border border-navy-100 shadow-premium-lg py-2 z-50">
+          <div className="px-4 py-2 border-b border-navy-100">
             <p className="text-sm font-semibold text-navy truncate">
               {session.user.name || "User"}
             </p>
-            <p className="text-xs text-gray-500 truncate">
+            <p className="text-xs text-navy-500 truncate">
               {session.user.email}
             </p>
           </div>
           <Link
             href="/dashboard"
             onClick={() => setMenuOpen(false)}
-            className="min-h-[44px] flex items-center px-4 py-2.5 text-sm text-navy hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
+            className="min-h-[44px] flex items-center px-4 py-2.5 text-sm text-navy hover:bg-navy-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
             aria-label="Go to dashboard"
           >
             Dashboard
@@ -83,7 +83,7 @@ export default function AuthButton() {
           <button
             type="button"
             onClick={() => signOut()}
-            className="min-h-[44px] w-full text-left px-4 py-2.5 text-sm text-gray-500 hover:bg-gray-50 hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
+            className="min-h-[44px] w-full text-left px-4 py-2.5 text-sm text-navy-500 hover:bg-navy-50 hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
             aria-label="Sign out of PitchIQ"
           >
             Sign out

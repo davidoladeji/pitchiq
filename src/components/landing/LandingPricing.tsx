@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+/* ─── tier data ─── */
+
 interface Tier {
   name: string;
   plan?: string; // "pro" | "growth" — used for checkout
@@ -10,6 +12,7 @@ interface Tier {
   unit: string;
   desc: string;
   highlight: boolean;
+  badge?: string;
   features: string[];
   cta: string;
   href: string;
@@ -39,6 +42,7 @@ const TIERS: Tier[] = [
     unit: "/mo",
     desc: "For active fundraisers",
     highlight: true,
+    badge: "Popular",
     features: [
       "Unlimited decks",
       "Full PIQ Score + coaching",
@@ -46,6 +50,10 @@ const TIERS: Tier[] = [
       "PDF + PPTX export",
       "Brand customization",
       "Remove branding",
+      "Pitch deck editor",
+      "Smart Blocks",
+      "AI coaching per slide",
+      "10 version history",
     ],
     cta: "Start Free Trial",
     href: "/create",
@@ -57,6 +65,7 @@ const TIERS: Tier[] = [
     unit: "/mo",
     desc: "Full intelligence suite",
     highlight: false,
+    badge: "Best Value",
     features: [
       "Everything in Pro",
       "Engagement analytics",
@@ -64,6 +73,11 @@ const TIERS: Tier[] = [
       "Investor variants",
       "A/B testing",
       "Follow-up alerts",
+      "Investor CRM",
+      "Investor Lens AI",
+      "Pitch Simulator",
+      "Unlimited version history",
+      "Custom domain",
     ],
     cta: "Start Free Trial",
     href: "/create",
@@ -77,7 +91,9 @@ const TIERS: Tier[] = [
     features: [
       "Everything in Growth",
       "Team collaboration",
+      "Unlimited workspace members",
       "API access",
+      "Batch scoring",
       "White-label option",
       "SSO / SAML",
       "Dedicated support",
@@ -87,11 +103,70 @@ const TIERS: Tier[] = [
   },
 ];
 
+/* ─── feature comparison table rows ─── */
+
+interface CompareRow {
+  label: string;
+  starter: string | boolean;
+  pro: string | boolean;
+  growth: string | boolean;
+  enterprise: string | boolean;
+}
+
+const COMPARE_ROWS: CompareRow[] = [
+  { label: "AI-Generated Decks", starter: "1", pro: "Unlimited", growth: "Unlimited", enterprise: "Unlimited" },
+  { label: "Design Themes", starter: "1", pro: "All 12+", growth: "All 12+", enterprise: "All 12+" },
+  { label: "PIQ Score", starter: "Overall only", pro: "Full breakdown", growth: "Full breakdown", enterprise: "Full breakdown" },
+  { label: "PDF Export", starter: "Watermarked", pro: true, growth: true, enterprise: true },
+  { label: "PPTX Export", starter: false, pro: true, growth: true, enterprise: true },
+  { label: "Pitch Deck Editor", starter: false, pro: true, growth: true, enterprise: true },
+  { label: "Smart Blocks", starter: false, pro: true, growth: true, enterprise: true },
+  { label: "AI Coaching per Slide", starter: false, pro: true, growth: true, enterprise: true },
+  { label: "Version History", starter: false, pro: "10 versions", growth: "Unlimited", enterprise: "Unlimited" },
+  { label: "Deck Templates", starter: false, pro: true, growth: true, enterprise: true },
+  { label: "Remove Branding", starter: false, pro: true, growth: true, enterprise: true },
+  { label: "Engagement Analytics", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "Slide-Level Tracking", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "Investor Variants", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "A/B Testing", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "Follow-Up Alerts", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "Investor CRM", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "Investor Lens AI", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "Pitch Simulator", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "Custom Domain", starter: false, pro: false, growth: true, enterprise: true },
+  { label: "Team Collaboration", starter: false, pro: false, growth: false, enterprise: true },
+  { label: "API Access", starter: false, pro: false, growth: false, enterprise: true },
+  { label: "Batch Scoring", starter: false, pro: false, growth: false, enterprise: true },
+  { label: "White-Label", starter: false, pro: false, growth: false, enterprise: true },
+  { label: "SSO / SAML", starter: false, pro: false, growth: false, enterprise: true },
+  { label: "Dedicated Support", starter: false, pro: false, growth: false, enterprise: true },
+];
+
+/* ─── cell renderer ─── */
+
+function CompareCell({ value }: { value: string | boolean }) {
+  if (value === true) {
+    return (
+      <svg className="w-5 h-5 text-electric mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+    );
+  }
+  if (value === false) {
+    return <span className="block w-1.5 h-1.5 rounded-full bg-navy-200 mx-auto" />;
+  }
+  return <span className="text-navy-600 text-xs font-medium">{value}</span>;
+}
+
+/* ─── component ─── */
+
 export default function LandingPricing() {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [showAllPlans, setShowAllPlans] = useState(false);
+  const [showCompare, setShowCompare] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -116,7 +191,6 @@ export default function LandingPricing() {
       const data = await res.json();
 
       if (!res.ok) {
-        // If not authenticated, redirect to sign in
         if (res.status === 401) {
           window.location.href = `/auth/signin?callbackUrl=${encodeURIComponent(`/?upgrade=${plan}#pricing`)}`;
           return;
@@ -136,10 +210,13 @@ export default function LandingPricing() {
 
   const starterTier = TIERS[0];
   const proTier = TIERS[1];
+  const growthTier = TIERS[2];
+  const enterpriseTier = TIERS[3];
 
   return (
     <section id="pricing" aria-label="Pricing and plans" className="section-py px-6 bg-white">
-      <div className="max-w-3xl mx-auto" ref={ref}>
+      <div className="max-w-5xl mx-auto" ref={ref}>
+        {/* Header */}
         <div className="text-center mb-16">
           <p className="text-xs tracking-[0.2em] uppercase text-navy-500 mb-4">PRICING</p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-navy tracking-[-0.02em] mb-4">
@@ -153,52 +230,42 @@ export default function LandingPricing() {
           )}
         </div>
 
+        {/* ── Primary cards: Starter + Pro ── */}
         <div
-          className={`grid md:grid-cols-2 gap-6 items-stretch transition-all duration-700 ease-out ${
+          className={`grid md:grid-cols-2 gap-6 items-stretch max-w-3xl mx-auto transition-all duration-700 ease-out ${
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          {/* Starter Card — hover lift for perceived interactivity (conversion, premium minimalism) */}
+          {/* Starter */}
           <div
             role="group"
             aria-label="Starter plan"
             className="relative flex flex-col rounded-2xl border border-navy-200 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-navy-300"
           >
-            <h3 className="text-base font-bold tracking-tight text-navy">
-              {starterTier.name}
-            </h3>
-            <p className="text-xs mt-1 mb-6 text-navy-500">
-              {starterTier.desc}
-            </p>
-
+            <h3 className="text-base font-bold tracking-tight text-navy">{starterTier.name}</h3>
+            <p className="text-xs mt-1 mb-6 text-navy-500">{starterTier.desc}</p>
             <div className="flex items-baseline gap-0.5 mb-8">
               <span className="text-4xl font-bold tracking-tight text-navy">{starterTier.price}</span>
             </div>
-
             <ul className="space-y-3 mb-8 flex-1">
               {starterTier.features.map((f) => (
                 <li key={f} className="flex items-center gap-3 text-sm">
-                  <svg
-                    className="w-4 h-4 shrink-0 text-electric"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"
-                  >
+                  <svg className="w-4 h-4 shrink-0 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-navy-500">{f}</span>
                 </li>
               ))}
             </ul>
-
             <Link
               href={starterTier.href}
-              aria-label="Get started with Starter plan"
               className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy-100 text-navy transition-all hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               {starterTier.cta}
             </Link>
           </div>
 
-          {/* Pro Card — subtle glow + hover lift so recommended plan stands out (conversion) */}
+          {/* Pro */}
           <div
             role="group"
             aria-label="Pro plan, most popular"
@@ -207,33 +274,22 @@ export default function LandingPricing() {
             <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide">
               Popular
             </div>
-
-            <h3 className="text-base font-bold tracking-tight text-navy">
-              {proTier.name}
-            </h3>
-            <p className="text-xs mt-1 mb-6 text-navy-500">
-              {proTier.desc}
-            </p>
-
+            <h3 className="text-base font-bold tracking-tight text-navy">{proTier.name}</h3>
+            <p className="text-xs mt-1 mb-6 text-navy-500">{proTier.desc}</p>
             <div className="flex items-baseline gap-0.5 mb-8">
               <span className="text-4xl font-bold tracking-tight text-navy">{proTier.price}</span>
               <span className="text-sm text-navy-500">{proTier.unit}</span>
             </div>
-
             <ul className="space-y-3 mb-8 flex-1">
               {proTier.features.map((f) => (
                 <li key={f} className="flex items-center gap-3 text-sm">
-                  <svg
-                    className="w-4 h-4 shrink-0 text-electric"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true"
-                  >
+                  <svg className="w-4 h-4 shrink-0 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                   <span className="text-navy-500">{f}</span>
                 </li>
               ))}
             </ul>
-
             {(() => {
               const isLoading = loadingPlan === proTier.plan;
               return (
@@ -242,16 +298,11 @@ export default function LandingPricing() {
                   onClick={() => handleCheckout(proTier.plan!)}
                   disabled={!!loadingPlan}
                   aria-busy={isLoading}
-                  aria-label={
-                    isLoading
-                      ? "Setting up Pro checkout..."
-                      : "Start free trial — Pro plan"
-                  }
                   className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
                 >
                   {isLoading ? (
                     <span className="inline-flex items-center gap-2">
-                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
@@ -266,29 +317,231 @@ export default function LandingPricing() {
           </div>
         </div>
 
-        {/* Additional plans text */}
-        <p
-          className={`text-center mt-10 text-sm text-navy-500 transition-all duration-700 ease-out delay-200 ${
+        {/* ── "See all plans" toggle ── */}
+        <div
+          className={`text-center mt-10 transition-all duration-700 ease-out delay-200 ${
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
-          Need more?{" "}
           <button
             type="button"
-            onClick={() => handleCheckout("growth")}
-            disabled={!!loadingPlan}
-            aria-label={loadingPlan === "growth" ? "Setting up Growth checkout..." : "Start free trial — Growth plan ($79/mo)"}
-            aria-busy={loadingPlan === "growth"}
-            className="text-electric hover:underline font-medium disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded px-0.5"
+            onClick={() => setShowAllPlans(!showAllPlans)}
+            className="inline-flex items-center gap-2 text-sm text-navy-500 hover:text-electric font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg px-4 py-2"
           >
-            Growth ($79/mo)
-          </button>{" "}
-          and{" "}
-          <Link href="#" className="text-electric hover:underline font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded px-0.5" aria-label="Contact sales for Enterprise plan">
-            Enterprise
-          </Link>{" "}
-          plans available.
-        </p>
+            {showAllPlans ? "Hide" : "See"} Growth &amp; Enterprise plans
+            <svg
+              className={`w-4 h-4 transition-transform duration-300 ${showAllPlans ? "rotate-180" : ""}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* ── Growth + Enterprise cards ── */}
+        <div
+          className={`grid md:grid-cols-2 gap-6 items-stretch max-w-3xl mx-auto overflow-hidden transition-all duration-500 ease-out ${
+            showAllPlans ? "mt-8 max-h-[2000px] opacity-100" : "mt-0 max-h-0 opacity-0"
+          }`}
+        >
+          {/* Growth */}
+          <div
+            role="group"
+            aria-label="Growth plan"
+            className="relative flex flex-col rounded-2xl border border-purple-300 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-purple-400"
+          >
+            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-gradient-to-r from-purple-500 to-electric text-white text-[11px] font-semibold tracking-wide">
+              Best Value
+            </div>
+            <h3 className="text-base font-bold tracking-tight text-navy">{growthTier.name}</h3>
+            <p className="text-xs mt-1 mb-6 text-navy-500">{growthTier.desc}</p>
+            <div className="flex items-baseline gap-0.5 mb-8">
+              <span className="text-4xl font-bold tracking-tight text-navy">{growthTier.price}</span>
+              <span className="text-sm text-navy-500">{growthTier.unit}</span>
+            </div>
+            <ul className="space-y-3 mb-8 flex-1">
+              {growthTier.features.map((f) => (
+                <li key={f} className="flex items-center gap-3 text-sm">
+                  <svg className="w-4 h-4 shrink-0 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-navy-500">{f}</span>
+                </li>
+              ))}
+            </ul>
+            {(() => {
+              const isLoading = loadingPlan === growthTier.plan;
+              return (
+                <button
+                  type="button"
+                  onClick={() => handleCheckout(growthTier.plan!)}
+                  disabled={!!loadingPlan}
+                  aria-busy={isLoading}
+                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-gradient-to-r from-purple-600 to-electric text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
+                >
+                  {isLoading ? (
+                    <span className="inline-flex items-center gap-2">
+                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Setting up...
+                    </span>
+                  ) : (
+                    growthTier.cta
+                  )}
+                </button>
+              );
+            })()}
+          </div>
+
+          {/* Enterprise */}
+          <div
+            role="group"
+            aria-label="Enterprise plan"
+            className="relative flex flex-col rounded-2xl border border-navy-200 bg-navy-50/50 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-navy-300"
+          >
+            <h3 className="text-base font-bold tracking-tight text-navy">{enterpriseTier.name}</h3>
+            <p className="text-xs mt-1 mb-6 text-navy-500">{enterpriseTier.desc}</p>
+            <div className="flex items-baseline gap-0.5 mb-8">
+              <span className="text-4xl font-bold tracking-tight text-navy">{enterpriseTier.price}</span>
+            </div>
+            <ul className="space-y-3 mb-8 flex-1">
+              {enterpriseTier.features.map((f) => (
+                <li key={f} className="flex items-center gap-3 text-sm">
+                  <svg className="w-4 h-4 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-navy-500">{f}</span>
+                </li>
+              ))}
+            </ul>
+            <a
+              href="mailto:hello@pitchiq.com?subject=Enterprise%20Plan%20Inquiry"
+              className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              {enterpriseTier.cta}
+            </a>
+          </div>
+        </div>
+
+        {/* ── Compare all features toggle ── */}
+        <div
+          className={`text-center mt-10 transition-all duration-700 ease-out delay-300 ${
+            inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+        >
+          <button
+            type="button"
+            onClick={() => setShowCompare(!showCompare)}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-electric hover:text-navy transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg px-5 py-2.5 border border-electric/20 hover:border-electric/40 bg-electric/5 hover:bg-electric/10"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+            </svg>
+            {showCompare ? "Hide" : "Compare all"} features
+            <svg
+              className={`w-4 h-4 transition-transform duration-300 ${showCompare ? "rotate-180" : ""}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* ── Feature comparison table ── */}
+        <div
+          className={`overflow-hidden transition-all duration-500 ease-out ${
+            showCompare ? "mt-8 max-h-[3000px] opacity-100" : "mt-0 max-h-0 opacity-0"
+          }`}
+        >
+          <div className="rounded-2xl border border-navy-200 overflow-hidden">
+            {/* Sticky header */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-left min-w-[640px]">
+                <thead>
+                  <tr className="bg-navy-50 border-b border-navy-200">
+                    <th className="px-5 py-4 text-xs font-semibold text-navy-500 uppercase tracking-wider w-[35%]">
+                      Feature
+                    </th>
+                    <th className="px-3 py-4 text-center w-[16%]">
+                      <div className="text-xs font-bold text-navy">Starter</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">Free</div>
+                    </th>
+                    <th className="px-3 py-4 text-center w-[16%]">
+                      <div className="text-xs font-bold text-electric">Pro</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">$29/mo</div>
+                    </th>
+                    <th className="px-3 py-4 text-center w-[16%]">
+                      <div className="text-xs font-bold text-purple-600">Growth</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">$79/mo</div>
+                    </th>
+                    <th className="px-3 py-4 text-center w-[16%]">
+                      <div className="text-xs font-bold text-navy">Enterprise</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">Custom</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {COMPARE_ROWS.map((row, i) => (
+                    <tr
+                      key={row.label}
+                      className={`border-b border-navy-100 ${i % 2 === 0 ? "bg-white" : "bg-navy-50/30"}`}
+                    >
+                      <td className="px-5 py-3 text-sm text-navy-600 font-medium">{row.label}</td>
+                      <td className="px-3 py-3 text-center"><CompareCell value={row.starter} /></td>
+                      <td className="px-3 py-3 text-center bg-electric/[0.03]"><CompareCell value={row.pro} /></td>
+                      <td className="px-3 py-3 text-center bg-purple-50/50"><CompareCell value={row.growth} /></td>
+                      <td className="px-3 py-3 text-center"><CompareCell value={row.enterprise} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+                {/* CTA row at bottom */}
+                <tfoot>
+                  <tr className="bg-navy-50 border-t border-navy-200">
+                    <td className="px-5 py-4" />
+                    <td className="px-3 py-4 text-center">
+                      <Link
+                        href="/create"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy-100 text-navy hover:-translate-y-0.5 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      >
+                        Get Started
+                      </Link>
+                    </td>
+                    <td className="px-3 py-4 text-center">
+                      <button
+                        type="button"
+                        onClick={() => handleCheckout("pro")}
+                        disabled={!!loadingPlan}
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
+                      >
+                        {loadingPlan === "pro" ? "..." : "Start Trial"}
+                      </button>
+                    </td>
+                    <td className="px-3 py-4 text-center">
+                      <button
+                        type="button"
+                        onClick={() => handleCheckout("growth")}
+                        disabled={!!loadingPlan}
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-600 to-electric text-white hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
+                      >
+                        {loadingPlan === "growth" ? "..." : "Start Trial"}
+                      </button>
+                    </td>
+                    <td className="px-3 py-4 text-center">
+                      <a
+                        href="mailto:hello@pitchiq.com?subject=Enterprise%20Plan%20Inquiry"
+                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      >
+                        Contact
+                      </a>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -20,8 +20,8 @@ function parsePiqOverall(piqJson: string): number | null {
 }
 
 function scoreColor(score: number): string {
-  if (score >= 80) return "text-green-600";
-  if (score >= 60) return "text-blue-600";
+  if (score >= 80) return "text-emerald-600";
+  if (score >= 60) return "text-electric";
   if (score >= 40) return "text-orange-500";
   return "text-red-500";
 }
@@ -56,8 +56,8 @@ export default function DashboardOverview({
     plan === "growth"
       ? "bg-purple-100 text-purple-700"
       : plan === "pro"
-        ? "bg-blue-50 text-[#4361ee]"
-        : "bg-gray-100 text-gray-600";
+        ? "bg-electric/10 text-electric"
+        : "bg-navy-100 text-navy-600";
 
   const stats = [
     {
@@ -68,8 +68,8 @@ export default function DashboardOverview({
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
         </svg>
       ),
-      color: "text-[#4361ee]",
-      bgColor: "bg-[#4361ee]/10",
+      color: "text-electric",
+      bgColor: "bg-electric/10",
     },
     {
       label: "Total Views",
@@ -91,7 +91,7 @@ export default function DashboardOverview({
           <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
         </svg>
       ),
-      color: avgScore !== null ? scoreColor(avgScore) : "text-gray-400",
+      color: avgScore !== null ? scoreColor(avgScore) : "text-navy-400",
       bgColor: avgScore !== null && avgScore >= 60 ? "bg-green-50" : "bg-orange-50",
     },
     {
@@ -104,7 +104,7 @@ export default function DashboardOverview({
           <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
         </svg>
       ),
-      color: bestDeck ? scoreColor(bestDeck.score) : "text-gray-400",
+      color: bestDeck ? scoreColor(bestDeck.score) : "text-navy-400",
       bgColor: "bg-amber-50",
     },
   ];
@@ -112,7 +112,7 @@ export default function DashboardOverview({
   return (
     <section aria-label="Dashboard overview">
       <div className="flex items-center gap-2 mb-4">
-        <h2 className="text-lg font-bold text-[#09090B] font-display">Overview</h2>
+        <h2 className="text-lg font-bold text-navy font-display">Overview</h2>
         <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wide ${planBadgeColor}`}>
           {plan}
         </span>
@@ -122,19 +122,19 @@ export default function DashboardOverview({
           const content = (
             <div
               key={stat.label}
-              className="bg-white rounded-2xl border border-[#e5e7eb] p-4 sm:p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+              className="bg-white rounded-2xl border border-navy-200 p-4 sm:p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all"
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${stat.bgColor} flex items-center justify-center shrink-0 ${stat.color}`}>
                   {stat.icon}
                 </div>
               </div>
-              <div className="text-2xl sm:text-3xl font-bold tabular-nums text-[#09090B]">
+              <div className="text-2xl sm:text-3xl font-bold tabular-nums text-navy">
                 {stat.value}
               </div>
-              <div className="text-xs sm:text-sm text-[#6b7280] mt-0.5">{stat.label}</div>
+              <div className="text-xs sm:text-sm text-navy-500 mt-0.5">{stat.label}</div>
               {stat.subtitle && (
-                <div className="text-xs text-[#6b7280] mt-1 truncate" title={stat.subtitle}>
+                <div className="text-xs text-navy-500 mt-1 truncate" title={stat.subtitle}>
                   {stat.subtitle}
                 </div>
               )}

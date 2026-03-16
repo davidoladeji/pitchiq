@@ -11,13 +11,13 @@ interface AdminUser {
 }
 
 const PLAN_BADGES: Record<string, string> = {
-  starter: "bg-gray-100 text-gray-700",
-  pro: "bg-blue-100 text-blue-700",
-  growth: "bg-purple-100 text-purple-700",
+  starter: "bg-navy-100 text-navy-700",
+  pro: "bg-electric/15 text-electric",
+  growth: "bg-violet/15 text-violet",
 };
 
 const ROLE_BADGES: Record<string, string> = {
-  user: "bg-gray-100 text-gray-600",
+  user: "bg-navy-100 text-navy-600",
   admin: "bg-amber-100 text-amber-700",
 };
 
@@ -69,15 +69,15 @@ export default function AdminUsersTable({ initialUsers }: { initialUsers: AdminU
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border bg-white">
+    <div className="overflow-x-auto rounded-lg border border-navy-200 bg-white">
       <table className="min-w-full text-left text-sm">
-        <thead className="border-b bg-gray-50">
+        <thead className="border-b border-navy-200 bg-navy-50">
           <tr>
-            <th className="px-4 py-2 font-medium text-gray-700">Email</th>
-            <th className="px-4 py-2 font-medium text-gray-700">Role</th>
-            <th className="px-4 py-2 font-medium text-gray-700">Plan</th>
-            <th className="px-4 py-2 font-medium text-gray-700">Created</th>
-            <th className="px-4 py-2 font-medium text-gray-700">Actions</th>
+            <th className="px-4 py-2 font-medium text-navy-700">Email</th>
+            <th className="px-4 py-2 font-medium text-navy-700">Role</th>
+            <th className="px-4 py-2 font-medium text-navy-700">Plan</th>
+            <th className="px-4 py-2 font-medium text-navy-700">Created</th>
+            <th className="px-4 py-2 font-medium text-navy-700">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -95,7 +95,7 @@ export default function AdminUsersTable({ initialUsers }: { initialUsers: AdminU
                     <select
                       value={editRole}
                       onChange={(e) => setEditRole(e.target.value)}
-                      className="rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="rounded border border-navy-300 px-2 py-1 text-sm focus:border-electric focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     >
                       <option value="user">user</option>
                       <option value="admin">admin</option>
@@ -113,7 +113,7 @@ export default function AdminUsersTable({ initialUsers }: { initialUsers: AdminU
                     <select
                       value={editPlan}
                       onChange={(e) => setEditPlan(e.target.value)}
-                      className="rounded border border-gray-300 px-2 py-1 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className="rounded border border-navy-300 px-2 py-1 text-sm focus:border-electric focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     >
                       <option value="starter">starter</option>
                       <option value="pro">pro</option>
@@ -126,7 +126,7 @@ export default function AdminUsersTable({ initialUsers }: { initialUsers: AdminU
                   )}
                 </td>
 
-                <td className="px-4 py-2 text-gray-500">
+                <td className="px-4 py-2 text-navy-500">
                   {new Date(u.createdAt).toLocaleDateString()}
                 </td>
 
@@ -138,14 +138,14 @@ export default function AdminUsersTable({ initialUsers }: { initialUsers: AdminU
                         <button
                           onClick={() => saveEdit(u.id)}
                           disabled={saving}
-                          className="rounded bg-blue-600 px-3 py-1 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                          className="rounded bg-electric px-3 py-1 text-xs font-medium text-white hover:bg-electric-600 disabled:opacity-50 disabled:cursor-wait transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99]"
                         >
                           {saving ? "Saving…" : "Save"}
                         </button>
                         <button
                           onClick={cancelEdit}
                           disabled={saving}
-                          className="rounded border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                          className="rounded border border-navy-300 px-3 py-1 text-xs font-medium text-navy-600 hover:bg-navy-50 disabled:opacity-50 disabled:cursor-wait transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99]"
                         >
                           Cancel
                         </button>
@@ -153,7 +153,7 @@ export default function AdminUsersTable({ initialUsers }: { initialUsers: AdminU
                     ) : (
                       <button
                         onClick={() => startEdit(u)}
-                        className="rounded border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                        className="rounded border border-navy-300 px-3 py-1 text-xs font-medium text-navy-600 hover:bg-navy-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99]"
                       >
                         Edit
                       </button>

@@ -5,7 +5,7 @@
  */
 export default function SignInLoading() {
   return (
-    <div className="min-h-screen bg-[#fafafa] flex items-center justify-center px-4" aria-busy="true">
+    <div className="min-h-screen bg-navy-50 flex items-center justify-center px-4" aria-busy="true">
       <p className="sr-only" role="status" aria-live="polite">
         Loading
       </p>
