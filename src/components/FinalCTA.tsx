@@ -30,7 +30,7 @@ export default function FinalCTA() {
         Ready to pitch smarter?
       </h2>
       <p
-        className={`text-blue-100/70 text-lg mb-12 max-w-xl mx-auto leading-relaxed transition-all duration-700 ease-out delay-100 ${
+        className={`text-white/70 text-lg mb-12 max-w-xl mx-auto leading-relaxed transition-all duration-700 ease-out delay-100 ${
           inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}
       >
@@ -52,7 +52,7 @@ export default function FinalCTA() {
             <div className="absolute inset-0 rounded-[10px] bg-gradient-to-r from-electric to-violet opacity-0 group-hover/inner:opacity-100 transition-opacity duration-300" />
           </Link>
         </span>
-        <p className="text-blue-200/50 text-sm">No signup · No credit card</p>
+        <p className="text-white/50 text-sm">No signup · No credit card</p>
       </div>
     </div>
   );

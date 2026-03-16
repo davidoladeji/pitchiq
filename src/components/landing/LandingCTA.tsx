@@ -34,7 +34,7 @@ export default function LandingCTA() {
           Ready to pitch smarter?
         </h2>
         <p
-          className={`text-blue-100/70 text-lg mb-12 max-w-lg mx-auto font-light transition-all duration-700 ease-out delay-100 ${
+          className={`text-white/70 text-lg mb-12 max-w-lg mx-auto font-light transition-all duration-700 ease-out delay-100 ${
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
@@ -57,7 +57,7 @@ export default function LandingCTA() {
           </span>
         </div>
         <p
-          className={`mt-5 text-sm text-blue-200/50 transition-all duration-700 ease-out delay-300 ${
+          className={`mt-5 text-sm text-white/50 transition-all duration-700 ease-out delay-300 ${
             inView ? "opacity-100" : "opacity-0"
           }`}
         >

@@ -121,7 +121,8 @@ export default function DeckUploader({
         className={`
           relative rounded-2xl border-2 border-dashed p-8 text-center cursor-pointer
           transition-all duration-200
-          ${dragActive ? "border-electric bg-electric/5 scale-[1.01]" : "border-gray-200 hover:border-gray-300 hover:bg-gray-50/50"}
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white
+          ${dragActive ? "border-electric bg-electric/5 scale-[1.01]" : "border-navy-200 hover:border-navy-300 hover:bg-navy-50/50"}
           ${disabled || isUploading ? "opacity-60 pointer-events-none" : ""}
           ${error ? "border-red-300 bg-red-50/30" : ""}
         `}
@@ -150,7 +151,7 @@ export default function DeckUploader({
             </div>
             <div>
               <p className="text-sm font-semibold text-navy">{selectedFile.name}</p>
-              <p className="text-xs text-gray-500 mt-0.5">{formatFileSize(selectedFile.size)}</p>
+              <p className="text-xs text-navy-500 mt-0.5">{formatFileSize(selectedFile.size)}</p>
             </div>
             <button
               type="button"
@@ -158,15 +159,15 @@ export default function DeckUploader({
                 e.stopPropagation();
                 handleRemove();
               }}
-              className="text-xs text-gray-400 hover:text-red-500 transition-colors"
+              className="text-xs text-navy-500 hover:text-red-500 transition-colors rounded px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Remove
             </button>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
-              <svg className="w-6 h-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="w-12 h-12 rounded-xl bg-navy-100 flex items-center justify-center">
+              <svg className="w-6 h-6 text-navy-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
             </div>
@@ -175,7 +176,7 @@ export default function DeckUploader({
                 Drop your pitch deck here, or{" "}
                 <span className="text-electric">browse</span>
               </p>
-              <p id="upload-constraints" className="text-xs text-gray-400 mt-1">
+              <p id="upload-constraints" className="text-xs text-navy-500 mt-1">
                 PDF or PPTX · Max {maxSizeMB}MB
               </p>
             </div>

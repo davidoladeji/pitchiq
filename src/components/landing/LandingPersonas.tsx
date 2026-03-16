@@ -91,13 +91,13 @@ export default function LandingPersonas() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight">
-            <span className="text-blue-100/70">Built for people who</span>
+            <span className="text-white/70">Built for people who</span>
             <br />
             <span className="bg-gradient-to-r from-electric to-violet bg-clip-text text-transparent">
               can&apos;t afford a bad first impression
             </span>
           </h2>
-          <p className="mt-5 text-base sm:text-lg text-blue-100/70 max-w-xl mx-auto">
+          <p className="mt-5 text-base sm:text-lg text-white/70 max-w-xl mx-auto">
             Whether you&apos;re raising for the first time or helping someone
             who is.
           </p>

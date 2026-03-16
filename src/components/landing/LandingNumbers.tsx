@@ -72,7 +72,7 @@ function StatCell({ stat, active, isLast }: { stat: Stat; active: boolean; isLas
         {formatNumber(count)}
         {stat.suffix}
       </div>
-      <div className="text-xs sm:text-sm text-blue-100/70 mt-1">{stat.label}</div>
+      <div className="text-xs sm:text-sm text-white/70 mt-1">{stat.label}</div>
     </div>
   );
 }

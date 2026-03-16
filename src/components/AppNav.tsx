@@ -59,7 +59,7 @@ export default function AppNav({ variant = "app", actions }: AppNavProps) {
       : "bg-white/60 border-navy-200/40 backdrop-blur-xl";
 
   const textColor = isLanding
-    ? "text-blue-100/70 hover:text-white"
+    ? "text-white/70 hover:text-white"
     : "text-navy-500 hover:text-navy";
 
   const logoText = isLanding ? "text-white" : "text-navy";
