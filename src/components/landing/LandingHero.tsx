@@ -66,7 +66,7 @@ export default function LandingHero() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric opacity-75" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-electric" />
           </span>
-          <span className="text-sm text-blue-100/70 font-medium tracking-wide">
+          <span className="text-sm text-white/70 font-medium tracking-wide">
             AI-Powered Fundraising Intelligence
           </span>
         </div>
@@ -84,9 +84,9 @@ export default function LandingHero() {
           before investors do
         </h1>
 
-        {/* Subtitle — blue-100/70 for WCAG 2.1 AA contrast on dark navy */}
+        {/* Subtitle — white/70 for WCAG 2.1 AA contrast on dark navy */}
         <p
-          className={`text-lg text-blue-100/70 max-w-xl mx-auto mb-10 leading-relaxed transition-all duration-1000 ease-out delay-300 ${
+          className={`text-lg text-white/70 max-w-xl mx-auto mb-10 leading-relaxed transition-all duration-1000 ease-out delay-300 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
@@ -103,7 +103,7 @@ export default function LandingHero() {
           <Link
             href="/create"
             aria-label="Get your PIQ Score"
-            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-[0_0_40px_rgba(67,97,238,0.35)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-glow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
           >
             Get Your PIQ Score
             <svg
@@ -123,9 +123,9 @@ export default function LandingHero() {
           </Link>
         </div>
 
-        {/* Trust line — blue-200/50 for WCAG 2.1 AA contrast on dark navy */}
+        {/* Trust line — white/50 for WCAG 2.1 AA contrast on dark navy */}
         <p
-          className={`text-sm text-blue-200/50 tracking-wide transition-all duration-1000 ease-out delay-700 ${
+          className={`text-sm text-white/50 tracking-wide transition-all duration-1000 ease-out delay-700 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
