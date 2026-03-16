@@ -40,12 +40,13 @@ const BLOCK_TEMPLATES = [
   { type: "comparison-row", label: "Comparison", icon: "M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" },
 ];
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function SortableSlide({
   slide,
   index,
   isSelected,
   themeId,
-  companyName: _companyName,
+  companyName,
   onSelect,
   onContextMenu,
 }: {
@@ -174,7 +175,8 @@ function DraggableBlockTemplate({
   );
 }
 
-export default function EditorSidebar({ plan: _plan }: EditorSidebarProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function EditorSidebar({ plan }: EditorSidebarProps) {
   const slides = useEditorStore((s) => s.slides);
   const selectedSlideIndex = useEditorStore((s) => s.selectedSlideIndex);
   const themeId = useEditorStore((s) => s.themeId);

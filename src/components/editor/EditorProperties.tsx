@@ -7,7 +7,8 @@ interface EditorPropertiesProps {
   plan: string;
 }
 
-export default function EditorProperties({ plan: _plan }: EditorPropertiesProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function EditorProperties({ plan }: EditorPropertiesProps) {
   const slides = useEditorStore((s) => s.slides);
   const selectedSlideIndex = useEditorStore((s) => s.selectedSlideIndex);
   const selectedBlockId = useEditorStore((s) => s.selectedBlockId);

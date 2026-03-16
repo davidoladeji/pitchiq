@@ -120,10 +120,11 @@ export default function EditorCanvas() {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function EditableSlide({
   slide,
   slideIndex,
-  companyName: _companyName,
+  companyName,
   theme,
   isDark,
   selectedBlockId,
@@ -431,10 +432,11 @@ function EditableSlide({
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function EditableBlock({
   block,
   isSelected,
-  slideIndex: _slideIndex,
+  slideIndex,
   onSelect,
   onUpdate,
   theme,

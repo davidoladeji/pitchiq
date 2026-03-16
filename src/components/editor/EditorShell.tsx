@@ -27,7 +27,8 @@ interface EditorShellProps {
   userName: string;
 }
 
-export default function EditorShell({ deck, plan, userName: _userName }: EditorShellProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function EditorShell({ deck, plan, userName }: EditorShellProps) {
   const initDeck = useEditorStore((s) => s.initDeck);
   const undo = useEditorStore((s) => s.undo);
   const redo = useEditorStore((s) => s.redo);

@@ -13,7 +13,8 @@ interface EditorToolbarProps {
   onToggleAIPanel: (panel: AIPanel) => void;
 }
 
-export default function EditorToolbar({ plan: _plan, activeAIPanel, onToggleAIPanel }: EditorToolbarProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: EditorToolbarProps) {
   const deck = useEditorStore((s) => s.deck);
   const isDirty = useEditorStore((s) => s.isDirty);
   const saving = useEditorStore((s) => s.saving);
