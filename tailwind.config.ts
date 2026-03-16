@@ -76,8 +76,13 @@ const config: Config = {
         "glow-pulse": "glowPulse 4s ease-in-out infinite",
         "border-flow": "borderFlow 3s linear infinite",
         "spin-slow": "spin 20s linear infinite",
+        "bounce-subtle": "bounceSubtle 2s ease-in-out infinite",
       },
       keyframes: {
+        bounceSubtle: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(4px)" },
+        },
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },

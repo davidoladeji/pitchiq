@@ -61,6 +61,12 @@ export default function LandingNav() {
               Features
             </a>
             <a
+              href="#how-it-works"
+              className="min-h-[44px] min-w-[44px] inline-flex items-center px-3 text-sm text-navy-500 hover:text-navy transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              How it works
+            </a>
+            <a
               href="#pricing"
               className="min-h-[44px] min-w-[44px] inline-flex items-center px-3 text-sm text-navy-500 hover:text-navy transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
@@ -182,6 +188,13 @@ export default function LandingNav() {
               className="min-h-[44px] inline-flex items-center px-4 py-3 rounded-xl text-navy font-medium hover:bg-navy-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Features
+            </a>
+            <a
+              href="#how-it-works"
+              onClick={closeMenu}
+              className="min-h-[44px] inline-flex items-center px-4 py-3 rounded-xl text-navy font-medium hover:bg-navy-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              How it works
             </a>
             <a
               href="#pricing"

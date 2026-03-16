@@ -95,6 +95,7 @@ export default function LandingSocialProof() {
 
   return (
     <section
+      id="social-proof"
       ref={sectionRef}
       className="section-py px-4 sm:px-6 bg-navy-50"
       aria-label="What founders say about PitchIQ"

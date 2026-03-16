@@ -3,12 +3,13 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer
+      id="footer"
       className="bg-background border-t border-navy-100"
       aria-label="Site footer"
     >
       <div className="max-w-5xl mx-auto py-12 px-6">
-        {/* Primary CTA — conversion moment, design-system match to hero/final CTA */}
-        <div className="flex justify-center mb-10">
+        {/* Primary CTA — conversion moment, design-system match to hero/final CTA; deep-link for campaigns */}
+        <div id="footer-cta" className="flex justify-center mb-10">
           <span className="inline-block p-[2px] rounded-full bg-gradient-to-r from-electric via-violet to-electric shadow-glow shadow-electric/20">
             <Link
               href="/create"
@@ -59,6 +60,13 @@ export default function Footer() {
             >
               Ideas
             </Link>
+            <a
+              href="#how-it-works"
+              aria-label="Jump to How it works section"
+              className="text-sm text-navy-400 hover:text-navy transition-colors min-h-[44px] min-w-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
+            >
+              How it works
+            </a>
             <a
               href="#features"
               aria-label="Jump to Features section"

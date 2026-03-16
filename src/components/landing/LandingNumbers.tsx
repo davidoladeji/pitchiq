@@ -180,8 +180,9 @@ export default function LandingNumbers() {
 
   return (
     <section
+      id="numbers"
       ref={sectionRef}
-      className="section-py bg-white px-4 sm:px-6"
+      className="section-py bg-background px-4 sm:px-6"
       aria-label="PitchIQ in numbers"
     >
       <div className="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-5xl mx-auto">

@@ -105,7 +105,7 @@ export default function LandingHero() {
           <Link
             href="/create"
             aria-label="Get your PIQ Score — create your pitch deck in 60 seconds"
-            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-glow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:shadow-glow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Get Your PIQ Score
             <svg
@@ -133,6 +133,27 @@ export default function LandingHero() {
         >
           Free to start &middot; No credit card &middot; Privacy-first
         </p>
+
+        {/* Scroll cue — conversion: clear next step for users who don't CTA yet */}
+        <a
+          href="#how-it-works"
+          className={`min-h-[44px] inline-flex items-center justify-center gap-2 text-sm text-white/60 hover:text-white/90 transition-all duration-1000 ease-out delay-1000 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy rounded-lg px-3 ${
+            visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+          aria-label="See how PitchIQ works — three steps to your deck"
+        >
+          <span>See how it works</span>
+          <svg
+            className="w-4 h-4 animate-bounce-subtle"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+            aria-hidden="true"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </a>
       </div>
     </section>
   );

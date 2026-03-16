@@ -23,7 +23,7 @@ const ITEMS = [
 
 export default function LandingTrust() {
   return (
-    <section className="py-10 px-6 bg-navy" aria-label="Trust and security — your data stays yours">
+    <section id="trust" className="section-py-sm px-6 bg-navy" aria-label="Trust and security — your data stays yours">
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-0">
           {ITEMS.map((item, i) => (

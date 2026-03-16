@@ -54,6 +54,7 @@ export default function LandingDemo() {
 
   return (
     <section
+      id="demo"
       ref={sectionRef}
       className="relative bg-navy section-py px-6"
       aria-label="Product preview — PIQ Score visualization"

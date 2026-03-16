@@ -15,6 +15,7 @@
   --navy-300: #A8A8B8;
   --section-py: 6rem;
   --section-py-lg: 8rem;
+  --section-py-sm: 2.5rem;
 }
 
 body {
@@ -70,6 +71,10 @@ body {
       padding-top: var(--section-py-lg);
       padding-bottom: var(--section-py-lg);
     }
+  }
+  .section-py-sm {
+    padding-top: var(--section-py-sm);
+    padding-bottom: var(--section-py-sm);
   }
 
   /* Glassmorphism */
