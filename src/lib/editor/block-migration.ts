@@ -317,7 +317,11 @@ export function editorBlockToLegacy(block: EditorBlock): SlideBlock {
       };
     }
 
-    // New block types without legacy equivalents → store as text fallback
+    // Phase 3 data blocks + Phase 1 layout blocks — no legacy equivalent
+    case "metric-grid":
+    case "funnel":
+    case "table":
+    case "progress":
     case "divider":
     case "spacer":
     case "shape":
@@ -422,7 +426,9 @@ export function syncBlocksToSlideData(
   const chart = blocks.find((b) => b.type === "chart");
   if (chart) {
     const d = chart.data as ChartBlockData;
-    updated.chartData = { type: d.chartType, data: d.data, label: d.yAxisLabel };
+    // Cast chartType to legacy — SlideRenderer only knows bar/pie/line/area
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    updated.chartData = { type: d.chartType as any, data: d.data, label: d.yAxisLabel };
   }
 
   // Text content for simple renderers

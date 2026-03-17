@@ -81,10 +81,61 @@ const DEFAULTS: { [K in BlockType]: () => BlockDataMap[K] } = {
     yAxisLabel: "Value",
   }),
 
+  "metric-grid": () => ({
+    metrics: [
+      { label: "Revenue", value: "$2.4M", change: "+24%", trend: "up" as const },
+      { label: "Users", value: "18,400", change: "+12%", trend: "up" as const },
+      { label: "Churn", value: "2.1%", change: "-0.3%", trend: "down" as const },
+      { label: "NPS", value: "72", change: "+5", trend: "up" as const },
+    ],
+    variant: "cards" as const,
+  }),
+
   "comparison-row": () => ({
     label: "Feature",
     us: "Yes",
     them: "No",
+  }),
+
+  funnel: () => ({
+    stages: [
+      { label: "Visitors", value: 10000 },
+      { label: "Leads", value: 3500 },
+      { label: "Qualified", value: 1200 },
+      { label: "Customers", value: 400 },
+    ],
+    variant: "funnel" as const,
+    showPercentages: true,
+    showConversionRates: true,
+  }),
+
+  table: () => ({
+    columns: [
+      { key: "feature", header: "Feature", align: "left" as const },
+      { key: "starter", header: "Starter", align: "center" as const },
+      { key: "pro", header: "Pro", align: "center" as const },
+      { key: "enterprise", header: "Enterprise", align: "center" as const },
+    ],
+    rows: [
+      { feature: "Decks", starter: "3", pro: "Unlimited", enterprise: "Unlimited" },
+      { feature: "Analytics", starter: "Basic", pro: "Advanced", enterprise: "Full" },
+      { feature: "Export", starter: "PDF", pro: "PDF + PPTX", enterprise: "All formats" },
+    ],
+    striped: true,
+    headerVariant: "accent" as const,
+  }),
+
+  progress: () => ({
+    label: "Fundraising Goal",
+    value: 65,
+    target: 100,
+    format: "bar" as const,
+    milestones: [
+      { label: "Seed", position: 25 },
+      { label: "Series A", position: 50 },
+      { label: "Series B", position: 75 },
+    ],
+    showLabel: true,
   }),
 
   image: () => ({

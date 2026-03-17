@@ -12,8 +12,12 @@ import type {
   BulletListBlockData,
   CalloutBlockData,
   MetricBlockData,
+  MetricGridBlockData,
   ChartBlockData,
   ComparisonRowBlockData,
+  FunnelBlockData,
+  TableBlockData,
+  ProgressBlockData,
   ImageBlockData,
   LogoGridBlockData,
   ShapeBlockData,
@@ -29,6 +33,7 @@ import HeadingBlock from "./HeadingBlock";
 import BulletListBlock from "./BulletListBlock";
 import CalloutBlock from "./CalloutBlock";
 import MetricBlockV2 from "./MetricBlockV2";
+import MetricGridBlock from "./MetricGridBlock";
 import ChartBlockV2 from "./ChartBlockV2";
 import TeamBlockV2 from "./TeamBlockV2";
 import TimelineBlockV2 from "./TimelineBlockV2";
@@ -40,6 +45,9 @@ import CardGroupBlock from "./CardGroupBlock";
 import ComparisonBlockV2 from "./ComparisonBlockV2";
 import LogoGridBlockV2 from "./LogoGridBlockV2";
 import ImageBlockV2 from "./ImageBlockV2";
+import FunnelBlock from "./FunnelBlock";
+import TableBlock from "./TableBlock";
+import ProgressBlock from "./ProgressBlock";
 
 interface BlockRendererProps {
   block: EditorBlock;
@@ -101,6 +109,14 @@ export default function BlockRenderer({
           onDataChange={onDataChange}
         />
       );
+    case "metric-grid":
+      return (
+        <MetricGridBlock
+          data={block.data as MetricGridBlockData}
+          isSelected={isSelected}
+          onDataChange={onDataChange}
+        />
+      );
     case "chart":
       return (
         <ChartBlockV2
@@ -113,6 +129,30 @@ export default function BlockRenderer({
       return (
         <ComparisonBlockV2
           data={block.data as ComparisonRowBlockData}
+          isSelected={isSelected}
+          onDataChange={onDataChange}
+        />
+      );
+    case "funnel":
+      return (
+        <FunnelBlock
+          data={block.data as FunnelBlockData}
+          isSelected={isSelected}
+          onDataChange={onDataChange}
+        />
+      );
+    case "table":
+      return (
+        <TableBlock
+          data={block.data as TableBlockData}
+          isSelected={isSelected}
+          onDataChange={onDataChange}
+        />
+      );
+    case "progress":
+      return (
+        <ProgressBlock
+          data={block.data as ProgressBlockData}
           isSelected={isSelected}
           onDataChange={onDataChange}
         />

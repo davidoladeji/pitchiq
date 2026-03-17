@@ -11,7 +11,7 @@ interface BlockTemplate {
   icon: React.ReactNode;
 }
 
-/** Build the full 16-block template list from BLOCK_CATEGORIES + BLOCK_META */
+/** Build the full 20-block template list from BLOCK_CATEGORIES + BLOCK_META */
 function buildTemplates(): BlockTemplate[] {
   const templates: BlockTemplate[] = [];
   const categories = Object.entries(BLOCK_CATEGORIES) as [BlockCategory, (typeof BLOCK_CATEGORIES)[BlockCategory]][];
@@ -48,6 +48,9 @@ function getBlockIcon(iconName: string): React.ReactNode {
     Users: "M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z",
     Clock: "M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z",
     Minus: "M5 12h14",
+    Funnel: "M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9l3.75 3.75",
+    Table: "M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M10.875 12c-.621 0-1.125.504-1.125 1.125M12 13.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 13.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m-1.125 1.125c0-.621-.504-1.125-1.125-1.125M13.125 12h1.5c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-1.5",
+    Target: "M12 12m-9 0a9 9 0 1018 0 9 9 0 10-18 0m9-5a5 5 0 100 10 5 5 0 000-10m0 3a2 2 0 100 4 2 2 0 000-4",
   };
 
   const path = iconPaths[iconName];
@@ -104,7 +107,7 @@ function DraggableBlockTile({ template }: { template: BlockTemplate }) {
 
 /**
  * Categorized block palette for the editor sidebar "Blocks" tab.
- * 16 block types in 5 color-coded categories.
+ * 20 block types in 5 color-coded categories.
  */
 export default function BlockLibrary() {
   const categories = Object.entries(BLOCK_CATEGORIES) as [BlockCategory, (typeof BLOCK_CATEGORIES)[BlockCategory]][];

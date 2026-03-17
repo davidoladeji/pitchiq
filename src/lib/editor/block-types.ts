@@ -22,8 +22,12 @@ export const BlockType = {
   Callout: "callout",
   // Data
   Metric: "metric",
+  MetricGrid: "metric-grid",
   Chart: "chart",
   ComparisonRow: "comparison-row",
+  Funnel: "funnel",
+  Table: "table",
+  Progress: "progress",
   // Visual
   Image: "image",
   LogoGrid: "logo-grid",
@@ -84,18 +88,110 @@ export interface MetricBlockData {
   value: string;
   change?: string;
   trend?: "up" | "down" | "neutral";
+  sparklineData?: number[];
+  targetValue?: number;
+  prefix?: string;
+  suffix?: string;
+  animateCountUp?: boolean;
+}
+
+export type ChartVariant =
+  | "bar" | "bar-horizontal" | "bar-stacked" | "bar-grouped"
+  | "line" | "area" | "area-stacked"
+  | "pie" | "donut"
+  | "funnel" | "waterfall" | "scatter" | "treemap"
+  | "gauge" | "combo" | "sparkline";
+
+export interface ChartAnnotation {
+  id: string;
+  dataIndex: number;
+  label: string;
+  offsetX: number;
+  offsetY: number;
+}
+
+export interface ChartDataSeries {
+  label: string;
+  value: number;
+  value2?: number;
+  color?: string;
 }
 
 export interface ChartBlockData {
-  chartType: "bar" | "pie" | "line" | "area";
-  data: { label: string; value: number; color?: string }[];
+  chartType: ChartVariant;
+  data: ChartDataSeries[];
   yAxisLabel?: string;
+  annotations?: ChartAnnotation[];
+  showLegend?: boolean;
+  showGrid?: boolean;
+  gaugeMin?: number;
+  gaugeMax?: number;
+  gaugeValue?: number;
 }
 
 export interface ComparisonRowBlockData {
   label: string;
   us: string;
   them: string;
+}
+
+export interface MetricGridBlockData {
+  metrics: {
+    label: string;
+    value: string;
+    change?: string;
+    trend?: "up" | "down" | "neutral";
+    sparklineData?: number[];
+    targetValue?: number;
+    prefix?: string;
+    suffix?: string;
+  }[];
+  variant: "cards" | "minimal" | "featured";
+}
+
+export interface FunnelStage {
+  label: string;
+  value: number;
+  color?: string;
+}
+
+export interface FunnelBlockData {
+  stages: FunnelStage[];
+  variant: "funnel" | "inverted-pyramid" | "concentric-circles";
+  showPercentages: boolean;
+  showConversionRates: boolean;
+}
+
+export interface TableColumn {
+  key: string;
+  header: string;
+  width?: number;
+  align?: "left" | "center" | "right";
+}
+
+export interface TableBlockData {
+  columns: TableColumn[];
+  rows: Record<string, string>[];
+  striped: boolean;
+  headerVariant: "default" | "bold" | "accent" | "minimal";
+  highlightColumn?: number;
+  highlightRow?: number;
+}
+
+export interface ProgressMilestone {
+  label: string;
+  position: number; // 0-100
+}
+
+export interface ProgressBlockData {
+  label: string;
+  value: number; // 0-100
+  target: number; // 0-100
+  format: "bar" | "radial" | "stepped";
+  milestones: ProgressMilestone[];
+  showLabel: boolean;
+  color?: string;
+  steps?: number; // for stepped format
 }
 
 // ── Visual ──
@@ -162,8 +258,12 @@ export interface BlockDataMap {
   quote: QuoteBlockData;
   callout: CalloutBlockData;
   metric: MetricBlockData;
+  "metric-grid": MetricGridBlockData;
   chart: ChartBlockData;
   "comparison-row": ComparisonRowBlockData;
+  funnel: FunnelBlockData;
+  table: TableBlockData;
+  progress: ProgressBlockData;
   image: ImageBlockData;
   "logo-grid": LogoGridBlockData;
   shape: ShapeBlockData;
@@ -244,7 +344,7 @@ export const BLOCK_CATEGORIES: Record<BlockCategory, BlockCategoryMeta> = {
   data: {
     label: "Data",
     color: "#06D6A0",
-    types: [BlockType.Metric, BlockType.Chart, BlockType.ComparisonRow],
+    types: [BlockType.Metric, BlockType.MetricGrid, BlockType.Chart, BlockType.ComparisonRow, BlockType.Funnel, BlockType.Table, BlockType.Progress],
   },
   visual: {
     label: "Visual",
@@ -274,8 +374,12 @@ export const BLOCK_META: Record<BlockType, { label: string; icon: string }> = {
   quote: { label: "Quote", icon: "Quote" },
   callout: { label: "Callout", icon: "AlertCircle" },
   metric: { label: "Metric", icon: "TrendingUp" },
+  "metric-grid": { label: "Metric Grid", icon: "Grid3X3" },
   chart: { label: "Chart", icon: "BarChart3" },
   "comparison-row": { label: "Comparison", icon: "Layers" },
+  funnel: { label: "Funnel", icon: "Funnel" },
+  table: { label: "Table", icon: "Table" },
+  progress: { label: "Progress", icon: "Target" },
   image: { label: "Image", icon: "Image" },
   "logo-grid": { label: "Logo Grid", icon: "Grid3X3" },
   shape: { label: "Shape", icon: "Square" },
