@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useCallback, useEffect } from "react";
 import AuthButton from "@/components/AuthButton";
 
@@ -67,13 +68,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
       className="flex items-center gap-2 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       aria-label="PitchIQ home"
     >
-      <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-navy">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 13V3h4.5a3.5 3.5 0 010 7H5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M11 8l2-2.5L15 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
-          <line x1="13" y1="5.5" x2="13" y2="12" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
-        </svg>
-      </div>
+      <Image src="/logo.png" alt="" width={28} height={28} className="rounded-lg" priority />
       <span className={`font-display font-bold text-lg tracking-tight ${logoText}`}>
         PitchIQ
       </span>

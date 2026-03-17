@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -24,13 +25,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-navy">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 13V3h4.5a3.5 3.5 0 010 7H5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M11 8l2-2.5L15 8" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
-                <line x1="13" y1="5.5" x2="13" y2="12" stroke="white" strokeWidth="1.5" strokeLinecap="round" opacity="0.7" />
-              </svg>
-            </div>
+            <Image src="/logo.png" alt="" width={28} height={28} className="rounded-lg" />
             <span className="font-semibold text-navy tracking-tight">
               PitchIQ
             </span>
