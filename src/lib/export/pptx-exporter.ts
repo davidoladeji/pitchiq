@@ -61,7 +61,7 @@ function calloutBgColor(variant: string): string {
 }
 
 /** Determine whether a slide should use the dark background. */
-function useDarkBg(slide: SlideData): boolean {
+function isDarkBg(slide: SlideData): boolean {
   return slide.type === "title" || slide.type === "cta" || slide.accent === true;
 }
 
@@ -90,7 +90,7 @@ export async function exportPptx(opts: {
     const pptxSlide = pptx.addSlide();
 
     // Background
-    const dark = useDarkBg(slideData);
+    const dark = isDarkBg(slideData);
     const bgColor = dark ? theme.bgDark : theme.bgLight;
     pptxSlide.background = { color: stripHash(bgColor) };
 

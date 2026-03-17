@@ -10,8 +10,7 @@
  * Does NOT auto-reorder — returns suggestions that the user confirms.
  */
 
-import type { SlideData } from "@/lib/types";
-import type { BlocksRecord, EditorBlock } from "@/lib/editor/block-types";
+import type { EditorBlock } from "@/lib/editor/block-types";
 import {
   analyzeNarrativeArc,
   type NarrativeSectionId,
