@@ -49,8 +49,18 @@ export default function LandingSocialProof() {
     new Array(TESTIMONIALS.length).fill(false)
   );
 
-  /* Fade-in heading on scroll */
+  /* Respect reduced motion — show content on first paint (WCAG 2.1 AA) */
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setHeadingVisible(true);
+      setVisibleCards(new Array(TESTIMONIALS.length).fill(true));
+    }
+  }, []);
+
+  /* Fade-in heading on scroll — only when reduced motion not preferred */
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const el = sectionRef.current;
     if (!el) return;
 
@@ -67,8 +77,9 @@ export default function LandingSocialProof() {
     return () => obs.disconnect();
   }, []);
 
-  /* Staggered card reveal */
+  /* Staggered card reveal — only when reduced motion not preferred */
   useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const observers: IntersectionObserver[] = [];
 
     cardRefs.current.forEach((el, i) => {

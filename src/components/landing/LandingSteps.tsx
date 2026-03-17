@@ -65,7 +65,7 @@ export default function LandingSteps() {
     <section
       id="how-it-works"
       className="section-py bg-background px-6"
-      aria-label="How it works — four steps to fundraising clarity"
+      aria-labelledby="steps-heading"
     >
       <div className="max-w-4xl mx-auto">
         {/* Header */}
@@ -73,7 +73,7 @@ export default function LandingSteps() {
           <p className="text-xs tracking-[0.2em] text-navy-500 font-medium uppercase mb-4">
             HOW IT WORKS
           </p>
-          <h2 className="text-display-lg font-display text-navy">
+          <h2 id="steps-heading" className="text-display-lg font-display text-navy">
             From idea to scored deck
             <br />
             in 60 seconds

@@ -51,7 +51,7 @@ const STATS: Stat[] = [
     label: "Average PIQ Score Improvement",
     animate: true,
     icon: ICON_PATHS.trendingUp,
-    cardClass: "bg-gradient-to-br from-violet-50 to-purple-50",
+    cardClass: "bg-gradient-to-br from-violet-50 to-violet-100",
     iconClass: "bg-violet-100 border border-violet-200 text-violet-600",
   },
   {
@@ -162,6 +162,12 @@ export default function LandingNumbers() {
   const [active, setActive] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setActive(true);
+      return;
+    }
+
     const el = sectionRef.current;
     if (!el) return;
 
@@ -183,8 +189,11 @@ export default function LandingNumbers() {
       id="numbers"
       ref={sectionRef}
       className="section-py bg-background px-4 sm:px-6"
-      aria-label="PitchIQ in numbers"
+      aria-labelledby="numbers-heading"
     >
+      <h2 id="numbers-heading" className="sr-only">
+        PitchIQ in numbers
+      </h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-5 max-w-5xl mx-auto">
         {STATS.map((stat, i) => (
           <StatCard

@@ -29,12 +29,13 @@ export default function LandingCTA() {
     <section
       id="cta"
       className="section-py px-6 bg-navy relative overflow-hidden"
-      aria-label="Know your number before investors do — get your PIQ Score"
+      aria-labelledby="cta-heading"
     >
       <div className="absolute inset-0 bg-hero-mesh" />
 
       <div ref={ref} className="max-w-2xl mx-auto text-center relative z-10">
         <h2
+          id="cta-heading"
           className={`text-3xl sm:text-4xl md:text-5xl font-display text-white mb-5 tracking-[-0.02em] transition-all duration-700 ease-out ${
             inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}

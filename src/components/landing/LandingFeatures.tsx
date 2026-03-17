@@ -91,6 +91,12 @@ export default function LandingFeatures() {
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) {
+      setVisibleCards(new Set(FEATURES.map((_, i) => i)));
+      return;
+    }
+
     const section = sectionRef.current;
     if (!section) return;
 
@@ -118,7 +124,7 @@ export default function LandingFeatures() {
     <section
       id="features"
       className="section-py px-6 bg-navy-50"
-      aria-label="Features — built for fundraising, not slides"
+      aria-labelledby="features-heading"
     >
       <div className="max-w-5xl mx-auto" ref={sectionRef}>
         {/* Section header */}
@@ -126,7 +132,7 @@ export default function LandingFeatures() {
           <span className="inline-block px-3.5 py-1.5 rounded-full bg-electric/10 text-electric text-[11px] font-semibold uppercase tracking-[0.2em] mb-5">
             Features
           </span>
-          <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-5xl font-bold text-navy tracking-[-0.025em] mb-5 font-display leading-[1.1]">
+          <h2 id="features-heading" className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-5xl font-bold text-navy tracking-[-0.025em] mb-5 font-display leading-[1.1]">
             Built for fundraising, not slides
           </h2>
           <p className="text-lg text-navy-500 max-w-md mx-auto leading-relaxed">

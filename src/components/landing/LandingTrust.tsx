@@ -23,11 +23,14 @@ const ITEMS = [
 
 export default function LandingTrust() {
   return (
-    <section id="trust" className="section-py-sm px-6 bg-navy" aria-label="Trust and security — your data stays yours">
+    <section id="trust" className="section-py-sm px-6 bg-navy" aria-labelledby="trust-heading">
       <div className="max-w-4xl mx-auto">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-0">
+        <h2 id="trust-heading" className="sr-only">
+          Trust and security — your data stays yours
+        </h2>
+        <ul className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 md:gap-0 list-none p-0 m-0">
           {ITEMS.map((item, i) => (
-            <div
+            <li
               key={item.title}
               className={`flex-1 flex items-start gap-3 px-3 sm:px-6 py-2 ${
                 i < ITEMS.length - 1 ? "md:border-r md:border-white/10" : ""
@@ -47,9 +50,9 @@ export default function LandingTrust() {
                 <h3 className="text-white text-sm font-medium leading-tight">{item.title}</h3>
                 <p className="text-white/70 text-xs mt-0.5">{item.desc}</p>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

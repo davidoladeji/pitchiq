@@ -32,6 +32,10 @@ export default function LandingDemo() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
     const el = sectionRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(
@@ -57,8 +61,11 @@ export default function LandingDemo() {
       id="demo"
       ref={sectionRef}
       className="relative bg-navy section-py px-6"
-      aria-label="Product preview — PIQ Score visualization"
+      aria-labelledby="demo-heading"
     >
+      <h2 id="demo-heading" className="sr-only">
+        Product preview — PIQ Score visualization
+      </h2>
       {/* Ambient glow behind mockup */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-electric/[0.06] rounded-full blur-[120px] pointer-events-none" />
 

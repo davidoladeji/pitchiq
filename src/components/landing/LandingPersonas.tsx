@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { ELECTRIC_HEX, AMBER_HEX, EMERALD_HEX } from "@/lib/design-tokens";
 
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /* Flat monochrome SVG icons */
 const IconRocket = ({ color }: { color: string }) => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -59,8 +62,11 @@ export default function LandingPersonas() {
   );
 
   useEffect(() => {
+    if (prefersReducedMotion()) {
+      setVisibleCards(new Array(PERSONAS.length).fill(true));
+      return;
+    }
     const observers: IntersectionObserver[] = [];
-
     cardRefs.current.forEach((el, i) => {
       if (!el) return;
       const obs = new IntersectionObserver(
@@ -79,19 +85,18 @@ export default function LandingPersonas() {
       obs.observe(el);
       observers.push(obs);
     });
-
     return () => observers.forEach((obs) => obs.disconnect());
   }, []);
 
   return (
     <section
       className="section-py px-4 sm:px-6 bg-navy"
-      aria-label="Who PitchIQ is built for"
+      aria-labelledby="personas-heading"
     >
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight text-white">
+          <h2 id="personas-heading" className="text-3xl sm:text-4xl lg:text-5xl font-display font-bold leading-tight text-white">
             Built for founders who measure
             <br />
             before they pitch
