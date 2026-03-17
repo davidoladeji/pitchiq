@@ -9,9 +9,10 @@ import {
   verticalListSortingStrategy,
   useSortable,
 } from "@dnd-kit/sortable";
-import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { nanoid } from "nanoid";
+import BlockLibrary from "./blocks/BlockLibrary";
+import LayoutPicker from "./LayoutPicker";
 
 interface EditorSidebarProps {
   plan: string;
@@ -29,16 +30,7 @@ const SLIDE_TYPES: { value: SlideData["type"]; label: string }[] = [
   { value: "cta", label: "CTA" },
 ];
 
-const BLOCK_TEMPLATES = [
-  { type: "text", label: "Text Block", icon: "M4 6h16M4 12h16m-7 6h7" },
-  { type: "metric", label: "Metric Card", icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
-  { type: "chart", label: "Chart", icon: "M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" },
-  { type: "team-member", label: "Team Member", icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
-  { type: "timeline-item", label: "Timeline", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
-  { type: "quote", label: "Quote", icon: "M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" },
-  { type: "logo-grid", label: "Logo Grid", icon: "M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" },
-  { type: "comparison-row", label: "Comparison", icon: "M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" },
-];
+// Block templates now live in BlockLibrary component
 
 function SortableSlide(props: {
   slide: SlideData;
@@ -129,43 +121,7 @@ function SortableSlide(props: {
   );
 }
 
-function DraggableBlockTemplate({
-  type,
-  label,
-  icon,
-}: {
-  type: string;
-  label: string;
-  icon: string;
-}) {
-  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
-    id: `block-template-${type}`,
-  });
-
-  return (
-    <div
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      className={`flex flex-col items-center gap-1.5 p-3 rounded-lg bg-white/5 hover:bg-white/10 cursor-grab active:cursor-grabbing transition-colors border border-white/5 hover:border-white/10 ${
-        isDragging ? "opacity-50" : ""
-      }`}
-    >
-      <svg
-        className="w-5 h-5 text-white/40"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
-      </svg>
-      <span className="text-[10px] text-white/60 font-medium text-center leading-tight">
-        {label}
-      </span>
-    </div>
-  );
-}
+// DraggableBlockTemplate moved into BlockLibrary component
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function EditorSidebar({ plan }: EditorSidebarProps) {
@@ -178,7 +134,7 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
   const removeSlide = useEditorStore((s) => s.removeSlide);
   const duplicateSlide = useEditorStore((s) => s.duplicateSlide);
 
-  const [tab, setTab] = useState<"slides" | "blocks">("slides");
+  const [tab, setTab] = useState<"slides" | "blocks" | "layouts">("slides");
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -239,11 +195,25 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
         >
           Blocks
         </button>
+        <button
+          type="button"
+          onClick={() => setTab("layouts")}
+          aria-selected={tab === "layouts"}
+          className={`flex-1 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 ${
+            tab === "layouts"
+              ? "text-white border-b-2 border-electric"
+              : "text-white/40 hover:text-white/60"
+          }`}
+        >
+          Layouts
+        </button>
       </div>
 
       {/* Tab content */}
       <div className="flex-1 min-h-0 overflow-y-auto">
-        {tab === "slides" ? (
+        {tab === "layouts" ? (
+          <LayoutPicker />
+        ) : tab === "slides" ? (
           <div className="p-3 space-y-2">
             <SortableContext
               items={slideIds}
@@ -303,21 +273,7 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
             </div>
           </div>
         ) : (
-          <div className="p-3">
-            <p className="text-[10px] text-white/30 uppercase tracking-wider font-semibold mb-3">
-              Drag to add
-            </p>
-            <div className="grid grid-cols-2 gap-2">
-              {BLOCK_TEMPLATES.map((block) => (
-                <DraggableBlockTemplate
-                  key={block.type}
-                  type={block.type}
-                  label={block.label}
-                  icon={block.icon}
-                />
-              ))}
-            </div>
-          </div>
+          <BlockLibrary />
         )}
       </div>
 

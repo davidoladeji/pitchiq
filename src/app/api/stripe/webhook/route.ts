@@ -56,6 +56,12 @@ export async function POST(req: NextRequest) {
         break;
       }
 
+      case "invoice.payment_succeeded": {
+        const invoice = event.data.object as Stripe.Invoice;
+        await handleInvoicePaymentSucceeded(invoice);
+        break;
+      }
+
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
         console.warn("Payment failed for customer:", invoice.customer);
@@ -151,6 +157,56 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     where: { userId },
     data: { isPremium: isActive },
   });
+}
+
+async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
+  const customerId =
+    typeof invoice.customer === "string"
+      ? invoice.customer
+      : invoice.customer?.id;
+
+  if (!customerId) {
+    console.warn("[Webhook] invoice.payment_succeeded missing customer ID");
+    return;
+  }
+
+  // Skip the very first invoice from a new subscription — that payment is
+  // already recorded by the checkout.session.completed handler.
+  if (invoice.billing_reason === "subscription_create") {
+    return;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const rawPI = (invoice as any).payment_intent;
+  const paymentIntentId =
+    typeof rawPI === "string" ? rawPI : rawPI?.id as string | undefined;
+
+  // Avoid duplicate transaction records
+  if (paymentIntentId) {
+    const existing = await prisma.transaction.findFirst({
+      where: { stripePaymentId: paymentIntentId },
+    });
+    if (existing) return;
+  }
+
+  // Look up user by Stripe customer ID
+  const user = await prisma.user.findFirst({
+    where: { stripeCustomerId: customerId },
+  });
+
+  await prisma.transaction.create({
+    data: {
+      stripePaymentId: paymentIntentId || invoice.id,
+      amountCents: invoice.amount_paid ?? 0,
+      currency: invoice.currency ?? "usd",
+      status: "succeeded",
+      userId: user?.id || undefined,
+    },
+  });
+
+  console.log(
+    `[Webhook] Recorded invoice payment: ${paymentIntentId || invoice.id} for customer ${customerId}`
+  );
 }
 
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {

@@ -63,6 +63,7 @@ export interface SlideData {
   imageUrl?: string;
   imagePrompt?: string; // For Thesys image generation
   editorBlocks?: SlideBlock[]; // structured block data for editor (when present, editor uses this)
+  editorBlocksV2?: Record<string, unknown>; // v2 typed blocks (runtime-only, stripped before API save)
 }
 
 export interface DeckInput {

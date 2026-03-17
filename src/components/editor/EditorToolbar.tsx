@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useEditorStore } from "./state/editorStore";
 import { THEMES } from "@/lib/themes";
+import DesignScoreWidget from "./DesignScoreWidget";
 
 export type AIPanel = "coach" | "investor-lens" | "simulator" | null;
 
@@ -190,6 +191,11 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 10H11a5 5 0 00-5 5v2M21 10l-4-4M21 10l-4 4" />
           </svg>
         </button>
+      </div>
+
+      {/* Design Score */}
+      <div className="hidden md:block">
+        <DesignScoreWidget />
       </div>
 
       {/* Save button */}

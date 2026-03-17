@@ -4,6 +4,11 @@ import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
+/** Allowed sort fields — anything else falls back to createdAt */
+const ALLOWED_SORT_FIELDS = new Set([
+  "createdAt", "updatedAt", "title", "companyName", "piqScore",
+]);
+
 /**
  * GET /api/admin/decks
  * List all decks with pagination and search.
@@ -18,20 +23,25 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
   const limit = Math.min(50, Math.max(1, parseInt(url.searchParams.get("limit") || "20", 10)));
-  const search = url.searchParams.get("search") || "";
-  const sortBy = url.searchParams.get("sort") || "createdAt";
+  const search = (url.searchParams.get("search") || "").trim();
+  const sortByRaw = url.searchParams.get("sort") || "createdAt";
+  const sortBy = ALLOWED_SORT_FIELDS.has(sortByRaw) ? sortByRaw : "createdAt";
   const order = url.searchParams.get("order") === "asc" ? "asc" : "desc";
 
-  const where = search
-    ? {
-        OR: [
-          { title: { contains: search, mode: "insensitive" as const } },
-          { companyName: { contains: search, mode: "insensitive" as const } },
-          { shareId: { contains: search, mode: "insensitive" as const } },
-          { owner: { email: { contains: search, mode: "insensitive" as const } } },
-        ],
-      }
-    : {};
+  // Build where clause — only add search filter if search string is non-empty
+  // Separate the owner email search to avoid issues with nullable relation
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let where: any = {};
+  if (search) {
+    where = {
+      OR: [
+        { title: { contains: search, mode: "insensitive" as const } },
+        { companyName: { contains: search, mode: "insensitive" as const } },
+        { shareId: { contains: search, mode: "insensitive" as const } },
+        { owner: { is: { email: { contains: search, mode: "insensitive" as const } } } },
+      ],
+    };
+  }
 
   try {
     const [decks, total] = await Promise.all([

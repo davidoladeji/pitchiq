@@ -3,6 +3,8 @@
 import { useEffect, useCallback, useState } from "react";
 import { DeckData } from "@/lib/types";
 import { useEditorStore } from "./state/editorStore";
+import type { BlockType } from "@/lib/editor/block-types";
+import { createDefaultEditorBlock } from "@/lib/editor/block-defaults";
 import EditorToolbar, { type AIPanel } from "./EditorToolbar";
 import EditorSidebar from "./EditorSidebar";
 import EditorCanvas from "./EditorCanvas";
@@ -40,6 +42,10 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
   const selectedSlideIndex = useEditorStore((s) => s.selectedSlideIndex);
   const reorderSlides = useEditorStore((s) => s.reorderSlides);
   const addBlock = useEditorStore((s) => s.addBlock);
+  const addBlockV2 = useEditorStore((s) => s.addBlockV2);
+  const removeBlockV2 = useEditorStore((s) => s.removeBlockV2);
+  const slideBlockOrder = useEditorStore((s) => s.slideBlockOrder);
+  const currentSlideId = useEditorStore((s) => s.currentSlideId);
 
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [mobilePanel, setMobilePanel] = useState<"canvas" | "slides" | "properties">("canvas");
@@ -90,11 +96,16 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
       if ((e.key === "Delete" || e.key === "Backspace") && !isEditable) {
         e.preventDefault();
         if (selectedBlockId) {
-          removeBlock(selectedSlideIndex, selectedBlockId);
+          const slideId = currentSlideId();
+          if (slideId && slideBlockOrder[slideId]?.includes(selectedBlockId)) {
+            removeBlockV2(slideId, selectedBlockId);
+          } else {
+            removeBlock(selectedSlideIndex, selectedBlockId);
+          }
         }
       }
     },
-    [undo, redo, save, selectedBlockId, selectedSlideIndex, removeBlock]
+    [undo, redo, save, selectedBlockId, selectedSlideIndex, removeBlock, removeBlockV2, currentSlideId, slideBlockOrder]
   );
 
   useEffect(() => {
@@ -130,9 +141,19 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
       String(over.id) === "editor-canvas-drop"
     ) {
       const blockType = String(active.id).replace("block-template-", "");
-      const template = getBlockTemplate(blockType);
-      if (template) {
-        addBlock(selectedSlideIndex, template);
+      const slideId = currentSlideId();
+
+      // Try v2 first
+      if (slideId && isV2BlockType(blockType)) {
+        const order = slideBlockOrder[slideId] || [];
+        const block = createDefaultEditorBlock(blockType as BlockType, order.length);
+        addBlockV2(slideId, block);
+      } else {
+        // Fallback to legacy
+        const template = getBlockTemplate(blockType);
+        if (template) {
+          addBlock(selectedSlideIndex, template);
+        }
       }
     }
   }
@@ -276,4 +297,16 @@ function getBlockTemplate(type: string) {
     content: tmpl.content,
     properties: tmpl.properties,
   };
+}
+
+const V2_BLOCK_TYPES = new Set([
+  "text", "heading", "bullet-list", "quote", "callout",
+  "metric", "chart", "comparison-row",
+  "image", "logo-grid", "shape",
+  "team-member", "timeline-item",
+  "divider", "spacer", "card-group",
+]);
+
+function isV2BlockType(type: string): boolean {
+  return V2_BLOCK_TYPES.has(type);
 }

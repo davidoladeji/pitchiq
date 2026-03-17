@@ -218,25 +218,20 @@ export default function DashboardClient({
           {/* API Keys (Enterprise only) */}
           <DashboardApiKeys hasApiAccess={limits.apiAccess} />
 
-          {/* Two-column layout: deck grid + sidebar */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
-            {/* Main column: 2/3 */}
-            <div className="xl:col-span-2 min-w-0">
-              <DashboardDeckGrid decks={decks} plan={effectivePlan} />
-            </div>
+          {/* Deck grid — full width */}
+          <DashboardDeckGrid decks={decks} plan={effectivePlan} />
 
-            {/* Sidebar: 1/3 */}
-            <div className="space-y-6 min-w-0">
-              <DashboardAnalytics
-                dailyViews={dailyViews}
-                plan={effectivePlan}
-                loading={analyticsLoading}
-              />
-              <DashboardActivityFeed
-                activities={activities}
-                plan={effectivePlan}
-              />
-            </div>
+          {/* Analytics + Activity — full width, side-by-side on large screens */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <DashboardAnalytics
+              dailyViews={dailyViews}
+              plan={effectivePlan}
+              loading={analyticsLoading}
+            />
+            <DashboardActivityFeed
+              activities={activities}
+              plan={effectivePlan}
+            />
           </div>
         </div>
       </main>
