@@ -5,13 +5,18 @@ import { DeckData } from "@/lib/types";
 import { useEditorStore } from "./state/editorStore";
 import type { BlockType } from "@/lib/editor/block-types";
 import { createDefaultEditorBlock } from "@/lib/editor/block-defaults";
-import EditorToolbar, { type AIPanel } from "./EditorToolbar";
+import EditorToolbar, { type AIPanel, type EditorPanel } from "./EditorToolbar";
 import EditorSidebar from "./EditorSidebar";
 import EditorCanvas from "./EditorCanvas";
 import EditorProperties from "./EditorProperties";
 import AICoachPanel from "./ai/AICoachPanel";
 import InvestorLensPanel from "./ai/InvestorLensPanel";
 import PitchSimulator from "./ai/PitchSimulator";
+import DeckAnalytics from "../analytics/DeckAnalytics";
+import CommentsPanel from "./CommentsPanel";
+import VersionHistoryPanel from "./VersionHistoryPanel";
+import PresentMode from "../presentation/PresentMode";
+import SocialExportModal from "./SocialExportModal";
 import {
   DndContext,
   DragEndEvent,
@@ -50,6 +55,9 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [mobilePanel, setMobilePanel] = useState<"canvas" | "slides" | "properties">("canvas");
   const [activeAIPanel, setActiveAIPanel] = useState<AIPanel>(null);
+  const [activeEditorPanel, setActiveEditorPanel] = useState<EditorPanel>(null);
+  const [presenting, setPresenting] = useState(false);
+  const [showSocialExport, setShowSocialExport] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -166,7 +174,7 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
       onDragEnd={handleDragEnd}
     >
       <div className="h-screen w-screen bg-navy flex flex-col overflow-hidden">
-        <EditorToolbar plan={plan} activeAIPanel={activeAIPanel} onToggleAIPanel={setActiveAIPanel} />
+        <EditorToolbar plan={plan} activeAIPanel={activeAIPanel} onToggleAIPanel={setActiveAIPanel} activeEditorPanel={activeEditorPanel} onToggleEditorPanel={setActiveEditorPanel} onPresent={() => setPresenting(true)} onSocialExport={() => setShowSocialExport(true)} />
 
         {/* Mobile tab bar */}
         <div className="flex lg:hidden border-b border-white/10 bg-navy-950">
@@ -204,13 +212,19 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
             <EditorCanvas />
           </div>
 
-          {/* Right panel - properties or AI panel */}
+          {/* Right panel - properties, AI panel, or editor panel */}
           <div
             className={`w-full lg:w-[300px] lg:block shrink-0 ${
               mobilePanel === "properties" ? "block" : "hidden"
             }`}
           >
-            {activeAIPanel === "coach" ? (
+            {activeEditorPanel === "analytics" && deck ? (
+              <DeckAnalytics shareId={deck.shareId} onClose={() => setActiveEditorPanel(null)} />
+            ) : activeEditorPanel === "comments" && deck ? (
+              <CommentsPanel shareId={deck.shareId} />
+            ) : activeEditorPanel === "versions" && deck ? (
+              <VersionHistoryPanel shareId={deck.shareId} onClose={() => setActiveEditorPanel(null)} />
+            ) : activeAIPanel === "coach" ? (
               <AICoachPanel onClose={() => setActiveAIPanel(null)} />
             ) : activeAIPanel === "investor-lens" ? (
               <InvestorLensPanel onClose={() => setActiveAIPanel(null)} />
@@ -223,6 +237,16 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
         {/* Pitch Simulator modal overlay */}
         {activeAIPanel === "simulator" && (
           <PitchSimulator onClose={() => setActiveAIPanel(null)} />
+        )}
+
+        {/* Presentation mode overlay */}
+        {presenting && (
+          <PresentMode onClose={() => setPresenting(false)} />
+        )}
+
+        {/* Social media export modal */}
+        {showSocialExport && (
+          <SocialExportModal onClose={() => setShowSocialExport(false)} />
         )}
       </div>
 
@@ -301,8 +325,8 @@ function getBlockTemplate(type: string) {
 
 const V2_BLOCK_TYPES = new Set([
   "text", "heading", "bullet-list", "quote", "callout",
-  "metric", "chart", "comparison-row",
-  "image", "logo-grid", "shape",
+  "metric", "metric-grid", "chart", "comparison-row", "funnel", "table", "progress",
+  "image", "icon", "logo-grid", "shape", "video-embed", "device-mockup",
   "team-member", "timeline-item",
   "divider", "spacer", "card-group",
 ]);

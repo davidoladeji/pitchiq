@@ -17,6 +17,7 @@ interface SlideRendererProps {
   companyName: string;
   showBranding?: boolean;
   themeId?: string;
+  onSlideChange?: (slideIndex: number) => void;
 }
 
 /** Convert hex color to rgba string — html2canvas-safe replacement for color-mix() */
@@ -626,7 +627,7 @@ export interface SlideRendererHandle {
   getAllSlidesContainer: () => HTMLDivElement | null;
 }
 
-const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(function SlideRenderer({ slides, companyName, showBranding = true, themeId }, ref) {
+const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(function SlideRenderer({ slides, companyName, showBranding = true, themeId, onSlideChange }, ref) {
   const theme = getTheme(themeId || "midnight");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -644,10 +645,11 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
       if (index >= 0 && index < slides.length && index !== currentSlide && !isTransitioning) {
         setIsTransitioning(true);
         setCurrentSlide(index);
+        onSlideChange?.(index);
         setTimeout(() => setIsTransitioning(false), 300);
       }
     },
-    [slides.length, currentSlide, isTransitioning]
+    [slides.length, currentSlide, isTransitioning, onSlideChange]
   );
 
   useEffect(() => {

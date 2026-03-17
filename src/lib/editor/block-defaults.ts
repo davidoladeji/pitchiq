@@ -142,11 +142,30 @@ const DEFAULTS: { [K in BlockType]: () => BlockDataMap[K] } = {
     src: "",
     alt: "Image placeholder",
     fit: "contain" as const,
+    borderRadius: 8,
+    shadow: "none" as const,
+    opacity: 100,
+    mask: "none" as const,
+  }),
+
+  icon: () => ({
+    iconName: "Zap",
+    size: 48,
+    color: "#4361EE",
+    backgroundShape: "none" as const,
+    strokeWidth: 2,
   }),
 
   "logo-grid": () => ({
-    logos: ["Partner 1", "Partner 2", "Partner 3", "Partner 4"],
+    logos: [
+      { name: "Partner 1" },
+      { name: "Partner 2" },
+      { name: "Partner 3" },
+      { name: "Partner 4" },
+    ],
     columns: 4,
+    variant: "default" as const,
+    header: "Trusted by",
   }),
 
   shape: () => ({
@@ -154,6 +173,23 @@ const DEFAULTS: { [K in BlockType]: () => BlockDataMap[K] } = {
     fill: "#4361EE",
     stroke: "transparent",
     strokeWidth: 0,
+    opacity: 100,
+    rotation: 0,
+    borderRadius: 4,
+    arrowHead: "single" as const,
+  }),
+
+  "video-embed": () => ({
+    url: "",
+    autoplay: false,
+    aspectRatio: "16:9" as const,
+  }),
+
+  "device-mockup": () => ({
+    device: "iphone" as const,
+    screenshotSrc: "",
+    colorVariant: "space-gray" as const,
+    orientation: "portrait" as const,
   }),
 
   "team-member": () => ({

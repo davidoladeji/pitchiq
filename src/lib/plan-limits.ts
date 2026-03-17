@@ -171,3 +171,19 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
 export function getPlanLimits(plan: string): PlanLimits {
   return PLAN_CONFIGS[plan] || PLAN_CONFIGS.starter;
 }
+
+/** Ordered plan hierarchy for comparison. */
+const PLAN_HIERARCHY: string[] = ["starter", "pro", "growth", "enterprise"];
+
+/**
+ * Check if a plan is at least the given minimum tier.
+ * e.g. isPlanAtLeast("enterprise", "growth") → true
+ *      isPlanAtLeast("pro", "growth") → false
+ */
+export function isPlanAtLeast(plan: string, minPlan: string): boolean {
+  const planIndex = PLAN_HIERARCHY.indexOf(plan);
+  const minIndex = PLAN_HIERARCHY.indexOf(minPlan);
+  if (planIndex === -1) return false;
+  if (minIndex === -1) return false;
+  return planIndex >= minIndex;
+}

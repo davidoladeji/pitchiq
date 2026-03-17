@@ -9,6 +9,7 @@ import type {
   BlockPosition,
   BlockStyle,
 } from "@/lib/editor/block-types";
+import type { AudienceMode } from "@/lib/editor/ai/audience-adapter";
 import { createDefaultEditorBlock } from "@/lib/editor/block-defaults";
 import { migrateSlideToV2, syncBlocksToSlideData } from "@/lib/editor/block-migration";
 import { getLayoutById } from "@/lib/editor/layout/layout-library";
@@ -41,6 +42,7 @@ export interface EditorState {
   undoStack: UndoSnapshot[];
   redoStack: UndoSnapshot[];
   themeId: string;
+  audienceMode: AudienceMode;
 
   // v2 block state: keyed by slideId
   slideBlocks: Record<string, BlocksRecord>;
@@ -87,6 +89,9 @@ export interface EditorState {
   // Theme
   setTheme: (themeId: string) => void;
 
+  // Audience
+  setAudienceMode: (mode: AudienceMode) => void;
+
   // Title
   setTitle: (title: string) => void;
 
@@ -131,6 +136,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   undoStack: [],
   redoStack: [],
   themeId: "midnight",
+  audienceMode: "investor" as AudienceMode,
   slideBlocks: {},
   slideBlockOrder: {},
 
@@ -585,6 +591,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         draft.isDirty = true;
       })
     );
+  },
+
+  setAudienceMode: (mode) => {
+    set({ audienceMode: mode });
   },
 
   setTitle: (title) => {

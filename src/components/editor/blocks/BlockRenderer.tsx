@@ -19,8 +19,11 @@ import type {
   TableBlockData,
   ProgressBlockData,
   ImageBlockData,
+  IconBlockData,
   LogoGridBlockData,
   ShapeBlockData,
+  VideoEmbedBlockData,
+  DeviceMockupBlockData,
   TeamMemberBlockData,
   TimelineItemBlockData,
   DividerBlockData,
@@ -48,6 +51,9 @@ import ImageBlockV2 from "./ImageBlockV2";
 import FunnelBlock from "./FunnelBlock";
 import TableBlock from "./TableBlock";
 import ProgressBlock from "./ProgressBlock";
+import IconBlock from "./IconBlock";
+import VideoEmbedBlock from "./VideoEmbedBlock";
+import DeviceMockupBlock from "./DeviceMockupBlock";
 
 interface BlockRendererProps {
   block: EditorBlock;
@@ -209,6 +215,30 @@ export default function BlockRenderer({
       return (
         <SpacerBlock
           data={block.data as SpacerBlockData}
+          isSelected={isSelected}
+          onDataChange={onDataChange}
+        />
+      );
+    case "icon":
+      return (
+        <IconBlock
+          data={block.data as IconBlockData}
+          isSelected={isSelected}
+          onDataChange={onDataChange}
+        />
+      );
+    case "video-embed":
+      return (
+        <VideoEmbedBlock
+          data={block.data as VideoEmbedBlockData}
+          isSelected={isSelected}
+          onDataChange={onDataChange}
+        />
+      );
+    case "device-mockup":
+      return (
+        <DeviceMockupBlock
+          data={block.data as DeviceMockupBlockData}
           isSelected={isSelected}
           onDataChange={onDataChange}
         />

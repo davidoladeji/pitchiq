@@ -151,15 +151,23 @@ export function legacyBlockToEditorBlock(
         } as ImageBlockData,
       } as EditorBlock;
 
-    case "logo-grid":
+    case "logo-grid": {
+      // Legacy logos are string[], new format is { name, url? }[]
+      const rawLogos = (p.logos as string[] | { name: string; url?: string }[]) ?? [];
+      const normalizedLogos = rawLogos.map((l) =>
+        typeof l === "string" ? { name: l } : l
+      );
       return {
         ...base,
         type: "logo-grid" as BlockType,
         data: {
-          logos: (p.logos as string[]) ?? [],
+          logos: normalizedLogos,
           columns: (p.columns as number) ?? 4,
+          variant: "default" as const,
+          header: "Trusted by",
         } as LogoGridBlockData,
       } as EditorBlock;
+    }
 
     case "comparison-row":
       return {
@@ -299,11 +307,13 @@ export function editorBlockToLegacy(block: EditorBlock): SlideBlock {
 
     case "logo-grid": {
       const d = block.data as LogoGridBlockData;
+      // Convert back to string[] for legacy format
+      const legacyLogos = d.logos.map((l) => (typeof l === "string" ? l : l.name));
       return {
         id: block.id,
         type: "logo-grid",
         content: "",
-        properties: { logos: d.logos, columns: d.columns },
+        properties: { logos: legacyLogos, columns: d.columns },
       };
     }
 
@@ -317,11 +327,14 @@ export function editorBlockToLegacy(block: EditorBlock): SlideBlock {
       };
     }
 
-    // Phase 3 data blocks + Phase 1 layout blocks — no legacy equivalent
+    // Phase 3 data blocks + Phase 4 visual blocks + Phase 1 layout blocks — no legacy equivalent
     case "metric-grid":
     case "funnel":
     case "table":
     case "progress":
+    case "icon":
+    case "video-embed":
+    case "device-mockup":
     case "divider":
     case "spacer":
     case "shape":

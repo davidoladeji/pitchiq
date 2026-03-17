@@ -53,11 +53,13 @@ export default function DashboardOverview({
   );
 
   const planBadgeColor =
-    plan === "growth"
-      ? "bg-violet-100 text-violet-700"
-      : plan === "pro"
-        ? "bg-electric/10 text-electric"
-        : "bg-navy-100 text-navy-600";
+    plan === "enterprise"
+      ? "bg-navy-900 text-white"
+      : plan === "growth"
+        ? "bg-violet-100 text-violet-700"
+        : plan === "pro"
+          ? "bg-electric/10 text-electric"
+          : "bg-navy-100 text-navy-600";
 
   const stats = [
     {

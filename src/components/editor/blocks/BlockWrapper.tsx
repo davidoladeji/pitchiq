@@ -1,8 +1,13 @@
 "use client";
 
-import { useCallback, useState, type ReactNode, type CSSProperties } from "react";
+import { useCallback, useState, useRef, useEffect, type ReactNode, type CSSProperties } from "react";
 import type { EditorBlock } from "@/lib/editor/block-types";
 import { BLOCK_META } from "@/lib/editor/block-types";
+import {
+  getAIActionsForBlock,
+  executeAIAction,
+  type AIActionDef,
+} from "@/lib/editor/ai/block-ai-actions";
 
 interface BlockWrapperProps {
   block: EditorBlock;
@@ -12,6 +17,7 @@ interface BlockWrapperProps {
   onDuplicate: () => void;
   onToggleLock: () => void;
   onDragStart?: (e: React.PointerEvent) => void;
+  onUpdateData?: (dataPatch: Record<string, unknown>) => void;
   children: ReactNode;
 }
 
@@ -31,10 +37,49 @@ export default function BlockWrapper({
   onDuplicate,
   onToggleLock,
   onDragStart,
+  onUpdateData,
   children,
 }: BlockWrapperProps) {
   const [showActions, setShowActions] = useState(false);
+  const [showAIMenu, setShowAIMenu] = useState(false);
+  const [aiLoading, setAILoading] = useState<string | null>(null);
+  const aiMenuRef = useRef<HTMLDivElement>(null);
   const meta = BLOCK_META[block.type as keyof typeof BLOCK_META];
+  const aiActions = getAIActionsForBlock(block.type);
+
+  // Close AI menu on outside click
+  useEffect(() => {
+    if (!showAIMenu) return;
+    function handleClick(e: MouseEvent) {
+      if (aiMenuRef.current && !aiMenuRef.current.contains(e.target as Node)) {
+        setShowAIMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showAIMenu]);
+
+  const handleAIAction = useCallback(
+    async (action: AIActionDef) => {
+      if (!onUpdateData) return;
+      setAILoading(action.id);
+      try {
+        // TODO: Replace with real LLM API call
+        const patch = await executeAIAction(
+          block.type,
+          action.id,
+          block.data as unknown as Record<string, unknown>,
+        );
+        if (Object.keys(patch).length > 0) {
+          onUpdateData(patch);
+        }
+      } finally {
+        setAILoading(null);
+        setShowAIMenu(false);
+      }
+    },
+    [block.type, block.data, onUpdateData],
+  );
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
@@ -92,8 +137,26 @@ export default function BlockWrapper({
       onClick={handleClick}
       onPointerDown={handlePointerDown}
       onMouseEnter={() => setShowActions(true)}
-      onMouseLeave={() => setShowActions(false)}
+      onMouseLeave={(e) => {
+        // Don't hide if moving to the toolbar (which extends above the block)
+        const rect = e.currentTarget.getBoundingClientRect();
+        const toolbarTop = rect.top - 44; // toolbar height + gap
+        if (
+          e.clientY >= toolbarTop &&
+          e.clientY <= rect.bottom + 8 &&
+          e.clientX >= rect.left - 8 &&
+          e.clientX <= rect.right + 8
+        ) {
+          return;
+        }
+        setShowActions(false);
+      }}
     >
+      {/* Invisible hover bridge to toolbar — prevents toolbar from disappearing when moving mouse up to it */}
+      {isSelected && !block.locked && (
+        <div className="absolute -top-11 left-0 right-0 h-11 z-30" />
+      )}
+
       {/* Selection ring */}
       {isSelected && (
         <div className="absolute inset-0 rounded-lg outline outline-2 outline-[#4361EE] outline-offset-2 pointer-events-none z-20" />
@@ -146,6 +209,60 @@ export default function BlockWrapper({
               )}
             </svg>
           </button>
+          {/* AI Actions (Wand2 icon) */}
+          {aiActions.length > 0 && (
+            <div className="relative" ref={aiMenuRef}>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setShowAIMenu(!showAIMenu); }}
+                className={`p-1 rounded transition-colors ${
+                  showAIMenu || aiLoading
+                    ? "text-[#4361EE] bg-[#4361EE]/20"
+                    : "text-white/50 hover:text-[#4361EE] hover:bg-white/10"
+                }`}
+                title="AI Actions"
+              >
+                {aiLoading ? (
+                  <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                  </svg>
+                )}
+              </button>
+
+              {/* AI Actions dropdown */}
+              {showAIMenu && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-48 bg-[#1A1A24] border border-white/10 rounded-lg shadow-xl z-50 py-1">
+                  <div className="px-2.5 py-1.5 text-[9px] text-white/40 uppercase tracking-wider font-semibold">
+                    AI Actions
+                  </div>
+                  {aiActions.map((action) => (
+                    <button
+                      key={action.id}
+                      type="button"
+                      disabled={!!aiLoading}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAIAction(action);
+                      }}
+                      className="w-full flex flex-col items-start px-2.5 py-1.5 text-left hover:bg-white/5 transition-colors disabled:opacity-40"
+                    >
+                      <span className="text-[11px] text-white/80 font-medium">
+                        {aiLoading === action.id ? "Processing..." : action.label}
+                      </span>
+                      <span className="text-[9px] text-white/40 leading-tight">
+                        {action.description}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
           {/* Delete */}
           <button
             type="button"

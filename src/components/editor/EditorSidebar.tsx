@@ -13,6 +13,9 @@ import { CSS } from "@dnd-kit/utilities";
 import { nanoid } from "nanoid";
 import BlockLibrary from "./blocks/BlockLibrary";
 import LayoutPicker from "./LayoutPicker";
+import NarrativeArcPanel from "./NarrativeArcPanel";
+import AudiencePanel from "./AudiencePanel";
+import SlideHealthPanel from "./SlideHealthPanel";
 
 interface EditorSidebarProps {
   plan: string;
@@ -117,6 +120,11 @@ function SortableSlide(props: {
           </span>
         </div>
       </div>
+
+      {/* Design score health dot */}
+      {slide.id && (
+        <SlideHealthPanel slideIndex={index} slideId={slide.id} />
+      )}
     </div>
   );
 }
@@ -134,7 +142,7 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
   const removeSlide = useEditorStore((s) => s.removeSlide);
   const duplicateSlide = useEditorStore((s) => s.duplicateSlide);
 
-  const [tab, setTab] = useState<"slides" | "blocks" | "layouts">("slides");
+  const [tab, setTab] = useState<"slides" | "blocks" | "layouts" | "ai">("slides");
   const [contextMenu, setContextMenu] = useState<{
     x: number;
     y: number;
@@ -207,11 +215,28 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
         >
           Layouts
         </button>
+        <button
+          type="button"
+          onClick={() => setTab("ai")}
+          aria-selected={tab === "ai"}
+          className={`flex-1 py-2.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900 ${
+            tab === "ai"
+              ? "text-white border-b-2 border-electric"
+              : "text-white/40 hover:text-white/60"
+          }`}
+        >
+          AI
+        </button>
       </div>
 
       {/* Tab content */}
       <div className="flex-1 min-h-0 overflow-y-auto">
-        {tab === "layouts" ? (
+        {tab === "ai" ? (
+          <div className="p-3 space-y-3">
+            <NarrativeArcPanel />
+            <AudiencePanel />
+          </div>
+        ) : tab === "layouts" ? (
           <LayoutPicker />
         ) : tab === "slides" ? (
           <div className="p-3 space-y-2">

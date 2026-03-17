@@ -30,8 +30,11 @@ export const BlockType = {
   Progress: "progress",
   // Visual
   Image: "image",
+  Icon: "icon",
   LogoGrid: "logo-grid",
   Shape: "shape",
+  VideoEmbed: "video-embed",
+  DeviceMockup: "device-mockup",
   // Story
   TeamMember: "team-member",
   TimelineItem: "timeline-item",
@@ -200,11 +203,34 @@ export interface ImageBlockData {
   src: string;
   alt: string;
   fit: "cover" | "contain" | "fill";
+  borderRadius?: number;
+  shadow?: "none" | "sm" | "md" | "lg";
+  opacity?: number;
+  caption?: string;
+  mask?: "none" | "circle" | "rounded";
+  filters?: {
+    grayscale?: number;   // 0-100
+    blur?: number;        // 0-20
+    brightness?: number;  // 0-200
+    contrast?: number;    // 0-200
+    saturate?: number;    // 0-200
+  };
+}
+
+export interface IconBlockData {
+  iconName: string;
+  size: number;
+  color: string;
+  backgroundColor?: string;
+  backgroundShape: "none" | "circle" | "rounded-square" | "square";
+  strokeWidth: number;
 }
 
 export interface LogoGridBlockData {
-  logos: string[];
+  logos: { name: string; url?: string }[];
   columns: number;
+  variant: "default" | "grayscale";
+  header?: string;
 }
 
 export interface ShapeBlockData {
@@ -212,6 +238,27 @@ export interface ShapeBlockData {
   fill: string;
   stroke: string;
   strokeWidth: number;
+  opacity?: number;
+  rotation?: number;
+  borderRadius?: number;
+  arrowHead?: "single" | "double" | "none";
+  connectorSource?: string;
+  connectorTarget?: string;
+}
+
+export interface VideoEmbedBlockData {
+  url: string;
+  provider?: "youtube" | "vimeo" | "loom" | "figma" | "generic";
+  autoplay: boolean;
+  startTime?: number;
+  aspectRatio: "16:9" | "4:3" | "1:1";
+}
+
+export interface DeviceMockupBlockData {
+  device: "iphone" | "macbook" | "ipad" | "browser";
+  screenshotSrc: string;
+  colorVariant: "silver" | "space-gray";
+  orientation: "portrait" | "landscape";
 }
 
 // ── Story ──
@@ -265,8 +312,11 @@ export interface BlockDataMap {
   table: TableBlockData;
   progress: ProgressBlockData;
   image: ImageBlockData;
+  icon: IconBlockData;
   "logo-grid": LogoGridBlockData;
   shape: ShapeBlockData;
+  "video-embed": VideoEmbedBlockData;
+  "device-mockup": DeviceMockupBlockData;
   "team-member": TeamMemberBlockData;
   "timeline-item": TimelineItemBlockData;
   divider: DividerBlockData;
@@ -349,7 +399,7 @@ export const BLOCK_CATEGORIES: Record<BlockCategory, BlockCategoryMeta> = {
   visual: {
     label: "Visual",
     color: "#7209B7",
-    types: [BlockType.Image, BlockType.LogoGrid, BlockType.Shape],
+    types: [BlockType.Image, BlockType.Icon, BlockType.LogoGrid, BlockType.Shape, BlockType.VideoEmbed, BlockType.DeviceMockup],
   },
   story: {
     label: "Story",
@@ -381,8 +431,11 @@ export const BLOCK_META: Record<BlockType, { label: string; icon: string }> = {
   table: { label: "Table", icon: "Table" },
   progress: { label: "Progress", icon: "Target" },
   image: { label: "Image", icon: "Image" },
+  icon: { label: "Icon", icon: "Smile" },
   "logo-grid": { label: "Logo Grid", icon: "Grid3X3" },
   shape: { label: "Shape", icon: "Square" },
+  "video-embed": { label: "Video", icon: "Play" },
+  "device-mockup": { label: "Mockup", icon: "Monitor" },
   "team-member": { label: "Team", icon: "Users" },
   "timeline-item": { label: "Timeline", icon: "Clock" },
   divider: { label: "Divider", icon: "Minus" },

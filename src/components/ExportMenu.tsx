@@ -174,10 +174,22 @@ export default function ExportMenu({ deck, className = "", userPlan = "starter" 
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
-  const handleExport = async (format: "pdf") => {
+  const handleExport = async (format: "pdf" | "pptx") => {
     setExporting(format);
     try {
-      await exportPdf(deck, limits.pdfWatermark, limits.showBranding);
+      if (format === "pptx") {
+        const { exportPptx } = await import("@/lib/export/pptx-exporter");
+        await exportPptx({
+          slides: deck.slides,
+          slideBlocks: {},
+          slideBlockOrder: {},
+          themeId: deck.themeId || "midnight",
+          deckTitle: deck.title || "pitch-deck",
+          companyName: deck.companyName || "",
+        });
+      } else {
+        await exportPdf(deck, limits.pdfWatermark, limits.showBranding);
+      }
     } finally {
       setExporting(null);
       setOpen(false);
@@ -228,11 +240,24 @@ export default function ExportMenu({ deck, className = "", userPlan = "starter" 
             )}
           </button>
           <div className="border-t border-navy-100 mt-1 pt-1">
-            <div className="px-4 py-2.5 text-sm text-navy-500 flex items-center gap-3">
-              <span className="w-8 h-8 rounded-lg bg-orange-50 text-orange-300 flex items-center justify-center text-xs font-bold">PPT</span>
-              PPTX Export
-              <span className="ml-auto text-[10px] text-navy-500 font-medium">{limits.pptxExport ? "Soon" : "Pro"}</span>
-            </div>
+            {limits.pptxExport ? (
+              <button
+                type="button"
+                onClick={() => handleExport("pptx")}
+                disabled={exporting !== null}
+                aria-label="Download deck as PowerPoint"
+                className="w-full min-h-[44px] text-left px-4 py-2.5 text-sm text-navy hover:bg-navy-50 transition-colors flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset focus-visible:ring-offset-white disabled:opacity-70"
+              >
+                <span className="w-8 h-8 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center text-xs font-bold">PPT</span>
+                {exporting === "pptx" ? "Exporting…" : "Download PPTX"}
+              </button>
+            ) : (
+              <div className="px-4 py-2.5 text-sm text-navy-500 flex items-center gap-3">
+                <span className="w-8 h-8 rounded-lg bg-orange-50 text-orange-300 flex items-center justify-center text-xs font-bold">PPT</span>
+                PPTX Export
+                <span className="ml-auto text-[10px] text-navy-500 font-medium">Pro</span>
+              </div>
+            )}
             <div className="px-4 py-2.5 text-sm text-navy-500 flex items-center gap-3">
               <span className="w-8 h-8 rounded-lg bg-navy-50 text-navy-400 flex items-center justify-center text-xs font-bold">G</span>
               Google Slides

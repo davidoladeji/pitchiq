@@ -28,7 +28,7 @@ export async function GET(
     const ip = req.headers.get("x-forwarded-for") || "unknown";
     const userAgent = req.headers.get("user-agent") || "";
 
-    await prisma.view.create({
+    const viewRecord = await prisma.view.create({
       data: {
         deckId: deck.id,
         viewerIp: ip,
@@ -79,6 +79,7 @@ export async function GET(
       piqScore,
       isOwner,
       ownerPlan,
+      viewId: viewRecord.id,
       variants: isOwner
         ? deck.parentVariants.map((v) => {
             let score = null;

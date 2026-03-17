@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { ELECTRIC_HEX, VIOLET_HEX, NAVY_500_HEX } from "@/lib/design-tokens";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 interface DailyView {
   date: string;
@@ -50,7 +51,7 @@ export default function DashboardAnalytics({
   plan: string;
   loading?: boolean;
 }) {
-  const isGated = plan !== "growth";
+  const isGated = !getPlanLimits(plan).analytics;
 
   // For gated users, show placeholder data
   const chartData = isGated

@@ -7,16 +7,24 @@ import { THEMES } from "@/lib/themes";
 import DesignScoreWidget from "./DesignScoreWidget";
 
 export type AIPanel = "coach" | "investor-lens" | "simulator" | null;
+export type EditorPanel = "analytics" | "comments" | "versions" | null;
 
 interface EditorToolbarProps {
   plan: string;
   activeAIPanel: AIPanel;
   onToggleAIPanel: (panel: AIPanel) => void;
+  activeEditorPanel: EditorPanel;
+  onToggleEditorPanel: (panel: EditorPanel) => void;
+  onPresent: () => void;
+  onSocialExport: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: EditorToolbarProps) {
+export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel, activeEditorPanel, onToggleEditorPanel, onPresent, onSocialExport }: EditorToolbarProps) {
   const deck = useEditorStore((s) => s.deck);
+  const slides = useEditorStore((s) => s.slides);
+  const slideBlocks = useEditorStore((s) => s.slideBlocks);
+  const slideBlockOrder = useEditorStore((s) => s.slideBlockOrder);
   const isDirty = useEditorStore((s) => s.isDirty);
   const saving = useEditorStore((s) => s.saving);
   const savedAt = useEditorStore((s) => s.savedAt);
@@ -35,6 +43,9 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
   const [exportOpen, setExportOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [exportingPptx, setExportingPptx] = useState(false);
+  const [exportingPdf, setExportingPdf] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const themeRef = useRef<HTMLDivElement>(null);
@@ -249,6 +260,51 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
         Preview
       </a>
 
+      {/* Analytics button */}
+      <button
+        onClick={() => onToggleEditorPanel(activeEditorPanel === "analytics" ? null : "analytics")}
+        className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+          activeEditorPanel === "analytics"
+            ? "bg-white/15 text-white"
+            : "bg-white/10 hover:bg-white/15 text-white/70 hover:text-white"
+        }`}
+        title="Deck Analytics"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+        </svg>
+      </button>
+
+      {/* Comments button */}
+      <button
+        onClick={() => onToggleEditorPanel(activeEditorPanel === "comments" ? null : "comments")}
+        className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+          activeEditorPanel === "comments"
+            ? "bg-white/15 text-white"
+            : "bg-white/10 hover:bg-white/15 text-white/70 hover:text-white"
+        }`}
+        title="Comments"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+        </svg>
+      </button>
+
+      {/* Version History button */}
+      <button
+        onClick={() => onToggleEditorPanel(activeEditorPanel === "versions" ? null : "versions")}
+        className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+          activeEditorPanel === "versions"
+            ? "bg-white/15 text-white"
+            : "bg-white/10 hover:bg-white/15 text-white/70 hover:text-white"
+        }`}
+        title="Version History"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </button>
+
       {/* Export dropdown */}
       <div className="relative hidden md:block" ref={exportRef}>
         <button
@@ -264,27 +320,153 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
           </svg>
         </button>
         {exportOpen && (
-          <div className="absolute top-full right-0 mt-1 w-44 bg-navy border border-white/10 rounded-xl shadow-xl z-50 py-1">
-            <a
-              href={deck ? `/deck/${deck.shareId}` : "#"}
-              className="flex items-center gap-2 px-3 py-2 text-white text-xs hover:bg-white/5 transition-colors"
-              onClick={() => setExportOpen(false)}
+          <div className="absolute top-full right-0 mt-1 w-56 bg-navy border border-white/10 rounded-xl shadow-xl z-50 py-1">
+            {/* PowerPoint */}
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-white/5 transition-colors disabled:opacity-40"
+              disabled={exportingPptx}
+              onClick={async () => {
+                setExportingPptx(true);
+                try {
+                  const { exportPptx } = await import("@/lib/export/pptx-exporter");
+                  await exportPptx({
+                    slides,
+                    slideBlocks,
+                    slideBlockOrder,
+                    themeId,
+                    deckTitle: deck?.title || "pitch-deck",
+                    companyName: deck?.companyName || "",
+                  });
+                } catch (err) {
+                  console.error("PPTX export failed:", err);
+                } finally {
+                  setExportingPptx(false);
+                  setExportOpen(false);
+                }
+              }}
             >
-              <svg className="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-              </svg>
-              Export PDF
-            </a>
-            <a
-              href={deck ? `/deck/${deck.shareId}` : "#"}
-              className="flex items-center gap-2 px-3 py-2 text-white text-xs hover:bg-white/5 transition-colors"
-              onClick={() => setExportOpen(false)}
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-500/15">
+                <svg className="w-3.5 h-3.5 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs font-medium text-white">
+                  {exportingPptx ? "Exporting..." : "PowerPoint (.pptx)"}
+                </div>
+                <div className="text-[10px] text-white/40">Editable slides</div>
+              </div>
+            </button>
+
+            {/* PDF */}
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-white/5 transition-colors disabled:opacity-40"
+              disabled={exportingPdf}
+              onClick={async () => {
+                setExportingPdf(true);
+                try {
+                  const { exportPdf } = await import("@/lib/export/pdf-exporter");
+                  await exportPdf({
+                    deckTitle: deck?.title || "pitch-deck",
+                    companyName: deck?.companyName || "",
+                    slideCount: slides.length,
+                    watermark: plan === "starter",
+                    showBranding: plan === "starter",
+                  });
+                } catch (err) {
+                  console.error("PDF export failed:", err);
+                } finally {
+                  setExportingPdf(false);
+                  setExportOpen(false);
+                }
+              }}
             >
-              <svg className="w-4 h-4 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" />
-              </svg>
-              Export PPTX
-            </a>
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-500/15">
+                <svg className="w-3.5 h-3.5 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs font-medium text-white">
+                  {exportingPdf ? "Exporting..." : "PDF"}
+                </div>
+                <div className="text-[10px] text-white/40">High-quality document</div>
+              </div>
+            </button>
+
+            <div className="my-1 border-t border-white/[0.06]" />
+
+            {/* Present */}
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-white/5 transition-colors"
+              onClick={() => {
+                setExportOpen(false);
+                onPresent();
+              }}
+            >
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#4361EE]/15">
+                <svg className="w-3.5 h-3.5 text-[#4361EE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs font-medium text-white">Present</div>
+                <div className="text-[10px] text-white/40">Fullscreen with animations</div>
+              </div>
+            </button>
+
+            {/* Social Media */}
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-white/5 transition-colors"
+              onClick={() => {
+                setExportOpen(false);
+                onSocialExport();
+              }}
+            >
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/15">
+                <svg className="w-3.5 h-3.5 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z" />
+                </svg>
+              </div>
+              <div>
+                <div className="text-xs font-medium text-white">Social Media</div>
+                <div className="text-[10px] text-white/40">LinkedIn, Twitter, Instagram</div>
+              </div>
+            </button>
+
+            <div className="my-1 border-t border-white/[0.06]" />
+
+            {/* Copy Link */}
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2.5 text-left hover:bg-white/5 transition-colors"
+              onClick={async () => {
+                if (deck?.shareId) {
+                  const url = `${window.location.origin}/deck/${deck.shareId}`;
+                  await navigator.clipboard.writeText(url);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }
+                setExportOpen(false);
+              }}
+            >
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-500/15">
+                {copied ? (
+                  <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-3.572a4.5 4.5 0 00-1.242-7.244l-4.5-4.5a4.5 4.5 0 00-6.364 6.364L4.34 8.374" />
+                  </svg>
+                )}
+              </div>
+              <div>
+                <div className="text-xs font-medium text-white">
+                  {copied ? "Copied!" : "Copy Link"}
+                </div>
+                <div className="text-[10px] text-white/40">Share your deck URL</div>
+              </div>
+            </button>
           </div>
         )}
       </div>

@@ -354,6 +354,7 @@ function V2SlideCanvas(props: {
               onDuplicate={() => onDuplicateBlock(slideId, blockId)}
               onToggleLock={() => onToggleLock(slideId, blockId)}
               onDragStart={(e) => handleDragStart(blockId, e)}
+              onUpdateData={(patch) => onUpdateBlockData(slideId, blockId, patch)}
             >
               <BlockRenderer
                 block={block}

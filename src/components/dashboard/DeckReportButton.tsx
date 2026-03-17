@@ -43,7 +43,8 @@ export default function DeckReportButton({ shareId }: { shareId: string }) {
       const report: ReportData = await res.json();
 
       // Dynamic import to keep bundle small
-      const { jsPDF } = await import("jspdf");
+      const jspdfModule = await import("jspdf");
+      const jsPDF = jspdfModule.default;
       const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
 
       const pageWidth = doc.internal.pageSize.getWidth();
@@ -219,7 +220,8 @@ export default function DeckReportButton({ shareId }: { shareId: string }) {
       }
 
       // === Footer ===
-      const pageCount = doc.getNumberOfPages();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const pageCount = (doc as any).getNumberOfPages() as number;
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(7);

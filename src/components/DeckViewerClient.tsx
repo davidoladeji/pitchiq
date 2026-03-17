@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
@@ -8,6 +8,7 @@ import SlideRenderer from "@/components/SlideRenderer";
 import ExportMenu from "@/components/ExportMenu";
 import DeckVariants from "@/components/DeckVariants";
 import { DeckData } from "@/lib/types";
+import { DeckTracker } from "@/lib/analytics/deck-tracker";
 
 export default function DeckViewerClient() {
   const params = useParams();
@@ -20,6 +21,8 @@ export default function DeckViewerClient() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [viewId, setViewId] = useState<string | null>(null);
+  const trackerRef = useRef<DeckTracker | null>(null);
 
   const shareUrl =
     typeof window !== "undefined" && shareId
@@ -44,6 +47,7 @@ export default function DeckViewerClient() {
         if (data.showBranding !== undefined) setShowBranding(data.showBranding);
         if (data.isOwner) setIsOwner(true);
         if (data.variants) setVariants(data.variants);
+        if (data.viewId) setViewId(data.viewId);
       } catch {
         setError("This deck doesn't exist or has been removed.");
       } finally {
@@ -52,6 +56,27 @@ export default function DeckViewerClient() {
     }
     fetchDeck();
   }, [shareId]);
+
+  // Initialize tracker when viewId is available
+  useEffect(() => {
+    if (!viewId || !shareId) return;
+    const tracker = new DeckTracker(shareId, viewId);
+    trackerRef.current = tracker;
+    // Track initial slide view (slide 0)
+    tracker.trackSlideView(0);
+    return () => {
+      tracker.flush();
+      tracker.cleanup();
+    };
+  }, [viewId, shareId]);
+
+  const handleSlideChange = useCallback((slideIndex: number) => {
+    trackerRef.current?.trackSlideView(slideIndex);
+    // Mark completed if viewing the last slide
+    if (deck && slideIndex === deck.slides.length - 1) {
+      trackerRef.current?.markCompleted();
+    }
+  }, [deck]);
 
   if (loading) {
     return (
@@ -201,6 +226,7 @@ export default function DeckViewerClient() {
             companyName={deck.companyName}
             showBranding={showBranding}
             themeId={deck.themeId}
+            onSlideChange={handleSlideChange}
           />
 
           {/* Actions below deck */}
@@ -240,8 +266,8 @@ export default function DeckViewerClient() {
               </Link>
             </div>
 
-            {/* Upgrade CTA for free-tier decks */}
-            {showBranding && (
+            {/* Upgrade CTA for starter-tier decks only */}
+            {ownerPlan === "starter" && (
               <div className="w-full max-w-2xl rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-violet-50 p-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="flex-1 min-w-0">
