@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useCallback, useEffect } from "react";
 import AuthButton from "@/components/AuthButton";
 
@@ -68,7 +67,6 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
       className="flex items-center gap-2 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       aria-label="PitchIQ home"
     >
-      <Image src="/logo.png" alt="" width={28} height={28} className="rounded-lg" priority />
       <span className={`font-display font-bold text-lg tracking-tight ${logoText}`}>
         PitchIQ
       </span>
