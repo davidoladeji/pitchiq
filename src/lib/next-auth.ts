@@ -38,6 +38,44 @@ export const authOptions: NextAuthOptions = {
     strategy: "database",
   },
   callbacks: {
+    async signIn({ user, account, profile }) {
+      // Auto-link OAuth accounts when email matches an existing user
+      if (account?.provider && user.email) {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+          include: { accounts: true },
+        });
+        if (existingUser) {
+          const alreadyLinked = existingUser.accounts.some(
+            (a) => a.provider === account.provider,
+          );
+          if (!alreadyLinked) {
+            await prisma.account.create({
+              data: {
+                userId: existingUser.id,
+                type: account.type,
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+                access_token: account.access_token,
+                refresh_token: account.refresh_token,
+                expires_at: account.expires_at,
+                token_type: account.token_type,
+                scope: account.scope,
+                id_token: account.id_token,
+              },
+            });
+          }
+          // Update profile image / name if missing
+          if (!existingUser.image && (profile as { picture?: string })?.picture) {
+            await prisma.user.update({
+              where: { id: existingUser.id },
+              data: { image: (profile as { picture?: string }).picture },
+            });
+          }
+        }
+      }
+      return true;
+    },
     async session({ session, user }) {
       if (session.user) {
         (session.user as { id?: string }).id = user.id;
