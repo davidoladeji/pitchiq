@@ -16,9 +16,9 @@ interface LensResult {
 }
 
 const INVESTOR_ICONS: Record<string, { emoji: string; gradient: string }> = {
-  vc: { emoji: "VC", gradient: "from-blue-500 to-cyan-500" },
+  vc: { emoji: "VC", gradient: "from-electric to-cyan-500" },
   angel: { emoji: "AN", gradient: "from-emerald-500 to-teal-500" },
-  accelerator: { emoji: "AC", gradient: "from-purple-500 to-pink-500" },
+  accelerator: { emoji: "AC", gradient: "from-violet-500 to-electric" },
 };
 
 function StarRating({ stars, max = 5 }: { stars: number; max?: number }) {
@@ -137,7 +137,7 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
             onClick={runLens}
             disabled={loading}
             aria-label={loading ? "Evaluating slide" : result && analyzedSlideIndex === selectedSlideIndex ? "Re-evaluate this slide" : "Evaluate this slide with Investor Lens"}
-            className="w-full py-2.5 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+            className="w-full min-h-[44px] py-2.5 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
           >
             {loading ? (
               <>

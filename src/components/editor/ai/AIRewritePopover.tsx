@@ -169,7 +169,7 @@ export default function AIRewritePopover({
                 onClose();
               }}
               aria-label="Apply rewritten text"
-              className="flex-1 py-2 rounded-lg bg-electric hover:bg-electric-600 text-white text-xs font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+              className="flex-1 min-h-[44px] py-2 rounded-lg bg-electric hover:bg-electric-600 text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
             >
               Apply
             </button>
@@ -177,7 +177,7 @@ export default function AIRewritePopover({
               type="button"
               onClick={() => runRewrite(selectedStyle)}
               aria-label="Retry rewrite"
-              className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white/60 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+              className="min-h-[44px] min-w-[44px] px-3 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-white/60 text-xs font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
             >
               Retry
             </button>

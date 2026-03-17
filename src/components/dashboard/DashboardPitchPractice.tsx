@@ -76,10 +76,17 @@ export default function DashboardPitchPractice({
             Growth
           </span>
         </div>
-        <p className="text-xs text-navy-500">
+        <p className="text-xs text-navy-500 mb-4">
           Practice your pitch with AI feedback on pacing, timing, and delivery.
           Upgrade to Growth to unlock.
         </p>
+        <Link
+          href="/billing"
+          className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          aria-label="View plans and upgrade to Growth for Pitch Practice"
+        >
+          Upgrade to Growth
+        </Link>
       </section>
     );
   }
@@ -100,7 +107,7 @@ export default function DashboardPitchPractice({
         {practiceLink && (
           <Link
             href={practiceLink}
-            className="px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold hover:bg-electric-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-xl bg-electric text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="Practice a deck with AI feedback"
           >
             Practice a Deck

@@ -2,7 +2,7 @@
 
 import { SlideData } from "@/lib/types";
 import { getTheme, ThemeDef } from "@/lib/themes";
-import { CHART_COLORS, ELECTRIC_HEX, EMERALD_HEX } from "@/lib/design-tokens";
+import { CHART_COLORS, ELECTRIC_HEX, EMERALD_HEX, NAVY_HEX, NAVY_400_HEX, NAVY_500_HEX, NAVY_950_HEX } from "@/lib/design-tokens";
 import { useState, useEffect, useCallback, useImperativeHandle, forwardRef, CSSProperties } from "react";
 import CompanyLogo from "@/components/CompanyLogo";
 import {
@@ -27,6 +27,13 @@ function hexToRgba(hex: string, alpha: number): string {
   const b = parseInt(h.substring(4, 6), 16);
   return `rgba(${r},${g},${b},${alpha})`;
 }
+
+/** Recharts tooltip/axis colors from design tokens (single source of truth). */
+const DARK_TOOLTIP_BG = hexToRgba(NAVY_950_HEX, 0.95);
+const TICK_FILL_LIGHT = NAVY_500_HEX;
+const LABEL_FILL_LIGHT = NAVY_400_HEX;
+const LEGEND_FILL_LIGHT = NAVY_500_HEX;
+const TOOLTIP_TEXT_LIGHT = NAVY_HEX;
 
 function themeVars(theme: ThemeDef): CSSProperties {
   return {
@@ -290,21 +297,21 @@ function ChartSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    background: isDark ? "rgba(15,23,42,0.95)" : "#fff",
+                    background: isDark ? DARK_TOOLTIP_BG : "#fff",
                     border: "1px solid rgba(128,128,128,0.2)",
                     borderRadius: "8px",
-                    color: isDark ? "#fff" : "#0f172a",
+                    color: isDark ? "#fff" : TOOLTIP_TEXT_LIGHT,
                     fontSize: "13px",
                   }}
                 />
-                <Legend wrapperStyle={{ fontSize: "12px", color: isDark ? "rgba(255,255,255,0.7)" : "#475569" }} />
+                <Legend wrapperStyle={{ fontSize: "12px", color: isDark ? "rgba(255,255,255,0.7)" : LEGEND_FILL_LIGHT }} />
               </PieChart>
             ) : chart.type === "line" ? (
               <LineChart data={chart.data}>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"} />
-                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8", fontSize: 11 }} />
-                <Tooltip contentStyle={{ background: isDark ? "rgba(15,23,42,0.95)" : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : "#0f172a", fontSize: "13px" }} />
+                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : TICK_FILL_LIGHT, fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : TICK_FILL_LIGHT, fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : LABEL_FILL_LIGHT, fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: isDark ? DARK_TOOLTIP_BG : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : TOOLTIP_TEXT_LIGHT, fontSize: "13px" }} />
                 <Line type="monotone" dataKey="value" stroke={ELECTRIC_HEX} strokeWidth={3} dot={{ fill: ELECTRIC_HEX, r: 5 }} activeDot={{ r: 7 }} />
               </LineChart>
             ) : chart.type === "area" ? (
@@ -316,17 +323,17 @@ function ChartSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"} />
-                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8", fontSize: 11 }} />
-                <Tooltip contentStyle={{ background: isDark ? "rgba(15,23,42,0.95)" : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : "#0f172a", fontSize: "13px" }} />
+                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : TICK_FILL_LIGHT, fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : TICK_FILL_LIGHT, fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : LABEL_FILL_LIGHT, fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: isDark ? DARK_TOOLTIP_BG : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : TOOLTIP_TEXT_LIGHT, fontSize: "13px" }} />
                 <Area type="monotone" dataKey="value" stroke={ELECTRIC_HEX} strokeWidth={3} fill="url(#areaGrad)" dot={{ fill: ELECTRIC_HEX, r: 4 }} />
               </AreaChart>
             ) : (
               <BarChart data={chart.data}>
                 <CartesianGrid strokeDasharray="3 3" stroke={isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"} />
-                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : "#64748b", fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : "#94a3b8", fontSize: 11 }} />
-                <Tooltip contentStyle={{ background: isDark ? "rgba(15,23,42,0.95)" : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : "#0f172a", fontSize: "13px" }} />
+                <XAxis dataKey="label" tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : TICK_FILL_LIGHT, fontSize: 12 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: isDark ? "rgba(255,255,255,0.6)" : TICK_FILL_LIGHT, fontSize: 12 }} axisLine={false} tickLine={false} label={{ value: chart.label || "", angle: -90, position: "insideLeft", fill: isDark ? "rgba(255,255,255,0.5)" : LABEL_FILL_LIGHT, fontSize: 11 }} />
+                <Tooltip contentStyle={{ background: isDark ? DARK_TOOLTIP_BG : "#fff", border: "1px solid rgba(128,128,128,0.2)", borderRadius: "8px", color: isDark ? "#fff" : TOOLTIP_TEXT_LIGHT, fontSize: "13px" }} />
                 <Bar dataKey="value" radius={[6, 6, 0, 0]}>
                   {chart.data.map((_, i) => (
                     <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />

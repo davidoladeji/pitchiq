@@ -96,7 +96,8 @@ export default function LandingNav() {
             </Link>
             <Link
               href="/create"
-              className="min-h-[44px] inline-flex items-center px-6 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label="Create your pitch deck"
+              className="min-h-[44px] inline-flex items-center px-6 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Create Deck
             </Link>
@@ -112,7 +113,8 @@ export default function LandingNav() {
             </Link>
             <Link
               href="/create"
-              className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label="Create your pitch deck"
+              className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Create Deck
             </Link>

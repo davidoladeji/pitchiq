@@ -9,7 +9,7 @@ import { getPlanLimits } from "@/lib/plan-limits";
 const PLAN_INFO: Record<string, { label: string; price: string; color: string; bgColor: string }> = {
   starter: { label: "Starter", price: "Free", color: "text-navy-600", bgColor: "bg-navy-100" },
   pro: { label: "Pro", price: "$29/mo", color: "text-electric", bgColor: "bg-electric/10" },
-  growth: { label: "Growth", price: "$79/mo", color: "text-purple-700", bgColor: "bg-purple-100" },
+  growth: { label: "Growth", price: "$79/mo", color: "text-violet-700", bgColor: "bg-violet-100" },
   enterprise: { label: "Enterprise", price: "$399/mo", color: "text-amber-700", bgColor: "bg-amber-100" },
 };
 
@@ -52,7 +52,7 @@ export default function BillingClient({
     <div className="min-h-screen bg-navy-50">
       <AppNav />
 
-      <main className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none" aria-label="Main content">
         <div className="max-w-3xl mx-auto space-y-6">
           {/* Header */}
           <div>
@@ -81,9 +81,21 @@ export default function BillingClient({
                   type="button"
                   onClick={handleManageBilling}
                   disabled={managingBilling}
-                  className="px-4 py-2 rounded-xl border border-navy-200 text-sm font-medium text-navy hover:bg-navy-50 transition-colors disabled:opacity-50"
+                  aria-label={managingBilling ? "Opening Stripe..." : "Manage billing in Stripe"}
+                  aria-busy={managingBilling}
+                  className="min-h-[44px] px-4 py-2 rounded-xl border border-navy-200 text-sm font-medium text-navy hover:bg-navy-50 transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white inline-flex items-center justify-center gap-2"
                 >
-                  {managingBilling ? "Loading..." : "Manage in Stripe"}
+                  {managingBilling ? (
+                    <>
+                      <svg className="h-4 w-4 animate-spin text-electric" aria-hidden viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      <span>Opening Stripe…</span>
+                    </>
+                  ) : (
+                    "Manage in Stripe"
+                  )}
                 </button>
               )}
             </div>
@@ -143,7 +155,8 @@ export default function BillingClient({
                 <button
                   type="button"
                   onClick={() => setShowPlanModal(true)}
-                  className="shrink-0 px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold hover:opacity-90 transition-all"
+                  className="shrink-0 inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  aria-label="View plans and upgrade to Pro"
                 >
                   View Plans
                 </button>
@@ -163,7 +176,8 @@ export default function BillingClient({
                 <button
                   type="button"
                   onClick={() => setShowPlanModal(true)}
-                  className="shrink-0 px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-semibold hover:bg-navy-50 transition-all"
+                  aria-label="Compare plans and switch"
+                  className="shrink-0 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-semibold hover:bg-navy-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   Compare Plans
                 </button>
@@ -180,13 +194,15 @@ export default function BillingClient({
                   type="button"
                   onClick={handleManageBilling}
                   disabled={managingBilling}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-navy-200 hover:bg-navy-50 transition-colors text-left disabled:opacity-50"
+                  aria-label={managingBilling ? "Opening Stripe..." : "Update payment method"}
+                  aria-busy={managingBilling}
+                  className="w-full min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl border border-navy-200 hover:bg-navy-50 transition-colors text-left disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   <div>
                     <div className="text-sm font-medium text-navy">Update payment method</div>
                     <div className="text-xs text-navy-400">Change your credit card or billing details</div>
                   </div>
-                  <svg className="w-4 h-4 text-navy-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-navy-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
@@ -194,13 +210,15 @@ export default function BillingClient({
                   type="button"
                   onClick={handleManageBilling}
                   disabled={managingBilling}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-navy-200 hover:bg-navy-50 transition-colors text-left disabled:opacity-50"
+                  aria-label={managingBilling ? "Opening Stripe..." : "View invoices"}
+                  aria-busy={managingBilling}
+                  className="w-full min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl border border-navy-200 hover:bg-navy-50 transition-colors text-left disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   <div>
                     <div className="text-sm font-medium text-navy">View invoices</div>
                     <div className="text-xs text-navy-400">Download past invoices and receipts</div>
                   </div>
-                  <svg className="w-4 h-4 text-navy-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-navy-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
@@ -208,13 +226,15 @@ export default function BillingClient({
                   type="button"
                   onClick={handleManageBilling}
                   disabled={managingBilling}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl border border-red-200 hover:bg-red-50 transition-colors text-left disabled:opacity-50"
+                  aria-label={managingBilling ? "Opening Stripe..." : "Cancel subscription"}
+                  aria-busy={managingBilling}
+                  className="w-full min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl border border-red-200 hover:bg-red-50 transition-colors text-left disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   <div>
                     <div className="text-sm font-medium text-red-600">Cancel subscription</div>
                     <div className="text-xs text-red-400">Downgrade to the free Starter plan</div>
                   </div>
-                  <svg className="w-4 h-4 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-4 h-4 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
@@ -248,7 +268,8 @@ export default function BillingClient({
           <div className="text-center">
             <Link
               href="/dashboard"
-              className="text-sm text-navy-500 hover:text-electric font-medium transition-colors"
+              aria-label="Back to dashboard"
+              className="text-sm text-navy-500 hover:text-electric font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
             >
               &larr; Back to Dashboard
             </Link>

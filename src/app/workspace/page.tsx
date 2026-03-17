@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
@@ -5,6 +6,12 @@ import { prisma } from "@/lib/db";
 import WorkspaceListClient from "@/components/workspace/WorkspaceListClient";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Workspaces | PitchIQ",
+  description:
+    "Manage your PitchIQ workspaces — collaborate on decks and share with your team.",
+};
 
 export default async function WorkspaceListPage() {
   const session = await getServerSession(authOptions);

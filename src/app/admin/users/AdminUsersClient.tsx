@@ -130,7 +130,7 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by email or name..."
-          className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 w-full max-w-md"
+          className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 outline-none focus:outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 w-full max-w-md"
           aria-label="Search users by email or name"
         />
       </div>
@@ -176,7 +176,7 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
                           <select
                             value={editRole}
                             onChange={(e) => setEditRole(e.target.value)}
-                            className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-xs text-white outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+                            className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-xs text-white outline-none focus:outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
                             aria-label="Edit user role"
                           >
                             <option value="user" className="bg-navy-950">user</option>
@@ -193,7 +193,7 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
                           <select
                             value={editPlan}
                             onChange={(e) => setEditPlan(e.target.value)}
-                            className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-xs text-white outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+                            className="rounded-lg bg-white/10 border border-white/10 px-2 py-1 text-xs text-white outline-none focus:outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
                             aria-label="Edit user plan"
                           >
                             <option value="starter" className="bg-navy-950">starter</option>

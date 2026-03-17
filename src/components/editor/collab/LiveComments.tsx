@@ -228,13 +228,14 @@ export default function LiveComments({
                         onChange={(e) => setReplyText(e.target.value)}
                         placeholder="Reply..."
                         onKeyDown={(e) => e.key === "Enter" && handleReply(comment.id)}
-                        className="flex-1 px-2 py-1 rounded-md border border-navy-200 text-[11px] text-navy focus:border-electric outline-none"
+                        className="flex-1 px-2 py-1 rounded-md border border-navy-200 text-[11px] text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       />
                       <button
                         type="button"
                         onClick={() => handleReply(comment.id)}
                         disabled={!replyText.trim()}
-                        className="px-2 py-1 rounded-md bg-electric text-white text-[10px] font-semibold disabled:opacity-50"
+                        aria-label="Send reply"
+                        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-2 py-1 rounded-md bg-electric text-white text-[10px] font-semibold disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       >
                         Send
                       </button>
@@ -257,13 +258,14 @@ export default function LiveComments({
             placeholder="Add a comment..."
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
             disabled={submitting}
-            className="flex-1 px-3 py-2 rounded-xl border border-navy-200 text-xs text-navy placeholder:text-navy-400 focus:border-electric focus:ring-1 focus:ring-electric/20 outline-none disabled:opacity-50"
+            className="flex-1 px-3 py-2 rounded-xl border border-navy-200 text-xs text-navy placeholder:text-navy-400 outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50"
           />
           <button
             type="button"
             onClick={handleSubmit}
             disabled={submitting || !newComment.trim()}
-            className="px-3 py-2 rounded-xl bg-electric text-white text-xs font-semibold disabled:opacity-50 hover:bg-electric-light transition-colors"
+            aria-label={submitting ? "Posting comment…" : "Post comment"}
+            className="min-h-[44px] px-3 py-2 rounded-xl bg-electric hover:bg-electric-600 text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             {submitting ? "..." : "Post"}
           </button>

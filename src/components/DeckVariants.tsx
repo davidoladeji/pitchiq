@@ -150,7 +150,7 @@ export default function DeckVariants({
                   type="button"
                   onClick={handleGenerate}
                   disabled={generating || selectedTypes.length === 0}
-                  className="px-4 py-2 rounded-lg bg-electric text-white text-xs font-semibold disabled:opacity-50 hover:bg-electric-light transition-colors"
+                  className="px-4 py-2 rounded-lg bg-electric text-white text-xs font-semibold disabled:opacity-50 hover:bg-electric-600 transition-colors"
                 >
                   {generating ? "Generating..." : `Generate ${selectedTypes.length} variant${selectedTypes.length !== 1 ? "s" : ""}`}
                 </button>

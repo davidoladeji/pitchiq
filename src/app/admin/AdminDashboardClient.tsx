@@ -85,7 +85,10 @@ export default function AdminDashboardClient() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-6" aria-busy="true">
+        <div role="status" aria-live="polite" className="sr-only">
+          Loading analytics
+        </div>
         <div>
           <h1 className="text-2xl font-bold text-white">Dashboard</h1>
           <p className="text-sm text-white/30 mt-1">Loading analytics...</p>

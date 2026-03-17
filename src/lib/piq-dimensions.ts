@@ -3,6 +3,8 @@
  * Imported by piq-score.ts and landing/dashboard components.
  */
 
+import { EMERALD_HEX, ELECTRIC_HEX, AMBER_HEX, RED_HEX } from "./design-tokens";
+
 export interface DimensionDef {
   id: string;
   label: string;
@@ -203,28 +205,28 @@ export const PIQ_DIMENSIONS: DimensionDef[] = [
   },
 ];
 
-/** Grade scale with color coding */
+/** Grade scale with color coding — uses design-tokens for single source of truth */
 export const GRADE_SCALE = [
-  { grade: "A+", min: 95, max: 100, color: "#22c55e", label: "Exceptional" },
-  { grade: "A", min: 90, max: 94, color: "#22c55e", label: "Exceptional" },
-  { grade: "A-", min: 85, max: 89, color: "#4ade80", label: "Excellent" },
-  { grade: "B+", min: 80, max: 84, color: "#4361ee", label: "Strong" },
-  { grade: "B", min: 75, max: 79, color: "#4361ee", label: "Good" },
-  { grade: "B-", min: 70, max: 74, color: "#60a5fa", label: "Above Average" },
-  { grade: "C+", min: 65, max: 69, color: "#f59e0b", label: "Average" },
-  { grade: "C", min: 60, max: 64, color: "#f59e0b", label: "Average" },
-  { grade: "C-", min: 55, max: 59, color: "#fb923c", label: "Below Average" },
-  { grade: "D+", min: 50, max: 54, color: "#ef4444", label: "Weak" },
-  { grade: "D", min: 45, max: 49, color: "#ef4444", label: "Poor" },
-  { grade: "F", min: 0, max: 44, color: "#dc2626", label: "Needs Rework" },
+  { grade: "A+", min: 95, max: 100, color: EMERALD_HEX, label: "Exceptional" },
+  { grade: "A", min: 90, max: 94, color: EMERALD_HEX, label: "Exceptional" },
+  { grade: "A-", min: 85, max: 89, color: EMERALD_HEX, label: "Excellent" },
+  { grade: "B+", min: 80, max: 84, color: ELECTRIC_HEX, label: "Strong" },
+  { grade: "B", min: 75, max: 79, color: ELECTRIC_HEX, label: "Good" },
+  { grade: "B-", min: 70, max: 74, color: ELECTRIC_HEX, label: "Above Average" },
+  { grade: "C+", min: 65, max: 69, color: AMBER_HEX, label: "Average" },
+  { grade: "C", min: 60, max: 64, color: AMBER_HEX, label: "Average" },
+  { grade: "C-", min: 55, max: 59, color: AMBER_HEX, label: "Below Average" },
+  { grade: "D+", min: 50, max: 54, color: RED_HEX, label: "Weak" },
+  { grade: "D", min: 45, max: 49, color: RED_HEX, label: "Poor" },
+  { grade: "F", min: 0, max: 44, color: RED_HEX, label: "Needs Rework" },
 ];
 
-/** PIQ Score benchmarks by startup stage */
+/** PIQ Score benchmarks by startup stage — uses design-tokens for single source of truth */
 export const PIQ_BENCHMARKS = [
-  { label: "Top YC Companies", score: 84, grade: "B+", color: "#22c55e" },
-  { label: "Average Seed Startup", score: 67, grade: "C+", color: "#4361ee" },
-  { label: "Average Pre-seed Startup", score: 52, grade: "D+", color: "#f59e0b" },
-  { label: "First-time Founder (no feedback)", score: 41, grade: "D", color: "#ef4444" },
+  { label: "Top YC Companies", score: 84, grade: "B+", color: EMERALD_HEX },
+  { label: "Average Seed Startup", score: 67, grade: "C+", color: ELECTRIC_HEX },
+  { label: "Average Pre-seed Startup", score: 52, grade: "D+", color: AMBER_HEX },
+  { label: "First-time Founder (no feedback)", score: 41, grade: "D", color: RED_HEX },
 ];
 
 /** Scoring guidelines text for display */

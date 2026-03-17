@@ -8,14 +8,8 @@ export default function CreateLoading() {
     <div className="min-h-screen bg-navy-50" aria-busy="true">
       {/* Screen reader: announce loading state (WCAG 2.1 AA) */}
       <p className="sr-only" role="status" aria-live="polite">
-        Loading
+        Loading create
       </p>
-      <a
-        href="#main"
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      >
-        Skip to main content
-      </a>
       {/* Nav skeleton — matches CreatePageClient fixed nav */}
       <header className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-hidden="true">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -26,7 +20,7 @@ export default function CreateLoading() {
         </div>
       </header>
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-hidden="true">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content" aria-hidden="true">
         <div className="max-w-2xl mx-auto">
           {/* Title block skeleton */}
           <div className="text-center mb-12">

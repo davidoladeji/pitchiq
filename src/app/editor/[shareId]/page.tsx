@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
@@ -7,6 +8,12 @@ import { DeckData, SlideData, PIQScore } from "@/lib/types";
 import EditorShell from "@/components/editor/EditorShell";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Edit deck | PitchIQ",
+  description:
+    "Edit your pitch deck slides, theme, and content. Export to PDF or PPTX.",
+};
 
 export default async function EditorPage({
   params,

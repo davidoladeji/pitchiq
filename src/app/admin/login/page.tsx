@@ -39,7 +39,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-navy-950 flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+      <main id="main" tabIndex={-1} className="w-full max-w-sm outline-none" aria-label="Main content">
         {/* Logo */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-electric to-violet mb-4">
@@ -67,7 +67,7 @@ export default function AdminLoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/25 outline-none focus:border-electric focus:ring-1 focus:ring-electric/30 transition-colors"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/25 outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 transition-colors"
               placeholder="admin@example.com"
               autoComplete="email"
             />
@@ -82,7 +82,7 @@ export default function AdminLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/25 outline-none focus:border-electric focus:ring-1 focus:ring-electric/30 transition-colors"
+              className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/25 outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 transition-colors"
               placeholder="Enter password"
               autoComplete="current-password"
             />
@@ -90,7 +90,9 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-xl bg-electric hover:bg-electric-light px-4 py-3 text-sm font-semibold text-white disabled:opacity-50 transition-all mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+            aria-label={loading ? "Signing in..." : "Sign in to admin"}
+            aria-busy={loading}
+            className="w-full min-h-[44px] rounded-xl bg-electric hover:bg-electric-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-electric/25 hover:shadow-glow disabled:opacity-50 disabled:hover:translate-y-0 transition-all mt-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 hover:-translate-y-0.5 active:translate-y-0"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
@@ -99,7 +101,7 @@ export default function AdminLoginPage() {
         <p className="text-center text-xs text-white/20 mt-8">
           PitchIQ Administration Panel
         </p>
-      </div>
+      </main>
     </div>
   );
 }

@@ -270,7 +270,7 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
                   value={addSlideType}
                   onChange={(e) => setAddSlideType(e.target.value as SlideData["type"])}
                   aria-label="Slide type for new slide"
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg text-white text-[11px] px-2 py-1.5 outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
+                  className="flex-1 bg-white/5 border border-white/10 rounded-lg text-white text-[11px] px-2 py-1.5 outline-none focus:outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
                 >
                   {SLIDE_TYPES.map((t) => (
                     <option key={t.value} value={t.value}>
@@ -283,7 +283,7 @@ export default function EditorSidebar({ plan }: EditorSidebarProps) {
                 type="button"
                 onClick={handleAddSlide}
                 aria-label="Add new slide"
-                className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-electric hover:bg-electric-600 text-white text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
+                className="w-full flex items-center justify-center gap-1.5 min-h-[44px] py-2 rounded-lg bg-electric hover:bg-electric-600 text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-900"
               >
                 <svg
                   className="w-3.5 h-3.5"

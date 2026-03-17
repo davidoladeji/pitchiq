@@ -47,7 +47,7 @@ function InlineEdit({
       suppressContentEditableWarning
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      className={`outline-none focus:ring-2 focus:ring-electric/50 rounded transition-shadow ${className || ""}`}
+      className={`outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 rounded transition-shadow ${className || ""}`}
       style={style}
     >
       {value}

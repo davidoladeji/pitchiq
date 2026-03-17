@@ -7,14 +7,8 @@ export default function SignInLoading() {
   return (
     <div className="min-h-screen bg-navy-50 flex items-center justify-center px-4" aria-busy="true">
       <p className="sr-only" role="status" aria-live="polite">
-        Loading
+        Loading sign in
       </p>
-      <a
-        href="#main"
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:bg-white focus-visible:font-medium focus-visible:text-navy"
-      >
-        Skip to main content
-      </a>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8" aria-hidden="true">
           {/* Logo + name skeleton */}
@@ -26,7 +20,7 @@ export default function SignInLoading() {
           <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse mb-2" />
           <div className="h-4 w-64 mx-auto rounded bg-navy-50 animate-pulse" />
         </div>
-        <main id="main" tabIndex={-1} className="outline-none" aria-hidden="true">
+        <main id="main" tabIndex={-1} className="outline-none" aria-label="Main content" aria-hidden="true">
           <div className="bg-white rounded-2xl border border-navy-50 shadow-sm p-6 space-y-3">
             {[1, 2].map((i) => (
               <div

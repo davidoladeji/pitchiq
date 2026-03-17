@@ -108,7 +108,7 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
               if (e.key === "Enter") commitTitle();
               if (e.key === "Escape") setEditingTitle(false);
             }}
-            className="bg-white/10 text-white text-sm font-semibold px-2 py-1 rounded-md border border-white/20 outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 w-full max-w-[240px]"
+            className="bg-white/10 text-white text-sm font-semibold px-2 py-1 rounded-md border border-white/20 outline-none focus:outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 w-full max-w-[240px]"
           />
         ) : (
           <button
@@ -274,7 +274,7 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
               className="flex items-center gap-2 px-3 py-2 text-white text-xs hover:bg-white/5 transition-colors"
               onClick={() => setExportOpen(false)}
             >
-              <svg className="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-4 h-4 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7" />
               </svg>
               Export PPTX
@@ -290,7 +290,7 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${
             activeAIPanel
               ? "bg-electric ring-2 ring-electric/50 ring-offset-1 ring-offset-navy-950"
-              : "bg-electric hover:bg-electric-light"
+              : "bg-electric hover:bg-electric-600"
           }`}
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -308,7 +308,7 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel }: 
             </div>
             {([
               { id: "coach" as const, label: "Coach this slide", icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z", gradient: "from-amber-400 to-orange-500" },
-              { id: "investor-lens" as const, label: "Investor Lens", icon: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z", gradient: "from-blue-500 to-purple-500" },
+              { id: "investor-lens" as const, label: "Investor Lens", icon: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z", gradient: "from-electric to-violet-500" },
               { id: "simulator" as const, label: "Pitch Simulator", icon: "M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z", gradient: "from-red-500 to-rose-600" },
             ]).map((item) => (
               <button

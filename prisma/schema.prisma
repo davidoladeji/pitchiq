@@ -77,6 +77,11 @@ model User {
   stripeCustomerId     String?   @unique
   stripeSubscriptionId String?
   planExpiresAt        DateTime?
+  // Branding preferences (Pro+ plans)
+  brandingEnabled      Boolean   @default(true) // show "Made with PitchIQ" — paid users can toggle off
+  customLogoUrl        String?
+  customCompanyName    String?
+  customAccentColor    String?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   accounts             Account[]

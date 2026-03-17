@@ -245,7 +245,9 @@ export default function DeckReportButton({ shareId }: { shareId: string }) {
     <button
       onClick={handleDownload}
       disabled={generating}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-navy-200 text-xs font-semibold text-navy hover:bg-navy-50 transition-colors disabled:opacity-50"
+      aria-label={generating ? "Generating report" : "Download analytics report"}
+      aria-busy={generating}
+      className="inline-flex items-center gap-1.5 min-h-[44px] px-3 py-1.5 rounded-lg border border-navy-200 text-xs font-semibold text-navy hover:bg-navy-50 transition-colors disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
     >
       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m.75 12l3 3m0 0l3-3m-3 3v-6m-1.5-9H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />

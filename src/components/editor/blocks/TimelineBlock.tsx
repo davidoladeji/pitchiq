@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useCallback, type KeyboardEvent } from "react";
+import { ELECTRIC_HEX, EMERALD_HEX } from "@/lib/design-tokens";
 
 interface TimelineBlockProps {
   content: string;
@@ -42,7 +43,7 @@ function InlineEdit({
       suppressContentEditableWarning
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}
-      className={`outline-none focus:ring-2 focus:ring-electric/50 rounded transition-shadow ${className || ""}`}
+      className={`outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 rounded transition-shadow ${className || ""}`}
       style={style}
     >
       {value}
@@ -64,7 +65,7 @@ export default function TimelineBlock({
   isSelected,
   onUpdate,
   onSelect,
-  accentHex = "#4361ee",
+  accentHex = ELECTRIC_HEX,
 }: TimelineBlockProps) {
   const date = (properties.date as string) || "Q1 2026";
   const title = (properties.title as string) || content || "Milestone";
@@ -104,13 +105,13 @@ export default function TimelineBlock({
         style={{
           borderWidth: "2px",
           borderStyle: "solid",
-          borderColor: completed ? "#34d399" : accentHex,
-          background: completed ? "rgba(52,211,153,0.1)" : hexToRgba(accentHex, 0.1),
+          borderColor: completed ? EMERALD_HEX : accentHex,
+          background: completed ? hexToRgba(EMERALD_HEX, 0.1) : hexToRgba(accentHex, 0.1),
         }}
         title={completed ? "Mark as incomplete" : "Mark as completed"}
       >
         {completed ? (
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="#10b981" strokeWidth={3}>
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke={EMERALD_HEX} strokeWidth={3}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
         ) : (

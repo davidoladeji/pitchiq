@@ -195,12 +195,14 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
           placeholder="decks.yourcompany.com"
           value={newDomain}
           onChange={(e) => setNewDomain(e.target.value)}
-          className="flex-1 rounded-lg border border-navy-200 bg-navy-50/40 px-3 py-2 text-sm text-navy placeholder:text-navy-400 focus:border-electric focus:outline-none focus:ring-1 focus:ring-electric"
+          className="flex-1 rounded-lg border border-navy-200 bg-navy-50/40 px-3 py-2 text-sm text-navy placeholder:text-navy-400 outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         />
         <button
           type="submit"
           disabled={adding || !newDomain.trim()}
-          className="rounded-lg bg-electric px-4 py-2 text-sm font-semibold text-white transition hover:bg-electric/90 disabled:opacity-50"
+          aria-label={adding ? "Adding domain…" : "Add custom domain"}
+          aria-busy={adding}
+          className="min-h-[44px] rounded-lg bg-electric px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-electric/25 transition hover:-translate-y-0.5 hover:bg-electric-600 hover:shadow-glow active:translate-y-0 focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:hover:translate-y-0"
         >
           {adding ? "Adding..." : "Add Domain"}
         </button>

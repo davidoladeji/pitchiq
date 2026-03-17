@@ -1,6 +1,6 @@
 /**
  * Admin route loading UI — skeleton for instant perceived performance.
- * Mirrors AdminLayout (skip link, header bar, main content) so first paint feels instant on /admin/*.
+ * Mirrors AdminLayout (header bar, main content) so first paint feels instant on /admin/*.
  * Speed as a feature; design-system navy tint; respects prefers-reduced-motion via animate-pulse.
  */
 export default function AdminLoading() {
@@ -8,14 +8,8 @@ export default function AdminLoading() {
     <div className="min-h-screen bg-navy-50" aria-busy="true">
       {/* Screen reader: announce loading state (WCAG 2.1 AA) */}
       <p className="sr-only" role="status" aria-live="polite">
-        Loading
+        Loading admin
       </p>
-      <a
-        href="#main"
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:left-4 focus-visible:top-4 focus-visible:z-50 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:px-4 focus-visible:py-2 focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      >
-        Skip to main content
-      </a>
       {/* Header skeleton — matches AdminLayout (PitchIQ Admin + nav links) */}
       <header className="border-b bg-white px-4 py-3" aria-hidden="true">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
@@ -35,6 +29,7 @@ export default function AdminLoading() {
         id="main"
         tabIndex={-1}
         className="mx-auto max-w-6xl px-4 py-6 outline-none"
+        aria-label="Main content"
         aria-hidden="true"
       >
         {/* Content block placeholders */}

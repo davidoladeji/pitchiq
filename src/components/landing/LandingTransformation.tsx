@@ -51,7 +51,7 @@ const WITH_CARDS: CardData[] = [
 
 const CARD_STYLES = [
   {
-    gradient: "bg-navy-50 border border-navy-100",
+    gradient: "bg-gradient-to-br from-electric-50 to-violet-50",
     blob: "bg-electric",
     iconBg: "bg-electric/10 border-electric/20",
     iconColor: "text-electric",
@@ -62,10 +62,10 @@ const CARD_STYLES = [
     ),
   },
   {
-    gradient: "bg-white border border-navy-100",
-    blob: "bg-electric",
-    iconBg: "bg-electric/10 border-electric/20",
-    iconColor: "text-electric",
+    gradient: "bg-gradient-to-br from-violet-50 to-purple-50",
+    blob: "bg-violet-400",
+    iconBg: "bg-violet-100 border-violet-200",
+    iconColor: "text-violet-600",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 3l1.912 5.813h6.088l-4.956 3.574 1.912 5.813L12 14.626 7.044 18.2l1.912-5.813L4 8.813h6.088z" />
@@ -73,10 +73,10 @@ const CARD_STYLES = [
     ),
   },
   {
-    gradient: "bg-navy-50 border border-navy-100",
-    blob: "bg-navy-300",
-    iconBg: "bg-navy-100 border-navy-200",
-    iconColor: "text-navy-600",
+    gradient: "bg-gradient-to-br from-amber-50 to-orange-50",
+    blob: "bg-amber-400",
+    iconBg: "bg-amber-100 border-amber-200",
+    iconColor: "text-amber-600",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="12" width="4" height="9" />
@@ -86,10 +86,10 @@ const CARD_STYLES = [
     ),
   },
   {
-    gradient: "bg-white border border-navy-100",
-    blob: "bg-navy-300",
-    iconBg: "bg-navy-100 border-navy-200",
-    iconColor: "text-navy-600",
+    gradient: "bg-gradient-to-br from-rose-50 to-pink-50",
+    blob: "bg-rose-400",
+    iconBg: "bg-rose-100 border-rose-200",
+    iconColor: "text-rose-600",
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="23 4 23 10 17 10" />
@@ -168,10 +168,10 @@ export default function LandingTransformation() {
           }}
         >
           <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy mb-3">
-            Stop guessing. Start measuring.
+            Stop guessing. Start pitching.
           </h2>
           <p className="text-navy-500 text-base max-w-lg mx-auto mb-8">
-            See how PitchIQ replaces intuition with data-driven fundraising intelligence.
+            See how PitchIQ replaces the chaos with a single, streamlined flow.
           </p>
 
           {/* ── Pill toggle ────────────────────────────────────────── */}
@@ -179,7 +179,9 @@ export default function LandingTransformation() {
             <button
               type="button"
               onClick={() => switchTab("before")}
-              className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+              aria-label="Show before PitchIQ workflow"
+              aria-pressed={activeTab === "before"}
+              className={`min-h-[44px] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                 activeTab === "before"
                   ? "bg-navy text-white"
                   : "text-navy-500 hover:text-navy-700"
@@ -190,7 +192,9 @@ export default function LandingTransformation() {
             <button
               type="button"
               onClick={() => switchTab("with")}
-              className={`px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+              aria-label="Show with PitchIQ workflow"
+              aria-pressed={activeTab === "with"}
+              className={`min-h-[44px] px-5 py-2 text-sm font-medium rounded-full transition-all duration-200 flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                 activeTab === "with"
                   ? "bg-electric text-white"
                   : "text-navy-500 hover:text-navy-700"

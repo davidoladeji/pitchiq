@@ -107,7 +107,7 @@ export default function AdminSettingsPage() {
                         value={formValue}
                         onChange={(e) => setFormValue(e.target.value)}
                         placeholder={isSecret ? "sk_live_..." : "pk_live_..."}
-                        className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/20 outline-none focus:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+                        className="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder:text-white/20 outline-none focus:outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
                       />
                       <button
                         onClick={() => handleSave(key)}

@@ -194,17 +194,13 @@ export default function IdeasPageClient() {
     setError("");
   };
 
-  const skipLinkClass =
-    "sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white";
-
   // ── Results view ──
   if (ideas && ideas.length > 0) {
     return (
       <div className="min-h-screen bg-navy-50">
-        <a href="#main" className={skipLinkClass}>Skip to main content</a>
         <AppNav />
 
-        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
           <div className="max-w-3xl mx-auto">
             <h1
               ref={resultsHeadingRef}
@@ -261,7 +257,7 @@ export default function IdeasPageClient() {
                     onClick={() => handleCheckDeckForIdea(idea, i)}
                     disabled={deckLoadingId !== null}
                     aria-label={deckLoadingId === i ? "Building deck…" : `Turn ${idea.name} into a pitch deck`}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-lg hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-60 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     {deckLoadingId === i ? (
                       <>
@@ -309,11 +305,10 @@ export default function IdeasPageClient() {
   // ── Question wizard view ──
   return (
     <div className="min-h-screen bg-navy-50">
-      <a href="#main" className={skipLinkClass}>Skip to main content</a>
       <AppNav
       />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
         <div className="max-w-xl mx-auto">
           <h1 className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight">
             Find your next startup idea
@@ -327,6 +322,7 @@ export default function IdeasPageClient() {
             type="button"
             onClick={handleSurpriseMe}
             disabled={loading}
+            aria-label="Surprise me — get random startup ideas without answering questions"
             className="w-full mb-6 p-4 rounded-2xl border-2 border-dashed border-electric/20 bg-electric/[0.02] hover:bg-electric/[0.05] hover:border-electric/30 transition-all text-left group disabled:opacity-60 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             <div className="flex items-center gap-3">
@@ -353,7 +349,8 @@ export default function IdeasPageClient() {
               type="button"
               onClick={handleAutofillAll}
               disabled={Object.values(autofilling).some(Boolean)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2"
+              aria-label="Autofill all empty fields with AI suggestions"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-violet-600 bg-violet-50 hover:bg-violet-100 transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               title="Fill all empty fields with AI suggestions"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -407,7 +404,8 @@ export default function IdeasPageClient() {
                     type="button"
                     onClick={() => handleAutofill(currentQuestion.id)}
                     disabled={autofilling[currentQuestion.id]}
-                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-electric bg-electric/[0.06] hover:bg-electric/[0.12] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    aria-label={autofilling[currentQuestion.id] ? "AI suggesting answer…" : "AI suggest an answer for this question"}
+                    className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-electric bg-electric/[0.06] hover:bg-electric/[0.12] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     title="AI will suggest an answer you can refine"
                   >
                     {autofilling[currentQuestion.id] ? (
@@ -482,7 +480,8 @@ export default function IdeasPageClient() {
                         type="button"
                         onClick={handleNext}
                         disabled={!canAdvance}
-                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-40 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                        aria-label="Next question"
                       >
                         Next
                       </button>
@@ -491,7 +490,8 @@ export default function IdeasPageClient() {
                         type="button"
                         onClick={handleSubmit}
                         disabled={!canSubmit}
-                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-40 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                        className="min-h-[44px] px-6 py-2.5 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-40 disabled:pointer-events-none disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                        aria-label={canSubmit ? "Generate ideas" : "Complete answers to generate ideas"}
                       >
                         Generate ideas
                       </button>
@@ -503,7 +503,7 @@ export default function IdeasPageClient() {
           </div>
 
           <p className="mt-6 text-center">
-            <Link href="/create" className="text-electric text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded">
+            <Link href="/create" aria-label="Create your deck from scratch" className="text-electric text-sm font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded">
               Already have an idea? Create your deck
             </Link>
           </p>

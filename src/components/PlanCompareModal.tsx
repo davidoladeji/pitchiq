@@ -62,8 +62,8 @@ const PLANS: PlanCard[] = [
     price: "$79",
     unit: "/mo",
     desc: "Full intelligence suite",
-    color: "text-purple-600",
-    bgAccent: "bg-purple-50",
+    color: "text-violet-600",
+    bgAccent: "bg-violet-50",
     badge: "Best Value",
     features: [
       "Everything in Pro, plus:",
@@ -184,7 +184,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 p-2 rounded-lg hover:bg-navy-100 transition-colors text-navy-400 hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99]"
+          className="absolute top-4 right-4 z-20 p-2 rounded-lg hover:bg-navy-100 transition-colors text-navy-400 hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           aria-label="Close"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -217,7 +217,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                   key={p.name}
                   className={`relative flex flex-col rounded-xl border p-5 transition-all duration-300 ${
                     isHighlighted
-                      ? `border-2 ${p.plan === "growth" ? "border-purple-400 shadow-lg shadow-purple-100" : "border-electric shadow-lg shadow-electric/10"}`
+                      ? `border-2 ${p.plan === "growth" ? "border-violet-400 shadow-lg shadow-violet-100" : "border-electric shadow-lg shadow-electric/10"}`
                       : isCurrent
                         ? "border-2 border-electric/30 bg-electric/[0.02]"
                         : "border-navy-200 hover:border-navy-300 hover:-translate-y-0.5"
@@ -226,7 +226,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                   {/* Badge */}
                   {p.badge && (
                     <div className={`absolute -top-2.5 left-4 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide text-white ${
-                      p.plan === "growth" ? "bg-gradient-to-r from-purple-500 to-electric" : "bg-electric"
+                      p.plan === "growth" ? "bg-gradient-to-r from-violet-500 to-electric" : "bg-electric"
                     }`}>
                       {p.badge}
                     </div>
@@ -277,10 +277,10 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                       disabled={!!loadingPlan}
                       aria-busy={!!loadingPlan}
                       aria-label={loadingPlan ? "Setting up checkout…" : p.cta}
-                      className={`mt-auto w-full text-center py-2.5 rounded-lg text-xs font-semibold transition-all hover:-translate-y-0.5 hover:shadow-md disabled:opacity-70 disabled:cursor-wait focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99] ${
+                      className={`mt-auto w-full min-h-[44px] inline-flex items-center justify-center rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                         p.plan === "growth"
-                          ? "bg-electric hover:bg-electric-light text-white"
-                          : "bg-navy text-white"
+                          ? "bg-electric text-white shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow"
+                          : "bg-navy text-white shadow-lg shadow-navy-900/20 hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10"
                       }`}
                     >
                       {isLoading ? (

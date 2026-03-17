@@ -52,7 +52,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "Geist Mono", "ui-monospace", "monospace"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
         display: ["var(--font-inter)", "Inter", "system-ui", "sans-serif"],
       },
       fontSize: {

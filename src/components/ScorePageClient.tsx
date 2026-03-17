@@ -205,7 +205,7 @@ export default function ScorePageClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
             <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -214,7 +214,11 @@ export default function ScorePageClient({
             </div>
             <h2 className="text-2xl font-bold text-navy mb-2">Sign in to score your deck</h2>
             <p className="text-navy-500 mb-6 max-w-md">Create a free account to get an instant fundability score with actionable feedback.</p>
-            <a href="/auth/signin?callbackUrl=/score" className="inline-flex items-center px-6 py-3 rounded-full bg-electric text-white font-semibold hover:opacity-90 transition-opacity">
+            <a
+              href="/auth/signin?callbackUrl=/score"
+              className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-full bg-electric text-white font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:-translate-y-0.5 active:translate-y-0"
+              aria-label="Sign in to get started and score your deck"
+            >
               Sign in to get started
             </a>
           </div>
@@ -225,15 +229,9 @@ export default function ScorePageClient({
 
   return (
     <div className="min-h-screen bg-navy-50">
-      <a
-        href="#main"
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      >
-        Skip to main content
-      </a>
       <AppNav />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-10 animate-fade-in">
@@ -294,7 +292,7 @@ export default function ScorePageClient({
                     onChange={(e) => setCompanyName(e.target.value)}
                     placeholder="e.g. Acme Inc."
                     disabled={isProcessing}
-                    className="w-full px-4 py-2.5 rounded-xl border border-navy-200 text-sm text-navy placeholder:text-navy-500 focus:border-electric focus:ring-2 focus:ring-electric/20 outline-none transition-all disabled:opacity-50"
+                    className="w-full px-4 py-2.5 rounded-xl border border-navy-200 text-sm text-navy placeholder:text-navy-500 outline-none transition-all disabled:opacity-50 focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   />
                 </div>
               )}
@@ -312,7 +310,7 @@ export default function ScorePageClient({
                   type="button"
                   onClick={handleScore}
                   disabled={!file || isProcessing}
-                  className="mt-6 w-full min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="mt-6 w-full min-h-[48px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
@@ -357,7 +355,7 @@ export default function ScorePageClient({
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
                 <Link
                   href="/create"
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -392,7 +390,8 @@ export default function ScorePageClient({
                     <button
                       type="button"
                       onClick={() => setShowPlanModal(true)}
-                      className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                      aria-label="View plans and upgrade to Pro"
                     >
                       View Plans
                     </button>

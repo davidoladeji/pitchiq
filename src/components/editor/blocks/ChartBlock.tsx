@@ -213,13 +213,13 @@ export default function ChartBlock({
                     type="text"
                     value={row.label}
                     onChange={(e) => handleDataChange(i, "label", e.target.value)}
-                    className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-electric/50"
+                    className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
                   />
                   <input
                     type="number"
                     value={row.value}
                     onChange={(e) => handleDataChange(i, "value", e.target.value)}
-                    className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus:ring-1 focus:ring-electric/50"
+                    className="bg-white/5 border border-white/10 rounded px-2 py-1 text-xs text-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
                   />
                   <button
                     type="button"

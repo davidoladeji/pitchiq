@@ -99,7 +99,7 @@ function SlideProperties({
           type="text"
           value={slide.title}
           onChange={(e) => updateSlide(slideIndex, { title: e.target.value })}
-          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus:ring-1 focus:ring-electric/20 focus-visible:ring-offset-white transition-colors"
+          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors"
         />
       </Field>
 
@@ -109,7 +109,7 @@ function SlideProperties({
           value={slide.subtitle || ""}
           onChange={(e) => updateSlide(slideIndex, { subtitle: e.target.value })}
           placeholder="Optional subtitle"
-          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus:ring-1 focus:ring-electric/20 focus-visible:ring-offset-white transition-colors placeholder:text-navy-400"
+          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors placeholder:text-navy-400"
         />
       </Field>
 
@@ -117,7 +117,7 @@ function SlideProperties({
         <select
           value={slide.type}
           onChange={(e) => updateSlide(slideIndex, { type: e.target.value as SlideData["type"] })}
-          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus:ring-1 focus:ring-electric/20 focus-visible:ring-offset-white transition-colors bg-white"
+          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors bg-white"
         >
           {slideTypes.map((t) => (
             <option key={t.value} value={t.value}>
@@ -131,7 +131,7 @@ function SlideProperties({
         <select
           value={slide.layout || "default"}
           onChange={(e) => updateSlide(slideIndex, { layout: e.target.value as SlideData["layout"] })}
-          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus:ring-1 focus:ring-electric/20 focus-visible:ring-offset-white transition-colors bg-white"
+          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors bg-white"
         >
           {layouts.map((l) => (
             <option key={l.value} value={l.value}>
@@ -147,7 +147,7 @@ function SlideProperties({
             type="checkbox"
             checked={slide.accent || false}
             onChange={(e) => updateSlide(slideIndex, { accent: e.target.checked })}
-            className="w-4 h-4 rounded border-navy-300 text-electric focus:ring-electric/20"
+            className="w-4 h-4 rounded border-navy-300 text-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           />
           <span className="text-sm text-navy-600">Use dark accent background</span>
         </label>
@@ -180,7 +180,7 @@ function SlideProperties({
                   newContent[i] = e.target.value;
                   updateSlide(slideIndex, { content: newContent });
                 }}
-                className="flex-1 px-3 py-1.5 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white transition-colors"
+                className="flex-1 px-3 py-1.5 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white transition-colors"
               />
               <button
                 onClick={() => {
@@ -276,7 +276,7 @@ function MetricsEditor({
                 updateSlide(slideIndex, { metrics: newMetrics });
               }}
               placeholder="Label"
-              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
             <input
               type="text"
@@ -287,7 +287,7 @@ function MetricsEditor({
                 updateSlide(slideIndex, { metrics: newMetrics });
               }}
               placeholder="Value"
-              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
             <div className="flex gap-2">
               <input
@@ -299,7 +299,7 @@ function MetricsEditor({
                   updateSlide(slideIndex, { metrics: newMetrics });
                 }}
                 placeholder="Change (e.g. +24%)"
-                className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+                className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               />
               <select
                 value={metric.trend || "neutral"}
@@ -308,7 +308,7 @@ function MetricsEditor({
                   newMetrics[i] = { ...metric, trend: e.target.value as "up" | "down" | "neutral" };
                   updateSlide(slideIndex, { metrics: newMetrics });
                 }}
-                className="px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white bg-white"
+                className="px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white bg-white"
               >
                 <option value="up">Up</option>
                 <option value="down">Down</option>
@@ -375,7 +375,7 @@ function TeamEditor({
                 updateSlide(slideIndex, { team: newTeam });
               }}
               placeholder="Name"
-              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
             <input
               type="text"
@@ -386,7 +386,7 @@ function TeamEditor({
                 updateSlide(slideIndex, { team: newTeam });
               }}
               placeholder="Role"
-              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
             <textarea
               value={member.bio || ""}
@@ -397,7 +397,7 @@ function TeamEditor({
               }}
               placeholder="Bio (optional)"
               rows={2}
-              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white resize-none"
+              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white resize-none"
             />
           </div>
         ))}
@@ -460,7 +460,7 @@ function TimelineEditor({
                   updateSlide(slideIndex, { timeline: newTimeline });
                 }}
                 placeholder="Date"
-                className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+                className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               />
               <label className="flex items-center gap-1 text-xs text-navy-500">
                 <input
@@ -485,7 +485,7 @@ function TimelineEditor({
                 updateSlide(slideIndex, { timeline: newTimeline });
               }}
               placeholder="Title"
-              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
             <input
               type="text"
@@ -496,7 +496,7 @@ function TimelineEditor({
                 updateSlide(slideIndex, { timeline: newTimeline });
               }}
               placeholder="Description (optional)"
-              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </div>
         ))}
@@ -526,7 +526,7 @@ function ChartEditor({
               chartData: { ...chartData, type: e.target.value as "bar" | "pie" | "line" | "area" },
             });
           }}
-          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white bg-white"
+          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white bg-white"
         >
           <option value="bar">Bar</option>
           <option value="pie">Pie</option>
@@ -545,7 +545,7 @@ function ChartEditor({
             });
           }}
           placeholder="e.g., Revenue ($M)"
-          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white placeholder:text-navy-400"
+          className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white placeholder:text-navy-400"
         />
       </Field>
 
@@ -580,7 +580,7 @@ function ChartEditor({
                   updateSlide(slideIndex, { chartData: { ...chartData, data: newData } });
                 }}
                 placeholder="Label"
-                className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+                className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               />
               <input
                 type="number"
@@ -590,7 +590,7 @@ function ChartEditor({
                   newData[i] = { ...point, value: Number(e.target.value) };
                   updateSlide(slideIndex, { chartData: { ...chartData, data: newData } });
                 }}
-                className="w-16 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+                className="w-16 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               />
               <button
                 onClick={() => {
@@ -649,7 +649,7 @@ function BlockProperties({
               value={block.content}
               onChange={(e) => updateBlock(slideIndex, block.id, { content: e.target.value })}
               rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white resize-none"
             />
           </Field>
           <Field label="Font Size">
@@ -659,7 +659,7 @@ function BlockProperties({
               onChange={(e) => updateProp("fontSize", Number(e.target.value))}
               min={8}
               max={72}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Alignment">
@@ -709,7 +709,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.label as string) || ""}
               onChange={(e) => updateProp("label", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Value">
@@ -717,7 +717,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.value as string) || ""}
               onChange={(e) => updateProp("value", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Change">
@@ -726,14 +726,14 @@ function BlockProperties({
               value={(block.properties.change as string) || ""}
               onChange={(e) => updateProp("change", e.target.value)}
               placeholder="e.g., +24%"
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white placeholder:text-navy-400"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white placeholder:text-navy-400"
             />
           </Field>
           <Field label="Trend">
             <select
               value={(block.properties.trend as string) || "neutral"}
               onChange={(e) => updateProp("trend", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white bg-white"
             >
               <option value="up">Up</option>
               <option value="down">Down</option>
@@ -749,7 +749,7 @@ function BlockProperties({
             <select
               value={(block.properties.chartType as string) || "bar"}
               onChange={(e) => updateProp("chartType", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white bg-white"
             >
               <option value="bar">Bar</option>
               <option value="pie">Pie</option>
@@ -783,7 +783,7 @@ function BlockProperties({
                       data[i] = { ...point, label: e.target.value };
                       updateProp("data", data);
                     }}
-                    className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+                    className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   />
                   <input
                     type="number"
@@ -793,7 +793,7 @@ function BlockProperties({
                       data[i] = { ...point, value: Number(e.target.value) };
                       updateProp("data", data);
                     }}
-                    className="w-16 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+                    className="w-16 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   />
                   <button
                     onClick={() => {
@@ -820,7 +820,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.name as string) || ""}
               onChange={(e) => updateProp("name", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Role">
@@ -828,7 +828,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.role as string) || ""}
               onChange={(e) => updateProp("role", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Bio">
@@ -836,7 +836,7 @@ function BlockProperties({
               value={(block.properties.bio as string) || ""}
               onChange={(e) => updateProp("bio", e.target.value)}
               rows={2}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white resize-none"
             />
           </Field>
         </>
@@ -849,7 +849,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.date as string) || ""}
               onChange={(e) => updateProp("date", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Title">
@@ -857,7 +857,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.title as string) || ""}
               onChange={(e) => updateProp("title", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Description">
@@ -865,7 +865,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.description as string) || ""}
               onChange={(e) => updateProp("description", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Completed">
@@ -889,7 +889,7 @@ function BlockProperties({
               value={block.content}
               onChange={(e) => updateBlock(slideIndex, block.id, { content: e.target.value })}
               rows={3}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white resize-none"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white resize-none"
             />
           </Field>
           <Field label="Author">
@@ -897,7 +897,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.author as string) || ""}
               onChange={(e) => updateProp("author", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Source">
@@ -905,7 +905,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.source as string) || ""}
               onChange={(e) => updateProp("source", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
         </>
@@ -938,7 +938,7 @@ function BlockProperties({
                     logos[i] = e.target.value;
                     updateProp("logos", logos);
                   }}
-                  className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus:border-electric focus-visible:ring-offset-white"
+                  className="flex-1 px-2 py-1 rounded border border-navy-200 text-xs outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 />
                 <button
                   onClick={() => {
@@ -964,7 +964,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.label as string) || ""}
               onChange={(e) => updateProp("label", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Us">
@@ -972,7 +972,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.us as string) || ""}
               onChange={(e) => updateProp("us", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
           <Field label="Them">
@@ -980,7 +980,7 @@ function BlockProperties({
               type="text"
               value={(block.properties.them as string) || ""}
               onChange={(e) => updateProp("them", e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus:border-electric focus-visible:ring-offset-white"
+              className="w-full px-3 py-2 rounded-lg border border-navy-200 text-sm text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             />
           </Field>
         </>

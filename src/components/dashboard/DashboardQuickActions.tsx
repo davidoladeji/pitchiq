@@ -35,8 +35,8 @@ const BASE_ACTIONS: QuickAction[] = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
       </svg>
     ),
-    color: "text-purple-600",
-    bgColor: "bg-purple-100",
+    color: "text-violet-600",
+    bgColor: "bg-violet-100",
   },
   {
     label: "Explore Ideas",
@@ -112,7 +112,8 @@ export default function DashboardQuickActions({ plan = "starter" }: { plan?: str
           <Link
             key={action.label}
             href={action.href}
-            className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+            aria-label={`${action.label} — ${action.description}`}
+            className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all"
           >
             <div className={`w-10 h-10 rounded-xl ${action.bgColor} flex items-center justify-center mb-3 ${action.color} group-hover:scale-110 transition-transform`}>
               {action.icon}

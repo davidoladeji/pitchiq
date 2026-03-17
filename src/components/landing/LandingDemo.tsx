@@ -71,7 +71,7 @@ export default function LandingDemo() {
               : "opacity-0 translate-y-12 scale-[0.97]"
           }`}
         >
-          {/* Minimal browser chrome — decorative traffic-light dots */}
+          {/* Minimal browser chrome — decorative traffic-light dots (intentional hex: macOS-style window controls, not brand tokens) */}
           <div
             className="flex items-center gap-2 px-5 py-3.5 bg-navy border-b border-white/[0.06]"
             aria-hidden="true"

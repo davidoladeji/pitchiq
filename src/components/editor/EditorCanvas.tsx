@@ -207,7 +207,7 @@ function EditableSlide(props: {
           contentEditable
           suppressContentEditableWarning
           onBlur={handleTitleBlur}
-          className={`outline-none focus:outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2 focus-visible:ring-offset-2 rounded px-1 -mx-1 ${
+          className={`outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded px-1 -mx-1 ${
             slide.type === "title" || slide.type === "cta"
               ? "text-4xl mb-3"
               : "text-3xl mb-2"
@@ -226,7 +226,7 @@ function EditableSlide(props: {
             contentEditable
             suppressContentEditableWarning
             onBlur={handleSubtitleBlur}
-            className={`outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2 focus-visible:ring-offset-2 rounded px-1 -mx-1 opacity-60 leading-relaxed ${
+            className={`outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded px-1 -mx-1 opacity-60 leading-relaxed ${
               slide.type === "title" || slide.type === "cta"
                 ? "text-lg mb-6 max-w-2xl"
                 : "text-base mb-4"
@@ -258,7 +258,7 @@ function EditableSlide(props: {
                   contentEditable
                   suppressContentEditableWarning
                   onBlur={(e) => handleContentItemBlur(i, e)}
-                  className="text-base leading-relaxed opacity-90 outline-none focus:ring-2 focus:ring-electric focus:ring-offset-2 focus-visible:ring-offset-2 rounded px-1 -mx-1 flex-1"
+                  className="text-base leading-relaxed opacity-90 outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 rounded px-1 -mx-1 flex-1"
                   style={{ caretColor: theme.accent }}
                 >
                   {item}

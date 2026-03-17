@@ -91,7 +91,8 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/create"
-              className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center justify-center min-h-[44px] px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label="Create a new pitch deck"
             >
               Create Deck
             </Link>
@@ -119,7 +120,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
           return (
             <div
               key={deck.id}
-              className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5"
+              className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5"
             >
               <div className="flex items-center gap-4">
                 {/* Score ring */}

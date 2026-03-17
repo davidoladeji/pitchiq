@@ -273,7 +273,7 @@ export default function LandingPricing() {
             aria-label="Pro plan, most popular"
             className="relative flex flex-col rounded-2xl border border-electric p-5 sm:p-8 shadow-glow transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-glow-lg"
           >
-            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide">
+            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide" aria-hidden="true">
               Popular
             </div>
             <h3 className="text-base font-bold tracking-tight text-navy">{proTier.name}</h3>
@@ -295,25 +295,31 @@ export default function LandingPricing() {
             {(() => {
               const isLoading = loadingPlan === proTier.plan;
               return (
-                <button
-                  type="button"
-                  onClick={() => handleCheckout(proTier.plan!)}
-                  disabled={!!loadingPlan}
-                  aria-busy={isLoading}
-                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
-                >
-                  {isLoading ? (
-                    <span className="inline-flex items-center gap-2">
-                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                      Setting up...
-                    </span>
-                  ) : (
-                    proTier.cta
-                  )}
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={() => handleCheckout(proTier.plan!)}
+                    disabled={!!loadingPlan}
+                    aria-busy={isLoading}
+                    aria-label={isLoading ? "Setting up Pro plan…" : "Start free trial for Pro plan"}
+                    className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/10 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none"
+                  >
+                    {isLoading ? (
+                      <span className="inline-flex items-center gap-2">
+                        <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Setting up...
+                      </span>
+                    ) : (
+                      proTier.cta
+                    )}
+                  </button>
+                  <p className="mt-2 text-xs text-navy-500 text-center" aria-hidden="true">
+                    14-day free trial &middot; Cancel anytime
+                  </p>
+                </>
               );
             })()}
           </div>
@@ -354,10 +360,10 @@ export default function LandingPricing() {
           {/* Growth */}
           <div
             role="group"
-            aria-label="Growth plan"
+            aria-label="Growth plan, best value"
             className="relative flex flex-col rounded-2xl border border-violet/40 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-violet"
           >
-            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide">
+            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide" aria-hidden="true">
               Best Value
             </div>
             <h3 className="text-base font-bold tracking-tight text-navy">{growthTier.name}</h3>
@@ -384,7 +390,8 @@ export default function LandingPricing() {
                   onClick={() => handleCheckout(growthTier.plan!)}
                   disabled={!!loadingPlan}
                   aria-busy={isLoading}
-                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-electric hover:bg-electric-light text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0"
+                  aria-label={isLoading ? "Setting up Growth plan…" : "Start free trial for Growth plan"}
+                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-electric hover:bg-electric-600 text-white shadow-lg shadow-electric/25 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none"
                 >
                   {isLoading ? (
                     <span className="inline-flex items-center gap-2">
@@ -432,8 +439,8 @@ export default function LandingPricing() {
                   onClick={() => handleCheckout("enterprise")}
                   disabled={!!loadingPlan}
                   aria-busy={isLoading}
-                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:hover:translate-y-0"
-                  aria-label="Start free trial for Enterprise plan"
+                  aria-label={isLoading ? "Setting up Enterprise plan…" : "Start free trial for Enterprise plan"}
+                  className="mt-auto w-full text-center min-h-[48px] flex items-center justify-center py-3 rounded-full font-semibold text-sm bg-navy text-white transition-all hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/10 active:translate-y-0 disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none"
                 >
                   {isLoading ? (
                     <span className="inline-flex items-center gap-2">
@@ -535,7 +542,8 @@ export default function LandingPricing() {
                     <td className="px-3 py-4 text-center">
                       <Link
                         href="/create"
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy-100 text-navy hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                        aria-label="Get started with Starter plan"
+                        className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-4 py-2 rounded-full text-xs font-semibold bg-navy-100 text-navy hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       >
                         Get Started
                       </Link>
@@ -545,7 +553,9 @@ export default function LandingPricing() {
                         type="button"
                         onClick={() => handleCheckout("pro")}
                         disabled={!!loadingPlan}
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
+                        aria-label={loadingPlan === "pro" ? "Setting up Pro plan…" : "Start free trial for Pro plan"}
+                        aria-busy={!!loadingPlan && loadingPlan === "pro"}
+                        className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/10 active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none"
                       >
                         {loadingPlan === "pro" ? "..." : "Start Trial"}
                       </button>
@@ -555,7 +565,9 @@ export default function LandingPricing() {
                         type="button"
                         onClick={() => handleCheckout("growth")}
                         disabled={!!loadingPlan}
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-electric hover:bg-electric-light text-white hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
+                        aria-label={loadingPlan === "growth" ? "Setting up Growth plan…" : "Start free trial for Growth plan"}
+                        aria-busy={!!loadingPlan && loadingPlan === "growth"}
+                        className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-4 py-2 rounded-full text-xs font-semibold bg-electric hover:bg-electric-600 text-white shadow-lg shadow-electric/25 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none"
                       >
                         {loadingPlan === "growth" ? "..." : "Start Trial"}
                       </button>
@@ -565,7 +577,9 @@ export default function LandingPricing() {
                         type="button"
                         onClick={() => handleCheckout("enterprise")}
                         disabled={!!loadingPlan}
-                        className="inline-flex items-center justify-center px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait"
+                        aria-label={loadingPlan === "enterprise" ? "Setting up Enterprise plan…" : "Start free trial for Enterprise plan"}
+                        aria-busy={!!loadingPlan && loadingPlan === "enterprise"}
+                        className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-4 py-2 rounded-full text-xs font-semibold bg-navy text-white hover:-translate-y-0.5 hover:shadow-glow hover:shadow-electric/10 active:translate-y-0 transition-all disabled:opacity-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none"
                       >
                         {loadingPlan === "enterprise" ? "..." : "Start Trial"}
                       </button>

@@ -16,6 +16,7 @@ export default function DeckViewerClient() {
   const [ownerPlan, setOwnerPlan] = useState("starter");
   const [isOwner, setIsOwner] = useState(false);
   const [variants, setVariants] = useState<{ shareId: string; title: string; investorType: string; piqScore: number | null }[]>([]);
+  const [showBranding, setShowBranding] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -40,6 +41,7 @@ export default function DeckViewerClient() {
         const data = await res.json();
         setDeck(data);
         if (data.ownerPlan) setOwnerPlan(data.ownerPlan);
+        if (data.showBranding !== undefined) setShowBranding(data.showBranding);
         if (data.isOwner) setIsOwner(true);
         if (data.variants) setVariants(data.variants);
       } catch {
@@ -54,14 +56,12 @@ export default function DeckViewerClient() {
   if (loading) {
     return (
       <div className="min-h-screen bg-navy-50" aria-busy="true" aria-label="Loading deck">
-        <a
-          href="#main"
-          className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-        >
-          Skip to main content
-        </a>
+        {/* Screen reader: announce loading state (WCAG 2.1 AA) — matches route loading.tsx pattern */}
+        <p className="sr-only" role="status" aria-live="polite">
+          Loading deck
+        </p>
         <AppNav />
-        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
               <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse mb-3" />
@@ -123,14 +123,14 @@ export default function DeckViewerClient() {
           <Link
             href="/create"
             aria-label="Create your own pitch deck"
-            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl bg-electric text-white font-medium shadow-sm hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl bg-electric text-white font-medium shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Create a deck
           </Link>
           <Link
             href="/"
             aria-label="Go to PitchIQ home"
-            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border border-navy-200 text-navy font-medium shadow-sm hover:border-navy-300 hover:bg-navy-50 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border border-navy-200 text-navy font-medium shadow-sm hover:border-navy-300 hover:bg-navy-50 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Go to PitchIQ
           </Link>
@@ -161,7 +161,7 @@ export default function DeckViewerClient() {
                   <button
                     type="button"
                     onClick={handleCopyLink}
-                    className="min-h-[44px] min-w-[44px] shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-electric text-white text-sm font-medium shadow-sm hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="min-h-[44px] min-w-[44px] shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-electric text-white text-sm font-medium shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     aria-label={copied ? "Link copied to clipboard" : "Copy share link"}
                   >
                     {copied ? (
@@ -199,7 +199,7 @@ export default function DeckViewerClient() {
           <SlideRenderer
             slides={deck.slides}
             companyName={deck.companyName}
-            showBranding={!deck.isPremium}
+            showBranding={showBranding}
             themeId={deck.themeId}
           />
 
@@ -212,7 +212,8 @@ export default function DeckViewerClient() {
               {isOwner && (ownerPlan === "growth" || ownerPlan === "enterprise") && (
                 <Link
                   href={`/practice/${shareId}`}
-                  className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-electric/20 bg-electric/5 text-electric text-sm font-semibold hover:bg-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                  className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-electric/20 bg-electric/5 text-electric text-sm font-semibold hover:bg-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  aria-label="Practice pitch with this deck"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
@@ -222,7 +223,8 @@ export default function DeckViewerClient() {
               )}
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                aria-label="Go to dashboard"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -231,15 +233,16 @@ export default function DeckViewerClient() {
               </Link>
               <Link
                 href="/create"
-                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                aria-label="Create a new pitch deck"
               >
                 Create New Deck
               </Link>
             </div>
 
-            {/* Upgrade CTA for non-premium decks */}
-            {!deck.isPremium && (
-              <div className="w-full max-w-2xl rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-purple-50 p-5">
+            {/* Upgrade CTA for free-tier decks */}
+            {showBranding && (
+              <div className="w-full max-w-2xl rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-violet-50 p-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
@@ -254,7 +257,8 @@ export default function DeckViewerClient() {
                   </div>
                   <Link
                     href="/#pricing"
-                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    aria-label="View plans and upgrade to Pro"
                   >
                     View Plans
                   </Link>

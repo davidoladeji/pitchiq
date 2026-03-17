@@ -584,7 +584,7 @@ export default function DeckForm({ onGenerated, userPlan = "starter", templateDe
               type="button"
               onClick={() => setError("")}
               aria-label="Try generating your deck again"
-              className="min-h-[44px] shrink-0 inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-dark transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              className="min-h-[44px] shrink-0 inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-600 shadow-lg shadow-electric/25 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Try again
             </button>
@@ -626,7 +626,7 @@ export default function DeckForm({ onGenerated, userPlan = "starter", templateDe
             type="button"
             onClick={handleNext}
             disabled={!canAdvance()}
-            className="min-h-[44px] inline-flex items-center px-6 py-3 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+            className="min-h-[44px] inline-flex items-center px-6 py-3 rounded-xl bg-navy text-white text-sm font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
           >
             <span className="flex items-center gap-1.5">
               Continue
@@ -652,7 +652,7 @@ export default function DeckForm({ onGenerated, userPlan = "starter", templateDe
               disabled={loading || !canAdvance()}
               aria-busy={loading}
               aria-label={loading ? "Generating your pitch deck" : "Generate pitch deck"}
-              className="min-h-[44px] inline-flex items-center px-8 py-3.5 rounded-xl bg-electric text-white font-semibold hover:bg-electric-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-electric/20 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              className="min-h-[44px] inline-flex items-center px-8 py-3.5 rounded-xl bg-electric text-white font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               {loading ? (
                 <span className="flex items-center gap-2.5">

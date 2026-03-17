@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
+import { getPlanLimits } from "@/lib/plan-limits";
 
 export async function GET(
   req: NextRequest,
@@ -11,7 +12,8 @@ export async function GET(
     const deck = await prisma.deck.findUnique({
       where: { shareId: params.shareId },
       include: {
-        owner: { select: { id: true, plan: true } },
+        owner: { select: { id: true, plan: true, brandingEnabled: true } },
+        workspace: { select: { brandConfig: true } },
         parentVariants: {
           include: { variantDeck: { select: { shareId: true, title: true, piqScore: true } } },
         },
@@ -48,6 +50,22 @@ export async function GET(
     const isOwner = !!(currentUserId && deck.userId && currentUserId === deck.userId);
     const ownerPlan = isOwner ? (deck.owner?.plan ?? "starter") : undefined;
 
+    // Layered branding: plan-enforced > workspace setting > user preference
+    const ownerLimits = getPlanLimits(deck.owner?.plan ?? "starter");
+    let showBranding: boolean;
+    if (ownerLimits.showBranding) {
+      // Free plan: always show branding, no override
+      showBranding = true;
+    } else if (deck.workspace) {
+      // Workspace deck (Enterprise): workspace hidePitchiqBranding takes priority
+      let wsBrand: { hidePitchiqBranding?: boolean } = {};
+      try { wsBrand = JSON.parse(deck.workspace.brandConfig || "{}"); } catch { /* empty */ }
+      showBranding = !wsBrand.hidePitchiqBranding;
+    } else {
+      // Individual paid user: user preference controls
+      showBranding = deck.owner?.brandingEnabled ?? true;
+    }
+
     return NextResponse.json({
       id: deck.id,
       shareId: deck.shareId,
@@ -56,6 +74,7 @@ export async function GET(
       slides: JSON.parse(deck.slides),
       createdAt: deck.createdAt.toISOString(),
       isPremium: deck.isPremium,
+      showBranding,
       themeId: deck.themeId,
       piqScore,
       isOwner,

@@ -168,7 +168,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
             </svg>
             Fundraise Tracker
           </h2>
-          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-100 text-purple-700">Growth</span>
+          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-100 text-violet-700">Growth</span>
         </div>
         <p className="text-xs text-navy-500">
           Track investor conversations, manage your pipeline, and log outreach activities.
@@ -196,7 +196,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
         </h2>
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold hover:bg-electric-light transition-colors"
+          className="px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold hover:bg-electric-600 transition-colors"
         >
           {showAddForm ? "Cancel" : "+ Add Contact"}
         </button>
@@ -220,7 +220,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
               placeholder="Contact name *"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white focus:ring-2 focus:ring-electric/30 focus:border-electric outline-none"
+              className="px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric"
               required
             />
             <input
@@ -228,19 +228,19 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
               placeholder="Firm / Fund"
               value={newFirm}
               onChange={(e) => setNewFirm(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white focus:ring-2 focus:ring-electric/30 focus:border-electric outline-none"
+              className="px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric"
             />
             <input
               type="email"
               placeholder="Email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white focus:ring-2 focus:ring-electric/30 focus:border-electric outline-none"
+              className="px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric"
             />
             <select
               value={newStatus}
               onChange={(e) => setNewStatus(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white focus:ring-2 focus:ring-electric/30 focus:border-electric outline-none"
+              className="px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric"
             >
               {STATUSES.map((s) => (
                 <option key={s.value} value={s.value}>{s.label}</option>
@@ -252,12 +252,12 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
             value={newNotes}
             onChange={(e) => setNewNotes(e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white focus:ring-2 focus:ring-electric/30 focus:border-electric outline-none resize-none"
+            className="w-full px-3 py-2 rounded-lg border border-navy-200 text-xs bg-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric resize-none"
           />
           {error && <p className="text-xs text-red-500">{error}</p>}
           <button
             type="submit"
-            className="px-4 py-2 rounded-lg bg-electric text-white text-xs font-semibold hover:bg-electric-light transition-colors"
+            className="px-4 py-2 rounded-lg bg-electric text-white text-xs font-semibold hover:bg-electric-600 transition-colors"
           >
             Add Contact
           </button>
@@ -377,12 +377,12 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                             value={outreachContent}
                             onChange={(e) => setOutreachContent(e.target.value)}
                             rows={2}
-                            className="w-full px-2 py-1.5 rounded-md border border-navy-200 text-xs bg-white focus:ring-2 focus:ring-electric/30 focus:border-electric outline-none resize-none"
+                            className="w-full px-2 py-1.5 rounded-md border border-navy-200 text-xs bg-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric resize-none"
                             required
                           />
                           <button
                             type="submit"
-                            className="self-end px-3 py-1 rounded-md bg-electric text-white text-[10px] font-semibold hover:bg-electric-light transition-colors"
+                            className="self-end px-3 py-1 rounded-md bg-electric text-white text-[10px] font-semibold hover:bg-electric-600 transition-colors"
                           >
                             Save
                           </button>

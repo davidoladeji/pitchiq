@@ -70,7 +70,7 @@ export default function CreatePageClient({
           <div className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin" aria-hidden="true" />
         </div>
         <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
-          Loading
+          Loading create
         </span>
       </div>
     );
@@ -80,7 +80,7 @@ export default function CreatePageClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
             <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -91,7 +91,7 @@ export default function CreatePageClient({
             <p className="text-navy-500 mb-6 max-w-md">Create a free account to generate investor-ready pitch decks with AI.</p>
             <a
               href="/auth/signin?callbackUrl=/create"
-              className="inline-flex items-center min-h-[44px] px-6 py-3 rounded-full bg-electric text-white font-semibold hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="inline-flex items-center min-h-[44px] px-6 py-3 rounded-full bg-electric text-white font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               aria-label="Sign in to create your pitch deck"
             >
               Sign in to get started
@@ -106,7 +106,7 @@ export default function CreatePageClient({
     <div className="min-h-screen bg-navy-50">
       <AppNav />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
         {!deck && deckCount >= limits.maxDecks && (
           <div className="max-w-2xl mx-auto mb-6 animate-fade-in">
             <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 sm:p-6">
@@ -120,7 +120,7 @@ export default function CreatePageClient({
                 <button
                   type="button"
                   onClick={() => setShowPlanModal(true)}
-                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   aria-label="Upgrade to Pro for unlimited decks"
                 >
                   Upgrade Now
@@ -168,7 +168,7 @@ export default function CreatePageClient({
                   <p className="text-navy text-sm mb-3">Answer a few questions and we&apos;ll suggest viable business ideas, then you can turn one into a deck.</p>
                   <Link
                     href="/ideas"
-                    className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     Start idea generator
                   </Link>
@@ -344,6 +344,7 @@ export default function CreatePageClient({
                 type="button"
                 onClick={() => setDeck(null)}
                 className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl text-navy-500 font-medium shadow-sm hover:text-navy hover:shadow-glow hover:shadow-electric/5 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                aria-label="Create another pitch deck"
               >
                 Create Another
               </button>
@@ -381,7 +382,7 @@ export default function CreatePageClient({
                   <button
                     type="button"
                     onClick={() => setShowPlanModal(true)}
-                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light hover:shadow-glow hover:shadow-electric/20 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     aria-label="View plans and upgrade to Pro"
                   >
                     View Plans

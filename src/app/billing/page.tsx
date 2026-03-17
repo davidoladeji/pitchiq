@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
@@ -5,6 +6,12 @@ import { prisma } from "@/lib/db";
 import BillingClient from "@/components/BillingClient";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Billing & plans | PitchIQ",
+  description:
+    "Manage your PitchIQ subscription, compare plans, and update payment method.",
+};
 
 export default async function BillingPage() {
   const session = await getServerSession(authOptions);

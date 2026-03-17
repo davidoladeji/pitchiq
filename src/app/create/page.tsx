@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import CreatePageClient from "@/components/CreatePageClient";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Create deck | PitchIQ",
+  description:
+    "Create your AI-powered pitch deck in 60 seconds. Get a fundability-ready deck and your PIQ Score.",
+};
 
 export default async function CreatePage() {
   let userPlan = "starter";

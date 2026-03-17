@@ -30,7 +30,7 @@ export default function AuthButton() {
       <button
         type="button"
         onClick={() => signIn()}
-        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium text-current opacity-70 hover:opacity-100 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium text-current opacity-70 hover:opacity-100 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         aria-label="Sign in to PitchIQ"
       >
         Sign in
@@ -79,6 +79,22 @@ export default function AuthButton() {
             aria-label="Go to dashboard"
           >
             Dashboard
+          </Link>
+          <Link
+            href="/settings"
+            onClick={() => setMenuOpen(false)}
+            className="min-h-[44px] flex items-center px-4 py-2.5 text-sm text-navy hover:bg-navy-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
+            aria-label="Go to settings"
+          >
+            Settings
+          </Link>
+          <Link
+            href="/billing"
+            onClick={() => setMenuOpen(false)}
+            className="min-h-[44px] flex items-center px-4 py-2.5 text-sm text-navy hover:bg-navy-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-inset"
+            aria-label="Go to billing"
+          >
+            Billing
           </Link>
           <button
             type="button"

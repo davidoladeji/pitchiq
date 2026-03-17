@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 
@@ -48,8 +48,77 @@ export default function WorkspaceDashboardClient({
   const [inviteSuccess, setInviteSuccess] = useState("");
   const [members, setMembers] = useState(workspace.members);
 
+  // Branding state
+  const [brandCompanyName, setBrandCompanyName] = useState("");
+  const [brandLogoUrl, setBrandLogoUrl] = useState("");
+  const [brandPrimaryColor, setBrandPrimaryColor] = useState("");
+  const [brandAccentColor, setBrandAccentColor] = useState("");
+  const [hidePitchiqBranding, setHidePitchiqBranding] = useState(false);
+  const [brandLoading, setBrandLoading] = useState(false);
+  const [brandSaving, setBrandSaving] = useState(false);
+  const [brandError, setBrandError] = useState("");
+  const [brandSuccess, setBrandSuccess] = useState("");
+  const [brandNotEnterprise, setBrandNotEnterprise] = useState(false);
+
   const canManage = workspace.role === "owner" || workspace.role === "editor";
   const canAdmin = workspace.role === "owner";
+
+  const fetchBranding = useCallback(async () => {
+    if (!canAdmin) return;
+    setBrandLoading(true);
+    try {
+      const res = await fetch(`/api/workspace/${workspace.slug}/branding`);
+      if (res.ok) {
+        const data = await res.json();
+        const bc = data.brandConfig || {};
+        setBrandCompanyName(bc.companyName || "");
+        setBrandLogoUrl(bc.logoUrl || "");
+        setBrandPrimaryColor(bc.primaryColor || "");
+        setBrandAccentColor(bc.accentColor || "");
+        setHidePitchiqBranding(!!bc.hidePitchiqBranding);
+      }
+    } catch { /* empty */ }
+    setBrandLoading(false);
+  }, [canAdmin, workspace.slug]);
+
+  useEffect(() => {
+    fetchBranding();
+  }, [fetchBranding]);
+
+  async function handleBrandSave() {
+    setBrandSaving(true);
+    setBrandError("");
+    setBrandSuccess("");
+    setBrandNotEnterprise(false);
+    try {
+      const res = await fetch(`/api/workspace/${workspace.slug}/branding`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyName: brandCompanyName || undefined,
+          logoUrl: brandLogoUrl || undefined,
+          primaryColor: brandPrimaryColor || undefined,
+          accentColor: brandAccentColor || undefined,
+          hidePitchiqBranding,
+        }),
+      });
+      if (res.status === 403) {
+        setBrandNotEnterprise(true);
+        setBrandError("Upgrade to Enterprise for white-label branding");
+      } else if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to save branding");
+      } else {
+        setBrandSuccess("Branding saved.");
+        setTimeout(() => setBrandSuccess(""), 3000);
+      }
+    } catch (e) {
+      if (!brandNotEnterprise) {
+        setBrandError(e instanceof Error ? e.message : "Something went wrong");
+      }
+    }
+    setBrandSaving(false);
+  }
 
   async function handleInvite() {
     if (!inviteEmail.trim()) return;
@@ -110,7 +179,7 @@ export default function WorkspaceDashboardClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="flex items-start justify-between gap-4 mb-8">
@@ -144,7 +213,8 @@ export default function WorkspaceDashboardClient({
                 {canManage && (
                   <Link
                     href="/create"
-                    className="text-xs text-electric font-medium hover:underline"
+                    className="text-xs text-electric font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded px-1 py-0.5 min-h-[44px] inline-flex items-center"
+                    aria-label="Add a deck to this workspace"
                   >
                     + Add Deck
                   </Link>
@@ -204,7 +274,9 @@ export default function WorkspaceDashboardClient({
                     <button
                       type="button"
                       onClick={() => setShowInvite(!showInvite)}
-                      className="text-xs text-electric font-medium hover:underline"
+                      className="text-xs text-electric font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded min-h-[44px] px-1"
+                      aria-label={showInvite ? "Close invite form" : "Invite a member"}
+                      aria-expanded={showInvite}
                     >
                       + Invite
                     </button>
@@ -219,13 +291,13 @@ export default function WorkspaceDashboardClient({
                       value={inviteEmail}
                       onChange={(e) => setInviteEmail(e.target.value)}
                       placeholder="email@company.com"
-                      className="w-full px-3 py-1.5 rounded-lg border border-navy-200 text-xs text-navy focus:border-electric focus:ring-1 focus:ring-electric/20 outline-none"
+                      className="w-full px-3 py-1.5 rounded-lg border border-navy-200 text-xs text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     />
                     <div className="flex gap-2">
                       <select
                         value={inviteRole}
                         onChange={(e) => setInviteRole(e.target.value)}
-                        className="flex-1 px-2 py-1.5 rounded-lg border border-navy-200 text-xs text-navy focus:border-electric outline-none"
+                        className="flex-1 px-2 py-1.5 rounded-lg border border-navy-200 text-xs text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                       >
                         <option value="editor">Editor</option>
                         <option value="viewer">Viewer</option>
@@ -234,7 +306,9 @@ export default function WorkspaceDashboardClient({
                         type="button"
                         onClick={handleInvite}
                         disabled={inviting || !inviteEmail.trim()}
-                        className="px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold disabled:opacity-50"
+                        className="px-3 py-1.5 min-h-[44px] rounded-lg bg-electric text-white text-xs font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:bg-electric-600 transition disabled:hover:bg-electric"
+                        aria-label={inviting ? "Sending invite…" : "Send invite"}
+                        aria-busy={inviting}
                       >
                         {inviting ? "..." : "Send"}
                       </button>
@@ -266,7 +340,7 @@ export default function WorkspaceDashboardClient({
                           <select
                             value={member.role}
                             onChange={(e) => handleRoleChange(member.id, e.target.value)}
-                            className="text-[10px] text-navy-400 bg-transparent border-none cursor-pointer focus:outline-none"
+                            className="text-[10px] text-navy-400 bg-transparent border-none cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
                           >
                             <option value="editor">Editor</option>
                             <option value="viewer">Viewer</option>
@@ -293,6 +367,112 @@ export default function WorkspaceDashboardClient({
                   ))}
                 </div>
               </div>
+
+              {/* Branding settings (owner only) */}
+              {canAdmin && (
+                <div className="rounded-2xl border border-navy-100 bg-white p-5">
+                  <h2 className="font-bold text-navy text-sm mb-4">Branding</h2>
+
+                  {brandLoading ? (
+                    <div className="space-y-3 animate-pulse">
+                      <div className="h-8 rounded-lg bg-navy-50" />
+                      <div className="h-8 rounded-lg bg-navy-50" />
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {brandError && (
+                        <p className="text-[10px] text-red-500 font-medium">{brandError}</p>
+                      )}
+                      {brandSuccess && (
+                        <p className="text-[10px] text-emerald-600 font-medium">{brandSuccess}</p>
+                      )}
+
+                      {/* Hide PitchIQ branding toggle */}
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs text-navy">Hide PitchIQ branding</span>
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={hidePitchiqBranding}
+                          onClick={() => setHidePitchiqBranding(!hidePitchiqBranding)}
+                          disabled={brandNotEnterprise}
+                          className={`relative inline-flex h-5 w-9 shrink-0 rounded-full transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed ${
+                            hidePitchiqBranding ? "bg-electric" : "bg-navy-200"
+                          }`}
+                          aria-label={hidePitchiqBranding ? "PitchIQ branding hidden — click to show" : "PitchIQ branding shown — click to hide"}
+                        >
+                          <span
+                            className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200 ease-in-out ${
+                              hidePitchiqBranding ? "translate-x-4" : "translate-x-0.5"
+                            } mt-0.5`}
+                          />
+                        </button>
+                      </div>
+
+                      {/* Company name */}
+                      <input
+                        type="text"
+                        value={brandCompanyName}
+                        onChange={(e) => setBrandCompanyName(e.target.value)}
+                        placeholder="Company name"
+                        maxLength={100}
+                        disabled={brandNotEnterprise}
+                        className="w-full px-3 py-1.5 rounded-lg border border-navy-200 text-xs text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-navy-50"
+                      />
+
+                      {/* Logo URL */}
+                      <input
+                        type="url"
+                        value={brandLogoUrl}
+                        onChange={(e) => setBrandLogoUrl(e.target.value)}
+                        placeholder="Logo URL"
+                        maxLength={500}
+                        disabled={brandNotEnterprise}
+                        className="w-full px-3 py-1.5 rounded-lg border border-navy-200 text-xs text-navy outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-navy-50"
+                      />
+
+                      {/* Colors */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          value={brandPrimaryColor}
+                          onChange={(e) => setBrandPrimaryColor(e.target.value)}
+                          placeholder="Primary #hex"
+                          maxLength={7}
+                          disabled={brandNotEnterprise}
+                          className="px-3 py-1.5 rounded-lg border border-navy-200 text-xs text-navy font-mono outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-navy-50"
+                        />
+                        <input
+                          type="text"
+                          value={brandAccentColor}
+                          onChange={(e) => setBrandAccentColor(e.target.value)}
+                          placeholder="Accent #hex"
+                          maxLength={7}
+                          disabled={brandNotEnterprise}
+                          className="px-3 py-1.5 rounded-lg border border-navy-200 text-xs text-navy font-mono outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-navy-50"
+                        />
+                      </div>
+
+                      {brandNotEnterprise && (
+                        <p className="text-[10px] text-navy-400">
+                          <Link href="/billing" className="text-electric hover:underline">Upgrade to Enterprise</Link> for white-label branding.
+                        </p>
+                      )}
+
+                      <button
+                        type="button"
+                        onClick={handleBrandSave}
+                        disabled={brandSaving || brandNotEnterprise}
+                        aria-busy={brandSaving}
+                        aria-label={brandSaving ? "Saving branding…" : "Save branding settings"}
+                        className="w-full min-h-[44px] px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:bg-electric-600 transition disabled:hover:bg-electric disabled:cursor-not-allowed"
+                      >
+                        {brandSaving ? "Saving…" : "Save Branding"}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

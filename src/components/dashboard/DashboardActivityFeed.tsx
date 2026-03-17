@@ -35,8 +35,8 @@ const typeConfig: Record<string, { icon: React.ReactNode; color: string; bgColor
         <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
     ),
-    color: "text-purple-600",
-    bgColor: "bg-purple-50",
+    color: "text-violet-600",
+    bgColor: "bg-violet-50",
     verb: "Someone viewed",
   },
   created: {
@@ -135,7 +135,8 @@ export default function DashboardActivityFeed({
             </p>
             <Link
               href="/#pricing"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-electric text-white text-xs font-semibold shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all"
+              className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2 rounded-xl bg-electric text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label="Upgrade to Pro for activity feed"
             >
               Upgrade to Pro
             </Link>

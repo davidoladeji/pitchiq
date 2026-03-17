@@ -8,6 +8,11 @@ export default function FinalCTA() {
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
@@ -45,7 +50,7 @@ export default function FinalCTA() {
         <Link
           href="/create"
           aria-label="Generate your pitch deck for free — no signup required"
-          className="min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-xl bg-electric hover:bg-electric-light text-white font-semibold text-lg shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+          className="min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-xl bg-electric hover:bg-electric-600 text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           Generate Your Deck — Free
         </Link>

@@ -8,16 +8,8 @@ export default function RootLoading() {
     <div className="min-h-screen overflow-hidden bg-background" aria-busy="true">
       {/* Screen reader: announce loading state (WCAG 2.1 AA) */}
       <p className="sr-only" role="status" aria-live="polite">
-        Loading
+        Loading home
       </p>
-      {/* Skip link present for a11y consistency (skeleton is non-interactive) */}
-      <a
-        href="#main"
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      >
-        Skip to main content
-      </a>
-
       {/* Nav skeleton — matches LandingNav (fixed glass bar, logo + text + CTA) */}
       <header
         className="fixed top-0 w-full z-50 glass border-b border-white/10"
@@ -32,7 +24,7 @@ export default function RootLoading() {
         </div>
       </header>
 
-      <main id="main" tabIndex={-1} aria-hidden="true">
+      <main id="main" tabIndex={-1} aria-label="Main content" aria-hidden="true">
         {/* Hero skeleton — dark gradient to match real hero */}
         <section className="relative pt-32 pb-32 md:pt-40 md:pb-40 px-6 bg-hero-gradient overflow-hidden">
           <div className="max-w-4xl mx-auto text-center relative z-10">

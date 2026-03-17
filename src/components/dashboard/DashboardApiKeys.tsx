@@ -114,7 +114,7 @@ export default function DashboardApiKeys({
           </p>
           <a
             href="/pricing"
-            className="inline-block px-4 py-2 text-sm font-semibold text-white bg-electric rounded-lg hover:bg-electric-600 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="min-h-[44px] inline-flex items-center justify-center px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-electric shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             aria-label="Upgrade to Enterprise for API access"
           >
             Upgrade to Enterprise
@@ -179,7 +179,7 @@ export default function DashboardApiKeys({
           placeholder="Key name (optional)"
           value={newKeyName}
           onChange={(e) => setNewKeyName(e.target.value)}
-          className="flex-1 text-sm border border-navy-200 rounded-lg px-3 py-2 text-navy placeholder:text-navy-300 focus:outline-none focus:ring-2 focus:ring-electric/30 focus:border-electric focus-visible:ring-offset-0"
+          className="flex-1 text-sm border border-navy-200 rounded-lg px-3 py-2 text-navy placeholder:text-navy-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric"
           maxLength={100}
           aria-label="API key name (optional)"
         />
@@ -187,8 +187,9 @@ export default function DashboardApiKeys({
           type="button"
           onClick={handleCreate}
           disabled={creating}
-          className="flex-shrink-0 px-4 py-2 text-sm font-semibold rounded-lg bg-electric text-white hover:bg-electric-600 transition disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="flex-shrink-0 min-h-[44px] px-5 py-2.5 text-sm font-semibold rounded-xl bg-electric text-white shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:hover:translate-y-0 disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           aria-label={creating ? "Creating API key" : "Create API key"}
+          aria-busy={creating}
         >
           {creating ? "Creating..." : "Create Key"}
         </button>
@@ -200,7 +201,28 @@ export default function DashboardApiKeys({
 
       {/* Keys list */}
       {loading ? (
-        <div className="py-8 text-center text-navy-400 text-sm">Loading...</div>
+        <>
+          <p className="sr-only" role="status" aria-live="polite">
+            Loading API keys
+          </p>
+          <div className="space-y-2" aria-hidden="true">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-navy-200 bg-white"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="h-4 w-32 rounded bg-navy-100 animate-pulse" />
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className="h-3 w-24 rounded bg-navy-50 animate-pulse" />
+                    <div className="h-3 w-20 rounded bg-navy-50 animate-pulse" />
+                  </div>
+                </div>
+                <div className="h-6 w-14 rounded bg-navy-100 animate-pulse flex-shrink-0" />
+              </div>
+            ))}
+          </div>
+        </>
       ) : keys.length === 0 ? (
         <div className="py-8 text-center text-navy-400 text-sm">
           No API keys yet. Create one to get started.

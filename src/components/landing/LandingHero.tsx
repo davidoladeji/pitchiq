@@ -11,6 +11,12 @@ export default function LandingHero() {
     const el = sectionRef.current;
     if (!el) return;
 
+    // WCAG 2.1 AA: when reduced motion is preferred, show hero content on first paint (no scroll-triggered reveal)
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -27,6 +33,7 @@ export default function LandingHero() {
 
   return (
     <section
+      id="hero"
       ref={sectionRef}
       className="relative min-h-[100vh] flex items-center justify-center px-4 sm:px-6 overflow-hidden bg-navy"
       aria-label="PitchIQ hero — get your PIQ Score"
@@ -104,7 +111,7 @@ export default function LandingHero() {
           <Link
             href="/create"
             aria-label="Get your PIQ Score — analyze your deck's fundability"
-            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all duration-300 hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Get Your PIQ Score
             <svg
@@ -124,9 +131,9 @@ export default function LandingHero() {
           </Link>
         </div>
 
-        {/* Trust line — white/50 for WCAG 2.1 AA contrast on dark navy */}
+        {/* Trust line — white/60 for WCAG 2.1 AA contrast on dark navy (#1a1a2e) */}
         <p
-          className={`text-sm text-white/50 tracking-wide transition-all duration-1000 ease-out delay-700 ${
+          className={`text-sm text-white/60 tracking-wide transition-all duration-1000 ease-out delay-700 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >

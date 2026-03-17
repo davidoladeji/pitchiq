@@ -94,8 +94,15 @@ export default function LandingPIQDeepDive() {
   const [chartVisible, setChartVisible] = useState(false);
   const [gradeVisible, setGradeVisible] = useState(false);
 
-  /* Scroll-triggered visibility */
+  /* Scroll-triggered visibility; respect prefers-reduced-motion (WCAG 2.1 AA) */
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setHeaderVisible(true);
+      setChartVisible(true);
+      setGradeVisible(true);
+      return;
+    }
     const observers: IntersectionObserver[] = [];
 
     const observe = (
@@ -143,7 +150,7 @@ export default function LandingPIQDeepDive() {
     <section
       id="about"
       ref={sectionRef}
-      className="py-16 sm:py-20 px-4 sm:px-6 bg-white"
+      className="py-16 sm:py-20 px-4 sm:px-6 bg-background"
       aria-label="PIQ Score methodology deep dive"
     >
       <div className="max-w-5xl mx-auto">

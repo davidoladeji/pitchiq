@@ -427,7 +427,7 @@ export default function PitchPracticeClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main id="main" tabIndex={-1} className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8">
+        <main id="main" tabIndex={-1} className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8" aria-label="Main content">
           {/* Header */}
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
@@ -515,7 +515,7 @@ export default function PitchPracticeClient({
                         Math.max(1, Math.min(60, parseInt(e.target.value) || 1))
                       )
                     }
-                    className="w-20 px-3 py-2 rounded-lg border border-navy-200 text-sm bg-white focus:ring-2 focus:ring-electric/30 focus:border-electric outline-none"
+                    className="w-20 px-3 py-2 rounded-lg border border-navy-200 text-sm bg-white outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric"
                   />
                   <span className="text-sm text-navy-500">minutes</span>
                 </div>
@@ -563,7 +563,8 @@ export default function PitchPracticeClient({
 
             <button
               onClick={handleStart}
-              className="px-8 py-3 rounded-xl bg-electric text-white font-bold text-base hover:bg-electric-light transition-colors shadow-sm"
+              className="min-h-[44px] px-8 py-3 rounded-xl bg-electric text-white font-bold text-base shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              aria-label="Start practice session"
             >
               Start Practice
             </button>
@@ -755,7 +756,7 @@ export default function PitchPracticeClient({
           {currentSlide < slideCount - 1 ? (
             <button
               onClick={goToNextSlide}
-              className="px-5 py-2.5 rounded-xl bg-electric text-white font-medium hover:bg-electric-light transition-colors flex items-center gap-2"
+              className="px-5 py-2.5 rounded-xl bg-electric text-white font-medium hover:bg-electric-600 transition-colors flex items-center gap-2"
             >
               Next
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -799,7 +800,7 @@ export default function PitchPracticeClient({
                 </button>
                 <button
                   onClick={handleEndPractice}
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-light transition-colors"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-600 transition-colors"
                 >
                   End & Review
                 </button>
@@ -818,7 +819,7 @@ export default function PitchPracticeClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main id="main" tabIndex={-1} className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8">
+      <main id="main" tabIndex={-1} className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8" aria-label="Main content">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-2xl font-bold text-navy">Practice Review</h1>
@@ -829,7 +830,7 @@ export default function PitchPracticeClient({
           <div className="flex gap-3">
             <button
               onClick={handlePracticeAgain}
-              className="px-4 py-2 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-light transition-colors"
+              className="px-4 py-2 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-600 transition-colors"
             >
               Practice Again
             </button>
@@ -855,7 +856,7 @@ export default function PitchPracticeClient({
             <p className="text-sm text-red-700">{feedbackError}</p>
             <button
               onClick={handlePracticeAgain}
-              className="px-4 py-2 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-light transition-colors"
+              className="px-4 py-2 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-600 transition-colors"
             >
               Try Again
             </button>
@@ -1012,7 +1013,7 @@ export default function PitchPracticeClient({
             {/* Confidence Indicators */}
             <div className="rounded-2xl border border-navy-100 bg-white p-6 space-y-3">
               <h2 className="text-base font-bold text-navy flex items-center gap-2">
-                <svg className="w-5 h-5 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                 </svg>
                 Confidence Analysis

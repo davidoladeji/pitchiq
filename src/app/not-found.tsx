@@ -5,24 +5,17 @@ export const dynamic = "force-dynamic";
 export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col bg-navy-50">
-      {/* Skip link — WCAG 2.1 AA */}
-      <a
-        href="#main"
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-electric focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-      >
-        Skip to main content
-      </a>
-
+      {/* Single skip link provided by root layout — no duplicate here (WCAG 2.1 AA) */}
       <main
         id="main"
         tabIndex={-1}
         className="flex flex-1 flex-col items-center justify-center px-6 py-16"
-        role="main"
+        aria-label="Main content"
       >
         {/* Brand — consistent with landing/deck viewer */}
         <Link
           href="/"
-          className="mb-12 flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+          className="mb-12 flex items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-electric shadow-glow">
             <span className="font-bold text-white text-sm">P</span>
@@ -51,14 +44,14 @@ export default function NotFound() {
             <Link
               href="/"
               aria-label="Go to PitchIQ home"
-              className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-navy text-white font-semibold text-sm shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2"
+              className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-navy text-white font-semibold text-sm shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Go to PitchIQ
             </Link>
             <Link
               href="/create"
               aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
-              className="min-h-[44px] w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-electric hover:bg-electric-light text-white font-semibold text-sm shadow-lg hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="min-h-[44px] w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-electric hover:bg-electric-600 text-white font-semibold text-sm shadow-lg shadow-electric/25 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Create your deck
             </Link>

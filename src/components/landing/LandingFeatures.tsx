@@ -43,46 +43,46 @@ const FEATURES = [
 
 const CARD_THEMES = [
   {
-    bg: "bg-navy-50 border border-navy-100",
+    bg: "bg-gradient-to-br from-electric-50 to-violet-50",
     blob: "bg-electric",
     iconBg: "bg-electric/10",
     iconBorder: "border-electric/20",
     iconColor: "text-electric",
   },
   {
-    bg: "bg-white border border-navy-100",
-    blob: "bg-electric",
-    iconBg: "bg-electric/10",
-    iconBorder: "border-electric/20",
-    iconColor: "text-electric",
+    bg: "bg-gradient-to-br from-violet-50 to-purple-50",
+    blob: "bg-violet-400",
+    iconBg: "bg-violet-100",
+    iconBorder: "border-violet-200",
+    iconColor: "text-violet-600",
   },
   {
-    bg: "bg-navy-50 border border-navy-100",
-    blob: "bg-navy-300",
-    iconBg: "bg-navy-100",
-    iconBorder: "border-navy-200",
-    iconColor: "text-navy-600",
+    bg: "bg-gradient-to-br from-amber-50 to-orange-50",
+    blob: "bg-amber-400",
+    iconBg: "bg-amber-100",
+    iconBorder: "border-amber-200",
+    iconColor: "text-amber-600",
   },
   {
-    bg: "bg-white border border-navy-100",
-    blob: "bg-navy-300",
-    iconBg: "bg-navy-100",
-    iconBorder: "border-navy-200",
-    iconColor: "text-navy-600",
+    bg: "bg-gradient-to-br from-rose-50 to-pink-50",
+    blob: "bg-rose-400",
+    iconBg: "bg-rose-100",
+    iconBorder: "border-rose-200",
+    iconColor: "text-rose-600",
   },
   {
-    bg: "bg-navy-50 border border-navy-100",
-    blob: "bg-electric",
-    iconBg: "bg-electric/10",
-    iconBorder: "border-electric/20",
-    iconColor: "text-electric",
+    bg: "bg-gradient-to-br from-emerald-50 to-teal-50",
+    blob: "bg-emerald-400",
+    iconBg: "bg-emerald-100",
+    iconBorder: "border-emerald-200",
+    iconColor: "text-emerald-600",
   },
   {
-    bg: "bg-white border border-navy-100",
-    blob: "bg-electric",
-    iconBg: "bg-electric/10",
-    iconBorder: "border-electric/20",
-    iconColor: "text-electric",
+    bg: "bg-gradient-to-br from-electric-50 to-violet-50",
+    blob: "bg-electric-400",
+    iconBg: "bg-electric-100",
+    iconBorder: "border-electric-200",
+    iconColor: "text-electric-600",
   },
 ];
 
@@ -118,7 +118,7 @@ export default function LandingFeatures() {
     <section
       id="features"
       className="section-py px-6 bg-navy-50"
-      aria-label="Features — built for fundraising intelligence"
+      aria-label="Features — built for fundraising, not slides"
     >
       <div className="max-w-5xl mx-auto" ref={sectionRef}>
         {/* Section header */}
@@ -127,10 +127,10 @@ export default function LandingFeatures() {
             Features
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] lg:text-5xl font-bold text-navy tracking-[-0.025em] mb-5 font-display leading-[1.1]">
-            Built for fundraising intelligence
+            Built for fundraising, not slides
           </h2>
           <p className="text-lg text-navy-500 max-w-md mx-auto leading-relaxed">
-            Every feature designed to quantify, improve, and track your fundraising readiness.
+            Every feature optimized for one goal: closing investor meetings.
           </p>
         </div>
 

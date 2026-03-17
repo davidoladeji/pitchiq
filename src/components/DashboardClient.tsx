@@ -34,7 +34,7 @@ interface DeckSummary {
 const PLAN_LABELS: Record<string, { label: string; color: string }> = {
   starter: { label: "Starter", color: "bg-navy-100 text-navy-600" },
   pro: { label: "Pro", color: "bg-electric/10 text-electric" },
-  growth: { label: "Growth", color: "bg-purple-100 text-purple-700" },
+  growth: { label: "Growth", color: "bg-violet-100 text-violet-700" },
   enterprise: { label: "Enterprise", color: "bg-amber-100 text-amber-700" },
 };
 
@@ -94,15 +94,9 @@ export default function DashboardClient({
 
   return (
     <div className="min-h-screen bg-navy-50">
-      <a
-        href="#main"
-        className="sr-only focus-visible:not-sr-only focus-visible:absolute focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:bg-white focus-visible:font-medium focus-visible:text-navy"
-      >
-        Skip to main content
-      </a>
       <AppNav />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none" aria-label="Main content">
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Header row */}
           <div className="flex items-start justify-between gap-4">
@@ -182,7 +176,8 @@ export default function DashboardClient({
                 <button
                   type="button"
                   onClick={() => setShowPlanModal(true)}
-                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[40px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  aria-label="View plans and upgrade to Pro"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />

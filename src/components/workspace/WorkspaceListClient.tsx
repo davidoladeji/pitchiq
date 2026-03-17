@@ -73,7 +73,7 @@ export default function WorkspaceListClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6">
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
@@ -84,9 +84,10 @@ export default function WorkspaceListClient({
               <button
                 type="button"
                 onClick={() => setShowCreate(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light transition-colors"
+                aria-label="Create a new workspace"
+                className="min-h-[44px] inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                 </svg>
                 New Workspace
@@ -105,13 +106,15 @@ export default function WorkspaceListClient({
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Acme Ventures"
                   onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-                  className="flex-1 px-4 py-2 rounded-xl border border-navy-200 text-sm text-navy placeholder:text-navy-400 focus:border-electric focus:ring-2 focus:ring-electric/20 outline-none"
+                  className="flex-1 px-4 py-2 rounded-xl border border-navy-200 text-sm text-navy placeholder:text-navy-400 outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 />
                 <button
                   type="button"
                   onClick={handleCreate}
                   disabled={creating || !name.trim()}
-                  className="px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold disabled:opacity-50 hover:bg-electric-light transition-colors"
+                  aria-label={creating ? "Creating workspace…" : "Create workspace"}
+                  aria-busy={creating}
+                  className="min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   {creating ? "Creating..." : "Create"}
                 </button>
@@ -148,7 +151,8 @@ export default function WorkspaceListClient({
                 <button
                   type="button"
                   onClick={() => setShowCreate(true)}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-light transition-colors"
+                  aria-label="Create your first workspace"
+                  className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
                   Create Your First Workspace
                 </button>

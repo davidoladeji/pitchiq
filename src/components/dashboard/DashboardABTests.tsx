@@ -103,8 +103,8 @@ export default function DashboardABTests({
     <div className="rounded-2xl border border-navy-100 bg-white p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
-            <svg className="w-4 h-4 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center">
+            <svg className="w-4 h-4 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
             </svg>
           </div>
@@ -135,7 +135,7 @@ export default function DashboardABTests({
                 id="ab-deck-a"
                 value={deckAId}
                 onChange={(e) => setDeckAId(e.target.value)}
-                className="w-full rounded-lg border border-navy-200 bg-white px-3 py-2 text-xs text-navy focus:outline-none focus:ring-2 focus:ring-electric"
+                className="w-full rounded-lg border border-navy-200 bg-white px-3 py-2 text-xs text-navy focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 <option value="">Select a deck...</option>
                 {decks.map((d) => (
@@ -151,7 +151,7 @@ export default function DashboardABTests({
                 id="ab-deck-b"
                 value={deckBId}
                 onChange={(e) => setDeckBId(e.target.value)}
-                className="w-full rounded-lg border border-navy-200 bg-white px-3 py-2 text-xs text-navy focus:outline-none focus:ring-2 focus:ring-electric"
+                className="w-full rounded-lg border border-navy-200 bg-white px-3 py-2 text-xs text-navy focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               >
                 <option value="">Select a deck...</option>
                 {decks.map((d) => (
@@ -168,7 +168,7 @@ export default function DashboardABTests({
               type="button"
               onClick={handleCreate}
               disabled={creating || !deckAId || !deckBId || deckAId === deckBId}
-              className="px-4 py-2 rounded-lg bg-electric text-white text-xs font-semibold disabled:opacity-50 hover:bg-electric-light transition-colors"
+              className="px-4 py-2 rounded-lg bg-electric text-white text-xs font-semibold disabled:opacity-50 hover:bg-electric-600 transition-colors"
             >
               {creating ? "Creating..." : "Create A/B Test"}
             </button>
@@ -269,10 +269,10 @@ export default function DashboardABTests({
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="w-4 text-[10px] font-bold text-purple-600">B</span>
+                    <span className="w-4 text-[10px] font-bold text-violet-600">B</span>
                     <div className="flex-1 h-6 rounded-lg bg-navy-100 overflow-hidden relative">
                       <div
-                        className="h-full bg-purple-200/50 rounded-lg transition-all"
+                        className="h-full bg-violet-200/50 rounded-lg transition-all"
                         style={{ width: `${bPct}%` }}
                       />
                       <span className="absolute inset-0 flex items-center px-2 text-[11px] font-semibold text-navy truncate">
@@ -300,7 +300,7 @@ export default function DashboardABTests({
                   </Link>
                   <Link
                     href={`/deck/${test.deckB.shareId}`}
-                    className="text-[10px] text-purple-600 hover:underline font-medium"
+                    className="text-[10px] text-violet-600 hover:underline font-medium"
                   >
                     View B
                   </Link>

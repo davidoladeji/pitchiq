@@ -54,8 +54,8 @@ function Endpoint({
   children?: React.ReactNode;
 }) {
   const methodColors: Record<string, string> = {
-    GET: "bg-green-500/10 text-green-400 border-green-500/20",
-    POST: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    GET: "bg-emerald/15 text-emerald border-emerald/20",
+    POST: "bg-electric/10 text-electric border-electric/20",
     DELETE: "bg-red-500/10 text-red-400 border-red-500/20",
   };
   return (

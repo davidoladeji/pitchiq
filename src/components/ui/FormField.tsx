@@ -1,7 +1,7 @@
 import React from "react";
 
 export const inputClass =
-  "w-full px-4 py-3.5 rounded-xl border border-navy-200 bg-white focus:border-electric focus:ring-2 focus:ring-electric/10 outline-none transition-all text-navy placeholder:text-navy-500 text-sm";
+  "w-full px-4 py-3.5 rounded-xl border border-navy-200 bg-white outline-none transition-all text-navy placeholder:text-navy-500 text-sm focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white";
 
 export default function FormField({
   label,

@@ -54,7 +54,7 @@ export default function DashboardOverview({
 
   const planBadgeColor =
     plan === "growth"
-      ? "bg-purple-100 text-purple-700"
+      ? "bg-violet-100 text-violet-700"
       : plan === "pro"
         ? "bg-electric/10 text-electric"
         : "bg-navy-100 text-navy-600";
@@ -80,8 +80,8 @@ export default function DashboardOverview({
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
       ),
-      color: "text-purple-600",
-      bgColor: "bg-purple-100",
+      color: "text-violet-600",
+      bgColor: "bg-violet-100",
     },
     {
       label: "Avg PIQ Score",
@@ -122,7 +122,7 @@ export default function DashboardOverview({
           const content = (
             <div
               key={stat.label}
-              className="bg-white rounded-2xl border border-navy-200 p-4 sm:p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+              className="bg-white rounded-2xl border border-navy-200 p-4 sm:p-6 hover:shadow-card-hover hover:-translate-y-0.5 transition-all"
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${stat.bgColor} flex items-center justify-center shrink-0 ${stat.color}`}>

@@ -64,7 +64,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
   const logo = (
     <Link
       href="/"
-      className={`flex items-center gap-2 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"}`}
+      className="flex items-center gap-2 shrink-0 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       aria-label="PitchIQ home"
     >
       <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-navy">
@@ -84,16 +84,17 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
   const navLink = (
     href: string,
     label: string,
-    opts?: { anchor?: boolean; current?: boolean; badge?: string }
+    opts?: { anchor?: boolean; current?: boolean; badge?: string; ariaLabel?: string }
   ) => {
     const Tag = opts?.anchor ? "a" : Link;
     return (
       <Tag
         href={href}
+        aria-label={opts?.ariaLabel}
         {...(opts?.current !== undefined
           ? { "aria-current": opts.current ? ("page" as const) : undefined }
           : {})}
-        className={`text-[13px] font-medium px-3.5 py-1.5 rounded-full transition-colors duration-200 ${textColor} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"} ${opts?.badge ? "inline-flex items-center gap-1" : ""}`}
+        className={`text-[13px] font-medium px-3.5 py-1.5 rounded-full transition-colors duration-200 min-h-[44px] inline-flex items-center ${textColor} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${opts?.badge ? "gap-1" : ""}`}
       >
         {label}
         {opts?.badge && (
@@ -105,12 +106,12 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
     );
   };
 
-  /* --- CTA button — translate-only feedback to match hero, LandingCTA, Footer (motion with purpose) --- */
+  /* --- CTA button — 44px touch target (WCAG 2.1 AA); translate-only feedback; focus ring visible on dark bar --- */
   const ctaButton = (
     <Link
       href="/create"
       aria-label="Get started — create your pitch deck"
-      className={`inline-flex items-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"} ${
+      className={`min-h-[44px] inline-flex items-center justify-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
         isLanding
           ? "bg-white text-navy hover:bg-navy-100 hover:shadow-md"
           : "bg-navy text-white hover:bg-navy/80 hover:shadow-md"
@@ -120,12 +121,12 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
     </Link>
   );
 
-  /* --- Hamburger: min 44×44px touch target (WCAG 2.1) --- */
+  /* --- Hamburger: min 44×44px touch target (WCAG 2.1); focus ring visible on dark bar --- */
   const hamburger = (
     <button
       type="button"
       onClick={() => setIsMenuOpen((o) => !o)}
-      className={`min-w-[44px] min-h-[44px] w-11 h-11 inline-flex items-center justify-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 ${isLanding ? "focus-visible:ring-offset-navy" : "focus-visible:ring-offset-white"} ${
+      className={`min-w-[44px] min-h-[44px] w-11 h-11 inline-flex items-center justify-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
         isLanding
           ? "text-white/80 hover:text-white hover:bg-white/10"
           : "text-navy hover:bg-navy-100"
@@ -150,17 +151,18 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
   const mobileLink = (
     href: string,
     label: string,
-    opts?: { anchor?: boolean; current?: boolean; badge?: string }
+    opts?: { anchor?: boolean; current?: boolean; badge?: string; ariaLabel?: string }
   ) => {
     const Tag = opts?.anchor ? "a" : Link;
     return (
       <Tag
         href={href}
         onClick={closeMenu}
+        aria-label={opts?.ariaLabel}
         {...(opts?.current !== undefined
           ? { "aria-current": opts.current ? ("page" as const) : undefined }
           : {})}
-        className="block px-2 py-4 text-2xl font-display font-semibold text-white/90 hover:text-white transition-colors border-b border-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+        className="min-h-[44px] flex items-center px-2 py-4 text-2xl font-display font-semibold text-white/90 hover:text-white transition-colors border-b border-white/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       >
         {label}
         {opts?.badge && (
@@ -204,10 +206,10 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
 
           {/* Center: desktop links */}
           <div className="hidden md:flex items-center gap-0.5">
-            {navLink("#about", "About", { anchor: true, badge: "PIQ" })}
-            {navLink("#how-it-works", "How", { anchor: true })}
-            {navLink("#features", "Features", { anchor: true })}
-            {navLink("#pricing", "Pricing", { anchor: true })}
+            {navLink("#about", "About", { anchor: true, badge: "PIQ", ariaLabel: "Go to About PitchIQ" })}
+            {navLink("#how-it-works", "How", { anchor: true, ariaLabel: "Go to How it works" })}
+            {navLink("#features", "Features", { anchor: true, ariaLabel: "Go to Features" })}
+            {navLink("#pricing", "Pricing", { anchor: true, ariaLabel: "Go to Pricing" })}
           </div>
 
           {/* Right: CTA + auth + mobile hamburger */}
@@ -248,10 +250,10 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
           }`}
         >
           <div className="flex flex-col">
-            {mobileLink("#about", "About", { anchor: true, badge: "PIQ" })}
-            {mobileLink("#how-it-works", "How", { anchor: true })}
-            {mobileLink("#features", "Features", { anchor: true })}
-            {mobileLink("#pricing", "Pricing", { anchor: true })}
+            {mobileLink("#about", "About", { anchor: true, badge: "PIQ", ariaLabel: "Go to About PitchIQ" })}
+            {mobileLink("#how-it-works", "How", { anchor: true, ariaLabel: "Go to How it works" })}
+            {mobileLink("#features", "Features", { anchor: true, ariaLabel: "Go to Features" })}
+            {mobileLink("#pricing", "Pricing", { anchor: true, ariaLabel: "Go to Pricing" })}
           </div>
 
           {/* Bottom section */}
@@ -263,7 +265,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
               href="/create"
               onClick={closeMenu}
               aria-label="Get started — create your pitch deck"
-              className="w-full text-center py-3.5 rounded-full bg-electric hover:bg-electric-600 text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy"
+              className="min-h-[44px] w-full inline-flex items-center justify-center py-3.5 rounded-full bg-electric hover:bg-electric-600 text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Get Started
             </Link>

@@ -32,6 +32,11 @@ export default function LandingSteps() {
   );
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisibleRows(new Array(STEPS.length).fill(true));
+      return;
+    }
     const observers: IntersectionObserver[] = [];
 
     rowRefs.current.forEach((el, i) => {
@@ -69,7 +74,7 @@ export default function LandingSteps() {
             HOW IT WORKS
           </p>
           <h2 className="text-display-lg font-display text-navy">
-            From upload to fundability score
+            From idea to scored deck
             <br />
             in 60 seconds
           </h2>

@@ -21,7 +21,8 @@ export default function PIQScoreExplainer() {
         </p>
         <Link
           href="/create"
-          className="inline-flex items-center justify-center min-h-[44px] px-8 py-3.5 rounded-full bg-electric text-white font-semibold text-base transition-all duration-300 hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          aria-label="Get your PIQ Score — create your pitch deck in 60 seconds"
+          className="inline-flex items-center justify-center min-h-[44px] px-8 py-3.5 rounded-full bg-electric text-white font-semibold text-base shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           Get Your PIQ Score
         </Link>
@@ -307,7 +308,8 @@ export default function PIQScoreExplainer() {
         </p>
         <Link
           href="/create"
-          className="inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all duration-300 hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          aria-label="Get your PIQ Score — create your pitch deck in 60 seconds"
+          className="inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           Get Your PIQ Score
         </Link>

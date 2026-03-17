@@ -96,8 +96,9 @@ export default function AdminLayout({
       {/* Main content */}
       <main
         id="main"
-        className="flex-1 min-w-0 pt-14 lg:pt-0 lg:ml-64"
         tabIndex={-1}
+        className="flex-1 min-w-0 pt-14 lg:pt-0 lg:ml-64"
+        aria-label="Main content"
       >
         <div className="p-6 lg:p-8 max-w-7xl">
           {children}

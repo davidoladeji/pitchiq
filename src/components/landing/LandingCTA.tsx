@@ -8,10 +8,17 @@ export default function LandingCTA() {
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setInView(true); },
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
       { threshold: 0.15 }
     );
     obs.observe(el);
@@ -49,7 +56,7 @@ export default function LandingCTA() {
           <Link
             href="/create"
             aria-label="Get your PIQ Score for free"
-            className="group min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg transition-all duration-300 hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="group min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Get Your PIQ Score &mdash; Free
             <svg

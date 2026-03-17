@@ -162,7 +162,8 @@ export default function DeckUploader({
                 e.stopPropagation();
                 handleRemove();
               }}
-              className="text-xs text-navy-500 hover:text-red-500 transition-colors rounded px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="text-xs text-navy-500 hover:text-red-500 transition-colors rounded px-1.5 py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
+              aria-label="Remove selected file"
             >
               Remove
             </button>

@@ -398,10 +398,11 @@ export default function BatchScoreClient(props: {
             </p>
             <Link
               href="/#pricing"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-electric text-white rounded-xl font-medium hover:bg-electric/90 transition"
+              className="inline-flex items-center gap-2 min-h-[44px] px-6 py-3 bg-electric text-white rounded-xl font-medium shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white transition hover:-translate-y-0.5 active:translate-y-0"
+              aria-label="Upgrade to Enterprise to use batch scoring"
             >
               Upgrade to Enterprise
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>
@@ -447,7 +448,7 @@ export default function BatchScoreClient(props: {
             placeholder="Batch name (optional)"
             value={batchName}
             onChange={(e) => setBatchName(e.target.value)}
-            className="w-full mb-4 px-4 py-2.5 border border-navy-200 rounded-xl text-navy-900 placeholder-navy-400 focus:outline-none focus:ring-2 focus:ring-electric/30 focus:border-electric"
+            className="w-full mb-4 px-4 py-2.5 border border-navy-200 rounded-xl text-navy-900 placeholder-navy-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric"
           />
 
           {/* Drop zone */}
@@ -531,10 +532,12 @@ export default function BatchScoreClient(props: {
                     </span>
                   </div>
                   <button
+                    type="button"
                     onClick={() => removeFile(i)}
-                    className="text-navy-400 hover:text-red-500 transition p-1"
+                    className="text-navy-400 hover:text-red-500 transition p-1 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white min-h-[44px] min-w-[44px] inline-flex items-center justify-center"
+                    aria-label={`Remove ${file.name}`}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
@@ -543,13 +546,16 @@ export default function BatchScoreClient(props: {
 
               {/* Submit button */}
               <button
+                type="button"
                 onClick={handleSubmit}
                 disabled={submitting || files.length === 0}
-                className="mt-4 w-full py-3 bg-electric text-white font-semibold rounded-xl hover:bg-electric/90 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="mt-4 w-full min-h-[44px] py-3 bg-electric text-white font-semibold rounded-xl shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white transition hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none flex items-center justify-center gap-2"
+                aria-label={submitting ? `Scoring ${files.length} deck${files.length !== 1 ? "s" : ""}…` : `Score all ${files.length} deck${files.length !== 1 ? "s" : ""}`}
+                aria-busy={submitting}
               >
                 {submitting ? (
                   <>
-                    <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 animate-spin shrink-0" fill="none" viewBox="0 0 24 24" aria-hidden>
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
@@ -738,11 +744,13 @@ export default function BatchScoreClient(props: {
             {/* Back to new batch button */}
             {isCompleted && (
               <button
+                type="button"
                 onClick={() => {
                   setActiveJobId(null);
                   setActiveJob(null);
                 }}
-                className="mt-4 text-sm text-electric hover:text-electric/80 font-medium transition"
+                className="mt-4 min-h-[44px] px-4 text-sm text-electric hover:text-electric/80 font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
+                aria-label="Start a new batch"
               >
                 Start New Batch
               </button>
@@ -783,16 +791,20 @@ export default function BatchScoreClient(props: {
                     </div>
                     <div className="flex items-center gap-2 shrink-0 ml-3">
                       <button
+                        type="button"
                         onClick={() => viewJob(job)}
-                        className="text-xs px-3 py-1.5 text-electric bg-electric/10 rounded-lg hover:bg-electric/20 font-medium transition"
+                        className="text-xs px-3 py-1.5 text-electric bg-electric/10 rounded-lg hover:bg-electric/20 font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white min-h-[44px]"
+                        aria-label={`View batch ${job.name}`}
                       >
                         View
                       </button>
                       <button
+                        type="button"
                         onClick={() => deleteJob(job.id)}
-                        className="text-xs px-2 py-1.5 text-navy-400 hover:text-red-500 transition"
+                        className="text-xs px-2 py-1.5 text-navy-400 hover:text-red-500 transition min-h-[44px] min-w-[44px] inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded-lg"
+                        aria-label={`Delete batch ${job.name}`}
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                         </svg>
                       </button>

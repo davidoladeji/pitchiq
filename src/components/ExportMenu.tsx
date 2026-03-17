@@ -10,7 +10,7 @@ interface ExportMenuProps {
   userPlan?: string;
 }
 
-async function exportPdf(deck: DeckData, watermark: boolean) {
+async function exportPdf(deck: DeckData, watermark: boolean, showBranding: boolean) {
   const [{ default: jsPDF }, { default: html2canvas }] = await Promise.all([
     import("jspdf"),
     import("html2canvas"),
@@ -39,7 +39,7 @@ async function exportPdf(deck: DeckData, watermark: boolean) {
         pdf.addImage(imgData, "JPEG", 0, 0, 1280, 720);
       } catch {
         // Fallback: text-only for this slide
-        renderTextSlide(pdf, deck.slides[i], i, deck.slides.length);
+        renderTextSlide(pdf, deck.slides[i], i, deck.slides.length, showBranding);
       }
 
       // Add watermark for free tier
@@ -51,7 +51,7 @@ async function exportPdf(deck: DeckData, watermark: boolean) {
     // No rendered container — fall back to text-only
     for (let i = 0; i < deck.slides.length; i++) {
       if (i > 0) pdf.addPage([1280, 720], "landscape");
-      renderTextSlide(pdf, deck.slides[i], i, deck.slides.length);
+      renderTextSlide(pdf, deck.slides[i], i, deck.slides.length, showBranding);
       if (watermark) {
         addWatermark(pdf);
       }
@@ -76,7 +76,7 @@ function addWatermark(pdf: any) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function renderTextSlide(pdf: any, slide: DeckData["slides"][number], idx: number, total: number) {
+function renderTextSlide(pdf: any, slide: DeckData["slides"][number], idx: number, total: number, showBranding: boolean) {
   const isDark = slide.type === "title" || slide.type === "cta" || slide.accent;
   if (isDark) {
     pdf.setFillColor(26, 26, 46);
@@ -151,7 +151,9 @@ function renderTextSlide(pdf: any, slide: DeckData["slides"][number], idx: numbe
   }
   pdf.setFontSize(10);
   pdf.setTextColor(150, 150, 170);
-  pdf.text("Made with PitchIQ", 80, 690);
+  if (showBranding) {
+    pdf.text("Made with PitchIQ", 80, 690);
+  }
   pdf.text(`${idx + 1} / ${total}`, 1180, 690);
 }
 
@@ -175,7 +177,7 @@ export default function ExportMenu({ deck, className = "", userPlan = "starter" 
   const handleExport = async (format: "pdf") => {
     setExporting(format);
     try {
-      await exportPdf(deck, limits.pdfWatermark);
+      await exportPdf(deck, limits.pdfWatermark, limits.showBranding);
     } finally {
       setExporting(null);
       setOpen(false);
@@ -191,7 +193,7 @@ export default function ExportMenu({ deck, className = "", userPlan = "starter" 
         aria-label="Export deck"
         aria-expanded={open}
         aria-haspopup="menu"
-        className="min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-navy text-white font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 disabled:opacity-70"
+        className="min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-navy text-white font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none"
       >
         {exporting ? (
           <>

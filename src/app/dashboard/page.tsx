@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
@@ -5,6 +6,12 @@ import { prisma } from "@/lib/db";
 import DashboardClient from "@/components/DashboardClient";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Dashboard | PitchIQ",
+  description:
+    "Manage your pitch decks, view PIQ scores, and access Pitch Practice and fundraise tools.",
+};
 
 export default async function DashboardPage({
   searchParams,
