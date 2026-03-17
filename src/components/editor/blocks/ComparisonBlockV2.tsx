@@ -43,9 +43,11 @@ function InlineEdit({
 
 export default function ComparisonBlockV2({
   data,
-  isSelected,
+  // isSelected reserved for future selection styling
+  isSelected: _isSelected,
   onDataChange,
 }: ComparisonBlockV2Props) {
+  void _isSelected;
   return (
     <div
       className="w-full h-full grid grid-cols-3 gap-4 p-3 rounded-lg items-center"

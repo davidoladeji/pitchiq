@@ -42,9 +42,10 @@ function InlineField({
 
 export default function MetricBlockV2({
   data,
-  isSelected,
+  isSelected: _isSelected,
   onDataChange,
 }: MetricBlockV2Props) {
+  void _isSelected;
   const cycleTrend = useCallback(() => {
     const cycle = { up: "down", down: "neutral", neutral: "up" } as const;
     const current = data.trend || "neutral";

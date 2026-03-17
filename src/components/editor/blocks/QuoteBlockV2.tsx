@@ -40,9 +40,10 @@ function InlineEdit({
 
 export default function QuoteBlockV2({
   data,
-  isSelected,
+  isSelected: _isSelected,
   onDataChange,
 }: QuoteBlockV2Props) {
+  void _isSelected;
   const ref = useRef<HTMLParagraphElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 

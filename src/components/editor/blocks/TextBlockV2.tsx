@@ -67,9 +67,10 @@ function FormattingToolbar({
 
 export default function TextBlockV2({
   data,
-  isSelected,
+  isSelected: _isSelected,
   onDataChange,
 }: TextBlockV2Props) {
+  void _isSelected;
   const ref = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [localBold, setLocalBold] = useState(data.bold);

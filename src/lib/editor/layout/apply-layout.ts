@@ -3,10 +3,9 @@
  * in the zones or repositions existing blocks to fit the zones.
  */
 
-import { nanoid } from "nanoid";
 import type { EditorBlock, BlocksRecord, BlockType } from "../block-types";
 import { createDefaultEditorBlock } from "../block-defaults";
-import type { SlideLayout, LayoutZone } from "./layout-types";
+import type { SlideLayout } from "./layout-types";
 
 /**
  * Apply a layout to a set of existing blocks.

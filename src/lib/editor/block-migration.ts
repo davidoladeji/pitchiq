@@ -14,7 +14,7 @@ import type {
   BlockType,
   EditorBlock,
   BlocksRecord,
-  BlockPosition,
+  // BlockPosition used in type annotations below
   BlockStyle,
   TextBlockData,
   HeadingBlockData,
