@@ -265,7 +265,7 @@ export default function BlockWrapper({
 
               {/* AI Actions dropdown */}
               {showAIMenu && (
-                <div className={`absolute left-1/2 -translate-x-1/2 w-48 bg-[#1A1A24] border border-white/10 rounded-lg shadow-xl z-50 py-1 ${toolbarBelow ? "bottom-full mb-1" : "top-full mt-1"}`}>
+                <div className={`absolute left-1/2 -translate-x-1/2 w-48 bg-[#1A1A24] border border-white/10 rounded-lg shadow-xl z-50 py-1 ${toolbarBelow ? "top-full mt-1" : "bottom-full mb-1"}`}>
                   <div className="px-2.5 py-1.5 text-[9px] text-white/40 uppercase tracking-wider font-semibold">
                     AI Actions
                   </div>
