@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState, useRef, useEffect, type ReactNode, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import type { EditorBlock } from "@/lib/editor/block-types";
 import { BLOCK_META } from "@/lib/editor/block-types";
 import {
@@ -50,6 +51,7 @@ export default function BlockWrapper({
   const [toolbarBelow, setToolbarBelow] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const aiMenuRef = useRef<HTMLDivElement>(null);
+  const aiBtnRef = useRef<HTMLButtonElement>(null);
   const meta = BLOCK_META[block.type as keyof typeof BLOCK_META];
   const aiActions = getAIActionsForBlock(block.type);
 
@@ -242,6 +244,7 @@ export default function BlockWrapper({
           {aiActions.length > 0 && (
             <div className="relative" ref={aiMenuRef}>
               <button
+                ref={aiBtnRef}
                 type="button"
                 onClick={(e) => { e.stopPropagation(); setShowAIMenu(!showAIMenu); }}
                 className={`p-1 rounded transition-colors ${
@@ -263,33 +266,14 @@ export default function BlockWrapper({
                 )}
               </button>
 
-              {/* AI Actions dropdown */}
-              {showAIMenu && (
-                <div className={`absolute left-1/2 -translate-x-1/2 w-48 bg-[#1A1A24] border border-white/10 rounded-lg shadow-xl z-50 py-1 ${toolbarBelow ? "top-full mt-1" : "bottom-full mb-1"}`}>
-                  <div className="px-2.5 py-1.5 text-[9px] text-white/40 uppercase tracking-wider font-semibold">
-                    AI Actions
-                  </div>
-                  {aiActions.map((action) => (
-                    <button
-                      key={action.id}
-                      type="button"
-                      disabled={!!aiLoading}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleAIAction(action);
-                      }}
-                      className="w-full flex flex-col items-start px-2.5 py-1.5 text-left hover:bg-white/5 transition-colors disabled:opacity-40"
-                    >
-                      <span className="text-[11px] text-white/80 font-medium">
-                        {aiLoading === action.id ? "Processing..." : action.label}
-                      </span>
-                      <span className="text-[9px] text-white/40 leading-tight">
-                        {action.description}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
+              {/* AI Actions dropdown — rendered in a portal to escape overflow:hidden */}
+              {showAIMenu && <AIDropdownPortal
+                anchorRef={aiBtnRef}
+                aiActions={aiActions}
+                aiLoading={aiLoading}
+                onAction={handleAIAction}
+                menuRef={aiMenuRef}
+              />}
             </div>
           )}
           {/* Delete */}
@@ -320,5 +304,108 @@ export default function BlockWrapper({
         {children}
       </div>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  AI Actions dropdown rendered in a portal (escapes overflow:hidden) */
+/* ------------------------------------------------------------------ */
+
+function AIDropdownPortal({
+  anchorRef,
+  aiActions,
+  aiLoading,
+  onAction,
+  menuRef,
+}: {
+  anchorRef: React.RefObject<HTMLButtonElement | null>;
+  aiActions: AIActionDef[];
+  aiLoading: string | null;
+  onAction: (action: AIActionDef) => void;
+  menuRef: React.RefObject<HTMLDivElement | null>;
+}) {
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!anchorRef.current) return;
+    const rect = anchorRef.current.getBoundingClientRect();
+    // Position centered below the button, then adjust to stay on-screen
+    const menuW = 192; // w-48 = 12rem = 192px
+    let left = rect.left + rect.width / 2 - menuW / 2;
+    // Keep within viewport
+    left = Math.max(8, Math.min(left, window.innerWidth - menuW - 8));
+    // Place above the button by default
+    setPos({ top: rect.top - 4, left });
+  }, [anchorRef]);
+
+  // Adjust to render above anchor once we know dropdown height
+  useEffect(() => {
+    if (!pos || !dropdownRef.current || !anchorRef.current) return;
+    const dropH = dropdownRef.current.offsetHeight;
+    const btnRect = anchorRef.current.getBoundingClientRect();
+    // Place above button
+    const topAbove = btnRect.top - dropH - 4;
+    if (topAbove >= 0) {
+      setPos((p) => p && { ...p, top: topAbove });
+    } else {
+      // Not enough space above — place below
+      setPos((p) => p && { ...p, top: btnRect.bottom + 4 });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pos === null]); // only run once after initial position set
+
+  // Forward ref for outside-click detection
+  useEffect(() => {
+    if (menuRef && dropdownRef.current) {
+      // Patch the menuRef so the outside-click handler in the parent detects
+      // clicks inside the portal dropdown as "inside" the menu.
+      const origNode = menuRef.current;
+      Object.defineProperty(menuRef, "current", {
+        get() { return dropdownRef.current ?? origNode; },
+        configurable: true,
+      });
+      return () => {
+        Object.defineProperty(menuRef, "current", {
+          value: origNode,
+          writable: true,
+          configurable: true,
+        });
+      };
+    }
+  }, [menuRef]);
+
+  if (!pos) return null;
+
+  return createPortal(
+    <div
+      ref={dropdownRef}
+      className="fixed w-48 bg-[#1A1A24] border border-white/10 rounded-lg shadow-2xl py-1"
+      style={{ top: pos.top, left: pos.left, zIndex: 99999 }}
+    >
+      <div className="px-2.5 py-1.5 text-[9px] text-white/40 uppercase tracking-wider font-semibold">
+        AI Actions
+      </div>
+      {aiActions.map((action) => (
+        <button
+          key={action.id}
+          type="button"
+          disabled={!!aiLoading}
+          onClick={(e) => {
+            e.stopPropagation();
+            onAction(action);
+          }}
+          className="w-full flex flex-col items-start px-2.5 py-1.5 text-left hover:bg-white/5 transition-colors disabled:opacity-40"
+        >
+          <span className="text-[11px] text-white/80 font-medium">
+            {aiLoading === action.id ? "Processing..." : action.label}
+          </span>
+          <span className="text-[9px] text-white/40 leading-tight">
+            {action.description}
+          </span>
+        </button>
+      ))}
+    </div>,
+    document.body,
   );
 }
