@@ -51,6 +51,7 @@ export default function BlockWrapper({
   const [toolbarBelow, setToolbarBelow] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const aiMenuRef = useRef<HTMLDivElement>(null);
+  const aiDropdownRef = useRef<HTMLDivElement>(null);
   const aiBtnRef = useRef<HTMLButtonElement>(null);
   const meta = BLOCK_META[block.type as keyof typeof BLOCK_META];
   const aiActions = getAIActionsForBlock(block.type);
@@ -75,11 +76,14 @@ export default function BlockWrapper({
     }
   }, [isSelected, block.position.y]);
 
-  // Close AI menu on outside click
+  // Close AI menu on outside click — check both the toolbar button area AND the portal dropdown
   useEffect(() => {
     if (!showAIMenu) return;
     function handleClick(e: MouseEvent) {
-      if (aiMenuRef.current && !aiMenuRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const inButton = aiMenuRef.current?.contains(target);
+      const inDropdown = aiDropdownRef.current?.contains(target);
+      if (!inButton && !inDropdown) {
         setShowAIMenu(false);
       }
     }
@@ -272,7 +276,7 @@ export default function BlockWrapper({
                 aiActions={aiActions}
                 aiLoading={aiLoading}
                 onAction={handleAIAction}
-                menuRef={aiMenuRef}
+                dropdownRef={aiDropdownRef}
               />}
             </div>
           )}
@@ -316,70 +320,48 @@ function AIDropdownPortal({
   aiActions,
   aiLoading,
   onAction,
-  menuRef,
+  dropdownRef,
 }: {
   anchorRef: React.RefObject<HTMLButtonElement | null>;
   aiActions: AIActionDef[];
   aiLoading: string | null;
   onAction: (action: AIActionDef) => void;
-  menuRef: React.RefObject<HTMLDivElement | null>;
+  dropdownRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [adjusted, setAdjusted] = useState(false);
 
+  // Initial position: place temporarily to measure height
   useEffect(() => {
     if (!anchorRef.current) return;
     const rect = anchorRef.current.getBoundingClientRect();
-    // Position centered below the button, then adjust to stay on-screen
-    const menuW = 192; // w-48 = 12rem = 192px
+    const menuW = 192;
     let left = rect.left + rect.width / 2 - menuW / 2;
-    // Keep within viewport
     left = Math.max(8, Math.min(left, window.innerWidth - menuW - 8));
-    // Place above the button by default
-    setPos({ top: rect.top - 4, left });
+    // Temporarily place at button top (will adjust after measuring)
+    setPos({ top: rect.top, left });
+    setAdjusted(false);
   }, [anchorRef]);
 
-  // Adjust to render above anchor once we know dropdown height
+  // Adjust position after first render to place above or below button
   useEffect(() => {
-    if (!pos || !dropdownRef.current || !anchorRef.current) return;
+    if (adjusted || !pos || !dropdownRef.current || !anchorRef.current) return;
     const dropH = dropdownRef.current.offsetHeight;
     const btnRect = anchorRef.current.getBoundingClientRect();
-    // Place above button
     const topAbove = btnRect.top - dropH - 4;
     if (topAbove >= 0) {
-      setPos((p) => p && { ...p, top: topAbove });
+      setPos({ top: topAbove, left: pos.left });
     } else {
-      // Not enough space above — place below
-      setPos((p) => p && { ...p, top: btnRect.bottom + 4 });
+      setPos({ top: btnRect.bottom + 4, left: pos.left });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pos === null]); // only run once after initial position set
-
-  // Forward ref for outside-click detection
-  useEffect(() => {
-    if (menuRef && dropdownRef.current) {
-      // Patch the menuRef so the outside-click handler in the parent detects
-      // clicks inside the portal dropdown as "inside" the menu.
-      const origNode = menuRef.current;
-      Object.defineProperty(menuRef, "current", {
-        get() { return dropdownRef.current ?? origNode; },
-        configurable: true,
-      });
-      return () => {
-        Object.defineProperty(menuRef, "current", {
-          value: origNode,
-          writable: true,
-          configurable: true,
-        });
-      };
-    }
-  }, [menuRef]);
+    setAdjusted(true);
+  }, [adjusted, pos, dropdownRef, anchorRef]);
 
   if (!pos) return null;
 
   return createPortal(
     <div
-      ref={dropdownRef}
+      ref={(el) => { (dropdownRef as React.MutableRefObject<HTMLDivElement | null>).current = el; }}
       className="fixed w-48 bg-[#1A1A24] border border-white/10 rounded-lg shadow-2xl py-1"
       style={{ top: pos.top, left: pos.left, zIndex: 99999 }}
     >
