@@ -21,6 +21,10 @@ interface BlockWrapperProps {
   children: ReactNode;
 }
 
+/** Toolbar height + gap used for positioning */
+const TOOLBAR_H = 36; // height of toolbar bar
+const TOOLBAR_GAP = 4; // space between toolbar and block
+
 /** Corner resize handle positions */
 const HANDLES = [
   { cursor: "nw-resize", position: "top-0 left-0 -translate-x-1/2 -translate-y-1/2" },
@@ -43,9 +47,31 @@ export default function BlockWrapper({
   const [showActions, setShowActions] = useState(false);
   const [showAIMenu, setShowAIMenu] = useState(false);
   const [aiLoading, setAILoading] = useState<string | null>(null);
+  const [toolbarBelow, setToolbarBelow] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const aiMenuRef = useRef<HTMLDivElement>(null);
   const meta = BLOCK_META[block.type as keyof typeof BLOCK_META];
   const aiActions = getAIActionsForBlock(block.type);
+
+  // Detect whether block is too close to the top of its scrollable ancestor
+  // so we can flip the toolbar below the block instead of above.
+  useEffect(() => {
+    if (!isSelected || !wrapperRef.current) return;
+    const el = wrapperRef.current;
+    const rect = el.getBoundingClientRect();
+    // Find the nearest overflow-hidden ancestor (the slide canvas)
+    let ancestor = el.parentElement;
+    while (ancestor && getComputedStyle(ancestor).overflow !== "hidden") {
+      ancestor = ancestor.parentElement;
+    }
+    if (ancestor) {
+      const parentRect = ancestor.getBoundingClientRect();
+      const spaceAbove = rect.top - parentRect.top;
+      setToolbarBelow(spaceAbove < TOOLBAR_H + TOOLBAR_GAP + 8);
+    } else {
+      setToolbarBelow(rect.top < TOOLBAR_H + TOOLBAR_GAP + 8);
+    }
+  }, [isSelected, block.position.y]);
 
   // Close AI menu on outside click
   useEffect(() => {
@@ -130,6 +156,7 @@ export default function BlockWrapper({
 
   return (
     <div
+      ref={wrapperRef}
       className={`relative group transition-all ${
         block.locked ? "pointer-events-none" : "cursor-grab active:cursor-grabbing"
       } ${isSelected ? "" : "hover:outline hover:outline-1 hover:outline-white/20 hover:outline-offset-1"}`}
@@ -138,12 +165,14 @@ export default function BlockWrapper({
       onPointerDown={handlePointerDown}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={(e) => {
-        // Don't hide if moving to the toolbar (which extends above the block)
+        // Don't hide if moving to the toolbar (which extends above/below the block)
         const rect = e.currentTarget.getBoundingClientRect();
-        const toolbarTop = rect.top - 44; // toolbar height + gap
+        const extend = 44;
+        const top = toolbarBelow ? rect.top - 8 : rect.top - extend;
+        const bottom = toolbarBelow ? rect.bottom + extend : rect.bottom + 8;
         if (
-          e.clientY >= toolbarTop &&
-          e.clientY <= rect.bottom + 8 &&
+          e.clientY >= top &&
+          e.clientY <= bottom &&
           e.clientX >= rect.left - 8 &&
           e.clientX <= rect.right + 8
         ) {
@@ -152,9 +181,9 @@ export default function BlockWrapper({
         setShowActions(false);
       }}
     >
-      {/* Invisible hover bridge to toolbar — prevents toolbar from disappearing when moving mouse up to it */}
+      {/* Invisible hover bridge to toolbar — prevents toolbar from disappearing when moving mouse to it */}
       {isSelected && !block.locked && (
-        <div className="absolute -top-11 left-0 right-0 h-11 z-30" />
+        <div className={`absolute left-0 right-0 h-11 z-30 ${toolbarBelow ? "-bottom-11" : "-top-11"}`} />
       )}
 
       {/* Selection ring */}
@@ -177,7 +206,7 @@ export default function BlockWrapper({
 
       {/* Floating action toolbar */}
       {isSelected && showActions && !block.locked && (
-        <div className="absolute -top-9 left-1/2 -translate-x-1/2 z-40 flex items-center gap-0.5 bg-[#1A1A24] border border-white/10 rounded-lg px-1 py-0.5 shadow-xl pointer-events-auto">
+        <div className={`absolute left-1/2 -translate-x-1/2 z-40 flex items-center gap-0.5 bg-[#1A1A24] border border-white/10 rounded-lg px-1 py-0.5 shadow-xl pointer-events-auto ${toolbarBelow ? "-bottom-9" : "-top-9"}`}>
           {/* Block type label */}
           <span className="text-[9px] text-white/40 font-medium px-1.5 select-none">
             {meta?.label || block.type}
@@ -236,7 +265,7 @@ export default function BlockWrapper({
 
               {/* AI Actions dropdown */}
               {showAIMenu && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-48 bg-[#1A1A24] border border-white/10 rounded-lg shadow-xl z-50 py-1">
+                <div className={`absolute left-1/2 -translate-x-1/2 w-48 bg-[#1A1A24] border border-white/10 rounded-lg shadow-xl z-50 py-1 ${toolbarBelow ? "bottom-full mb-1" : "top-full mt-1"}`}>
                   <div className="px-2.5 py-1.5 text-[9px] text-white/40 uppercase tracking-wider font-semibold">
                     AI Actions
                   </div>
