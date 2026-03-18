@@ -69,20 +69,66 @@ export async function POST(req: NextRequest) {
       }
     }
   } catch (e) {
-    console.error("Webhook handler error:", e);
+    console.error(`[Webhook] Handler error for ${event.type}:`, e);
     return NextResponse.json({ error: "Webhook handler failed" }, { status: 500 });
   }
 
   return NextResponse.json({ received: true });
 }
 
+/**
+ * Resolve a userId from Stripe session/subscription metadata,
+ * falling back to customer lookup if metadata is missing.
+ */
+async function resolveUserId(
+  metadataUserId: string | undefined | null,
+  customerId: string | null | Stripe.Customer | Stripe.DeletedCustomer
+): Promise<string | null> {
+  // 1. Try metadata first
+  if (metadataUserId && metadataUserId.trim().length > 0) {
+    return metadataUserId;
+  }
+
+  // 2. Fall back to looking up user by Stripe customer ID
+  const custId =
+    typeof customerId === "string"
+      ? customerId
+      : customerId && "id" in customerId
+        ? customerId.id
+        : null;
+
+  if (custId) {
+    const user = await prisma.user.findFirst({
+      where: { stripeCustomerId: custId },
+      select: { id: true },
+    });
+    if (user) {
+      console.log(`[Webhook] Resolved userId ${user.id} from customer ${custId}`);
+      return user.id;
+    }
+  }
+
+  return null;
+}
+
 async function handleSubscriptionCheckout(session: Stripe.Checkout.Session) {
-  const userId = session.metadata?.userId;
   const plan = session.metadata?.plan || "pro";
   const subscriptionId =
     typeof session.subscription === "string"
       ? session.subscription
       : session.subscription?.id;
+
+  const userId = await resolveUserId(
+    session.metadata?.userId,
+    session.customer
+  );
+
+  if (!userId) {
+    console.error(
+      `[Webhook] checkout.session.completed: could not resolve userId. ` +
+      `metadata=${JSON.stringify(session.metadata)}, customer=${session.customer}, session=${session.id}`
+    );
+  }
 
   if (userId && subscriptionId) {
     await prisma.user.update({
@@ -98,6 +144,29 @@ async function handleSubscriptionCheckout(session: Stripe.Checkout.Session) {
     });
 
     // Mark all user's decks as premium
+    await prisma.deck.updateMany({
+      where: { userId },
+      data: { isPremium: true },
+    });
+
+    console.log(`[Webhook] checkout.session.completed: user ${userId} upgraded to ${plan}`);
+  } else if (userId && !subscriptionId) {
+    // Payment succeeded but subscription ID missing — still update plan
+    console.warn(
+      `[Webhook] checkout.session.completed: subscriptionId missing, updating plan anyway. ` +
+      `userId=${userId}, session=${session.id}`
+    );
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        plan,
+        stripeCustomerId:
+          typeof session.customer === "string"
+            ? session.customer
+            : session.customer?.id || undefined,
+      },
+    });
+
     await prisma.deck.updateMany({
       where: { userId },
       data: { isPremium: true },
@@ -135,8 +204,18 @@ async function handleOneTimePayment(session: Stripe.Checkout.Session) {
 }
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
-  const userId = subscription.metadata?.userId;
-  if (!userId) return;
+  const userId = await resolveUserId(
+    subscription.metadata?.userId,
+    subscription.customer
+  );
+
+  if (!userId) {
+    console.warn(
+      `[Webhook] customer.subscription.updated: could not resolve userId. ` +
+      `metadata=${JSON.stringify(subscription.metadata)}, customer=${subscription.customer}, sub=${subscription.id}`
+    );
+    return;
+  }
 
   const isActive = ["active", "trialing"].includes(subscription.status);
   const plan = subscription.metadata?.plan || "pro";
@@ -157,6 +236,10 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     where: { userId },
     data: { isPremium: isActive },
   });
+
+  console.log(
+    `[Webhook] subscription.updated: user ${userId} → ${isActive ? plan : "starter"} (status: ${subscription.status})`
+  );
 }
 
 async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
@@ -210,8 +293,18 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
 }
 
 async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
-  const userId = subscription.metadata?.userId;
-  if (!userId) return;
+  const userId = await resolveUserId(
+    subscription.metadata?.userId,
+    subscription.customer
+  );
+
+  if (!userId) {
+    console.warn(
+      `[Webhook] subscription.deleted: could not resolve userId. ` +
+      `metadata=${JSON.stringify(subscription.metadata)}, customer=${subscription.customer}`
+    );
+    return;
+  }
 
   await prisma.user.update({
     where: { id: userId },
@@ -227,4 +320,6 @@ async function handleSubscriptionCanceled(subscription: Stripe.Subscription) {
     where: { userId },
     data: { isPremium: false },
   });
+
+  console.log(`[Webhook] subscription.deleted: user ${userId} downgraded to starter`);
 }
