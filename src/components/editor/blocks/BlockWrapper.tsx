@@ -50,6 +50,7 @@ export default function BlockWrapper({
   const [aiLoading, setAILoading] = useState<string | null>(null);
   const [toolbarBelow, setToolbarBelow] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const aiMenuRef = useRef<HTMLDivElement>(null);
   const aiDropdownRef = useRef<HTMLDivElement>(null);
   const aiBtnRef = useRef<HTMLButtonElement>(null);
@@ -171,7 +172,20 @@ export default function BlockWrapper({
       onPointerDown={handlePointerDown}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={(e) => {
-        // Don't hide if moving to the toolbar (which extends above/below the block)
+        // Don't hide if moving to the portal toolbar
+        const toolbarEl = toolbarRef.current;
+        if (toolbarEl) {
+          const toolbarRect = toolbarEl.getBoundingClientRect();
+          if (
+            e.clientX >= toolbarRect.left &&
+            e.clientX <= toolbarRect.right &&
+            e.clientY >= toolbarRect.top &&
+            e.clientY <= toolbarRect.bottom
+          ) {
+            return;
+          }
+        }
+        // Don't hide if moving within the block + toolbar zone
         const rect = e.currentTarget.getBoundingClientRect();
         const extend = 44;
         const top = toolbarBelow ? rect.top - 8 : rect.top - extend;
@@ -187,11 +201,6 @@ export default function BlockWrapper({
         setShowActions(false);
       }}
     >
-      {/* Invisible hover bridge to toolbar — prevents toolbar from disappearing when moving mouse to it */}
-      {isSelected && !block.locked && (
-        <div className={`absolute left-0 right-0 h-11 z-30 ${toolbarBelow ? "-bottom-11" : "-top-11"}`} />
-      )}
-
       {/* Selection ring */}
       {isSelected && (
         <div className="absolute inset-0 rounded-lg outline outline-2 outline-[#4361EE] outline-offset-2 pointer-events-none z-20" />
@@ -210,100 +219,27 @@ export default function BlockWrapper({
         </>
       )}
 
-      {/* Floating action toolbar */}
+      {/* Floating action toolbar — rendered in a portal so it sits above ALL blocks */}
       {isSelected && showActions && (
-        <div className={`absolute left-1/2 -translate-x-1/2 z-40 flex items-center gap-0.5 bg-[#1A1A24] border border-white/10 rounded-lg px-1 py-0.5 shadow-xl pointer-events-auto ${toolbarBelow ? "-bottom-9" : "-top-9"}`}>
-          {/* Block type label */}
-          <span className="text-[9px] text-white/40 font-medium px-1.5 select-none">
-            {meta?.label || block.type}
-            {block.locked && (
-              <span className="ml-1 text-amber-400/60">locked</span>
-            )}
-          </span>
-          <div className="w-px h-4 bg-white/10" />
-          {/* Unlock/Lock — always available */}
-          <button
-            type="button"
-            onClick={(e) => { e.stopPropagation(); onToggleLock(); }}
-            className={`p-1 rounded transition-colors ${
-              block.locked
-                ? "text-amber-400 hover:text-amber-300 hover:bg-amber-400/10"
-                : "text-white/50 hover:text-white hover:bg-white/10"
-            }`}
-            title={block.locked ? "Unlock" : "Lock"}
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              {block.locked ? (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-              )}
-            </svg>
-          </button>
-          {/* Remaining tools only when unlocked */}
-          {!block.locked && (
-            <>
-              {/* Duplicate */}
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); onDuplicate(); }}
-                className="p-1 text-white/50 hover:text-white hover:bg-white/10 rounded transition-colors"
-                title="Duplicate"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </button>
-              {/* AI Actions (Wand2 icon) */}
-              {aiActions.length > 0 && (
-                <div className="relative" ref={aiMenuRef}>
-                  <button
-                    ref={aiBtnRef}
-                    type="button"
-                    onClick={(e) => { e.stopPropagation(); setShowAIMenu(!showAIMenu); }}
-                    className={`p-1 rounded transition-colors ${
-                      showAIMenu || aiLoading
-                        ? "text-[#4361EE] bg-[#4361EE]/20"
-                        : "text-white/50 hover:text-[#4361EE] hover:bg-white/10"
-                    }`}
-                    title="AI Actions"
-                  >
-                    {aiLoading ? (
-                      <svg className="w-3.5 h-3.5 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" aria-hidden>
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                    ) : (
-                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
-                      </svg>
-                    )}
-                  </button>
-
-                  {/* AI Actions dropdown — rendered in a portal to escape overflow:hidden */}
-                  {showAIMenu && <AIDropdownPortal
-                    anchorRef={aiBtnRef}
-                    aiActions={aiActions}
-                    aiLoading={aiLoading}
-                    onAction={handleAIAction}
-                    dropdownRef={aiDropdownRef}
-                  />}
-                </div>
-              )}
-              {/* Delete */}
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); onDelete(); }}
-                className="p-1 text-white/50 hover:text-red-400 hover:bg-white/10 rounded transition-colors"
-                title="Delete"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
+        <ToolbarPortal
+          wrapperRef={wrapperRef}
+          toolbarRef={toolbarRef}
+          toolbarBelow={toolbarBelow}
+          block={block}
+          meta={meta}
+          aiActions={aiActions}
+          aiMenuRef={aiMenuRef}
+          aiBtnRef={aiBtnRef}
+          showAIMenu={showAIMenu}
+          setShowAIMenu={setShowAIMenu}
+          aiLoading={aiLoading}
+          aiDropdownRef={aiDropdownRef}
+          onToggleLock={onToggleLock}
+          onDuplicate={onDuplicate}
+          onDelete={onDelete}
+          handleAIAction={handleAIAction}
+          onMouseLeave={() => setShowActions(false)}
+        />
       )}
 
       {/* Lock indicator — clickable to unlock */}
@@ -325,6 +261,194 @@ export default function BlockWrapper({
         {children}
       </div>
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Toolbar rendered in a portal (escapes CSS grid stacking context)   */
+/* ------------------------------------------------------------------ */
+
+function ToolbarPortal({
+  wrapperRef,
+  toolbarRef,
+  toolbarBelow,
+  block,
+  meta,
+  aiActions,
+  aiMenuRef,
+  aiBtnRef,
+  showAIMenu,
+  setShowAIMenu,
+  aiLoading,
+  aiDropdownRef,
+  onToggleLock,
+  onDuplicate,
+  onDelete,
+  handleAIAction,
+  onMouseLeave,
+}: {
+  wrapperRef: React.RefObject<HTMLDivElement | null>;
+  toolbarRef: React.RefObject<HTMLDivElement | null>;
+  toolbarBelow: boolean;
+  block: EditorBlock;
+  meta: { label: string } | undefined;
+  aiActions: AIActionDef[];
+  aiMenuRef: React.RefObject<HTMLDivElement | null>;
+  aiBtnRef: React.RefObject<HTMLButtonElement | null>;
+  showAIMenu: boolean;
+  setShowAIMenu: (v: boolean) => void;
+  aiLoading: string | null;
+  aiDropdownRef: React.RefObject<HTMLDivElement | null>;
+  onToggleLock: () => void;
+  onDuplicate: () => void;
+  onDelete: () => void;
+  handleAIAction: (action: AIActionDef) => void;
+  onMouseLeave: () => void;
+}) {
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+
+  // Position toolbar centered above or below the block
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    function update() {
+      const rect = wrapperRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const centerX = rect.left + rect.width / 2;
+      const top = toolbarBelow ? rect.bottom + 4 : rect.top - TOOLBAR_H - TOOLBAR_GAP;
+      setPos({ top, left: centerX });
+    }
+    update();
+    // Reposition on scroll/resize
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [wrapperRef, toolbarBelow]);
+
+  if (!pos) return null;
+
+  return createPortal(
+    <div
+      ref={(el) => { (toolbarRef as React.MutableRefObject<HTMLDivElement | null>).current = el; }}
+      className="fixed flex items-center gap-0.5 bg-[#1A1A24] border border-white/10 rounded-lg px-1 py-0.5 shadow-xl"
+      style={{
+        top: pos.top,
+        left: pos.left,
+        transform: "translateX(-50%)",
+        zIndex: 99990,
+      }}
+      onMouseLeave={(e) => {
+        // Don't dismiss if moving back to the block
+        const wrapperEl = wrapperRef.current;
+        if (wrapperEl) {
+          const blockRect = wrapperEl.getBoundingClientRect();
+          const pad = 8;
+          if (
+            e.clientX >= blockRect.left - pad &&
+            e.clientX <= blockRect.right + pad &&
+            e.clientY >= blockRect.top - pad &&
+            e.clientY <= blockRect.bottom + pad
+          ) {
+            return;
+          }
+        }
+        onMouseLeave();
+      }}
+    >
+      {/* Block type label */}
+      <span className="text-[9px] text-white/40 font-medium px-1.5 select-none whitespace-nowrap">
+        {meta?.label || block.type}
+        {block.locked && (
+          <span className="ml-1 text-amber-400/60">locked</span>
+        )}
+      </span>
+      <div className="w-px h-4 bg-white/10" />
+      {/* Unlock/Lock — always available */}
+      <button
+        type="button"
+        onClick={(e) => { e.stopPropagation(); onToggleLock(); }}
+        className={`p-1 rounded transition-colors ${
+          block.locked
+            ? "text-amber-400 hover:text-amber-300 hover:bg-amber-400/10"
+            : "text-white/50 hover:text-white hover:bg-white/10"
+        }`}
+        title={block.locked ? "Unlock" : "Lock"}
+      >
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          {block.locked ? (
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          ) : (
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+          )}
+        </svg>
+      </button>
+      {/* Remaining tools only when unlocked */}
+      {!block.locked && (
+        <>
+          {/* Duplicate */}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onDuplicate(); }}
+            className="p-1 text-white/50 hover:text-white hover:bg-white/10 rounded transition-colors"
+            title="Duplicate"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </button>
+          {/* AI Actions (Wand2 icon) */}
+          {aiActions.length > 0 && (
+            <div className="relative" ref={(el) => { (aiMenuRef as React.MutableRefObject<HTMLDivElement | null>).current = el; }}>
+              <button
+                ref={(el) => { (aiBtnRef as React.MutableRefObject<HTMLButtonElement | null>).current = el; }}
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setShowAIMenu(!showAIMenu); }}
+                className={`p-1 rounded transition-colors ${
+                  showAIMenu || aiLoading
+                    ? "text-[#4361EE] bg-[#4361EE]/20"
+                    : "text-white/50 hover:text-[#4361EE] hover:bg-white/10"
+                }`}
+                title="AI Actions"
+              >
+                {aiLoading ? (
+                  <svg className="w-3.5 h-3.5 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" aria-hidden>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                ) : (
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59" />
+                  </svg>
+                )}
+              </button>
+
+              {/* AI Actions dropdown — rendered in a portal to escape overflow:hidden */}
+              {showAIMenu && <AIDropdownPortal
+                anchorRef={aiBtnRef}
+                aiActions={aiActions}
+                aiLoading={aiLoading}
+                onAction={handleAIAction}
+                dropdownRef={aiDropdownRef}
+              />}
+            </div>
+          )}
+          {/* Delete */}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            className="p-1 text-white/50 hover:text-red-400 hover:bg-white/10 rounded transition-colors"
+            title="Delete"
+          >
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        </>
+      )}
+    </div>,
+    document.body,
   );
 }
 
