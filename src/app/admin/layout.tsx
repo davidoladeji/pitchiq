@@ -80,6 +80,7 @@ export default function AdminLayout({
               { href: "/admin/decks", label: "Decks" },
               { href: "/admin/transactions", label: "Txns" },
               { href: "/admin/references", label: "Refs" },
+              { href: "/admin/plans", label: "Plans" },
               { href: "/admin/settings", label: "Settings" },
             ].map((link) => (
               <Link

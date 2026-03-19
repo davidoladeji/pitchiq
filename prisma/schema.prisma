@@ -164,6 +164,64 @@ model Setting {
   updatedAt DateTime @updatedAt
 }
 
+// --- Plan configuration (admin-managed) ---
+model PlanConfig {
+  id              String   @id @default(uuid())
+  planKey         String   @unique // "starter" | "pro" | "growth" | "enterprise"
+  sortOrder       Int      @default(0)
+  enabled         Boolean  @default(true)
+
+  // Display metadata
+  displayName     String
+  description     String   @default("")
+  price           String   // "$29" or "Free"
+  priceUnit       String   @default("/mo")
+  highlight       Boolean  @default(false)
+  badge           String?  // "Popular", "Best Value", null
+  ctaText         String   @default("Start Free Trial")
+  ctaHref         String   @default("/create")
+  features        String   @default("[]") // JSON string[] — bullet points on pricing cards
+
+  // Stripe integration
+  stripePriceId   String?
+  stripeAmount    Int?     // amount in cents (2900 = $29)
+
+  // Plan limits — mirrors PlanLimits interface
+  // Use -1 for Infinity values
+  maxDecks            Int     @default(1)
+  allowedThemes       String  @default("[\"midnight\"]") // JSON string[]
+  piqScoreDetail      String  @default("basic") // "basic" | "full"
+  showBranding        Boolean @default(true)
+  pdfWatermark        Boolean @default(true)
+  pptxExport          Boolean @default(false)
+  analytics           Boolean @default(false)
+  investorVariants    Boolean @default(false)
+  abTesting           Boolean @default(false)
+  followUpAlerts      Boolean @default(false)
+  investorCRM         Boolean @default(false)
+  fundraiseTracker    Boolean @default(false)
+  editor              Boolean @default(false)
+  aiCoachingPerSlide  Boolean @default(false)
+  investorLens        Boolean @default(false)
+  pitchSimulator      Boolean @default(false)
+  maxVersionHistory   Int     @default(0)
+  smartBlocks         Boolean @default(false)
+  deckTemplates       Boolean @default(false)
+  appendixGenerator   Boolean @default(false)
+  teamCollaboration   Boolean @default(false)
+  maxWorkspaceMembers Int     @default(0)
+  customDomain        Boolean @default(false)
+  apiAccess           Boolean @default(false)
+  batchScoring        Boolean @default(false)
+  maxApiKeys          Int     @default(0)
+  apiRateLimit        Int     @default(0)
+  maxBatchSize        Int     @default(0)
+  pitchPractice       Boolean @default(false)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
 // --- Version history for editor ---
 model DeckVersion {
   id         String   @id @default(uuid())

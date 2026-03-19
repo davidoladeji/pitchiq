@@ -168,7 +168,19 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
   },
 };
 
+/**
+ * Get plan limits — synchronous. Checks in-memory plan config cache first
+ * (populated from DB by plan-config.ts), falls back to hardcoded defaults.
+ */
 export function getPlanLimits(plan: string): PlanLimits {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const gc = globalThis as any;
+    const cached = gc.__planConfigCache?.data?.get(plan);
+    if (cached) return cached as PlanLimits;
+  } catch {
+    // Cache not available
+  }
   return PLAN_CONFIGS[plan] || PLAN_CONFIGS.starter;
 }
 
