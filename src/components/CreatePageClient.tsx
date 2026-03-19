@@ -45,7 +45,12 @@ export default function CreatePageClient({
   const handleGenerated = useCallback((newDeck: DeckData) => {
     setDeck(newDeck);
     setTimeout(() => {
-      deckRef.current?.scrollIntoView({ behavior: "smooth" });
+      const reduced =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      deckRef.current?.scrollIntoView({
+        behavior: reduced ? "instant" : "smooth",
+      });
     }, 100);
   }, []);
 
@@ -67,7 +72,10 @@ export default function CreatePageClient({
       <div className="min-h-screen bg-navy-50" aria-busy="true">
         <AppNav />
         <div className="min-h-[60vh] flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin" aria-hidden="true" />
+          <div
+            className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin motion-reduce:animate-none motion-reduce:border-electric/40"
+            aria-hidden="true"
+          />
         </div>
         <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
           Loading create
@@ -80,14 +88,21 @@ export default function CreatePageClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="pt-24 pb-16 px-4 sm:px-6"
+          aria-labelledby="create-signin-heading"
+        >
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
             <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-navy mb-2">Sign in to create your deck</h2>
+            <h1 id="create-signin-heading" className="text-2xl font-bold text-navy mb-2">
+              Sign in to create your deck
+            </h1>
             <p className="text-navy-500 mb-6 max-w-md">Create a free account to generate investor-ready pitch decks with AI.</p>
             <a
               href="/auth/signin?callbackUrl=/create"
@@ -106,22 +121,27 @@ export default function CreatePageClient({
     <div className="min-h-screen bg-navy-50">
       <AppNav />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6"
+        aria-labelledby={deck ? "deck-result-heading" : "create-page-heading"}
+      >
         {!deck && deckCount >= limits.maxDecks && (
           <div className="max-w-2xl mx-auto mb-6 animate-fade-in">
             <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 sm:p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-amber-900 text-sm mb-1">Free deck limit reached</h3>
+                  <h3 className="font-bold text-amber-900 text-sm mb-1">Deck limit reached</h3>
                   <p className="text-amber-700 text-xs sm:text-sm">
-                    You&apos;ve used your 1 free deck. Upgrade to Pro for unlimited decks, all themes, full PIQ coaching & more.
+                    You&apos;ve used all {limits.maxDecks} of your decks. Upgrade your plan for more decks, all themes, full PIQ coaching & more.
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowPlanModal(true)}
                   className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-                  aria-label="Upgrade to Pro for unlimited decks"
+                  aria-label="Upgrade plan for more decks"
                 >
                   Upgrade Now
                 </button>
@@ -133,7 +153,10 @@ export default function CreatePageClient({
         {!deck && (
           <div className="max-w-2xl mx-auto animate-fade-in">
             <div className="text-center mb-12">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
+              <h1
+                id="create-page-heading"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight"
+              >
                 Create Your Pitch Deck
               </h1>
               <p className="text-navy-600 text-base sm:text-lg max-w-lg mx-auto">
@@ -281,7 +304,10 @@ export default function CreatePageClient({
                 </svg>
                 Your deck is ready
               </p>
-              <h1 className="text-xl sm:text-2xl font-bold text-navy mb-2 tracking-tight">
+              <h1
+                id="deck-result-heading"
+                className="text-xl sm:text-2xl font-bold text-navy mb-2 tracking-tight"
+              >
                 {deck.title}
               </h1>
               <p className="text-navy-500 text-sm">
@@ -376,7 +402,7 @@ export default function CreatePageClient({
                       <h3 className="font-bold text-navy text-sm">Want more from your deck?</h3>
                     </div>
                     <p className="text-navy-500 text-xs sm:text-sm">
-                      Upgrade to Pro for unlimited decks, full PIQ coaching, all themes, PPTX export, brand customization & remove &quot;Made with PitchIQ&quot; branding.
+                      Upgrade to Pro for up to 5 decks, full PIQ coaching, all themes, PPTX export, brand customization & remove &quot;Made with PitchIQ&quot; branding.
                     </p>
                   </div>
                   <button

@@ -96,12 +96,20 @@ export default function DashboardClient({
     <div className="min-h-screen bg-navy-50">
       <AppNav />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6 outline-none"
+        aria-labelledby="dashboard-page-heading"
+      >
         <div className="max-w-6xl mx-auto space-y-6">
           {/* Header row */}
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-navy font-display tracking-tight">
+              <h1
+                id="dashboard-page-heading"
+                className="text-xl sm:text-2xl md:text-3xl font-bold text-navy font-display tracking-tight"
+              >
                 Hey {userName}
               </h1>
               <div className="flex items-center gap-3 mt-1">
@@ -129,7 +137,7 @@ export default function DashboardClient({
 
           {/* Upgrade success banner */}
           {showUpgradeSuccess && upgradedPlan && (
-            <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:p-6 animate-fade-in">
+            <div className="rounded-2xl border border-green-200 bg-green-50 p-5 sm:p-6 animate-fade-in motion-reduce:animate-none">
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
@@ -170,7 +178,7 @@ export default function DashboardClient({
                     <h3 className="font-bold text-navy text-sm">Upgrade to Pro</h3>
                   </div>
                   <p className="text-navy-500 text-xs sm:text-sm">
-                    Unlock unlimited decks, full PIQ coaching, all themes, PPTX export &amp; remove branding.
+                    Unlock up to 5 decks, full PIQ coaching, all themes, PPTX export &amp; remove branding.
                   </p>
                 </div>
                 <button

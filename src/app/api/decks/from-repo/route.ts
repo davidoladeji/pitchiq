@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     if (deckCount >= planLimits.maxDecks) {
       return NextResponse.json(
         {
-          error: "You've reached your free deck limit. Upgrade to Pro for unlimited decks.",
+          error: `You've reached your deck limit (${planLimits.maxDecks}). Upgrade your plan for more decks.`,
           code: "PLAN_LIMIT",
         },
         { status: 403 }

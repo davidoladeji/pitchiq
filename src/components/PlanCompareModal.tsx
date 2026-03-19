@@ -44,7 +44,7 @@ const PLANS: PlanCard[] = [
     bgAccent: "bg-electric/5",
     badge: "Popular",
     features: [
-      "Unlimited decks",
+      "Up to 5 decks",
       "Full PIQ Score + AI coaching",
       "All 12+ design themes",
       "PDF + PPTX export — no watermark",
@@ -67,6 +67,7 @@ const PLANS: PlanCard[] = [
     badge: "Best Value",
     features: [
       "Everything in Pro, plus:",
+      "Unlimited decks",
       "Engagement analytics dashboard",
       "Slide-level viewer tracking",
       "Investor variants (VC, Angel, Accelerator)",
@@ -285,7 +286,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                     >
                       {isLoading ? (
                         <span className="inline-flex items-center justify-center gap-1.5">
-                          <svg className="animate-spin w-3.5 h-3.5" fill="none" viewBox="0 0 24 24">
+                          <svg className="animate-spin motion-reduce:animate-none w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" aria-hidden>
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                           </svg>

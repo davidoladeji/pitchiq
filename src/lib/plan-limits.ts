@@ -74,7 +74,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     pitchPractice: false,
   },
   pro: {
-    maxDecks: Infinity,
+    maxDecks: 5,
     allowedThemes: ALL_THEME_IDS,
     piqScoreDetail: "full",
     showBranding: false,
