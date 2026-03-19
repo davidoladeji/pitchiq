@@ -13,23 +13,23 @@ export default function SignInLoading() {
         <div className="text-center mb-8" aria-hidden="true">
           {/* Logo + name skeleton */}
           <div className="inline-flex items-center gap-2.5 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-navy-100 animate-pulse" />
-            <div className="h-7 w-20 rounded-md bg-navy-100 animate-pulse" />
+            <div className="w-10 h-10 rounded-xl bg-navy-100 animate-pulse motion-reduce:animate-none" />
+            <div className="h-7 w-20 rounded-md bg-navy-100 animate-pulse motion-reduce:animate-none" />
           </div>
           {/* Title + subtitle skeleton */}
-          <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse mb-2" />
-          <div className="h-4 w-64 mx-auto rounded bg-navy-50 animate-pulse" />
+          <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none mb-2" />
+          <div className="h-4 w-64 mx-auto rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
         </div>
         <main id="main" tabIndex={-1} className="outline-none" aria-label="Main content" aria-hidden="true">
           <div className="bg-white rounded-2xl border border-navy-50 shadow-sm p-6 space-y-3">
             {[1, 2].map((i) => (
               <div
                 key={i}
-                className="h-12 rounded-xl bg-navy-50 animate-pulse"
+                className="h-12 rounded-xl bg-navy-50 animate-pulse motion-reduce:animate-none"
               />
             ))}
           </div>
-          <div className="mt-6 h-3 w-56 mx-auto rounded bg-navy-50/80 animate-pulse" />
+          <div className="mt-6 h-3 w-56 mx-auto rounded bg-navy-50/80 animate-pulse motion-reduce:animate-none" />
         </main>
       </div>
     </div>

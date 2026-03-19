@@ -56,7 +56,7 @@ export default function GitHubRepoForm({ onGenerated, userPlan = "starter" }: Gi
           <div className="absolute inset-0 z-10 flex flex-col justify-center rounded-xl bg-navy-50/90 border border-navy-100 p-8 animate-fade-in" aria-live="polite" aria-busy="true">
             <div className="flex flex-col items-center gap-6">
               <div className="w-14 h-14 rounded-2xl bg-electric/10 border border-electric/20 flex items-center justify-center">
-                <svg className="animate-spin h-7 w-7 text-electric" viewBox="0 0 24 24" aria-hidden="true">
+                <svg className="animate-spin motion-reduce:animate-none h-7 w-7 text-electric" viewBox="0 0 24 24" aria-hidden="true">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
@@ -66,9 +66,9 @@ export default function GitHubRepoForm({ onGenerated, userPlan = "starter" }: Gi
                 <p className="text-xs text-navy-500 mt-1">Extracting README, languages, contributors & more</p>
               </div>
               <div className="w-full max-w-xs space-y-3">
-                <div className="h-2 rounded-full bg-navy-100 animate-pulse" style={{ width: "100%" }} />
-                <div className="h-2 rounded-full bg-navy-100 animate-pulse" style={{ width: "85%" }} />
-                <div className="h-2 rounded-full bg-navy-100 animate-pulse" style={{ width: "70%" }} />
+                <div className="h-2 rounded-full bg-navy-100 animate-pulse motion-reduce:animate-none" style={{ width: "100%" }} />
+                <div className="h-2 rounded-full bg-navy-100 animate-pulse motion-reduce:animate-none" style={{ width: "85%" }} />
+                <div className="h-2 rounded-full bg-navy-100 animate-pulse motion-reduce:animate-none" style={{ width: "70%" }} />
               </div>
             </div>
           </div>
@@ -220,7 +220,7 @@ export default function GitHubRepoForm({ onGenerated, userPlan = "starter" }: Gi
           >
             {loading ? (
               <span className="flex items-center gap-2.5">
-                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+                <svg className="animate-spin motion-reduce:animate-none h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
                   <circle
                     className="opacity-25"
                     cx="12"

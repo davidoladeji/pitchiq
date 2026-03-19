@@ -131,7 +131,7 @@ export default function AdminDecksPage() {
                   <tr key={i} className="border-b border-white/5">
                     {Array.from({ length: 6 }).map((_, j) => (
                       <td key={j} className="px-5 py-4">
-                        <div className="h-3 bg-white/5 rounded animate-pulse w-20" />
+                        <div className="h-3 bg-white/5 rounded animate-pulse motion-reduce:animate-none w-20" />
                       </td>
                     ))}
                   </tr>

@@ -80,11 +80,19 @@ export default function SettingsClient({
     <div className="min-h-screen bg-navy-50">
       <AppNav />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6 outline-none"
+        aria-labelledby="settings-page-heading"
+      >
         <div className="max-w-3xl mx-auto space-y-6">
           {/* Header */}
           <div>
-            <h1 className="text-2xl font-bold text-navy font-display tracking-tight">
+            <h1
+              id="settings-page-heading"
+              className="text-2xl font-bold text-navy font-display tracking-tight"
+            >
               Settings
             </h1>
             <p className="text-sm text-navy-500 mt-1">
@@ -154,13 +162,13 @@ export default function SettingsClient({
                   role="switch"
                   aria-checked={brandingEnabled}
                   onClick={() => setBrandingEnabled(!brandingEnabled)}
-                  className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+                  className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors duration-200 ease-in-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                     brandingEnabled ? "bg-electric" : "bg-navy-200"
                   }`}
                   aria-label={brandingEnabled ? "PitchIQ branding is shown — click to hide" : "PitchIQ branding is hidden — click to show"}
                 >
                   <span
-                    className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200 ease-in-out ${
+                    className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200 ease-in-out motion-reduce:transition-none ${
                       brandingEnabled ? "translate-x-5" : "translate-x-0.5"
                     } mt-0.5`}
                   />
@@ -274,11 +282,12 @@ export default function SettingsClient({
                   disabled={saving}
                   aria-busy={saving}
                   aria-label={saving ? "Saving settings…" : "Save branding settings"}
-                  className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-600 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-60 disabled:cursor-wait"
+                  className="inline-flex items-center justify-center min-h-[44px] px-6 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-60 disabled:cursor-wait disabled:hover:translate-y-0 disabled:hover:shadow-none"
                 >
                   {saving ? (
-                    <span className="inline-flex items-center gap-2">
-                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <span className="inline-flex items-center gap-2" role="status">
+                      <span className="sr-only">Saving settings</span>
+                      <svg className="animate-spin motion-reduce:animate-none w-4 h-4" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>

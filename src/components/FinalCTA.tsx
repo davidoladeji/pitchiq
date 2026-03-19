@@ -26,8 +26,9 @@ export default function FinalCTA() {
   }, []);
 
   return (
-    <div ref={ref} className="max-w-3xl mx-auto text-center relative z-10">
+    <section ref={ref} aria-labelledby="final-cta-heading" className="max-w-3xl mx-auto text-center relative z-10">
       <h2
+        id="final-cta-heading"
         className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-5 tracking-tight transition-all duration-700 ease-out ${
           inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
         }`}
@@ -50,12 +51,12 @@ export default function FinalCTA() {
         <Link
           href="/create"
           aria-label="Generate your pitch deck for free — no signup required"
-          className="min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-xl bg-electric hover:bg-electric-600 text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="min-h-[44px] inline-flex items-center justify-center px-10 py-4 rounded-xl bg-electric hover:bg-electric-600 text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all hover:-translate-y-0.5 hover:shadow-glow active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           Generate Your Deck — Free
         </Link>
         <p className="text-white/50 text-sm">No signup · No credit card</p>
       </div>
-    </div>
+    </section>
   );
 }

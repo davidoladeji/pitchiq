@@ -3,15 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { getStripe } from "@/lib/stripe";
 import { prisma } from "@/lib/db";
+import { getPlanConfigByKey } from "@/lib/plan-config";
 
-/**
- * Stripe price IDs — create these in your Stripe Dashboard:
- *   Pro:    $29/mo recurring
- *   Growth: $79/mo recurring
- *
- * Set via env vars or fall back to lookup by product metadata.
- */
-const PLAN_PRICES: Record<string, { priceId?: string; amount: number; name: string }> = {
+/** Hardcoded fallback when PlanConfig table is empty. */
+const FALLBACK_PRICES: Record<string, { priceId?: string; amount: number; name: string }> = {
   pro: {
     priceId: process.env.STRIPE_PRO_PRICE_ID,
     amount: 2900,
@@ -29,6 +24,18 @@ const PLAN_PRICES: Record<string, { priceId?: string; amount: number; name: stri
   },
 };
 
+async function resolvePlanPricing(plan: string): Promise<{ priceId?: string; amount: number; name: string } | null> {
+  const dbConfig = await getPlanConfigByKey(plan);
+  if (dbConfig) {
+    return {
+      priceId: dbConfig.stripePriceId || undefined,
+      amount: dbConfig.stripeAmount || FALLBACK_PRICES[plan]?.amount || 0,
+      name: `PitchIQ ${dbConfig.displayName}`,
+    };
+  }
+  return FALLBACK_PRICES[plan] || null;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
@@ -43,7 +50,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { plan } = body as { plan: string };
 
-    const planConfig = PLAN_PRICES[plan];
+    const planConfig = await resolvePlanPricing(plan);
     if (!planConfig) {
       return NextResponse.json(
         { error: "Invalid plan. Choose 'pro', 'growth', or 'enterprise'." },

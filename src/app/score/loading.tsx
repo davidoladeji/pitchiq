@@ -14,10 +14,10 @@ export default function ScoreLoading() {
       <header className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-hidden="true">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-navy-100 animate-pulse" />
-            <div className="h-5 w-20 rounded-md bg-navy-100 animate-pulse" />
+            <div className="w-8 h-8 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
+            <div className="h-5 w-20 rounded-md bg-navy-100 animate-pulse motion-reduce:animate-none" />
           </div>
-          <div className="h-10 w-24 rounded-lg bg-navy-100 animate-pulse" />
+          <div className="h-10 w-24 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
         </div>
       </header>
 
@@ -25,13 +25,13 @@ export default function ScoreLoading() {
         <div className="max-w-2xl mx-auto">
           {/* Header skeleton — badge + title + subtitle */}
           <div className="text-center mb-10">
-            <div className="inline-flex h-9 w-32 rounded-full bg-navy-100 animate-pulse mb-4" />
-            <div className="h-8 w-64 mx-auto rounded-lg bg-navy-100 animate-pulse mb-2" />
-            <div className="h-5 w-80 mx-auto rounded-md bg-navy-50 animate-pulse" />
+            <div className="inline-flex h-9 w-32 rounded-full bg-navy-100 animate-pulse motion-reduce:animate-none mb-4" />
+            <div className="h-8 w-64 mx-auto rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none mb-2" />
+            <div className="h-5 w-80 mx-auto rounded-md bg-navy-50 animate-pulse motion-reduce:animate-none" />
           </div>
 
           {/* Upload card skeleton */}
-          <div className="rounded-2xl border border-navy-50 bg-white p-8 sm:p-10 animate-pulse">
+          <div className="rounded-2xl border border-navy-50 bg-white p-8 sm:p-10 animate-pulse motion-reduce:animate-none">
             <div className="flex flex-col items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-navy-100" />
               <div className="h-5 w-48 rounded-md bg-navy-50" />

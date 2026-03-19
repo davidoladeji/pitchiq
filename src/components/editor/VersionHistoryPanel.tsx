@@ -96,15 +96,25 @@ export default function VersionHistoryPanel({
   /*  Render                                                           */
   /* ---------------------------------------------------------------- */
 
+  const focusRingDark =
+    "focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F0F14]";
+  const restoreConfirmCta = `min-h-[44px] rounded-xl bg-electric px-3 text-xs font-semibold text-white shadow-lg shadow-electric/25 transition-all hover:-translate-y-0.5 hover:bg-electric-600 hover:shadow-glow active:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${focusRingDark}`;
+
   return (
-    <div className="flex h-full flex-col bg-[#0F0F14]">
+    <section
+      className="flex h-full flex-col bg-[#0F0F14]"
+      aria-labelledby="version-history-heading"
+    >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-        <h3 className="text-sm font-semibold text-white">Version History</h3>
+        <h3 id="version-history-heading" className="text-sm font-semibold text-white">
+          Version History
+        </h3>
         <button
           type="button"
           onClick={onClose}
-          className="flex h-6 w-6 items-center justify-center rounded text-white/40 transition-colors hover:bg-white/[0.08] hover:text-white/70"
+          aria-label="Close version history"
+          className={`flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-white/40 transition-colors hover:bg-white/[0.08] hover:text-white/70 motion-reduce:transition-none ${focusRingDark}`}
         >
           <svg
             width="14"
@@ -115,6 +125,7 @@ export default function VersionHistoryPanel({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            aria-hidden
           >
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
@@ -125,8 +136,13 @@ export default function VersionHistoryPanel({
       {/* Timeline */}
       <div className="flex-1 overflow-y-auto px-4 py-3">
         {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white/60" />
+          <div
+            className="flex items-center justify-center py-12"
+            role="status"
+            aria-live="polite"
+          >
+            <span className="sr-only">Loading version history</span>
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white/60 motion-reduce:animate-none" />
           </div>
         ) : versions.length === 0 ? (
           <p className="py-12 text-center text-xs text-white/40">
@@ -148,14 +164,14 @@ export default function VersionHistoryPanel({
                     {/* Dot */}
                     <div
                       className={`absolute left-[4px] top-3 h-[7px] w-[7px] rounded-full ${
-                        isCurrent ? "bg-[#4361EE]" : "bg-white/20"
+                        isCurrent ? "bg-electric" : "bg-white/20"
                       }`}
                     />
 
                     <div
-                      className={`rounded-xl border p-3 transition-colors ${
+                      className={`rounded-xl border p-3 transition-colors motion-reduce:transition-none ${
                         isCurrent
-                          ? "border-[#4361EE]/30 bg-[#4361EE]/[0.06]"
+                          ? "border-electric/30 bg-electric/[0.06]"
                           : "border-white/[0.06] bg-white/[0.04] hover:border-white/[0.12]"
                       }`}
                     >
@@ -165,7 +181,7 @@ export default function VersionHistoryPanel({
                             v{v.version}
                           </span>
                           {isCurrent && (
-                            <span className="rounded bg-[#4361EE]/20 px-1.5 py-0.5 text-[10px] font-medium text-[#4361EE]">
+                            <span className="rounded bg-electric/20 px-1.5 py-0.5 text-[10px] font-medium text-electric">
                               Current
                             </span>
                           )}
@@ -191,7 +207,7 @@ export default function VersionHistoryPanel({
                         <button
                           type="button"
                           onClick={() => setConfirmId(v.id)}
-                          className="mt-2 hidden text-[11px] font-medium text-[#4361EE] transition-colors hover:text-[#4361EE]/80 group-hover:inline-block"
+                          className={`mt-2 hidden min-h-[44px] text-[11px] font-medium text-electric transition-colors hover:text-electric/80 group-hover:inline-block ${focusRingDark}`}
                         >
                           Restore
                         </button>
@@ -199,7 +215,7 @@ export default function VersionHistoryPanel({
 
                       {/* Confirm */}
                       {isConfirming && (
-                        <div className="mt-2 flex items-center gap-2">
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
                           <span className="text-[11px] text-white/50">
                             Restore this version?
                           </span>
@@ -207,14 +223,31 @@ export default function VersionHistoryPanel({
                             type="button"
                             onClick={() => handleRestore(v.id)}
                             disabled={isRestoring}
-                            className="rounded bg-[#4361EE] px-2.5 py-1 text-[11px] font-medium text-white transition-opacity disabled:opacity-40"
+                            aria-busy={isRestoring}
+                            aria-label={
+                              isRestoring
+                                ? "Restoring version, please wait"
+                                : "Confirm restore this version"
+                            }
+                            className={restoreConfirmCta}
                           >
-                            {isRestoring ? "Restoring..." : "Confirm"}
+                            {isRestoring ? (
+                              <span className="inline-flex items-center gap-2">
+                                <span
+                                  className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white motion-reduce:animate-none"
+                                  aria-hidden
+                                />
+                                Restoring…
+                                <span className="sr-only">Please wait</span>
+                              </span>
+                            ) : (
+                              "Confirm"
+                            )}
                           </button>
                           <button
                             type="button"
                             onClick={() => setConfirmId(null)}
-                            className="text-[11px] text-white/40 hover:text-white/60"
+                            className={`min-h-[44px] rounded-lg px-2 text-[11px] text-white/40 hover:text-white/60 ${focusRingDark}`}
                           >
                             Cancel
                           </button>
@@ -228,6 +261,6 @@ export default function VersionHistoryPanel({
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

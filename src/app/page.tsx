@@ -22,7 +22,7 @@ export default function Home() {
         <AppNav variant="landing" />
       </header>
 
-      <main id="main" tabIndex={-1} aria-label="Main content">
+      <main id="main" tabIndex={-1} aria-labelledby="hero-heading">
         <LandingHero />
         <LandingDemo />
         <LandingPIQDeepDive />

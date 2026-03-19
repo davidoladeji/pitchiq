@@ -179,18 +179,29 @@ export default function WorkspaceDashboardClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6 outline-none"
+        aria-labelledby="workspace-dashboard-heading"
+      >
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="flex items-start justify-between gap-4 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <Link href="/workspace" className="text-navy-400 hover:text-electric transition-colors">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <Link
+                  href="/workspace"
+                  className="text-navy-400 hover:text-electric transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded p-1 -m-1"
+                  aria-label="Back to workspaces list"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                   </svg>
                 </Link>
-                <h1 className="text-2xl font-bold text-navy tracking-tight">{workspace.name}</h1>
+                <h1 id="workspace-dashboard-heading" className="text-2xl font-bold text-navy tracking-tight">
+                  {workspace.name}
+                </h1>
               </div>
               <p className="text-navy-500 text-sm">
                 {workspace.decks.length} deck{workspace.decks.length !== 1 ? "s" : ""} ·{" "}
@@ -238,7 +249,7 @@ export default function WorkspaceDashboardClient({
                       <Link
                         key={deck.id}
                         href={`/deck/${deck.shareId}`}
-                        className="rounded-xl border border-navy-100 bg-white p-4 hover:border-electric/30 hover:shadow-sm transition-all group"
+                        className="rounded-xl border border-navy-100 bg-white p-4 hover:border-electric/30 hover:shadow-sm transition-all motion-reduce:transition-none group"
                       >
                         <div className="flex items-center justify-between gap-3">
                           <div className="min-w-0">
@@ -310,7 +321,18 @@ export default function WorkspaceDashboardClient({
                         aria-label={inviting ? "Sending invite…" : "Send invite"}
                         aria-busy={inviting}
                       >
-                        {inviting ? "..." : "Send"}
+                        {inviting ? (
+                          <span className="inline-flex items-center gap-1.5" role="status">
+                            <span className="sr-only">Sending invite</span>
+                            <svg className="h-3.5 w-3.5 animate-spin motion-reduce:animate-none shrink-0" aria-hidden viewBox="0 0 24 24" fill="none">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                            </svg>
+                            Sending…
+                          </span>
+                        ) : (
+                          "Send"
+                        )}
                       </button>
                     </div>
                     {inviteError && <p className="text-[10px] text-red-500">{inviteError}</p>}
@@ -374,7 +396,8 @@ export default function WorkspaceDashboardClient({
                   <h2 className="font-bold text-navy text-sm mb-4">Branding</h2>
 
                   {brandLoading ? (
-                    <div className="space-y-3 animate-pulse">
+                    <div className="space-y-3 animate-pulse motion-reduce:animate-none" role="status" aria-busy="true">
+                      <span className="sr-only">Loading branding settings</span>
                       <div className="h-8 rounded-lg bg-navy-50" />
                       <div className="h-8 rounded-lg bg-navy-50" />
                     </div>
@@ -396,13 +419,13 @@ export default function WorkspaceDashboardClient({
                           aria-checked={hidePitchiqBranding}
                           onClick={() => setHidePitchiqBranding(!hidePitchiqBranding)}
                           disabled={brandNotEnterprise}
-                          className={`relative inline-flex h-5 w-9 shrink-0 rounded-full transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed ${
+                          className={`relative inline-flex h-5 w-9 shrink-0 rounded-full transition-colors duration-200 ease-in-out motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed ${
                             hidePitchiqBranding ? "bg-electric" : "bg-navy-200"
                           }`}
                           aria-label={hidePitchiqBranding ? "PitchIQ branding hidden — click to show" : "PitchIQ branding shown — click to hide"}
                         >
                           <span
-                            className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200 ease-in-out ${
+                            className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200 ease-in-out motion-reduce:transition-none ${
                               hidePitchiqBranding ? "translate-x-4" : "translate-x-0.5"
                             } mt-0.5`}
                           />
@@ -465,9 +488,20 @@ export default function WorkspaceDashboardClient({
                         disabled={brandSaving || brandNotEnterprise}
                         aria-busy={brandSaving}
                         aria-label={brandSaving ? "Saving branding…" : "Save branding settings"}
-                        className="w-full min-h-[44px] px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:bg-electric-600 transition disabled:hover:bg-electric disabled:cursor-not-allowed"
+                        className="w-full min-h-[44px] px-3 py-1.5 rounded-lg bg-electric text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:shadow-glow disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition motion-reduce:transition-none disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:hover:bg-electric disabled:cursor-not-allowed"
                       >
-                        {brandSaving ? "Saving…" : "Save Branding"}
+                        {brandSaving ? (
+                          <span className="inline-flex items-center justify-center gap-2" role="status">
+                            <span className="sr-only">Saving branding</span>
+                            <svg className="h-3.5 w-3.5 animate-spin motion-reduce:animate-none shrink-0" aria-hidden viewBox="0 0 24 24" fill="none">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                            </svg>
+                            Saving…
+                          </span>
+                        ) : (
+                          "Save Branding"
+                        )}
                       </button>
                     </div>
                   )}

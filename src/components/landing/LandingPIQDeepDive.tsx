@@ -151,7 +151,7 @@ export default function LandingPIQDeepDive() {
       id="about"
       ref={sectionRef}
       className="py-16 sm:py-20 px-4 sm:px-6 bg-background"
-      aria-label="PIQ Score methodology deep dive"
+      aria-labelledby="piq-deep-dive-heading"
     >
       <div className="max-w-5xl mx-auto">
         {/* ── Section header (compact) ────────────────────────────────── */}
@@ -165,7 +165,7 @@ export default function LandingPIQDeepDive() {
           <span className="inline-block px-3.5 py-1.5 rounded-full bg-electric/10 text-electric text-[11px] font-semibold uppercase tracking-[0.2em] mb-4">
             PIQ Score
           </span>
-          <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy tracking-[-0.02em] mb-3">
+          <h2 id="piq-deep-dive-heading" className="text-3xl sm:text-4xl font-display font-bold text-navy tracking-[-0.02em] mb-3">
             Your fundability, quantified
           </h2>
           <p className="text-navy-500 text-base max-w-xl mx-auto font-light leading-relaxed">

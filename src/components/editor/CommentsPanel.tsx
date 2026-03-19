@@ -66,6 +66,11 @@ function initials(name: string | null, email: string): string {
 /*  Avatar                                                             */
 /* ------------------------------------------------------------------ */
 
+const focusRingDark =
+  "focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F0F14]";
+
+const primaryCtaDark = `min-h-[44px] rounded-xl bg-electric px-4 text-xs font-semibold text-white shadow-lg shadow-electric/25 transition-all hover:-translate-y-0.5 hover:bg-electric-600 hover:shadow-glow active:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 motion-reduce:transition-none motion-reduce:hover:translate-y-0 ${focusRingDark}`;
+
 function UserAvatar({ user }: { user: CommentUser }) {
   if (user.image) {
     return (
@@ -77,7 +82,7 @@ function UserAvatar({ user }: { user: CommentUser }) {
     );
   }
   return (
-    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#4361EE]/20 text-[10px] font-medium text-[#4361EE]">
+    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-electric/20 text-[10px] font-medium text-electric">
       {initials(user.name, user.email)}
     </div>
   );
@@ -206,19 +211,30 @@ export default function CommentsPanel({ shareId }: { shareId: string }) {
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="flex h-full flex-col bg-[#0F0F14]">
+    <section
+      className="flex h-full flex-col bg-[#0F0F14]"
+      aria-labelledby="comments-panel-heading"
+    >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold text-white">Comments</h3>
+          <h3 id="comments-panel-heading" className="text-sm font-semibold text-white">
+            Comments
+          </h3>
           <span className="rounded bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-medium text-white/60">
             {comments.length}
           </span>
         </div>
-        <div className="flex gap-1">
+        <div
+          className="flex gap-1"
+          role="group"
+          aria-label="Filter comments"
+        >
           <button
+            type="button"
             onClick={() => setFilter("all")}
-            className={`rounded px-2 py-1 text-[11px] font-medium transition-colors ${
+            aria-pressed={filter === "all"}
+            className={`min-h-[44px] rounded-lg px-3 text-[11px] font-medium transition-colors motion-reduce:transition-none ${focusRingDark} ${
               filter === "all"
                 ? "bg-white/[0.08] text-white"
                 : "text-white/40 hover:text-white/60"
@@ -227,8 +243,10 @@ export default function CommentsPanel({ shareId }: { shareId: string }) {
             All
           </button>
           <button
+            type="button"
             onClick={() => setFilter("unresolved")}
-            className={`rounded px-2 py-1 text-[11px] font-medium transition-colors ${
+            aria-pressed={filter === "unresolved"}
+            className={`min-h-[44px] rounded-lg px-3 text-[11px] font-medium transition-colors motion-reduce:transition-none ${focusRingDark} ${
               filter === "unresolved"
                 ? "bg-white/[0.08] text-white"
                 : "text-white/40 hover:text-white/60"
@@ -242,8 +260,13 @@ export default function CommentsPanel({ shareId }: { shareId: string }) {
       {/* Comment list */}
       <div className="flex-1 overflow-y-auto px-3 py-3">
         {loading ? (
-          <div className="flex items-center justify-center py-12">
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white/60" />
+          <div
+            className="flex items-center justify-center py-12"
+            role="status"
+            aria-live="polite"
+          >
+            <span className="sr-only">Loading comments</span>
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white/60 motion-reduce:animate-none" />
           </div>
         ) : filtered.length === 0 ? (
           <p className="py-12 text-center text-xs text-white/40">
@@ -288,8 +311,8 @@ export default function CommentsPanel({ shareId }: { shareId: string }) {
                               e.stopPropagation();
                               handleResolve(comment.id);
                             }}
-                            className="flex h-6 w-6 items-center justify-center rounded text-white/30 transition-colors hover:bg-white/[0.08] hover:text-green-400"
-                            title="Resolve"
+                            aria-label="Mark comment resolved"
+                            className={`flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-white/30 transition-colors hover:bg-white/[0.08] hover:text-green-400 motion-reduce:transition-none ${focusRingDark}`}
                           >
                             <svg
                               width="14"
@@ -300,6 +323,7 @@ export default function CommentsPanel({ shareId }: { shareId: string }) {
                               strokeWidth="2"
                               strokeLinecap="round"
                               strokeLinejoin="round"
+                              aria-hidden
                             >
                               <polyline points="20 6 9 17 4 12" />
                             </svg>
@@ -376,7 +400,7 @@ export default function CommentsPanel({ shareId }: { shareId: string }) {
                               setReplyingTo(null);
                               setReplyContent("");
                             }}
-                            className="rounded px-2.5 py-1 text-[11px] text-white/40 hover:text-white/60"
+                            className={`min-h-[44px] rounded-lg px-2.5 text-[11px] text-white/40 hover:text-white/60 ${focusRingDark}`}
                           >
                             Cancel
                           </button>
@@ -384,9 +408,22 @@ export default function CommentsPanel({ shareId }: { shareId: string }) {
                             type="button"
                             onClick={() => handleReply(comment.id)}
                             disabled={!replyContent.trim() || submitting}
-                            className="rounded bg-[#4361EE] px-3 py-1 text-[11px] font-medium text-white transition-opacity disabled:opacity-40"
+                            aria-label={submitting ? "Posting reply…" : "Post reply"}
+                            aria-busy={submitting}
+                            className={`${primaryCtaDark} px-3`}
                           >
-                            Reply
+                            {submitting ? (
+                              <span className="inline-flex items-center gap-2">
+                                <span
+                                  className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white motion-reduce:animate-none"
+                                  aria-hidden
+                                />
+                                <span className="sr-only">Posting</span>
+                                …
+                              </span>
+                            ) : (
+                              "Reply"
+                            )}
                           </button>
                         </div>
                       </div>
@@ -413,12 +450,25 @@ export default function CommentsPanel({ shareId }: { shareId: string }) {
             type="button"
             onClick={handleAdd}
             disabled={!newContent.trim() || submitting}
-            className="rounded bg-[#4361EE] px-4 py-1.5 text-[11px] font-medium text-white transition-opacity disabled:opacity-40"
+            aria-label={submitting ? "Posting comment…" : "Post comment on current slide"}
+            aria-busy={submitting}
+            className={primaryCtaDark}
           >
-            {submitting ? "Posting..." : "Comment"}
+            {submitting ? (
+              <span className="inline-flex items-center gap-2">
+                <span
+                  className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white motion-reduce:animate-none"
+                  aria-hidden
+                />
+                <span>Posting…</span>
+                <span className="sr-only">Please wait</span>
+              </span>
+            ) : (
+              "Comment"
+            )}
           </button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

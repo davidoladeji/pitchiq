@@ -112,9 +112,9 @@ export default function DashboardOverview({
   ];
 
   return (
-    <section aria-label="Dashboard overview">
+    <section aria-labelledby="dashboard-overview-heading">
       <div className="flex items-center gap-2 mb-4">
-        <h2 className="text-lg font-bold text-navy font-display">Overview</h2>
+        <h2 id="dashboard-overview-heading" className="text-lg font-bold text-navy font-display">Overview</h2>
         <span className={`px-2 py-0.5 rounded-lg text-[10px] font-bold uppercase tracking-wide ${planBadgeColor}`}>
           {plan}
         </span>
@@ -124,7 +124,7 @@ export default function DashboardOverview({
           const content = (
             <div
               key={stat.label}
-              className="bg-white rounded-2xl border border-navy-200 p-4 sm:p-6 hover:shadow-card-hover hover:-translate-y-0.5 transition-all"
+              className="bg-white rounded-2xl border border-navy-200 p-4 sm:p-6 hover:shadow-card-hover hover:-translate-y-0.5 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0"
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${stat.bgColor} flex items-center justify-center shrink-0 ${stat.color}`}>

@@ -97,18 +97,23 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
     : null;
 
   return (
-    <div className="h-full flex flex-col bg-navy-950 border-l border-white/10">
+    <section
+      className="h-full flex flex-col bg-navy-950 border-l border-white/10"
+      aria-labelledby="investor-lens-heading"
+    >
       {/* Header */}
       <div className="p-4 border-b border-white/10 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-electric to-violet flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-electric to-violet flex items-center justify-center" aria-hidden>
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Investor Lens</h3>
+              <h3 id="investor-lens-heading" className="text-sm font-bold text-white">
+                Investor Lens
+              </h3>
               <p className="text-[10px] text-white/40">3 investor perspectives</p>
             </div>
           </div>
@@ -137,15 +142,17 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
             onClick={runLens}
             disabled={loading}
             aria-label={loading ? "Evaluating slide" : result && analyzedSlideIndex === selectedSlideIndex ? "Re-evaluate this slide" : "Evaluate this slide with Investor Lens"}
-            className="w-full min-h-[44px] py-2.5 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+            aria-busy={loading}
+            className="w-full min-h-[44px] py-2.5 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow transition-all motion-reduce:transition-none hover:-translate-y-0.5 active:translate-y-0 motion-reduce:hover:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
           >
             {loading ? (
               <>
-                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" aria-hidden>
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                Evaluating...
+                <span className="sr-only">Evaluating slide, please wait</span>
+                <span aria-hidden>Evaluating...</span>
               </>
             ) : result && analyzedSlideIndex === selectedSlideIndex ? (
               "Re-evaluate Slide"
@@ -168,7 +175,7 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
 
         {/* Error */}
         {error && (
-          <div className="mx-4 mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+          <div className="mx-4 mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20" role="alert">
             <p className="text-xs text-red-400">{error}</p>
           </div>
         )}
@@ -249,6 +256,6 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

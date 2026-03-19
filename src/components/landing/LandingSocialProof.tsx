@@ -109,7 +109,7 @@ export default function LandingSocialProof() {
       id="social-proof"
       ref={sectionRef}
       className="section-py px-4 sm:px-6 bg-navy-50"
-      aria-label="What founders say about PitchIQ"
+      aria-labelledby="social-proof-heading"
     >
       <div className="max-w-5xl mx-auto">
         {/* Header */}
@@ -120,7 +120,7 @@ export default function LandingSocialProof() {
             transform: headingVisible ? "translateY(0)" : "translateY(20px)",
           }}
         >
-          <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy">
+          <h2 id="social-proof-heading" className="text-3xl sm:text-4xl font-display font-bold text-navy">
             Trusted by data-driven founders
           </h2>
         </div>

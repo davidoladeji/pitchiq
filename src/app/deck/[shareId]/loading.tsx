@@ -14,10 +14,10 @@ export default function DeckViewerLoading() {
       <header className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-hidden="true">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-navy-100 animate-pulse" />
-            <div className="h-5 w-20 rounded-md bg-navy-100 animate-pulse" />
+            <div className="w-8 h-8 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
+            <div className="h-5 w-20 rounded-md bg-navy-100 animate-pulse motion-reduce:animate-none" />
           </div>
-          <div className="h-9 w-28 rounded-lg bg-navy-100 animate-pulse" />
+          <div className="h-9 w-28 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
         </div>
       </header>
 
@@ -25,8 +25,8 @@ export default function DeckViewerLoading() {
         <div className="max-w-5xl mx-auto">
           {/* Title block skeleton */}
           <div className="text-center mb-8">
-            <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse mb-3" />
-            <div className="h-4 w-16 mx-auto rounded bg-navy-50 animate-pulse" />
+            <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none mb-3" />
+            <div className="h-4 w-16 mx-auto rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
           </div>
 
           {/* Slide placeholders — 3 cards matching DeckViewerClient loading */}
@@ -34,7 +34,7 @@ export default function DeckViewerLoading() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="aspect-video rounded-2xl bg-navy-50 border border-navy-50 animate-pulse"
+                className="aspect-video rounded-2xl bg-navy-50 border border-navy-50 animate-pulse motion-reduce:animate-none"
               >
                 <div className="h-full flex flex-col justify-center p-8 md:p-12">
                   <div className="h-10 max-w-md rounded-lg bg-navy-100 mb-4 mx-auto w-3/4" />
@@ -51,8 +51,8 @@ export default function DeckViewerLoading() {
 
           {/* CTA row skeleton */}
           <div className="flex justify-center mt-8 gap-3">
-            <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse" />
-            <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse" />
+            <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse motion-reduce:animate-none" />
+            <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse motion-reduce:animate-none" />
           </div>
         </div>
       </main>

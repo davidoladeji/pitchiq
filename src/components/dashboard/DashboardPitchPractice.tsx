@@ -116,8 +116,12 @@ export default function DashboardPitchPractice({
       </div>
 
       {loading ? (
-        <div className="text-center py-6">
-          <div className="w-5 h-5 border-2 border-electric border-t-transparent rounded-full animate-spin mx-auto" />
+        <div className="text-center py-6" role="status">
+          <div
+            className="w-5 h-5 border-2 border-electric border-t-transparent rounded-full animate-spin motion-reduce:animate-none motion-reduce:border-electric/40 mx-auto ring-2 ring-electric/15 ring-offset-2 ring-offset-white motion-reduce:ring-0"
+            aria-hidden="true"
+          />
+          <span className="sr-only">Loading pitch practice</span>
         </div>
       ) : sessions.length === 0 ? (
         <div className="text-center py-6">

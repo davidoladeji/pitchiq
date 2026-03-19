@@ -21,13 +21,27 @@ export default function IdeasPageClient() {
   const [deckLoadingId, setDeckLoadingId] = useState<number | null>(null);
   const [autofilling, setAutofilling] = useState<Record<string, boolean>>({});
   const resultsHeadingRef = useRef<HTMLHeadingElement>(null);
+  const ideasResultsRef = useRef<HTMLDivElement>(null);
 
-  /** When ideas load, move focus to results heading so keyboard/screen reader users land on the new content (WCAG 2.1 AA, founder-first). */
+  /** When ideas load, scroll to results (respect reduced motion) + focus heading (WCAG 2.1 AA, parity with Score/Create). */
   useEffect(() => {
-    if (ideas?.length) {
-      const t = setTimeout(() => resultsHeadingRef.current?.focus({ preventScroll: true }), 200);
-      return () => clearTimeout(t);
-    }
+    if (!ideas?.length) return;
+    const tScroll = window.setTimeout(() => {
+      const reduced =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      ideasResultsRef.current?.scrollIntoView({
+        behavior: reduced ? "instant" : "smooth",
+        block: "start",
+      });
+    }, 100);
+    const tFocus = window.setTimeout(() => {
+      resultsHeadingRef.current?.focus({ preventScroll: true });
+    }, 200);
+    return () => {
+      window.clearTimeout(tScroll);
+      window.clearTimeout(tFocus);
+    };
   }, [ideas]);
 
   const currentQuestion = IDEA_QUESTIONS[step];
@@ -200,9 +214,15 @@ export default function IdeasPageClient() {
       <div className="min-h-screen bg-navy-50">
         <AppNav />
 
-        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
-          <div className="max-w-3xl mx-auto">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="pt-24 pb-16 px-4 sm:px-6"
+          aria-labelledby="ideas-results-heading"
+        >
+          <div ref={ideasResultsRef} className="max-w-3xl mx-auto scroll-mt-24" tabIndex={-1}>
             <h1
+              id="ideas-results-heading"
               ref={resultsHeadingRef}
               tabIndex={-1}
               className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight outline-none focus:outline-none"
@@ -216,7 +236,7 @@ export default function IdeasPageClient() {
               {ideas.map((idea, i) => (
                 <div
                   key={i}
-                  className="bg-white rounded-2xl border border-navy-100 p-6 shadow-sm hover:border-electric/20 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300"
+                  className="bg-white rounded-2xl border border-navy-100 p-6 shadow-sm hover:border-electric/20 hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                   <div className="flex items-start justify-between gap-4 mb-3">
                     <div>
@@ -261,7 +281,7 @@ export default function IdeasPageClient() {
                   >
                     {deckLoadingId === i ? (
                       <>
-                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg className="animate-spin motion-reduce:animate-none h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>
@@ -308,9 +328,17 @@ export default function IdeasPageClient() {
       <AppNav
       />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6"
+        aria-labelledby="ideas-page-heading"
+      >
         <div className="max-w-xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight">
+          <h1
+            id="ideas-page-heading"
+            className="text-2xl md:text-3xl font-bold text-navy mb-1 tracking-tight"
+          >
             Find your next startup idea
           </h1>
           <p className="text-navy-500 text-sm mb-6">
@@ -375,7 +403,7 @@ export default function IdeasPageClient() {
                 {IDEA_QUESTIONS.map((_, i) => (
                   <div
                     key={i}
-                    className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+                    className={`h-1 flex-1 rounded-full transition-colors duration-300 motion-reduce:transition-none ${
                       i <= step ? "bg-electric" : "bg-navy-100"
                     }`}
                     aria-hidden="true"
@@ -386,8 +414,12 @@ export default function IdeasPageClient() {
 
             {loading ? (
               <div className="flex flex-col items-center gap-4 py-12" aria-live="polite" aria-busy="true">
-                <div className="w-12 h-12 rounded-xl bg-electric/10 border border-electric/20 flex items-center justify-center">
-                  <svg className="animate-spin h-6 w-6 text-electric" viewBox="0 0 24 24" aria-hidden="true">
+                <div className="w-12 h-12 rounded-xl bg-electric/10 border border-electric/20 flex items-center justify-center motion-reduce:border-electric/40">
+                  <svg
+                    className="animate-spin motion-reduce:animate-none h-6 w-6 text-electric"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
@@ -409,7 +441,7 @@ export default function IdeasPageClient() {
                     title="AI will suggest an answer you can refine"
                   >
                     {autofilling[currentQuestion.id] ? (
-                      <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24" aria-hidden="true">
+                      <svg className="animate-spin motion-reduce:animate-none h-3.5 w-3.5" viewBox="0 0 24 24" aria-hidden="true">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>

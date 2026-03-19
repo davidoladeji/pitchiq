@@ -1,16 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import PlanCompareModal from "@/components/PlanCompareModal";
 import { getPlanLimits } from "@/lib/plan-limits";
 
-const PLAN_INFO: Record<string, { label: string; price: string; color: string; bgColor: string }> = {
+const FALLBACK_PLAN_INFO: Record<string, { label: string; price: string; color: string; bgColor: string }> = {
   starter: { label: "Starter", price: "Free", color: "text-navy-600", bgColor: "bg-navy-100" },
   pro: { label: "Pro", price: "$29/mo", color: "text-electric", bgColor: "bg-electric/10" },
   growth: { label: "Growth", price: "$79/mo", color: "text-violet-700", bgColor: "bg-violet-100" },
   enterprise: { label: "Enterprise", price: "$399/mo", color: "text-amber-700", bgColor: "bg-amber-100" },
+};
+
+const PLAN_COLORS: Record<string, { color: string; bgColor: string }> = {
+  starter: { color: "text-navy-600", bgColor: "bg-navy-100" },
+  pro: { color: "text-electric", bgColor: "bg-electric/10" },
+  growth: { color: "text-violet-700", bgColor: "bg-violet-100" },
+  enterprise: { color: "text-amber-700", bgColor: "bg-amber-100" },
 };
 
 export default function BillingClient({
@@ -28,8 +35,31 @@ export default function BillingClient({
 }) {
   const [managingBilling, setManagingBilling] = useState(false);
   const [showPlanModal, setShowPlanModal] = useState(false);
+  const [planInfo, setPlanInfo] = useState(FALLBACK_PLAN_INFO);
 
-  const info = PLAN_INFO[plan] || PLAN_INFO.starter;
+  // Fetch dynamic plan display data
+  useEffect(() => {
+    fetch("/api/plans")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.plans && Array.isArray(data.plans) && data.plans.length > 0) {
+          const info: Record<string, { label: string; price: string; color: string; bgColor: string }> = {};
+          for (const p of data.plans) {
+            const colors = PLAN_COLORS[p.planKey] || PLAN_COLORS.starter;
+            info[p.planKey] = {
+              label: p.displayName,
+              price: p.priceUnit ? `${p.price}${p.priceUnit}` : p.price,
+              color: colors.color,
+              bgColor: colors.bgColor,
+            };
+          }
+          setPlanInfo(info);
+        }
+      })
+      .catch(() => { /* fallback to hardcoded */ });
+  }, []);
+
+  const info = planInfo[plan] || planInfo.starter || FALLBACK_PLAN_INFO.starter;
   const limits = getPlanLimits(plan);
   const isPaid = plan !== "starter";
 
@@ -52,11 +82,19 @@ export default function BillingClient({
     <div className="min-h-screen bg-navy-50">
       <AppNav />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6 outline-none"
+        aria-labelledby="billing-page-heading"
+      >
         <div className="max-w-3xl mx-auto space-y-6">
           {/* Header */}
           <div>
-            <h1 className="text-2xl font-bold text-navy font-display tracking-tight">
+            <h1
+              id="billing-page-heading"
+              className="text-2xl font-bold text-navy font-display tracking-tight"
+            >
               Billing & Subscription
             </h1>
             <p className="text-sm text-navy-500 mt-1">
@@ -87,7 +125,7 @@ export default function BillingClient({
                 >
                   {managingBilling ? (
                     <>
-                      <svg className="h-4 w-4 animate-spin text-electric" aria-hidden viewBox="0 0 24 24" fill="none">
+                      <svg className="h-4 w-4 animate-spin motion-reduce:animate-none text-electric" aria-hidden viewBox="0 0 24 24" fill="none">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>

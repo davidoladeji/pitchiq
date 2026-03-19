@@ -97,7 +97,7 @@ export default function LandingNav() {
             <Link
               href="/create"
               aria-label="Create your pitch deck"
-              className="min-h-[44px] inline-flex items-center px-6 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="min-h-[44px] inline-flex items-center px-6 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Create Deck
             </Link>
@@ -114,7 +114,7 @@ export default function LandingNav() {
             <Link
               href="/create"
               aria-label="Create your pitch deck"
-              className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="min-h-[44px] inline-flex items-center px-4 py-2.5 rounded-lg bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Create Deck
             </Link>
@@ -166,6 +166,7 @@ export default function LandingNav() {
       <div
         id="nav-menu"
         aria-label="Navigation menu"
+        aria-hidden={!isMenuOpen}
         className={`fixed inset-0 z-40 md:hidden transition-opacity duration-200 ${
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
@@ -179,7 +180,7 @@ export default function LandingNav() {
         />
         {/* Panel */}
         <div
-          className={`absolute top-16 left-0 right-0 bg-white border-b border-navy-100 shadow-premium-lg rounded-b-2xl px-6 py-4 transition-transform duration-200 ${
+          className={`absolute top-16 left-0 right-0 bg-white border-b border-navy-100 shadow-premium-lg rounded-b-2xl px-6 py-4 transition-transform duration-200 motion-reduce:transition-none ${
             isMenuOpen ? "translate-y-0" : "-translate-y-2"
           }`}
         >

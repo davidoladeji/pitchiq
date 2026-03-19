@@ -135,7 +135,8 @@ export default function LiveComments({
           <button
             type="button"
             onClick={() => setShowResolved(!showResolved)}
-            className="text-[10px] text-navy-400 hover:text-navy font-medium"
+            aria-pressed={showResolved}
+            className="min-h-[44px] min-w-[44px] px-2 -mr-2 text-[10px] text-navy-400 hover:text-navy font-medium rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 motion-reduce:transition-none"
           >
             {showResolved ? "Hide resolved" : "Show resolved"}
           </button>
@@ -146,8 +147,12 @@ export default function LiveComments({
       {/* Comments list */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {loading ? (
-          <div className="flex justify-center py-8">
-            <div className="w-5 h-5 rounded-full border-2 border-electric border-t-transparent animate-spin" />
+          <div className="flex flex-col items-center justify-center py-8 gap-2" role="status">
+            <span className="sr-only">Loading comments</span>
+            <div
+              className="w-5 h-5 rounded-full border-2 border-electric border-t-transparent animate-spin motion-reduce:animate-none motion-reduce:border-electric/40"
+              aria-hidden
+            />
           </div>
         ) : slideComments.length === 0 ? (
           <p className="text-xs text-navy-400 text-center py-6">

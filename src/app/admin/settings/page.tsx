@@ -83,7 +83,7 @@ export default function AdminSettingsPage() {
           {loading ? (
             <div className="space-y-4">
               {[1, 2].map((i) => (
-                <div key={i} className="animate-pulse">
+                <div key={i} className="animate-pulse motion-reduce:animate-none">
                   <div className="h-3 bg-white/5 rounded w-32 mb-2" />
                   <div className="h-10 bg-white/5 rounded-xl" />
                 </div>

@@ -36,7 +36,7 @@ export default function LandingHero() {
       id="hero"
       ref={sectionRef}
       className="relative min-h-[100vh] flex items-center justify-center px-4 sm:px-6 overflow-hidden bg-navy"
-      aria-label="PitchIQ hero — get your PIQ Score"
+      aria-labelledby="hero-heading"
     >
       {/* Grid overlay */}
       <div className="absolute inset-0 bg-grid-dark pointer-events-none opacity-40" />
@@ -81,6 +81,7 @@ export default function LandingHero() {
 
         {/* Headline */}
         <h1
+          id="hero-heading"
           className={`font-display text-4xl sm:text-5xl md:text-display-xl font-bold text-white leading-[1.05] tracking-[-0.04em] mb-6 sm:mb-8 transition-all duration-1000 ease-out delay-150 ${
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
@@ -111,11 +112,11 @@ export default function LandingHero() {
           <Link
             href="/create"
             aria-label="Get your PIQ Score — analyze your deck's fundability"
-            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="group inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Get Your PIQ Score
             <svg
-              className="w-5 h-5 ml-2.5 group-hover:translate-x-1 transition-transform duration-300"
+              className="w-5 h-5 ml-2.5 group-hover:translate-x-1 motion-reduce:translate-x-0 transition-transform duration-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

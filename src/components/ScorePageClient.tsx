@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
@@ -29,6 +29,7 @@ export default function ScorePageClient({
   const [errorMsg, setErrorMsg] = useState("");
   const [progress, setProgress] = useState(0);
   const [extendEnabled, setExtendEnabled] = useState<boolean | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   // Check if Extend.ai is available on mount
   useEffect(() => {
@@ -37,6 +38,20 @@ export default function ScorePageClient({
       .then((d) => setExtendEnabled(d.extendEnabled === true))
       .catch(() => setExtendEnabled(false));
   }, []);
+
+  useEffect(() => {
+    if (state !== "result" || !score) return;
+    const t = window.setTimeout(() => {
+      const reduced =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      resultRef.current?.scrollIntoView({
+        behavior: reduced ? "instant" : "smooth",
+        block: "start",
+      });
+    }, 100);
+    return () => window.clearTimeout(t);
+  }, [state, score]);
 
   const handleFileSelected = useCallback((f: File) => {
     setFile(f);
@@ -192,11 +207,17 @@ export default function ScorePageClient({
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-navy-50">
+      <div className="min-h-screen bg-navy-50" aria-busy="true">
         <AppNav />
         <div className="min-h-[60vh] flex items-center justify-center">
-          <div className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin" />
+          <div
+            className="w-8 h-8 rounded-full border-2 border-electric border-t-transparent animate-spin motion-reduce:animate-none motion-reduce:border-electric/40"
+            aria-hidden="true"
+          />
         </div>
+        <span role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+          Loading score
+        </span>
       </div>
     );
   }
@@ -205,14 +226,21 @@ export default function ScorePageClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="pt-24 pb-16 px-4 sm:px-6"
+          aria-labelledby="score-signin-heading"
+        >
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
             <div className="w-16 h-16 rounded-2xl bg-electric/10 flex items-center justify-center mb-6">
               <svg className="w-8 h-8 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-navy mb-2">Sign in to score your deck</h2>
+            <h1 id="score-signin-heading" className="text-2xl font-bold text-navy mb-2">
+              Sign in to score your deck
+            </h1>
             <p className="text-navy-500 mb-6 max-w-md">Create a free account to get an instant fundability score with actionable feedback.</p>
             <a
               href="/auth/signin?callbackUrl=/score"
@@ -231,7 +259,14 @@ export default function ScorePageClient({
     <div className="min-h-screen bg-navy-50">
       <AppNav />
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6"
+        aria-labelledby={
+          state === "result" && score ? "score-result-heading" : "score-page-heading"
+        }
+      >
         <div className="max-w-2xl mx-auto">
           {/* Header */}
           <div className="text-center mb-10 animate-fade-in">
@@ -241,7 +276,10 @@ export default function ScorePageClient({
               </svg>
               <span className="text-xs font-semibold text-electric">PIQ Score</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight">
+            <h1
+              id="score-page-heading"
+              className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight"
+            >
               Score Your Pitch Deck
             </h1>
             <p className="text-navy-600 text-base sm:text-lg max-w-lg mx-auto">
@@ -268,7 +306,7 @@ export default function ScorePageClient({
                   </div>
                   <div className="h-2 rounded-full bg-navy-100 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-electric transition-all duration-500 ease-out"
+                      className="h-full rounded-full bg-electric transition-all duration-500 ease-out motion-reduce:transition-none"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
@@ -334,7 +372,7 @@ export default function ScorePageClient({
 
           {/* Result */}
           {state === "result" && score && (
-            <div className="space-y-6 animate-fade-in-up">
+            <div ref={resultRef} className="space-y-6 animate-fade-in-up scroll-mt-24">
               <div className="text-center">
                 <p className="inline-flex items-center gap-2 text-electric text-sm font-medium mb-2">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -342,7 +380,7 @@ export default function ScorePageClient({
                   </svg>
                   Analysis complete
                 </p>
-                <h2 className="text-xl font-bold text-navy">
+                <h2 id="score-result-heading" className="text-xl font-bold text-navy">
                   {detectedName || companyName || "Your Deck"}
                 </h2>
                 <p className="text-navy-500 text-sm mt-1">

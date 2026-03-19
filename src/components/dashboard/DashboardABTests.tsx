@@ -188,7 +188,7 @@ export default function DashboardABTests({
       {loading && (
         <div className="space-y-3">
           {[1, 2].map((i) => (
-            <div key={i} className="h-16 rounded-xl bg-navy-50 animate-pulse" />
+            <div key={i} className="h-16 rounded-xl bg-navy-50 animate-pulse motion-reduce:animate-none" />
           ))}
         </div>
       )}

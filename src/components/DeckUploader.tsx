@@ -141,9 +141,13 @@ export default function DeckUploader({
         />
 
         {isUploading ? (
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 rounded-full border-2 border-electric border-t-transparent animate-spin" />
+          <div className="flex flex-col items-center gap-3" role="status" aria-live="polite">
+            <div
+              className="w-10 h-10 rounded-full border-2 border-electric border-t-transparent animate-spin motion-reduce:animate-none motion-reduce:border-electric/40 ring-2 ring-electric/15 ring-offset-2 ring-offset-white motion-reduce:ring-0"
+              aria-hidden="true"
+            />
             <p className="text-sm font-medium text-navy">Analyzing your deck…</p>
+            <span className="sr-only">Upload in progress</span>
           </div>
         ) : selectedFile ? (
           <div className="flex flex-col items-center gap-3">

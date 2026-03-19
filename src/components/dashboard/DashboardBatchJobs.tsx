@@ -122,7 +122,7 @@ export default function DashboardBatchJobs({ plan }: { plan: string }) {
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-14 bg-navy-50 rounded-lg animate-pulse" />
+            <div key={i} className="h-14 bg-navy-50 rounded-lg animate-pulse motion-reduce:animate-none" />
           ))}
         </div>
       ) : jobs.length === 0 ? (

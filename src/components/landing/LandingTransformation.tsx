@@ -121,11 +121,14 @@ export default function LandingTransformation() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [headingVisible, setHeadingVisible] = useState(false);
 
-  /* Fade-in heading on scroll */
+  /* Fade-in heading on scroll — static on first paint when reduced motion preferred */
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setHeadingVisible(true);
+      return;
+    }
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -139,11 +142,14 @@ export default function LandingTransformation() {
     return () => obs.disconnect();
   }, []);
 
-  /* Handle tab switch with animation */
+  /* Handle tab switch — instant when reduced motion preferred */
   function switchTab(tab: Tab) {
     if (tab === activeTab || animating) return;
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setActiveTab(tab);
+      return;
+    }
     setAnimating(true);
-    // Brief delay to let cards fade out, then switch content
     setTimeout(() => {
       setActiveTab(tab);
       setTimeout(() => setAnimating(false), 50);
@@ -156,7 +162,7 @@ export default function LandingTransformation() {
     <section
       ref={sectionRef}
       className="section-py px-4 sm:px-6 bg-navy-50"
-      aria-label="How PitchIQ transforms your pitch workflow"
+      aria-labelledby="transformation-heading"
     >
       <div className="max-w-4xl mx-auto">
         {/* ── Header ─────────────────────────────────────────────── */}
@@ -167,7 +173,7 @@ export default function LandingTransformation() {
             transform: headingVisible ? "translateY(0)" : "translateY(20px)",
           }}
         >
-          <h2 className="text-3xl sm:text-4xl font-display font-bold text-navy mb-3">
+          <h2 id="transformation-heading" className="text-3xl sm:text-4xl font-display font-bold text-navy mb-3">
             Stop guessing. Start pitching.
           </h2>
           <p className="text-navy-500 text-base max-w-lg mx-auto mb-8">

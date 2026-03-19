@@ -212,13 +212,13 @@ export default function DashboardApiKeys({
                 className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-navy-200 bg-white"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="h-4 w-32 rounded bg-navy-100 animate-pulse" />
+                  <div className="h-4 w-32 rounded bg-navy-100 animate-pulse motion-reduce:animate-none" />
                   <div className="flex items-center gap-3 mt-2">
-                    <div className="h-3 w-24 rounded bg-navy-50 animate-pulse" />
-                    <div className="h-3 w-20 rounded bg-navy-50 animate-pulse" />
+                    <div className="h-3 w-24 rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
+                    <div className="h-3 w-20 rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
                   </div>
                 </div>
-                <div className="h-6 w-14 rounded bg-navy-100 animate-pulse flex-shrink-0" />
+                <div className="h-6 w-14 rounded bg-navy-100 animate-pulse motion-reduce:animate-none flex-shrink-0" />
               </div>
             ))}
           </div>

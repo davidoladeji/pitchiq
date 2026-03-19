@@ -115,6 +115,8 @@ export default function PitchPracticeClient({
   const recognitionRef = useRef<unknown>(null);
   const transcriptsRef = useRef<Record<number, string>>({});
   const slideTimingsRef = useRef<SlideTiming[]>([]);
+  const practiceResultsRef = useRef<HTMLDivElement>(null);
+  const practiceResultsHeadingRef = useRef<HTMLHeadingElement>(null);
 
   const slideCount = deck.slides.length;
   const recommendedPerSlide = Math.round(targetDuration / slideCount);
@@ -132,6 +134,25 @@ export default function PitchPracticeClient({
       // Not supported
     }
   }, []);
+
+  // Scroll to results when AI feedback loads (respect reduced motion)
+  useEffect(() => {
+    if (!feedback || feedbackLoading) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const scrollT = window.setTimeout(() => {
+      practiceResultsRef.current?.scrollIntoView({
+        behavior: reduced ? "instant" : "smooth",
+        block: "start",
+      });
+    }, reduced ? 0 : 80);
+    const focusT = window.setTimeout(() => {
+      practiceResultsHeadingRef.current?.focus({ preventScroll: true });
+    }, reduced ? 50 : 200);
+    return () => {
+      window.clearTimeout(scrollT);
+      window.clearTimeout(focusT);
+    };
+  }, [feedback, feedbackLoading]);
 
   // Timer
   useEffect(() => {
@@ -427,11 +448,18 @@ export default function PitchPracticeClient({
     return (
       <div className="min-h-screen bg-navy-50">
         <AppNav />
-        <main id="main" tabIndex={-1} className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8" aria-label="Main content">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8 outline-none"
+          aria-labelledby="practice-setup-heading"
+        >
           {/* Header */}
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-navy">Pitch Practice</h1>
+              <h1 id="practice-setup-heading" className="text-2xl font-bold text-navy">
+                Pitch Practice
+              </h1>
               <p className="text-sm text-navy-500 mt-1">
                 {deck.title} &middot; {slideCount} slides
               </p>
@@ -529,7 +557,7 @@ export default function PitchPracticeClient({
             {/* Mic info */}
             {speechSupported && (
               <div className="flex items-start gap-3 p-3 rounded-xl bg-electric/5 border border-electric/10">
-                <svg className="w-5 h-5 text-electric shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <svg className="w-5 h-5 text-electric shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
                 </svg>
                 <div>
@@ -543,7 +571,7 @@ export default function PitchPracticeClient({
 
             {!speechSupported && (
               <div className="flex items-start gap-3 p-3 rounded-xl bg-amber-50 border border-amber-100">
-                <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                 </svg>
                 <div>
@@ -630,6 +658,15 @@ export default function PitchPracticeClient({
 
     return (
       <div className="min-h-screen bg-navy-900 flex flex-col">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="flex flex-col flex-1 min-h-0 outline-none"
+          aria-labelledby="practice-live-heading"
+        >
+          <h1 id="practice-live-heading" className="sr-only">
+            Live pitch practice: {deck.title}
+          </h1>
         {/* Top bar */}
         <div className="flex items-center justify-between px-4 py-3 bg-navy-800/80 backdrop-blur-sm border-b border-white/10">
           <div className="flex items-center gap-4">
@@ -647,7 +684,7 @@ export default function PitchPracticeClient({
               >
                 {isListening ? (
                   <>
-                    <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+                    <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse motion-reduce:animate-none" />
                     Listening...
                   </>
                 ) : (
@@ -808,6 +845,7 @@ export default function PitchPracticeClient({
             </div>
           </div>
         )}
+        </main>
       </div>
     );
   }
@@ -819,10 +857,18 @@ export default function PitchPracticeClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main id="main" tabIndex={-1} className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="max-w-5xl mx-auto px-4 pt-24 pb-16 space-y-8 outline-none"
+        aria-labelledby="practice-review-heading"
+        aria-busy={feedbackLoading}
+      >
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-navy">Practice Review</h1>
+            <h1 id="practice-review-heading" className="text-2xl font-bold text-navy">
+              Practice Review
+            </h1>
             <p className="text-sm text-navy-500 mt-1">
               {deck.title} &middot; {formatTime(totalElapsed)} total
             </p>
@@ -844,8 +890,16 @@ export default function PitchPracticeClient({
         </div>
 
         {feedbackLoading && (
-          <div className="rounded-2xl border border-navy-100 bg-white p-12 text-center space-y-4">
-            <div className="w-10 h-10 border-4 border-electric border-t-transparent rounded-full animate-spin mx-auto" />
+          <div
+            className="rounded-2xl border border-navy-100 bg-white p-12 text-center space-y-4"
+            role="status"
+            aria-live="polite"
+          >
+            <div
+              className="w-10 h-10 border-4 border-electric border-t-transparent rounded-full animate-spin motion-reduce:animate-none mx-auto ring-2 ring-electric/20 ring-offset-2 ring-offset-white"
+              aria-hidden="true"
+            />
+            <p className="sr-only">Loading practice feedback</p>
             <p className="text-sm text-navy-500">AI is analyzing your practice session...</p>
             <p className="text-xs text-navy-400">This may take up to 30 seconds</p>
           </div>
@@ -865,8 +919,19 @@ export default function PitchPracticeClient({
 
         {feedback && (
           <>
+            <h2
+              id="practice-results-heading"
+              ref={practiceResultsHeadingRef}
+              tabIndex={-1}
+              className="sr-only scroll-mt-24"
+            >
+              Your practice results
+            </h2>
             {/* Overall Score + Pacing */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div
+              ref={practiceResultsRef}
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 scroll-mt-24"
+            >
               <div className="rounded-2xl border border-navy-100 bg-white p-6 flex flex-col items-center justify-center space-y-3">
                 <h2 className="text-base font-bold text-navy">Overall Score</h2>
                 <ScoreGauge score={feedback.overallScore} />
@@ -947,7 +1012,7 @@ export default function PitchPracticeClient({
                       </div>
                       <div className="relative h-3 bg-navy-100 rounded-full overflow-hidden">
                         <div
-                          className={`absolute inset-y-0 left-0 rounded-full transition-all ${
+                          className={`absolute inset-y-0 left-0 rounded-full transition-all motion-reduce:transition-none ${
                             isOver
                               ? "bg-red-400"
                               : isUnder
@@ -977,7 +1042,7 @@ export default function PitchPracticeClient({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="rounded-2xl border border-navy-100 bg-white p-6 space-y-3">
                 <h2 className="text-base font-bold text-navy flex items-center gap-2">
-                  <svg className="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   Strengths
@@ -994,7 +1059,7 @@ export default function PitchPracticeClient({
 
               <div className="rounded-2xl border border-navy-100 bg-white p-6 space-y-3">
                 <h2 className="text-base font-bold text-navy flex items-center gap-2">
-                  <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                   </svg>
                   Areas to Improve
@@ -1013,7 +1078,7 @@ export default function PitchPracticeClient({
             {/* Confidence Indicators */}
             <div className="rounded-2xl border border-navy-100 bg-white p-6 space-y-3">
               <h2 className="text-base font-bold text-navy flex items-center gap-2">
-                <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                 </svg>
                 Confidence Analysis

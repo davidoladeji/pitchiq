@@ -10,7 +10,7 @@ export default function NotFound() {
         id="main"
         tabIndex={-1}
         className="flex flex-1 flex-col items-center justify-center px-6 py-16"
-        aria-label="Main content"
+        aria-labelledby="not-found-heading"
       >
         {/* Brand — consistent with landing/deck viewer */}
         <Link
@@ -27,7 +27,7 @@ export default function NotFound() {
 
         {/* 404 content — h1 is semantic ("Page not found"); 404 is visual only for clarity */}
         <div className="text-center max-w-md">
-          <h1 className="sr-only">Page not found</h1>
+          <h1 id="not-found-heading" className="sr-only">Page not found</h1>
           <p className="text-electric font-semibold text-sm uppercase tracking-widest mb-2" aria-hidden="true">
             Page not found
           </p>
@@ -44,14 +44,14 @@ export default function NotFound() {
             <Link
               href="/"
               aria-label="Go to PitchIQ home"
-              className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-navy text-white font-semibold text-sm shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-navy text-white font-semibold text-sm shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Go to PitchIQ
             </Link>
             <Link
               href="/create"
               aria-label="Create your pitch deck — get your PIQ Score in 60 seconds"
-              className="min-h-[44px] w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-electric hover:bg-electric-600 text-white font-semibold text-sm shadow-lg shadow-electric/25 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="min-h-[44px] w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-electric hover:bg-electric-600 text-white font-semibold text-sm shadow-lg shadow-electric/25 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Create your deck
             </Link>

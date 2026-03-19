@@ -213,7 +213,9 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel, ac
       <button
         onClick={handleSave}
         disabled={saving || !isDirty}
-        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${
+        aria-busy={saving}
+        aria-label={saving ? "Saving deck" : savedRecently && !isDirty ? "Deck saved" : isDirty ? "Save deck" : "Save disabled, no changes"}
+        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all motion-reduce:transition-none flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950 ${
           savedRecently && !isDirty
             ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
             : isDirty
@@ -224,11 +226,12 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel, ac
       >
         {saving ? (
           <>
-            <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+            <svg className="w-3.5 h-3.5 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" aria-hidden>
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>
-            Saving...
+            <span className="sr-only">Saving, please wait</span>
+            <span aria-hidden>Saving...</span>
           </>
         ) : savedRecently && !isDirty ? (
           <>

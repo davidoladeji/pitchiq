@@ -79,15 +79,27 @@ export default function AppendixGenerator({
   }
 
   return (
-    <div className="space-y-4">
+    <section
+      className="space-y-4"
+      aria-labelledby="appendix-generator-heading"
+    >
       <div>
-        <h3 className="text-sm font-bold text-navy mb-1">AI Appendix Generator</h3>
+        <h3
+          id="appendix-generator-heading"
+          className="text-sm font-bold text-navy mb-1"
+        >
+          AI Appendix Generator
+        </h3>
         <p className="text-xs text-navy-500">
           Generate data-rich appendix slides to strengthen your pitch.
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div
+        className="flex flex-wrap gap-2"
+        role="group"
+        aria-label="Appendix slide types to generate"
+      >
         {APPENDIX_TYPES.map((type) => {
           const isSelected = selected.includes(type.id);
           return (
@@ -96,13 +108,21 @@ export default function AppendixGenerator({
               type="button"
               onClick={() => toggleType(type.id)}
               disabled={generating}
-              className={`inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all ${
+              aria-pressed={isSelected}
+              className={`inline-flex items-center gap-2 min-h-[44px] px-3 py-2 rounded-xl text-xs font-semibold transition-all motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                 isSelected
                   ? `${type.bg} ${type.color} ring-2 ring-current`
                   : "bg-navy-50 text-navy-400 hover:text-navy"
               } disabled:opacity-50`}
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <svg
+                className="w-4 h-4 shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                aria-hidden
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d={type.icon} />
               </svg>
               {type.label}
@@ -111,17 +131,54 @@ export default function AppendixGenerator({
         })}
       </div>
 
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && (
+        <p className="text-xs text-red-600" role="alert">
+          {error}
+        </p>
+      )}
 
       <button
         type="button"
         onClick={handleGenerate}
         disabled={generating || selected.length === 0}
-        className="px-5 py-2.5 rounded-xl bg-electric text-white text-xs font-semibold disabled:opacity-50 hover:bg-electric-600 transition-colors"
+        aria-busy={generating}
+        aria-label={
+          generating
+            ? "Generating appendix slides"
+            : selected.length === 0
+              ? "Select at least one appendix type to generate"
+              : `Generate ${selected.length} appendix slide${selected.length !== 1 ? "s" : ""}`
+        }
+        className="min-h-[44px] inline-flex items-center justify-center gap-2.5 px-5 py-2.5 rounded-xl bg-electric text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
       >
-        {generating
-          ? "Generating..."
-          : `Generate ${selected.length} appendix slide${selected.length !== 1 ? "s" : ""}`}
+        {generating ? (
+          <>
+            <svg
+              className="h-4 w-4 animate-spin motion-reduce:animate-none"
+              viewBox="0 0 24 24"
+              aria-hidden
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+                fill="none"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              />
+            </svg>
+            <span>Generating…</span>
+            <span className="sr-only">Please wait</span>
+          </>
+        ) : (
+          `Generate ${selected.length} appendix slide${selected.length !== 1 ? "s" : ""}`
+        )}
       </button>
 
       {/* Preview generated slides */}
@@ -148,6 +205,6 @@ export default function AppendixGenerator({
           ))}
         </div>
       )}
-    </div>
+    </section>
   );
 }

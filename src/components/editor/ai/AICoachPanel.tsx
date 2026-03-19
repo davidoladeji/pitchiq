@@ -106,18 +106,23 @@ export default function AICoachPanel({ onClose }: AICoachPanelProps) {
   const weakCount = result?.feedback.filter((f) => f.rating === "weak").length || 0;
 
   return (
-    <div className="h-full flex flex-col bg-navy-950 border-l border-white/10">
+    <section
+      className="h-full flex flex-col bg-navy-950 border-l border-white/10"
+      aria-labelledby="ai-coach-heading"
+    >
       {/* Header */}
       <div className="p-4 border-b border-white/10 shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center" aria-hidden>
               <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">AI Coach</h3>
+              <h3 id="ai-coach-heading" className="text-sm font-bold text-white">
+                AI Coach
+              </h3>
               <p className="text-[10px] text-white/40">PIQ dimension feedback</p>
             </div>
           </div>
@@ -146,15 +151,17 @@ export default function AICoachPanel({ onClose }: AICoachPanelProps) {
             onClick={runCoach}
             disabled={loading}
             aria-label={loading ? "Analyzing slide" : result && analyzedSlideIndex === selectedSlideIndex ? "Re-analyze this slide" : "Analyze this slide with AI Coach"}
-            className="w-full min-h-[44px] py-2.5 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
+            aria-busy={loading}
+            className="w-full min-h-[44px] py-2.5 rounded-xl bg-electric hover:bg-electric-600 text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow transition-all motion-reduce:transition-none hover:-translate-y-0.5 active:translate-y-0 motion-reduce:hover:translate-y-0 disabled:hover:translate-y-0 disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950"
           >
             {loading ? (
               <>
-                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" aria-hidden>
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                Analyzing...
+                <span className="sr-only">Analyzing slide, please wait</span>
+                <span aria-hidden>Analyzing...</span>
               </>
             ) : result && analyzedSlideIndex === selectedSlideIndex ? (
               <>
@@ -183,7 +190,7 @@ export default function AICoachPanel({ onClose }: AICoachPanelProps) {
 
         {/* Error */}
         {error && (
-          <div className="mx-4 mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20">
+          <div className="mx-4 mt-3 p-3 rounded-xl bg-red-500/10 border border-red-500/20" role="alert">
             <p className="text-xs text-red-400">{error}</p>
           </div>
         )}
@@ -276,6 +283,6 @@ export default function AICoachPanel({ onClose }: AICoachPanelProps) {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

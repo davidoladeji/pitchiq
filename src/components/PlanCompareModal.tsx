@@ -6,7 +6,8 @@ import { useEffect, useState, useCallback } from "react";
 
 interface PlanCard {
   name: string;
-  plan?: string; // "pro" | "growth"
+  planKey: string;
+  plan?: string; // "pro" | "growth" — used for checkout
   price: string;
   unit: string;
   desc: string;
@@ -17,9 +18,17 @@ interface PlanCard {
   cta: string;
 }
 
-const PLANS: PlanCard[] = [
+const PLAN_STYLES: Record<string, { color: string; bgAccent: string; ctaFallback: string }> = {
+  starter: { color: "text-navy-400", bgAccent: "bg-navy-50", ctaFallback: "Current Plan" },
+  pro: { color: "text-electric", bgAccent: "bg-electric/5", ctaFallback: "Upgrade to Pro" },
+  growth: { color: "text-violet-600", bgAccent: "bg-violet-50", ctaFallback: "Upgrade to Growth" },
+  enterprise: { color: "text-amber-600", bgAccent: "bg-amber-50", ctaFallback: "Upgrade to Enterprise" },
+};
+
+const FALLBACK_PLANS: PlanCard[] = [
   {
     name: "Starter",
+    planKey: "starter",
     price: "Free",
     unit: "",
     desc: "Try it out",
@@ -36,6 +45,7 @@ const PLANS: PlanCard[] = [
   },
   {
     name: "Pro",
+    planKey: "pro",
     plan: "pro",
     price: "$29",
     unit: "/mo",
@@ -58,6 +68,7 @@ const PLANS: PlanCard[] = [
   },
   {
     name: "Growth",
+    planKey: "growth",
     plan: "growth",
     price: "$79",
     unit: "/mo",
@@ -83,6 +94,7 @@ const PLANS: PlanCard[] = [
   },
   {
     name: "Enterprise",
+    planKey: "enterprise",
     plan: "enterprise",
     price: "$399",
     unit: "/mo",
@@ -115,6 +127,35 @@ interface PlanCompareModalProps {
 export default function PlanCompareModal({ open, onClose, currentPlan = "starter", highlightPlan }: PlanCompareModalProps) {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [plans, setPlans] = useState<PlanCard[]>(FALLBACK_PLANS);
+
+  // Fetch dynamic plan data
+  useEffect(() => {
+    fetch("/api/plans")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.plans && Array.isArray(data.plans) && data.plans.length > 0) {
+          const mapped: PlanCard[] = data.plans.map((p: { planKey: string; displayName: string; description: string; price: string; priceUnit: string; highlight: boolean; badge: string | null; ctaText: string; features: string[] }) => {
+            const style = PLAN_STYLES[p.planKey] || PLAN_STYLES.starter;
+            return {
+              name: p.displayName,
+              planKey: p.planKey,
+              plan: p.planKey === "starter" ? undefined : p.planKey,
+              price: p.price,
+              unit: p.priceUnit,
+              desc: p.description,
+              color: style.color,
+              bgAccent: style.bgAccent,
+              badge: p.badge || undefined,
+              features: p.features,
+              cta: p.planKey === "starter" ? "Current Plan" : `Upgrade to ${p.displayName}`,
+            };
+          });
+          setPlans(mapped);
+        }
+      })
+      .catch(() => { /* fallback to hardcoded */ });
+  }, []);
 
   // Prevent body scroll when open
   useEffect(() => {
@@ -207,10 +248,10 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
         {/* Plan cards grid */}
         <div className="p-6 sm:p-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {PLANS.map((p) => {
-              const isCurrent = currentPlan === (p.plan || p.name.toLowerCase());
+            {plans.map((p) => {
+              const isCurrent = currentPlan === (p.planKey || p.plan || p.name.toLowerCase());
               const isHighlighted = highlightPlan === p.plan;
-              const isDowngrade = (planRank[p.plan || p.name.toLowerCase()] ?? 0) < currentRank;
+              const isDowngrade = (planRank[p.planKey] ?? 0) < currentRank;
               const isLoading = loadingPlan === p.plan;
 
               return (
@@ -227,7 +268,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                   {/* Badge */}
                   {p.badge && (
                     <div className={`absolute -top-2.5 left-4 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wide text-white ${
-                      p.plan === "growth" ? "bg-gradient-to-r from-violet-500 to-electric" : "bg-electric"
+                      p.planKey === "growth" ? "bg-gradient-to-r from-violet-500 to-electric" : "bg-electric"
                     }`}>
                       {p.badge}
                     </div>
@@ -279,7 +320,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                       aria-busy={!!loadingPlan}
                       aria-label={loadingPlan ? "Setting up checkout…" : p.cta}
                       className={`mt-auto w-full min-h-[44px] inline-flex items-center justify-center rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
-                        p.plan === "growth"
+                        p.planKey === "growth"
                           ? "bg-electric text-white shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow"
                           : "bg-navy text-white shadow-lg shadow-navy-900/20 hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10"
                       }`}

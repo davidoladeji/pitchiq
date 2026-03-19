@@ -125,21 +125,26 @@ export default function PitchSimulator({ onClose }: PitchSimulatorProps) {
 
           {/* Loading */}
           {loading && (
-            <div className="text-center py-12">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500/20 to-rose-600/20 flex items-center justify-center mx-auto mb-4">
-                <svg className="w-6 h-6 text-red-400 animate-spin" fill="none" viewBox="0 0 24 24">
+            <div className="text-center py-12" role="status">
+              <span className="sr-only">Analyzing deck and generating investor questions</span>
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-red-500/20 to-rose-600/20 flex items-center justify-center mx-auto mb-4" aria-hidden>
+                <svg className="w-6 h-6 text-red-400 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
               </div>
-              <p className="text-sm text-white/60 font-medium">Analyzing your entire deck...</p>
-              <p className="text-xs text-white/30 mt-1">Generating tough investor questions</p>
+              <p className="text-sm text-white/60 font-medium" aria-hidden>
+                Analyzing your entire deck...
+              </p>
+              <p className="text-xs text-white/30 mt-1" aria-hidden>
+                Generating tough investor questions
+              </p>
             </div>
           )}
 
           {/* Error */}
           {error && (
-            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 mb-4">
+            <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 mb-4" role="alert">
               <p className="text-sm text-red-400">{error}</p>
               <button
                 onClick={runSimulation}

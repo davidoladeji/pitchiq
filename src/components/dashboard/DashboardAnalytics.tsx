@@ -62,15 +62,19 @@ export default function DashboardAnalytics({
     : dailyViews;
 
   return (
-    <section aria-label="View analytics" className="bg-white rounded-2xl border border-navy-200 p-4 sm:p-6 relative overflow-hidden">
+    <section aria-labelledby="dashboard-analytics-heading" className="bg-white rounded-2xl border border-navy-200 p-4 sm:p-6 relative overflow-hidden">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-bold text-navy font-display">View Trends</h3>
+        <h3 id="dashboard-analytics-heading" className="text-sm font-bold text-navy font-display">View Trends</h3>
         <span className="text-xs text-navy-500">Last 30 days</span>
       </div>
 
       {loading ? (
-        <div className="h-48 flex items-center justify-center">
-          <div className="w-6 h-6 border-2 border-electric border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+        <div className="h-48 flex flex-col items-center justify-center gap-2" role="status">
+          <div
+            className="w-6 h-6 border-2 border-electric border-t-transparent rounded-full animate-spin motion-reduce:animate-none motion-reduce:border-electric/40 ring-2 ring-electric/10 ring-offset-2 ring-offset-white motion-reduce:ring-0"
+            aria-hidden="true"
+          />
+          <span className="sr-only">Loading view trends</span>
         </div>
       ) : (
         <div className={isGated ? "blur-[6px] select-none pointer-events-none" : ""}>
@@ -126,7 +130,7 @@ export default function DashboardAnalytics({
             </p>
             <Link
               href="/#pricing"
-              className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2 rounded-xl bg-electric text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="inline-flex items-center justify-center gap-1.5 min-h-[44px] px-4 py-2 rounded-xl bg-electric text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
               aria-label="Upgrade to Growth for full analytics"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

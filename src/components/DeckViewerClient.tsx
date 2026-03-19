@@ -89,14 +89,14 @@ export default function DeckViewerClient() {
         <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
-              <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse mb-3" />
-              <div className="h-4 w-16 mx-auto rounded bg-navy-50 animate-pulse" />
+              <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none mb-3" />
+              <div className="h-4 w-16 mx-auto rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
             </div>
             <div className="space-y-6">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="aspect-video rounded-2xl bg-navy-50 border border-navy-50 animate-pulse"
+                  className="aspect-video rounded-2xl bg-navy-50 border border-navy-50 animate-pulse motion-reduce:animate-none"
                   style={{ animationDelay: `${i * 100}ms` }}
                 >
                   <div className="h-full flex flex-col justify-center p-8 md:p-12">
@@ -112,8 +112,8 @@ export default function DeckViewerClient() {
               ))}
             </div>
             <div className="flex justify-center mt-8 gap-3">
-              <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse" />
-              <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse" />
+              <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse motion-reduce:animate-none" />
+              <div className="h-10 w-24 rounded-xl bg-navy-100 animate-pulse motion-reduce:animate-none" />
             </div>
           </div>
         </main>
@@ -148,14 +148,14 @@ export default function DeckViewerClient() {
           <Link
             href="/create"
             aria-label="Create your own pitch deck"
-            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl bg-electric text-white font-medium shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl bg-electric text-white font-medium shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Create a deck
           </Link>
           <Link
             href="/"
             aria-label="Go to PitchIQ home"
-            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border border-navy-200 text-navy font-medium shadow-sm hover:border-navy-300 hover:bg-navy-50 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border border-navy-200 text-navy font-medium shadow-sm hover:border-navy-300 hover:bg-navy-50 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             Go to PitchIQ
           </Link>
@@ -186,7 +186,7 @@ export default function DeckViewerClient() {
                   <button
                     type="button"
                     onClick={handleCopyLink}
-                    className="min-h-[44px] min-w-[44px] shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-electric text-white text-sm font-medium shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    className="min-h-[44px] min-w-[44px] shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-electric text-white text-sm font-medium shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     aria-label={copied ? "Link copied to clipboard" : "Copy share link"}
                   >
                     {copied ? (
@@ -238,7 +238,7 @@ export default function DeckViewerClient() {
               {isOwner && (ownerPlan === "growth" || ownerPlan === "enterprise") && (
                 <Link
                   href={`/practice/${shareId}`}
-                  className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-electric/20 bg-electric/5 text-electric text-sm font-semibold hover:bg-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-electric/20 bg-electric/5 text-electric text-sm font-semibold hover:bg-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   aria-label="Practice pitch with this deck"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -249,7 +249,7 @@ export default function DeckViewerClient() {
               )}
               <Link
                 href="/dashboard"
-                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 aria-label="Go to dashboard"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -259,7 +259,7 @@ export default function DeckViewerClient() {
               </Link>
               <Link
                 href="/create"
-                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 aria-label="Create a new pitch deck"
               >
                 Create New Deck
@@ -283,7 +283,7 @@ export default function DeckViewerClient() {
                   </div>
                   <Link
                     href="/#pricing"
-                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                     aria-label="View plans and upgrade to Pro"
                   >
                     View Plans

@@ -7,7 +7,8 @@ import { useEffect, useRef, useState } from "react";
 
 interface Tier {
   name: string;
-  plan?: string; // "pro" | "growth" — used for checkout
+  planKey: string; // "starter" | "pro" | "growth" | "enterprise"
+  plan?: string; // "pro" | "growth" — used for checkout (undefined for starter)
   price: string;
   unit: string;
   desc: string;
@@ -18,9 +19,39 @@ interface Tier {
   href: string;
 }
 
-const TIERS: Tier[] = [
+interface ApiPlan {
+  planKey: string;
+  displayName: string;
+  description: string;
+  price: string;
+  priceUnit: string;
+  highlight: boolean;
+  badge: string | null;
+  ctaText: string;
+  ctaHref: string;
+  features: string[];
+}
+
+function apiToTier(p: ApiPlan): Tier {
+  return {
+    name: p.displayName,
+    planKey: p.planKey,
+    plan: p.planKey === "starter" ? undefined : p.planKey,
+    price: p.price,
+    unit: p.priceUnit,
+    desc: p.description,
+    highlight: p.highlight,
+    badge: p.badge || undefined,
+    features: p.features,
+    cta: p.ctaText,
+    href: p.ctaHref,
+  };
+}
+
+const FALLBACK_TIERS: Tier[] = [
   {
     name: "Starter",
+    planKey: "starter",
     price: "Free",
     unit: "",
     desc: "Try it out",
@@ -37,6 +68,7 @@ const TIERS: Tier[] = [
   },
   {
     name: "Pro",
+    planKey: "pro",
     plan: "pro",
     price: "$29",
     unit: "/mo",
@@ -60,6 +92,7 @@ const TIERS: Tier[] = [
   },
   {
     name: "Growth",
+    planKey: "growth",
     plan: "growth",
     price: "$79",
     unit: "/mo",
@@ -85,11 +118,12 @@ const TIERS: Tier[] = [
   },
   {
     name: "Enterprise",
+    planKey: "enterprise",
+    plan: "enterprise",
     price: "$399",
     unit: "/mo",
     desc: "For teams & programs",
     highlight: false,
-    plan: "enterprise",
     features: [
       "Everything in Growth",
       "Team collaboration",
@@ -169,6 +203,19 @@ export default function LandingPricing() {
   const [error, setError] = useState("");
   const [showAllPlans, setShowAllPlans] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
+  const [tiers, setTiers] = useState<Tier[]>(FALLBACK_TIERS);
+
+  // Fetch dynamic plan data from API
+  useEffect(() => {
+    fetch("/api/plans")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.plans && Array.isArray(data.plans) && data.plans.length > 0) {
+          setTiers(data.plans.map(apiToTier));
+        }
+      })
+      .catch(() => { /* fallback to hardcoded */ });
+  }, []);
 
   useEffect(() => {
     const el = ref.current;
@@ -214,10 +261,10 @@ export default function LandingPricing() {
     }
   };
 
-  const starterTier = TIERS[0];
-  const proTier = TIERS[1];
-  const growthTier = TIERS[2];
-  const enterpriseTier = TIERS[3];
+  const starterTier = tiers.find((t) => t.planKey === "starter") || FALLBACK_TIERS[0];
+  const proTier = tiers.find((t) => t.planKey === "pro") || FALLBACK_TIERS[1];
+  const growthTier = tiers.find((t) => t.planKey === "growth") || FALLBACK_TIERS[2];
+  const enterpriseTier = tiers.find((t) => t.planKey === "enterprise") || FALLBACK_TIERS[3];
 
   return (
     <section id="pricing" aria-labelledby="pricing-heading" className="section-py px-6 bg-background">
@@ -509,20 +556,20 @@ export default function LandingPricing() {
                       Feature
                     </th>
                     <th className="px-3 py-4 text-center w-[16%]">
-                      <div className="text-xs font-bold text-navy">Starter</div>
-                      <div className="text-[10px] text-navy-400 mt-0.5">Free</div>
+                      <div className="text-xs font-bold text-navy">{starterTier.name}</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">{starterTier.price}</div>
                     </th>
                     <th className="px-3 py-4 text-center w-[16%]">
-                      <div className="text-xs font-bold text-electric">Pro</div>
-                      <div className="text-[10px] text-navy-400 mt-0.5">$29/mo</div>
+                      <div className="text-xs font-bold text-electric">{proTier.name}</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">{proTier.price}{proTier.unit}</div>
                     </th>
                     <th className="px-3 py-4 text-center w-[16%]">
-                      <div className="text-xs font-bold text-violet">Growth</div>
-                      <div className="text-[10px] text-navy-400 mt-0.5">$79/mo</div>
+                      <div className="text-xs font-bold text-violet">{growthTier.name}</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">{growthTier.price}{growthTier.unit}</div>
                     </th>
                     <th className="px-3 py-4 text-center w-[16%]">
-                      <div className="text-xs font-bold text-navy">Enterprise</div>
-                      <div className="text-[10px] text-navy-400 mt-0.5">$399/mo</div>
+                      <div className="text-xs font-bold text-navy">{enterpriseTier.name}</div>
+                      <div className="text-[10px] text-navy-400 mt-0.5">{enterpriseTier.price}{enterpriseTier.unit}</div>
                     </th>
                   </tr>
                 </thead>

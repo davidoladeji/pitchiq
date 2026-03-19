@@ -53,7 +53,7 @@ function relativeTime(iso: string): string {
 function Skeleton({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`animate-pulse rounded bg-white/5 ${className}`}
+      className={`animate-pulse motion-reduce:animate-none rounded bg-white/5 ${className}`}
     />
   );
 }

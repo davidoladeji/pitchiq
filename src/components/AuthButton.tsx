@@ -22,7 +22,7 @@ export default function AuthButton() {
   }, [menuOpen]);
 
   if (status === "loading") {
-    return <div className="w-8 h-8 rounded-full bg-navy-200 animate-pulse" aria-hidden="true" />;
+    return <div className="w-8 h-8 rounded-full bg-navy-200 animate-pulse motion-reduce:animate-none" aria-hidden="true" />;
   }
 
   if (!session) {
@@ -30,7 +30,7 @@ export default function AuthButton() {
       <button
         type="button"
         onClick={() => signIn()}
-        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium text-current opacity-70 hover:opacity-100 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-medium text-current opacity-70 hover:opacity-100 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         aria-label="Sign in to PitchIQ"
       >
         Sign in

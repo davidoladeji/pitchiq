@@ -78,7 +78,7 @@ export default function DashboardInvestorCRM({ plan }: { plan: string }) {
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-12 rounded-xl bg-navy-50 animate-pulse" />
+            <div key={i} className="h-12 rounded-xl bg-navy-50 animate-pulse motion-reduce:animate-none" />
           ))}
         </div>
       ) : investors.length === 0 ? (

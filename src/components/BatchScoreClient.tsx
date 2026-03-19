@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback, DragEvent, ChangeEvent } from "react";
+import { useState, useRef, useCallback, useEffect, DragEvent, ChangeEvent } from "react";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 
@@ -91,6 +91,24 @@ export default function BatchScoreClient(props: {
   const [sortDir, setSortDir] = useState<SortDir>("desc");
   const inputRef = useRef<HTMLInputElement>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const batchActiveJobRef = useRef<HTMLDivElement>(null);
+  const batchResultsHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  /** Scroll to active job panel when batch completes or user opens a completed job (parity with Ideas/Score/Create). */
+  useEffect(() => {
+    if (!activeJob || activeJob.status !== "completed" || activeJob.results.length === 0) return;
+    const prefersReduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const t = window.setTimeout(() => {
+      batchActiveJobRef.current?.scrollIntoView({
+        behavior: prefersReduced ? "instant" : "smooth",
+        block: "start",
+      });
+      batchResultsHeadingRef.current?.focus({ preventScroll: true });
+    }, 120);
+    return () => window.clearTimeout(t);
+  }, [activeJob?.id, activeJob?.status, activeJob?.results?.length]);
 
   // --- File handling ---
 
@@ -380,14 +398,21 @@ export default function BatchScoreClient(props: {
     return (
       <div className="min-h-screen bg-gradient-to-b from-navy-950 to-navy-900">
         <AppNav />
-        <div className="max-w-3xl mx-auto px-4 pt-24 pb-16">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="max-w-3xl mx-auto px-4 pt-24 pb-16 outline-none"
+          aria-labelledby="batch-upgrade-heading"
+        >
           <div className="bg-white rounded-2xl p-8 text-center">
             <div className="w-16 h-16 bg-navy-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-navy-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8 text-navy-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-bold text-navy-900 mb-2">Batch Scoring</h1>
+            <h1 id="batch-upgrade-heading" className="text-2xl font-bold text-navy-900 mb-2">
+              Batch Scoring
+            </h1>
             <p className="text-navy-500 mb-6">
               Score multiple pitch decks at once. Upload up to 50 decks and get
               PIQ scores, grades, and dimension breakdowns for each — perfect for
@@ -407,7 +432,7 @@ export default function BatchScoreClient(props: {
               </svg>
             </Link>
           </div>
-        </div>
+        </main>
       </div>
     );
   }
@@ -422,10 +447,18 @@ export default function BatchScoreClient(props: {
   return (
     <div className="min-h-screen bg-gradient-to-b from-navy-950 to-navy-900">
       <AppNav />
-      <div className="max-w-6xl mx-auto px-4 pt-24 pb-16">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="max-w-6xl mx-auto px-4 pt-24 pb-16 outline-none"
+        aria-labelledby="batch-page-heading"
+        aria-busy={submitting}
+      >
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-1">Batch Scoring</h1>
+            <h1 id="batch-page-heading" className="text-3xl font-bold text-white mb-1">
+              Batch Scoring
+            </h1>
             <p className="text-navy-300">
               Upload multiple pitch decks and score them all at once.
             </p>
@@ -555,10 +588,27 @@ export default function BatchScoreClient(props: {
               >
                 {submitting ? (
                   <>
-                    <svg className="w-5 h-5 animate-spin shrink-0" fill="none" viewBox="0 0 24 24" aria-hidden>
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    <svg
+                      className="w-5 h-5 shrink-0 animate-spin motion-reduce:animate-none"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      aria-hidden
+                    >
+                      <circle
+                        className="opacity-25 motion-reduce:opacity-40"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75 motion-reduce:opacity-100"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
                     </svg>
+                    <span className="sr-only">Scoring decks, please wait</span>
                     Scoring {files.length} deck{files.length !== 1 ? "s" : ""}...
                   </>
                 ) : (
@@ -573,11 +623,12 @@ export default function BatchScoreClient(props: {
 
         {/* Active Job Progress / Results */}
         {activeJob && (
-          <div className="bg-white rounded-2xl p-6 mb-6">
+          <div
+            ref={batchActiveJobRef}
+            className="bg-white rounded-2xl p-6 mb-6 scroll-mt-24"
+          >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-navy-900">
-                {activeJob.name}
-              </h2>
+              <h2 className="text-lg font-semibold text-navy-900">{activeJob.name}</h2>
               <span
                 className={`px-3 py-1 text-xs font-medium rounded-full ${
                   statusBadge(activeJob.status).classes
@@ -598,7 +649,7 @@ export default function BatchScoreClient(props: {
                 </div>
                 <div className="w-full bg-navy-100 rounded-full h-2.5">
                   <div
-                    className="bg-electric rounded-full h-2.5 transition-all duration-500"
+                    className="bg-electric rounded-full h-2.5 transition-all duration-500 motion-reduce:transition-none"
                     style={{ width: `${progressPct}%` }}
                   />
                 </div>
@@ -613,6 +664,14 @@ export default function BatchScoreClient(props: {
             {/* Results table */}
             {isCompleted && sortedResults.length > 0 && (
               <>
+                <h3
+                  ref={batchResultsHeadingRef}
+                  id="batch-results-heading"
+                  tabIndex={-1}
+                  className="sr-only outline-none"
+                >
+                  Batch scoring results for {activeJob.name}
+                </h3>
                 <div className="flex items-center justify-between mb-3">
                   <p className="text-sm text-navy-500">
                     {activeJob.completed} scored, {activeJob.failed} failed
@@ -668,7 +727,7 @@ export default function BatchScoreClient(props: {
                       {sortedResults.map((r, i) => (
                         <tr
                           key={i}
-                          className="border-b border-navy-50 hover:bg-navy-50/50 transition"
+                          className="border-b border-navy-50 hover:bg-navy-50/50 transition motion-reduce:transition-none"
                         >
                           <td className="py-2.5 px-3 text-navy-800 truncate max-w-[200px]">
                             {r.fileName}
@@ -815,7 +874,7 @@ export default function BatchScoreClient(props: {
             </div>
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

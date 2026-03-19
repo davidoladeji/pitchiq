@@ -73,11 +73,18 @@ export default function WorkspaceListClient({
   return (
     <div className="min-h-screen bg-navy-50">
       <AppNav />
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6 outline-none"
+        aria-labelledby="workspace-list-heading"
+      >
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h1 className="text-2xl font-bold text-navy tracking-tight">Workspaces</h1>
+              <h1 id="workspace-list-heading" className="text-2xl font-bold text-navy tracking-tight">
+                Workspaces
+              </h1>
               <p className="text-navy-500 text-sm mt-1">Collaborate with your team on pitch decks</p>
             </div>
             {!showCreate && (
@@ -97,7 +104,7 @@ export default function WorkspaceListClient({
 
           {/* Create form */}
           {showCreate && (
-            <div className="rounded-2xl border border-navy-100 bg-white p-6 mb-6 animate-fade-in">
+            <div className="rounded-2xl border border-navy-100 bg-white p-6 mb-6 animate-fade-in motion-reduce:animate-none">
               <h2 className="font-bold text-navy text-sm mb-3">Create workspace</h2>
               <div className="flex gap-3">
                 <input
@@ -114,9 +121,20 @@ export default function WorkspaceListClient({
                   disabled={creating || !name.trim()}
                   aria-label={creating ? "Creating workspace…" : "Create workspace"}
                   aria-busy={creating}
-                  className="min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:shadow-glow hover:bg-electric-600 hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 >
-                  {creating ? "Creating..." : "Create"}
+                  {creating ? (
+                    <span className="inline-flex items-center gap-2" role="status">
+                      <span className="sr-only">Creating workspace</span>
+                      <svg className="h-4 w-4 animate-spin motion-reduce:animate-none shrink-0" aria-hidden viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Creating…
+                    </span>
+                  ) : (
+                    "Create"
+                  )}
                 </button>
                 <button
                   type="button"
@@ -164,7 +182,7 @@ export default function WorkspaceListClient({
                 <Link
                   key={ws.id}
                   href={`/workspace/${ws.slug}`}
-                  className="rounded-2xl border border-navy-100 bg-white p-5 hover:border-electric/30 hover:shadow-sm transition-all group"
+                  className="rounded-2xl border border-navy-100 bg-white p-5 hover:border-electric/30 hover:shadow-sm transition-all motion-reduce:transition-none group"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">

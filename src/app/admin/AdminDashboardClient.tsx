@@ -85,17 +85,22 @@ export default function AdminDashboardClient() {
 
   if (loading) {
     return (
-      <div className="space-y-6" aria-busy="true">
+      <section className="space-y-6" aria-busy="true" aria-labelledby="admin-dashboard-heading">
         <div role="status" aria-live="polite" className="sr-only">
           Loading analytics
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+          <h1 id="admin-dashboard-heading" className="text-2xl font-bold text-white">
+            Dashboard
+          </h1>
           <p className="text-sm text-white/30 mt-1">Loading analytics...</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="rounded-2xl bg-white/[0.03] border border-white/5 p-5 animate-pulse">
+            <div
+              key={i}
+              className="rounded-2xl bg-white/[0.03] border border-white/5 p-5 animate-pulse motion-reduce:animate-none"
+            >
               <div className="h-3 bg-white/5 rounded w-20 mb-3" />
               <div className="h-8 bg-white/5 rounded w-24" />
             </div>
@@ -103,21 +108,26 @@ export default function AdminDashboardClient() {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {[1, 2].map((i) => (
-            <div key={i} className="rounded-2xl bg-white/[0.03] border border-white/5 p-6 h-72 animate-pulse" />
+            <div
+              key={i}
+              className="rounded-2xl bg-white/[0.03] border border-white/5 p-6 h-72 animate-pulse motion-reduce:animate-none"
+            />
           ))}
         </div>
-      </div>
+      </section>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+      <section className="space-y-6" aria-labelledby="admin-dashboard-heading">
+        <h1 id="admin-dashboard-heading" className="text-2xl font-bold text-white">
+          Dashboard
+        </h1>
         <div className="rounded-2xl bg-red-500/10 border border-red-500/20 p-6">
           <p className="text-sm text-red-400">{error || "Failed to load analytics"}</p>
         </div>
-      </div>
+      </section>
     );
   }
 
@@ -130,10 +140,12 @@ export default function AdminDashboardClient() {
   }));
 
   return (
-    <div className="space-y-6">
+    <section className="space-y-6" aria-labelledby="admin-dashboard-heading">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+        <h1 id="admin-dashboard-heading" className="text-2xl font-bold text-white">
+          Dashboard
+        </h1>
         <p className="text-sm text-white/30 mt-1">System overview — last 30 days</p>
       </div>
 
@@ -373,7 +385,7 @@ export default function AdminDashboardClient() {
           )}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -393,10 +405,17 @@ function StatCard({
   href?: string;
 }) {
   const content = (
-    <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-5 hover:bg-white/[0.05] transition-colors group">
+    <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-5 hover:bg-white/[0.05] transition-colors motion-reduce:transition-none group">
       <div className="flex items-start justify-between mb-3">
         <p className="text-xs font-semibold text-white/40 uppercase tracking-wider">{label}</p>
-        <svg className="w-5 h-5 text-white/15 group-hover:text-white/25 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <svg
+          className="w-5 h-5 text-white/15 group-hover:text-white/25 transition-colors motion-reduce:transition-none"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={1.5}
+          aria-hidden
+        >
           <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
         </svg>
       </div>

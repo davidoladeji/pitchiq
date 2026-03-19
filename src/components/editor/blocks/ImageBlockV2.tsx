@@ -435,10 +435,11 @@ export default function ImageBlockV2({
               {removingBg ? (
                 <>
                   <svg
-                    className="animate-spin h-3.5 w-3.5 text-white/60"
+                    className="animate-spin motion-reduce:animate-none h-3.5 w-3.5 text-white/60"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
+                    aria-hidden
                   >
                     <circle
                       className="opacity-25"

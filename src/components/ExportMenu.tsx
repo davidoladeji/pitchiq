@@ -202,14 +202,15 @@ export default function ExportMenu({ deck, className = "", userPlan = "starter" 
         type="button"
         onClick={() => setOpen((o) => !o)}
         disabled={exporting !== null}
-        aria-label="Export deck"
+        aria-busy={exporting !== null}
+        aria-label={exporting ? "Exporting deck…" : "Export deck"}
         aria-expanded={open}
         aria-haspopup="menu"
         className="min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-navy text-white font-semibold shadow-sm hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none"
       >
         {exporting ? (
           <>
-            <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+            <svg className="animate-spin motion-reduce:animate-none h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
             </svg>

@@ -80,7 +80,7 @@ export default function SignInPage() {
                   {[1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="h-12 rounded-xl bg-navy-100 animate-pulse"
+                      className="h-12 rounded-xl bg-navy-100 animate-pulse motion-reduce:animate-none"
                     />
                   ))}
                 </div>
