@@ -40,9 +40,21 @@ export async function PATCH(
       updates.role = body.role;
     }
 
+    // Suspend / unsuspend
+    if (body.suspended !== undefined) {
+      updates.suspended = !!body.suspended;
+      if (body.suspended) {
+        updates.suspendedAt = new Date();
+        updates.suspendedReason = body.suspendedReason || null;
+      } else {
+        updates.suspendedAt = null;
+        updates.suspendedReason = null;
+      }
+    }
+
     if (Object.keys(updates).length === 0) {
       return NextResponse.json(
-        { error: "No valid fields to update. Provide 'plan' or 'role'." },
+        { error: "No valid fields to update." },
         { status: 400 }
       );
     }
@@ -64,7 +76,16 @@ export async function PATCH(
     const user = await prisma.user.update({
       where: { id: params.id },
       data: updates,
-      select: { id: true, email: true, role: true, plan: true, createdAt: true },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        plan: true,
+        suspended: true,
+        suspendedAt: true,
+        suspendedReason: true,
+        createdAt: true,
+      },
     });
 
     // Update isPremium flag on all user's decks when plan changes
@@ -80,5 +101,57 @@ export async function PATCH(
   } catch (error) {
     console.error("Admin user update error:", error);
     return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+}
+
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await requireAdmin();
+  } catch {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    // Check user exists and is not an admin (prevent deleting other admins)
+    const user = await prisma.user.findUnique({
+      where: { id: params.id },
+      select: { id: true, role: true, email: true },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    if (user.role === "admin") {
+      return NextResponse.json(
+        { error: "Cannot delete admin accounts. Demote to user first." },
+        { status: 403 }
+      );
+    }
+
+    // Delete user and cascade (Prisma cascades will handle related records)
+    // First delete records that reference the user but may not cascade
+    await prisma.$transaction([
+      prisma.session.deleteMany({ where: { userId: params.id } }),
+      prisma.account.deleteMany({ where: { userId: params.id } }),
+      prisma.slideComment.deleteMany({ where: { userId: params.id } }),
+      prisma.activityLog.deleteMany({ where: { userId: params.id } }),
+      prisma.transaction.deleteMany({ where: { userId: params.id } }),
+      prisma.apiKey.deleteMany({ where: { userId: params.id } }),
+      prisma.batchJob.deleteMany({ where: { userId: params.id } }),
+      prisma.investorContact.deleteMany({ where: { userId: params.id } }),
+      prisma.pitchPracticeSession.deleteMany({ where: { userId: params.id } }),
+      prisma.workspaceMember.deleteMany({ where: { userId: params.id } }),
+      prisma.deck.deleteMany({ where: { userId: params.id } }),
+      prisma.user.delete({ where: { id: params.id } }),
+    ]);
+
+    return NextResponse.json({ deleted: true, email: user.email });
+  } catch (error) {
+    console.error("Admin user delete error:", error);
+    return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
   }
 }
