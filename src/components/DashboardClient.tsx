@@ -18,6 +18,7 @@ import DashboardApiKeys from "@/components/dashboard/DashboardApiKeys";
 import DashboardBatchJobs from "@/components/dashboard/DashboardBatchJobs";
 import DashboardCustomDomain from "@/components/dashboard/DashboardCustomDomain";
 import DashboardPitchPractice from "@/components/dashboard/DashboardPitchPractice";
+import DashboardProfilePrompt from "@/components/dashboard/DashboardProfilePrompt";
 import PlanCompareModal from "@/components/PlanCompareModal";
 
 interface DeckSummary {
@@ -198,6 +199,9 @@ export default function DashboardClient({
               </div>
             </div>
           )}
+
+          {/* Startup profile prompt — shown when user hasn't set up their profile */}
+          {!hasProfile && <DashboardProfilePrompt />}
 
           {/* Overview stats */}
           <DashboardOverview decks={decks} totalViews={totalViews} plan={effectivePlan} />

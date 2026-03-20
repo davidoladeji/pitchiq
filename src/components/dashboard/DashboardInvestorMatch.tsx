@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import Link from "next/link";
 import { getPlanLimits } from "@/lib/plan-limits";
 import {
   Search,
@@ -582,6 +583,15 @@ export default function DashboardInvestorMatch({
               Startup Profile
             </button>
           )}
+          {!hasProfile && (
+            <Link
+              href="/dashboard/startup-profile"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-[#4361EE]/70 hover:text-[#4361EE] hover:bg-[#4361EE]/5 transition-all"
+            >
+              <Building2 className="w-3 h-3" />
+              Set Up Profile
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => setMatchSource("deck")}
@@ -594,6 +604,19 @@ export default function DashboardInvestorMatch({
             Deck Analysis
           </button>
         </div>
+
+        {/* Profile setup nudge */}
+        {!hasProfile && (
+          <div className="mt-3 flex items-center gap-2 px-3 py-2 rounded-lg border border-[#4361EE]/15 bg-[#4361EE]/5">
+            <AlertTriangle className="w-3.5 h-3.5 text-[#4361EE]/60 shrink-0" />
+            <p className="text-[11px] text-white/50">
+              <Link href="/dashboard/startup-profile" className="text-[#4361EE] hover:underline font-medium">
+                Set up your startup profile
+              </Link>
+              {" "}to unlock profile-based matching — more accurate than deck analysis alone.
+            </p>
+          </div>
+        )}
 
         {/* Deck selector (when deck source) */}
         {matchSource === "deck" && decks.length > 1 && (
