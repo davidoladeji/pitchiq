@@ -187,5 +187,5 @@ export async function getPlanLimitsFromConfig(planKey: string): Promise<PlanLimi
     if (!displayKeys.has(k)) limits[k] = v;
   }
 
-  return limits as PlanLimits;
+  return limits as unknown as PlanLimits;
 }
