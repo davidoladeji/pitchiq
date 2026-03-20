@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { useEditorStore } from "./state/editorStore";
 import { computeDesignScore, type DesignRule } from "@/lib/editor/design-rules";
 import {

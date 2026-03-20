@@ -326,6 +326,7 @@ function FieldRow({ label, children }: { label: string; children: React.ReactNod
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function SectionHeader({ title }: { title: string }) {
   return (
     <h4 className="text-[11px] font-semibold uppercase tracking-wider text-white/25 pt-4 pb-1 border-t border-white/5 mt-2">

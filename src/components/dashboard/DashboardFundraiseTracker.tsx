@@ -278,9 +278,10 @@ function PipelineAnalytics({ contacts }: { contacts: InvestorContact[] }) {
   const stageConversions = STATUSES.slice(0, -1).map((s, i) => {
     const thisCount = contacts.filter((c) => c.status === s.value).length;
     const nextStatus = STATUSES[i + 1];
-    const nextCount = nextStatus
+    const _nextCount = nextStatus
       ? contacts.filter((c) => c.status === nextStatus.value).length
       : 0;
+    void _nextCount;
     const laterStatuses = STATUSES.slice(i + 1).filter((st) => st.value !== "passed");
     const laterCount = contacts.filter((c) =>
       laterStatuses.some((st) => st.value === c.status)
