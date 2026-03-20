@@ -14,6 +14,7 @@ import { createDefaultEditorBlock } from "@/lib/editor/block-defaults";
 import { migrateSlideToV2, syncBlocksToSlideData } from "@/lib/editor/block-migration";
 import { getLayoutById } from "@/lib/editor/layout/layout-library";
 import { applyLayout as applyLayoutFn, createBlocksFromLayout } from "@/lib/editor/layout/apply-layout";
+import { trackEvent } from "@/lib/analytics/product-events";
 
 const MAX_UNDO = 50;
 
@@ -704,10 +705,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     if (!isDirty || saving || !deck) return;
 
     set({ autosaveStatus: "saving" as AutosaveStatus });
+    trackEvent({ event: "autosave.triggered" });
     try {
       await get().save();
       // save() already sets savedAt + isDirty=false
       set({ autosaveStatus: "saved" as AutosaveStatus });
+      trackEvent({ event: "autosave.completed" });
     } catch {
       set({ autosaveStatus: "error" as AutosaveStatus });
     }

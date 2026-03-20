@@ -8,6 +8,7 @@ import { createDefaultEditorBlock } from "@/lib/editor/block-defaults";
 import EditorToolbar, { type AIPanel, type EditorPanel } from "./EditorToolbar";
 import EditorSidebar from "./EditorSidebar";
 import EditorCanvas from "./EditorCanvas";
+import InlineSlideSuggestions from "./InlineSlideSuggestions";
 import EditorProperties from "./EditorProperties";
 import AICoachPanel from "./ai/AICoachPanel";
 import InvestorLensPanel from "./ai/InvestorLensPanel";
@@ -203,13 +204,16 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
             <EditorSidebar plan={plan} />
           </div>
 
-          {/* Center canvas */}
+          {/* Center canvas + inline suggestions */}
           <div
-            className={`flex-1 min-w-0 lg:block ${
-              mobilePanel === "canvas" ? "block" : "hidden"
+            className={`flex-1 min-w-0 lg:flex lg:flex-col ${
+              mobilePanel === "canvas" ? "flex flex-col" : "hidden"
             }`}
           >
-            <EditorCanvas />
+            <div className="flex-1 min-h-0">
+              <EditorCanvas />
+            </div>
+            <InlineSlideSuggestions />
           </div>
 
           {/* Right panel - properties, AI panel, or editor panel */}

@@ -11,6 +11,7 @@ import { getPlanLimits } from "@/lib/plan-limits";
 import { rankInvestors, deckToMatchInput } from "@/lib/investor-matching";
 import type { InvestorForMatching } from "@/lib/investor-matching";
 import { SEED_INVESTORS } from "@/lib/investor-seed-data";
+import { trackEvent } from "@/lib/analytics/product-events";
 
 export const dynamic = "force-dynamic";
 
@@ -100,6 +101,8 @@ export async function GET(req: NextRequest) {
 
   const matchInput = deckToMatchInput(deck);
   const matches = rankInvestors(investors, matchInput);
+
+  trackEvent({ event: "investor.matched", properties: { count: matches.length } });
 
   return NextResponse.json({
     deckId,

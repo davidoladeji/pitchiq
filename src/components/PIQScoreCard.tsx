@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { PIQScore } from "@/lib/types";
 import { PIQ_DIMENSIONS } from "@/lib/piq-dimensions";
 import { scoreColorHex } from "@/lib/design-tokens";
+import { trackEvent } from "@/lib/analytics/product-events";
 
 /* ── Helpers ───────────────────────────────────────────── */
 
@@ -52,6 +54,15 @@ export default function PIQScoreCard({
   score: PIQScore;
   detail?: "basic" | "full";
 }) {
+  // Track score.viewed once per score value
+  const trackedScore = useRef<number | null>(null);
+  useEffect(() => {
+    if (trackedScore.current !== score.overall) {
+      trackEvent({ event: "score.viewed", properties: { score: score.overall } });
+      trackedScore.current = score.overall;
+    }
+  }, [score.overall]);
+
   const gaugeRadius = 42;
   const gaugeStroke = 5;
   const circumference = 2 * Math.PI * gaugeRadius;

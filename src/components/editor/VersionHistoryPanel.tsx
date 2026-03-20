@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useEditorStore } from "./state/editorStore";
+import { trackEvent } from "@/lib/analytics/product-events";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -214,6 +215,7 @@ export default function VersionHistoryPanel({
         { method: "POST" }
       );
       if (res.ok) {
+        trackEvent({ event: "version.restored", properties: { versionId } });
         // Reload the deck from the API so editor state reflects the restored version
         const deckRes = await fetch(`/api/decks/${shareId}`);
         if (deckRes.ok) {
