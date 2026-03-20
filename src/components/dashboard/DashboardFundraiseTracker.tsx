@@ -703,7 +703,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
 
   if (!limits.fundraiseTracker) {
     return (
-      <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
+      <section className="rounded-2xl border border-white/[0.08] bg-[#0F0F14] p-6 shadow-lg">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-semibold text-white flex items-center gap-2">
             <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -730,7 +730,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
   const editContact = editModalId ? contacts.find((c) => c.id === editModalId) : null;
 
   return (
-    <section className="rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 space-y-5">
+    <section className="rounded-2xl border border-white/[0.08] bg-[#0F0F14] p-6 space-y-5 shadow-lg">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-white flex items-center gap-2">
           <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
