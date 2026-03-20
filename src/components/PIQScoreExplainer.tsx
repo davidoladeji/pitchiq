@@ -33,9 +33,12 @@ export default function PIQScoreExplainer() {
         <h2 className="text-2xl sm:text-3xl font-display font-bold text-navy text-center mb-3">
           How do you compare?
         </h2>
-        <p className="text-navy-500 text-center mb-10 max-w-lg mx-auto">
+        <p className="text-navy-500 text-center mb-3 max-w-lg mx-auto">
           PIQ Score benchmarks based on thousands of analyzed pitch decks across
           funding stages.
+        </p>
+        <p className="text-[11px] italic text-navy-400 text-center mb-10 max-w-lg mx-auto">
+          Illustrative benchmarks based on analysis of successful decks
         </p>
 
         <div className="space-y-4">

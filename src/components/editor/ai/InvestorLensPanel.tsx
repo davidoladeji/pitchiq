@@ -117,6 +117,9 @@ export default function InvestorLensPanel({ onClose }: InvestorLensPanelProps) {
               <p className="text-[10px] text-white/40">3 investor perspectives</p>
             </div>
           </div>
+          <p className="text-[11px] italic text-white/40 mt-2">
+            Simulated investor feedback — not from real investors
+          </p>
           <button
             type="button"
             onClick={onClose}

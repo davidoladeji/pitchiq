@@ -118,6 +118,11 @@ export default function PIQScoreCard({
         </div>
       </div>
 
+      {/* AI disclaimer */}
+      <p className="text-[11px] italic text-navy-400 mb-4">
+        This score is directional guidance based on AI analysis of your deck. It does not guarantee funding outcomes.
+      </p>
+
       {detail === "full" ? (
         <>
           {/* ── Radar Chart ── */}

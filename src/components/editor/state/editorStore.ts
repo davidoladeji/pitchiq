@@ -31,6 +31,8 @@ interface UndoSnapshot {
 /*  Store interface                                                     */
 /* ------------------------------------------------------------------ */
 
+export type AutosaveStatus = "idle" | "saving" | "saved" | "error";
+
 export interface EditorState {
   deck: DeckData | null;
   slides: SlideData[];
@@ -39,6 +41,7 @@ export interface EditorState {
   isDirty: boolean;
   saving: boolean;
   savedAt: number | null;
+  autosaveStatus: AutosaveStatus;
   undoStack: UndoSnapshot[];
   redoStack: UndoSnapshot[];
   themeId: string;
@@ -101,6 +104,9 @@ export interface EditorState {
 
   // Save
   save: () => Promise<void>;
+
+  // Autosave — called by the autosave interval, does not throw
+  autosave: () => Promise<void>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -133,6 +139,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   isDirty: false,
   saving: false,
   savedAt: null,
+  autosaveStatus: "idle" as AutosaveStatus,
   undoStack: [],
   redoStack: [],
   themeId: "midnight",
@@ -166,6 +173,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       isDirty: false,
       saving: false,
       savedAt: null,
+      autosaveStatus: "idle" as AutosaveStatus,
       undoStack: [],
       redoStack: [],
       themeId: deck.themeId || "midnight",
@@ -683,6 +691,25 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     } catch (err) {
       set({ saving: false });
       throw err;
+    }
+  },
+
+  /* ---------------------------------------------------------------- */
+  /*  Autosave — silent save that never throws, updates autosaveStatus */
+  /* ---------------------------------------------------------------- */
+
+  autosave: async () => {
+    const { isDirty, saving, deck } = get();
+    // Guard: skip if nothing to save, already saving, or no deck loaded
+    if (!isDirty || saving || !deck) return;
+
+    set({ autosaveStatus: "saving" as AutosaveStatus });
+    try {
+      await get().save();
+      // save() already sets savedAt + isDirty=false
+      set({ autosaveStatus: "saved" as AutosaveStatus });
+    } catch {
+      set({ autosaveStatus: "error" as AutosaveStatus });
     }
   },
 }));

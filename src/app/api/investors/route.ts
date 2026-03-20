@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, firm, email, status, notes } = body;
+    const { name, firm, email, status, notes, investorProfileId, tags } = body;
 
     if (!name?.trim()) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
@@ -72,6 +72,8 @@ export async function POST(req: NextRequest) {
         email: email?.trim() || null,
         status: contactStatus,
         notes: notes?.trim() || "",
+        investorProfileId: investorProfileId || null,
+        tags: Array.isArray(tags) ? JSON.stringify(tags) : (tags || "[]"),
       },
     });
 

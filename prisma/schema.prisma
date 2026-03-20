@@ -334,19 +334,60 @@ model SlideComment {
   @@index([deckId, slideIndex])
 }
 
+// --- Investor database (admin-managed, used for matching) ---
+model InvestorProfile {
+  id              String   @id @default(uuid())
+  name            String                          // "Sequoia Capital" or "Naval Ravikant"
+  type            String   @default("vc")         // vc | angel | accelerator | family_office | corporate
+  website         String?
+  logoUrl         String?
+  description     String?                         // Short bio or investment thesis summary
+
+  // Matching dimensions
+  stages          String   @default("[]")         // JSON: ["pre-seed","seed","series-a","series-b"]
+  sectors         String   @default("[]")         // JSON: ["fintech","saas","healthtech","ai","marketplace"]
+  geographies     String   @default("[]")         // JSON: ["US","Europe","Global","Asia"]
+  chequeMin       Int?                            // Minimum cheque in USD (e.g., 50000)
+  chequeMax       Int?                            // Maximum cheque in USD (e.g., 2000000)
+  thesis          String?                         // Free-text investment thesis
+
+  // Portfolio & credibility
+  notableDeals    String   @default("[]")         // JSON: ["Stripe","Airbnb","Coinbase"]
+  aum             String?                         // Assets under management (display text)
+  partnerCount    Int?
+
+  // Contact & source
+  contactEmail    String?
+  linkedIn        String?
+  twitter         String?
+  source          String   @default("seed")       // "seed" | "admin" | "api"
+
+  // Admin controls
+  verified        Boolean  @default(false)
+  enabled         Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([type])
+  @@index([enabled])
+}
+
 // --- Fundraise tracker ---
 model InvestorContact {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name      String
-  firm      String?
-  email     String?
-  status    String   @default("identified") // identified | contacted | meeting | due_diligence | term_sheet | committed | passed
-  notes     String   @default("")
-  outreach  Outreach[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String    @id @default(uuid())
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String
+  firm           String?
+  email          String?
+  status         String    @default("identified") // identified | contacted | meeting | due_diligence | term_sheet | committed | passed
+  notes          String    @default("")
+  tags           String    @default("[]") // JSON string[] — e.g., ["Tier 1","Warm intro","Fintech focus"]
+  nextFollowUp   DateTime?
+  investorProfileId String? // optional link to InvestorProfile (when saved from matching)
+  outreach       Outreach[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([userId])
   @@index([userId, status])

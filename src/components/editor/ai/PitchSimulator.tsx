@@ -259,8 +259,8 @@ export default function PitchSimulator({ onClose }: PitchSimulatorProps) {
         {/* Footer */}
         <div className="p-4 border-t border-white/10 shrink-0">
           <div className="flex items-center justify-between">
-            <p className="text-[10px] text-white/20">
-              Powered by AI - Questions based on your deck content
+            <p className="text-[11px] italic text-white/40">
+              AI-generated questions for practice — real investor questions will vary
             </p>
             <button
               onClick={onClose}

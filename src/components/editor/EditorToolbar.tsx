@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useEditorStore } from "./state/editorStore";
+import { useAutosave } from "./state/useAutosave";
 import { THEMES } from "@/lib/themes";
 import DesignScoreWidget from "./DesignScoreWidget";
 
@@ -36,6 +37,10 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel, ac
   const save = useEditorStore((s) => s.save);
   const setTheme = useEditorStore((s) => s.setTheme);
   const setTitle = useEditorStore((s) => s.setTitle);
+  const autosaveStatus = useEditorStore((s) => s.autosaveStatus);
+
+  // Start the autosave interval
+  useAutosave();
 
   const [editingTitle, setEditingTitle] = useState(false);
   const [titleValue, setTitleValue] = useState("");
@@ -247,6 +252,46 @@ export default function EditorToolbar({ plan, activeAIPanel, onToggleAIPanel, ac
 
       {saveError && (
         <span className="text-xs text-red-400 hidden md:inline">{saveError}</span>
+      )}
+
+      {/* Autosave status indicator */}
+      {autosaveStatus !== "idle" && (
+        <span
+          className={`hidden md:flex items-center gap-1.5 text-[11px] font-medium transition-opacity duration-300 ${
+            autosaveStatus === "saving"
+              ? "text-white/50"
+              : autosaveStatus === "saved"
+              ? "text-emerald-400/70"
+              : "text-red-400/70"
+          }`}
+          aria-live="polite"
+        >
+          {autosaveStatus === "saving" && (
+            <>
+              <svg className="w-3 h-3 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden>
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              Autosaving...
+            </>
+          )}
+          {autosaveStatus === "saved" && (
+            <>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Autosaved
+            </>
+          )}
+          {autosaveStatus === "error" && (
+            <>
+              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Autosave failed
+            </>
+          )}
+        </span>
       )}
 
       {/* Preview */}

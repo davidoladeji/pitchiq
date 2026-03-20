@@ -12,6 +12,7 @@ import DashboardAnalytics from "@/components/dashboard/DashboardAnalytics";
 import DashboardActivityFeed, { type ActivityItem } from "@/components/dashboard/DashboardActivityFeed";
 import DashboardABTests from "@/components/dashboard/DashboardABTests";
 import DashboardInvestorCRM from "@/components/dashboard/DashboardInvestorCRM";
+import DashboardInvestorMatch from "@/components/dashboard/DashboardInvestorMatch";
 import DashboardFundraiseTracker from "@/components/dashboard/DashboardFundraiseTracker";
 import DashboardApiKeys from "@/components/dashboard/DashboardApiKeys";
 import DashboardBatchJobs from "@/components/dashboard/DashboardBatchJobs";
@@ -184,7 +185,7 @@ export default function DashboardClient({
                 <button
                   type="button"
                   onClick={() => setShowPlanModal(true)}
-                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="shrink-0 inline-flex items-center gap-1.5 min-h-[44px] px-5 py-2 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   aria-label="View plans and upgrade to Pro"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -206,6 +207,12 @@ export default function DashboardClient({
           <DashboardABTests
             decks={decks.map((d) => ({ shareId: d.shareId, title: d.title }))}
             plan={effectivePlan}
+          />
+
+          {/* Find Investors — matching engine (Growth+ only) */}
+          <DashboardInvestorMatch
+            plan={effectivePlan}
+            decks={decks.map((d) => ({ shareId: d.shareId, title: d.title, id: d.id }))}
           />
 
           {/* Investor CRM (Growth+ only) */}
