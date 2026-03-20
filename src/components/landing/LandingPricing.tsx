@@ -293,7 +293,7 @@ export default function LandingPricing() {
           <div
             role="group"
             aria-label="Starter plan"
-            className="relative flex flex-col rounded-2xl border border-navy-200 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-navy-300"
+            className="relative flex flex-col rounded-2xl border border-navy-200 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-navy-300 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
             <h3 className="text-base font-bold tracking-tight text-navy">{starterTier.name}</h3>
             <p className="text-xs mt-1 mb-6 text-navy-500">{starterTier.desc}</p>
@@ -323,11 +323,13 @@ export default function LandingPricing() {
           <div
             role="group"
             aria-label="Pro plan, most popular"
-            className="relative flex flex-col rounded-2xl border border-electric p-5 sm:p-8 shadow-glow transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-glow-lg"
+            className="relative flex flex-col rounded-2xl border border-electric p-5 sm:p-8 shadow-glow transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-glow-lg motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
-            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide" aria-hidden="true">
-              Popular
-            </div>
+            {proTier.badge && (
+              <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide" aria-hidden="true">
+                {proTier.badge}
+              </div>
+            )}
             <h3 className="text-base font-bold tracking-tight text-navy">{proTier.name}</h3>
             <p className="text-xs mt-1 mb-6 text-navy-500">{proTier.desc}</p>
             <div className="flex items-baseline gap-0.5 mb-8">
@@ -393,7 +395,7 @@ export default function LandingPricing() {
           >
             {showAllPlans ? "Hide" : "See"} Growth &amp; Enterprise plans
             <svg
-              className={`w-4 h-4 transition-transform duration-300 ${showAllPlans ? "rotate-180" : ""}`}
+              className={`w-4 h-4 transition-transform duration-300 motion-reduce:transition-none ${showAllPlans ? "rotate-180" : ""}`}
               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
               aria-hidden
             >
@@ -413,11 +415,13 @@ export default function LandingPricing() {
           <div
             role="group"
             aria-label="Growth plan, best value"
-            className="relative flex flex-col rounded-2xl border border-violet/40 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-violet"
+            className="relative flex flex-col rounded-2xl border border-violet/40 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-violet motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
-            <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide" aria-hidden="true">
-              Best Value
-            </div>
+            {growthTier.badge && (
+              <div className="absolute -top-3 left-6 px-3 py-1 rounded-full bg-electric text-white text-[11px] font-semibold tracking-wide" aria-hidden="true">
+                {growthTier.badge}
+              </div>
+            )}
             <h3 className="text-base font-bold tracking-tight text-navy">{growthTier.name}</h3>
             <p className="text-xs mt-1 mb-6 text-navy-500">{growthTier.desc}</p>
             <div className="flex items-baseline gap-0.5 mb-8">
@@ -465,7 +469,7 @@ export default function LandingPricing() {
           <div
             role="group"
             aria-label="Enterprise plan"
-            className="relative flex flex-col rounded-2xl border border-navy-200 bg-navy-50/50 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-navy-300"
+            className="relative flex flex-col rounded-2xl border border-navy-200 bg-navy-50/50 p-5 sm:p-8 transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-card-hover hover:border-navy-300 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
             <h3 className="text-base font-bold tracking-tight text-navy">{enterpriseTier.name}</h3>
             <p className="text-xs mt-1 mb-6 text-navy-500">{enterpriseTier.desc}</p>

@@ -7,10 +7,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { invalidatePlanCache } from "@/lib/plan-config";
+import { SEED_PLANS } from "@/lib/plan-seed-data";
 
 export const dynamic = "force-dynamic";
 
 const VALID_PLAN_KEYS = ["starter", "pro", "growth", "enterprise"] as const;
+
+/** Auto-seed plans if the table is empty so admin never sees a blank page. */
+async function ensureSeeded() {
+  const count = await prisma.planConfig.count();
+  if (count > 0) return;
+
+  for (const plan of SEED_PLANS) {
+    const { planKey, ...data } = plan;
+    await prisma.planConfig.upsert({
+      where: { planKey },
+      create: { planKey, ...data },
+      update: {},
+    });
+  }
+
+  invalidatePlanCache();
+}
 
 export async function GET() {
   try {
@@ -18,6 +36,8 @@ export async function GET() {
   } catch {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  await ensureSeeded();
 
   const plans = await prisma.planConfig.findMany({ orderBy: { sortOrder: "asc" } });
   return NextResponse.json({ plans });
