@@ -805,9 +805,24 @@ export default function ChartBlockV2({
   /* ---------------------------------------------------------------- */
 
   return (
-    <div className="w-full h-full rounded-xl overflow-hidden flex flex-col">
+    <div
+      className="w-full h-full rounded-xl overflow-hidden flex flex-col"
+      style={{
+        background: "var(--t-card-bg, rgba(255,255,255,0.03))",
+        border: "1px solid rgba(255,255,255,0.06)",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+      }}
+    >
+      {/* Chart title (shown when not editing, from y-axis label or data context) */}
+      {data.yAxisLabel && !isSelected && (
+        <div className="px-4 pt-3 pb-0">
+          <span className="text-[11px] font-medium text-white/40 uppercase tracking-wider">
+            {data.yAxisLabel}
+          </span>
+        </div>
+      )}
       {/* Chart area */}
-      <div ref={chartContainerRef} className="flex-1 min-h-[160px] p-3 relative">
+      <div ref={chartContainerRef} className="flex-1 min-h-[160px] p-4 relative">
         {renderChart()}
         {(data.annotations?.length ?? 0) > 0 && (
           <AnnotationOverlay

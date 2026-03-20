@@ -315,6 +315,29 @@ function V2SlideCanvas(props: {
         />
       )}
 
+      {/* Slide title/subtitle — always visible as contextual header */}
+      {slide.title && (
+        <div className="absolute top-0 left-0 right-0 z-[5] px-8 pt-6 pb-2 pointer-events-none">
+          <h2
+            className="text-2xl font-bold tracking-tight leading-tight opacity-90"
+            style={{
+              ...headingStyle,
+              color: isDark ? "var(--t-text)" : "var(--t-bg-dark)",
+            }}
+          >
+            {slide.title}
+          </h2>
+          {slide.subtitle && (
+            <p
+              className="text-sm mt-1 leading-relaxed opacity-50"
+              style={{ color: isDark ? "var(--t-text-secondary)" : "var(--t-bg-dark)" }}
+            >
+              {slide.subtitle}
+            </p>
+          )}
+        </div>
+      )}
+
       {/* Grid overlay during drag */}
       <GridOverlay visible={isDragging} />
 
@@ -324,12 +347,13 @@ function V2SlideCanvas(props: {
       {/* 12-column × 6-row grid */}
       <div
         ref={gridRef}
-        className="relative z-10 w-full h-full p-4"
+        className="relative z-10 w-full h-full px-4 pb-4"
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(12, 1fr)",
           gridTemplateRows: "repeat(6, 1fr)",
           gap: "4px",
+          paddingTop: slide.title ? "64px" : "16px",
         }}
         onClick={(e) => {
           if (e.target === e.currentTarget) onSelectBlock(null);

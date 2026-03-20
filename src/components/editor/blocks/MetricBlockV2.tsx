@@ -185,7 +185,9 @@ export default function MetricBlockV2({
       className="w-full h-full rounded-xl p-4 md:p-6 flex flex-col justify-center"
       style={{
         background: "var(--t-card-bg, rgba(255,255,255,0.05))",
-        border: "1px solid rgba(255,255,255,0.1)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.04) inset",
+        backdropFilter: "blur(8px)",
       }}
     >
       {/* Label */}

@@ -297,6 +297,15 @@ export default function ShapeBlock({
       >
         {renderShape()}
       </div>
+
+      {/* Subtle type label when not selected — helps users identify shape blocks */}
+      {!isSelected && shape !== "rectangle" && (
+        <div className="absolute bottom-1 right-1.5 z-10 pointer-events-none">
+          <span className="text-[8px] font-medium text-white/20 uppercase tracking-wider">
+            {shape}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
