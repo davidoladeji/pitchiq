@@ -26,10 +26,15 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { name, firm, email, status, notes, tags, nextFollowUp } = body;
+    const {
+      name, firm, email, status, notes, tags, nextFollowUp,
+      warmIntro, introSource, sentimentScore, lastInteractionAt,
+      dealProbability, expectedCloseDate, termSheetReceived, commitAmount,
+    } = body;
 
     const validStatuses = ["identified", "contacted", "meeting", "due_diligence", "term_sheet", "committed", "passed"];
-    const data: Record<string, string | null | Date> = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const data: Record<string, any> = {};
     if (name !== undefined) data.name = name.trim();
     if (firm !== undefined) data.firm = firm?.trim() || null;
     if (email !== undefined) data.email = email?.trim() || null;
@@ -58,6 +63,59 @@ export async function PATCH(
           return NextResponse.json({ error: "nextFollowUp must be a valid ISO date string" }, { status: 400 });
         }
         data.nextFollowUp = d;
+      }
+    }
+
+    // Enhanced CRM fields
+    if (warmIntro !== undefined) {
+      data.warmIntro = Boolean(warmIntro);
+    }
+    if (introSource !== undefined) {
+      data.introSource = introSource?.trim() || null;
+    }
+    if (sentimentScore !== undefined) {
+      const score = Number(sentimentScore);
+      if (!isNaN(score) && score >= -2 && score <= 2) {
+        data.sentimentScore = Math.round(score);
+      }
+    }
+    if (lastInteractionAt !== undefined) {
+      if (lastInteractionAt === null) {
+        data.lastInteractionAt = null;
+      } else {
+        const d = new Date(lastInteractionAt);
+        if (!isNaN(d.getTime())) {
+          data.lastInteractionAt = d;
+        }
+      }
+    }
+    if (dealProbability !== undefined) {
+      const prob = Number(dealProbability);
+      if (!isNaN(prob) && prob >= 0 && prob <= 100) {
+        data.dealProbability = Math.round(prob);
+      }
+    }
+    if (expectedCloseDate !== undefined) {
+      if (expectedCloseDate === null) {
+        data.expectedCloseDate = null;
+      } else {
+        const d = new Date(expectedCloseDate);
+        if (!isNaN(d.getTime())) {
+          data.expectedCloseDate = d;
+        }
+      }
+    }
+    if (termSheetReceived !== undefined) {
+      data.termSheetReceived = Boolean(termSheetReceived);
+    }
+    if (commitAmount !== undefined) {
+      if (commitAmount === null) {
+        data.commitAmount = null;
+      } else {
+        const amount = Number(commitAmount);
+        if (!isNaN(amount) && amount >= 0) {
+          data.commitAmount = amount;
+        }
       }
     }
 

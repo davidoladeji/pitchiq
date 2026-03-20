@@ -23,7 +23,7 @@ export default async function DashboardPage({
     redirect("/auth/signin");
   }
 
-  const [decks, user, recentViews] = await Promise.all([
+  const [decks, user, recentViews, startupProfile] = await Promise.all([
     prisma.deck.findMany({
       where: { userId: session.user.id },
       orderBy: { createdAt: "desc" },
@@ -58,7 +58,13 @@ export default async function DashboardPage({
         },
       },
     }),
+    prisma.startupProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { id: true },
+    }),
   ]);
+
+  const hasProfile = !!startupProfile;
 
   const serialized = decks.map((d) => ({
     id: d.id,
@@ -117,6 +123,7 @@ export default async function DashboardPage({
       plan={user?.plan || "starter"}
       upgradedPlan={searchParams.upgraded}
       activities={activities}
+      hasProfile={hasProfile}
     />
   );
 }

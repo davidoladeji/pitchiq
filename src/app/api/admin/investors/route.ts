@@ -117,6 +117,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "type is required" }, { status: 400 });
   }
 
+  // Helper to serialize arrays to JSON strings
+  function toJsonStr(val: unknown): string {
+    if (typeof val === "string") return val;
+    if (Array.isArray(val)) return JSON.stringify(val);
+    return "[]";
+  }
+
   try {
     const data = {
       name: name.trim(),
@@ -124,21 +131,13 @@ export async function POST(req: NextRequest) {
       website: body.website ? String(body.website) : null,
       logoUrl: body.logoUrl ? String(body.logoUrl) : null,
       description: body.description ? String(body.description) : null,
-      stages: typeof body.stages === "string"
-        ? body.stages
-        : JSON.stringify(body.stages ?? []),
-      sectors: typeof body.sectors === "string"
-        ? body.sectors
-        : JSON.stringify(body.sectors ?? []),
-      geographies: typeof body.geographies === "string"
-        ? body.geographies
-        : JSON.stringify(body.geographies ?? []),
+      stages: toJsonStr(body.stages),
+      sectors: toJsonStr(body.sectors),
+      geographies: toJsonStr(body.geographies),
       chequeMin: body.chequeMin != null ? Number(body.chequeMin) : null,
       chequeMax: body.chequeMax != null ? Number(body.chequeMax) : null,
       thesis: body.thesis ? String(body.thesis) : null,
-      notableDeals: typeof body.notableDeals === "string"
-        ? body.notableDeals
-        : JSON.stringify(body.notableDeals ?? []),
+      notableDeals: toJsonStr(body.notableDeals),
       aum: body.aum ? String(body.aum) : null,
       partnerCount: body.partnerCount != null ? Number(body.partnerCount) : null,
       contactEmail: body.contactEmail ? String(body.contactEmail) : null,
@@ -147,6 +146,35 @@ export async function POST(req: NextRequest) {
       source: body.source ? String(body.source) : "admin",
       verified: Boolean(body.verified ?? false),
       enabled: body.enabled !== false,
+      // Extended fields
+      country: body.country ? String(body.country) : null,
+      city: body.city ? String(body.city) : null,
+      currencies: toJsonStr(body.currencies),
+      businessModels: toJsonStr(body.businessModels),
+      revenueModels: toJsonStr(body.revenueModels),
+      customerTypes: toJsonStr(body.customerTypes),
+      dealStructures: toJsonStr(body.dealStructures),
+      valuationMin: body.valuationMin != null ? Number(body.valuationMin) : null,
+      valuationMax: body.valuationMax != null ? Number(body.valuationMax) : null,
+      minRevenue: body.minRevenue != null ? Number(body.minRevenue) : null,
+      minGrowthRate: body.minGrowthRate != null ? Number(body.minGrowthRate) : null,
+      minTeamSize: body.minTeamSize != null ? Number(body.minTeamSize) : null,
+      fundVintage: body.fundVintage != null ? Number(body.fundVintage) : null,
+      fundSize: body.fundSize != null ? Number(body.fundSize) : null,
+      deploymentPace: body.deploymentPace ? String(body.deploymentPace) : null,
+      averageCheckCount: body.averageCheckCount != null ? Number(body.averageCheckCount) : null,
+      leadPreference: body.leadPreference ? String(body.leadPreference) : null,
+      boardSeatRequired: Boolean(body.boardSeatRequired ?? false),
+      syndicateOpen: Boolean(body.syndicateOpen ?? false),
+      followOnReserve: body.followOnReserve !== false,
+      impactFocus: Boolean(body.impactFocus ?? false),
+      diversityLens: Boolean(body.diversityLens ?? false),
+      thesisKeywords: toJsonStr(body.thesisKeywords),
+      portfolioCompanies: toJsonStr(body.portfolioCompanies),
+      portfolioConflictSectors: toJsonStr(body.portfolioConflictSectors),
+      declinedSectors: toJsonStr(body.declinedSectors),
+      coInvestors: toJsonStr(body.coInvestors),
+      lpTypes: toJsonStr(body.lpTypes),
     };
 
     const investor = await prisma.investorProfile.create({ data });

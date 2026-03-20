@@ -91,6 +91,45 @@ export async function PATCH(
   if (body.verified !== undefined) data.verified = Boolean(body.verified);
   if (body.enabled !== undefined) data.enabled = Boolean(body.enabled);
 
+  // Extended fields
+  const toJsonStr = (val: unknown): string => {
+    if (typeof val === "string") return val;
+    if (Array.isArray(val)) return JSON.stringify(val);
+    return "[]";
+  };
+
+  if (body.country !== undefined) data.country = body.country ? String(body.country) : null;
+  if (body.city !== undefined) data.city = body.city ? String(body.city) : null;
+  if (body.currencies !== undefined) data.currencies = toJsonStr(body.currencies);
+  if (body.businessModels !== undefined) data.businessModels = toJsonStr(body.businessModels);
+  if (body.revenueModels !== undefined) data.revenueModels = toJsonStr(body.revenueModels);
+  if (body.customerTypes !== undefined) data.customerTypes = toJsonStr(body.customerTypes);
+  if (body.dealStructures !== undefined) data.dealStructures = toJsonStr(body.dealStructures);
+  if (body.valuationMin !== undefined) data.valuationMin = body.valuationMin != null ? Number(body.valuationMin) : null;
+  if (body.valuationMax !== undefined) data.valuationMax = body.valuationMax != null ? Number(body.valuationMax) : null;
+  if (body.minRevenue !== undefined) data.minRevenue = body.minRevenue != null ? Number(body.minRevenue) : null;
+  if (body.minGrowthRate !== undefined) data.minGrowthRate = body.minGrowthRate != null ? Number(body.minGrowthRate) : null;
+  if (body.minTeamSize !== undefined) data.minTeamSize = body.minTeamSize != null ? Number(body.minTeamSize) : null;
+  if (body.fundVintage !== undefined) data.fundVintage = body.fundVintage != null ? Number(body.fundVintage) : null;
+  if (body.fundSize !== undefined) data.fundSize = body.fundSize != null ? Number(body.fundSize) : null;
+  if (body.deploymentPace !== undefined) data.deploymentPace = body.deploymentPace ? String(body.deploymentPace) : null;
+  if (body.averageCheckCount !== undefined) data.averageCheckCount = body.averageCheckCount != null ? Number(body.averageCheckCount) : null;
+  if (body.leadPreference !== undefined) data.leadPreference = body.leadPreference ? String(body.leadPreference) : null;
+  if (body.boardSeatRequired !== undefined) data.boardSeatRequired = Boolean(body.boardSeatRequired);
+  if (body.syndicateOpen !== undefined) data.syndicateOpen = Boolean(body.syndicateOpen);
+  if (body.followOnReserve !== undefined) data.followOnReserve = Boolean(body.followOnReserve);
+  if (body.impactFocus !== undefined) data.impactFocus = Boolean(body.impactFocus);
+  if (body.diversityLens !== undefined) data.diversityLens = Boolean(body.diversityLens);
+  if (body.thesisKeywords !== undefined) data.thesisKeywords = toJsonStr(body.thesisKeywords);
+  if (body.portfolioCompanies !== undefined) data.portfolioCompanies = toJsonStr(body.portfolioCompanies);
+  if (body.portfolioConflictSectors !== undefined) data.portfolioConflictSectors = toJsonStr(body.portfolioConflictSectors);
+  if (body.declinedSectors !== undefined) data.declinedSectors = toJsonStr(body.declinedSectors);
+  if (body.coInvestors !== undefined) data.coInvestors = toJsonStr(body.coInvestors);
+  if (body.lpTypes !== undefined) data.lpTypes = toJsonStr(body.lpTypes);
+  if (body.lastActiveDate !== undefined) data.lastActiveDate = body.lastActiveDate ? new Date(String(body.lastActiveDate)) : null;
+  if (body.avgResponseDays !== undefined) data.avgResponseDays = body.avgResponseDays != null ? Number(body.avgResponseDays) : null;
+  if (body.avgCloseWeeks !== undefined) data.avgCloseWeeks = body.avgCloseWeeks != null ? Number(body.avgCloseWeeks) : null;
+
   try {
     const investor = await prisma.investorProfile.update({
       where: { id },

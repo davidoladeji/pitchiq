@@ -17,7 +17,7 @@ export type ProductEvent =
   | { event: "suggestion.dismissed"; properties: { type: string; slideIndex: number } }
   | { event: "score.viewed"; properties: { score: number } }
   | { event: "score.improved"; properties: { delta: number; from: number; to: number } }
-  | { event: "investor.matched"; properties: { count: number } }
+  | { event: "investor.matched"; properties: { count: number; source?: string } }
   | { event: "investor.saved_to_pipeline"; properties: { investorName: string } }
   | { event: "crm.followup_set"; properties: { contactId: string } }
   | { event: "crm.followup_completed"; properties: { contactId: string } }

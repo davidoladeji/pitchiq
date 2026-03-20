@@ -45,12 +45,14 @@ export default function DashboardClient({
   plan = "starter",
   upgradedPlan,
   activities = [],
+  hasProfile = false,
 }: {
   decks: DeckSummary[];
   userName: string;
   plan?: string;
   upgradedPlan?: string;
   activities?: ActivityItem[];
+  hasProfile?: boolean;
 }) {
   const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(!!upgradedPlan);
   const [showPlanModal, setShowPlanModal] = useState(false);
@@ -213,6 +215,7 @@ export default function DashboardClient({
           <DashboardInvestorMatch
             plan={effectivePlan}
             decks={decks.map((d) => ({ shareId: d.shareId, title: d.title, id: d.id }))}
+            hasProfile={hasProfile}
           />
 
           {/* Investor CRM (Growth+ only) */}

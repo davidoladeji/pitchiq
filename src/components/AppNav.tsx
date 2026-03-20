@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useCallback, useEffect } from "react";
 import AuthButton from "@/components/AuthButton";
+import NotificationBell from "@/components/dashboard/NotificationBell";
 
 const SCROLL_THRESHOLD_PX = 20;
 
@@ -178,6 +179,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
         >
           {logo}
           <div className="flex items-center gap-2">
+            <NotificationBell />
             <AuthButton />
           </div>
         </div>

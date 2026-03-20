@@ -262,7 +262,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                       ? `border-2 ${p.plan === "growth" ? "border-violet-400 shadow-lg shadow-violet-100" : "border-electric shadow-lg shadow-electric/10"}`
                       : isCurrent
                         ? "border-2 border-electric/30 bg-electric/[0.02]"
-                        : "border-navy-200 hover:border-navy-300 hover:-translate-y-0.5"
+                        : "border-navy-200 hover:border-navy-300 hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                   }`}
                 >
                   {/* Badge */}
@@ -319,7 +319,7 @@ export default function PlanCompareModal({ open, onClose, currentPlan = "starter
                       disabled={!!loadingPlan}
                       aria-busy={!!loadingPlan}
                       aria-label={loadingPlan ? "Setting up checkout…" : p.cta}
-                      className={`mt-auto w-full min-h-[44px] inline-flex items-center justify-center rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+                      className={`mt-auto w-full min-h-[44px] inline-flex items-center justify-center rounded-xl text-sm font-semibold transition-all hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 disabled:opacity-70 disabled:cursor-wait disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                         p.planKey === "growth"
                           ? "bg-electric text-white shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow"
                           : "bg-navy text-white shadow-lg shadow-navy-900/20 hover:bg-navy-800 hover:shadow-glow hover:shadow-electric/10"

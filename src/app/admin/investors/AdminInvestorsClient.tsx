@@ -23,6 +23,19 @@ const GEO_OPTIONS = [
   "MENA", "Africa", "Israel", "China", "Global",
 ] as const;
 
+const EDIT_TABS = [
+  { key: "basic", label: "Basic" },
+  { key: "investment", label: "Investment" },
+  { key: "location", label: "Location & Currency" },
+  { key: "preferences", label: "Preferences" },
+  { key: "requirements", label: "Requirements" },
+  { key: "fund", label: "Fund Info" },
+  { key: "focus", label: "Focus" },
+  { key: "conflicts", label: "Conflicts" },
+] as const;
+
+type EditTabKey = (typeof EDIT_TABS)[number]["key"];
+
 const TYPE_BADGE_STYLES: Record<InvestorType, { bg: string; text: string }> = {
   vc: { bg: "bg-electric/15", text: "text-electric" },
   angel: { bg: "bg-emerald-500/15", text: "text-emerald-400" },
@@ -59,6 +72,38 @@ interface InvestorRow {
   enabled: boolean;
   createdAt: string;
   updatedAt: string;
+  // Extended fields
+  country: string | null;
+  city: string | null;
+  currencies: string;
+  businessModels: string;
+  revenueModels: string;
+  customerTypes: string;
+  dealStructures: string;
+  valuationMin: number | null;
+  valuationMax: number | null;
+  minRevenue: number | null;
+  minGrowthRate: number | null;
+  minTeamSize: number | null;
+  fundVintage: number | null;
+  fundSize: number | null;
+  deploymentPace: string | null;
+  averageCheckCount: number | null;
+  leadPreference: string | null;
+  boardSeatRequired: boolean;
+  syndicateOpen: boolean;
+  followOnReserve: boolean;
+  impactFocus: boolean;
+  diversityLens: boolean;
+  thesisKeywords: string;
+  portfolioCompanies: string;
+  portfolioConflictSectors: string;
+  declinedSectors: string;
+  coInvestors: string;
+  lpTypes: string;
+  lastActiveDate: string | null;
+  avgResponseDays: number | null;
+  avgCloseWeeks: number | null;
 }
 
 interface InvestorForm {
@@ -80,6 +125,34 @@ interface InvestorForm {
   twitter: string;
   verified: boolean;
   enabled: boolean;
+  // Extended fields
+  country: string;
+  city: string;
+  currencies: string[];
+  businessModels: string[];
+  revenueModels: string[];
+  customerTypes: string[];
+  dealStructures: string[];
+  valuationMin: number | null;
+  valuationMax: number | null;
+  minRevenue: number | null;
+  minGrowthRate: number | null;
+  minTeamSize: number | null;
+  fundVintage: number | null;
+  fundSize: number | null;
+  deploymentPace: string;
+  averageCheckCount: number | null;
+  leadPreference: string;
+  boardSeatRequired: boolean;
+  syndicateOpen: boolean;
+  followOnReserve: boolean;
+  impactFocus: boolean;
+  diversityLens: boolean;
+  thesisKeywords: string[];
+  portfolioCompanies: string[];
+  coInvestors: string[];
+  portfolioConflictSectors: string[];
+  declinedSectors: string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -115,6 +188,34 @@ function rowToForm(row: InvestorRow): InvestorForm {
     twitter: row.twitter ?? "",
     verified: row.verified,
     enabled: row.enabled,
+    // Extended
+    country: row.country ?? "",
+    city: row.city ?? "",
+    currencies: parseJsonArray(row.currencies),
+    businessModels: parseJsonArray(row.businessModels),
+    revenueModels: parseJsonArray(row.revenueModels),
+    customerTypes: parseJsonArray(row.customerTypes),
+    dealStructures: parseJsonArray(row.dealStructures),
+    valuationMin: row.valuationMin,
+    valuationMax: row.valuationMax,
+    fundVintage: row.fundVintage,
+    fundSize: row.fundSize,
+    deploymentPace: row.deploymentPace ?? "",
+    minRevenue: row.minRevenue,
+    minGrowthRate: row.minGrowthRate,
+    minTeamSize: row.minTeamSize,
+    leadPreference: row.leadPreference ?? "",
+    boardSeatRequired: row.boardSeatRequired,
+    syndicateOpen: row.syndicateOpen,
+    followOnReserve: row.followOnReserve,
+    averageCheckCount: row.averageCheckCount,
+    impactFocus: row.impactFocus,
+    diversityLens: row.diversityLens,
+    thesisKeywords: parseJsonArray(row.thesisKeywords),
+    portfolioCompanies: parseJsonArray(row.portfolioCompanies),
+    coInvestors: parseJsonArray(row.coInvestors),
+    portfolioConflictSectors: parseJsonArray(row.portfolioConflictSectors),
+    declinedSectors: parseJsonArray(row.declinedSectors),
   };
 }
 
@@ -138,6 +239,34 @@ function emptyForm(): InvestorForm {
     twitter: "",
     verified: false,
     enabled: true,
+    // Extended
+    country: "",
+    city: "",
+    currencies: [],
+    businessModels: [],
+    revenueModels: [],
+    customerTypes: [],
+    dealStructures: [],
+    valuationMin: null,
+    valuationMax: null,
+    fundVintage: null,
+    fundSize: null,
+    deploymentPace: "",
+    minRevenue: null,
+    minGrowthRate: null,
+    minTeamSize: null,
+    averageCheckCount: null,
+    leadPreference: "",
+    boardSeatRequired: false,
+    syndicateOpen: false,
+    followOnReserve: false,
+    impactFocus: false,
+    diversityLens: false,
+    thesisKeywords: [],
+    portfolioCompanies: [],
+    coInvestors: [],
+    portfolioConflictSectors: [],
+    declinedSectors: [],
   };
 }
 
@@ -247,6 +376,266 @@ function MultiCheckbox({
   );
 }
 
+function TabBar({ active, onChange }: { active: EditTabKey; onChange: (t: EditTabKey) => void }) {
+  return (
+    <div className="flex flex-wrap gap-1 mb-4">
+      {EDIT_TABS.map((tab) => (
+        <button
+          key={tab.key}
+          type="button"
+          onClick={() => onChange(tab.key)}
+          className={`px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors ${
+            active === tab.key
+              ? "bg-[#4361EE] text-white"
+              : "bg-white/5 text-white/40 hover:text-white/60 hover:bg-white/10"
+          }`}
+        >
+          {tab.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function FormInput({
+  label,
+  value,
+  onChange,
+  placeholder,
+  type = "text",
+}: {
+  label: string;
+  value: string | number | null;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  type?: "text" | "number" | "email";
+}) {
+  return (
+    <div>
+      <label className="block text-xs text-white/50 mb-1 font-medium">{label}</label>
+      <input
+        type={type}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white placeholder:text-white/25"
+      />
+    </div>
+  );
+}
+
+function FormTextarea({
+  label,
+  value,
+  onChange,
+  placeholder,
+  rows = 2,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  rows?: number;
+}) {
+  return (
+    <div>
+      <label className="block text-xs text-white/50 mb-1 font-medium">{label}</label>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={rows}
+        placeholder={placeholder}
+        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white resize-none placeholder:text-white/25"
+      />
+    </div>
+  );
+}
+
+function FormCheckbox({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <label className="flex items-center gap-2 cursor-pointer select-none py-1">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="accent-[#4361EE] w-3.5 h-3.5"
+      />
+      <span className="text-xs text-white/60">{label}</span>
+    </label>
+  );
+}
+
+function FormCommaArray({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string[];
+  onChange: (v: string[]) => void;
+  placeholder?: string;
+}) {
+  return (
+    <div>
+      <label className="block text-xs text-white/50 mb-1 font-medium">{label}</label>
+      <input
+        type="text"
+        value={value.join(", ")}
+        onChange={(e) =>
+          onChange(
+            e.target.value
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          )
+        }
+        placeholder={placeholder ?? "Comma-separated values"}
+        className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white placeholder:text-white/25"
+      />
+    </div>
+  );
+}
+
+/** Renders the tab content for a given tab key, form, and update function */
+function InvestorTabContent({
+  tab,
+  form,
+  update,
+}: {
+  tab: EditTabKey;
+  form: InvestorForm;
+  update: <K extends keyof InvestorForm>(key: K, val: InvestorForm[K]) => void;
+}) {
+  const numUp = (key: keyof InvestorForm) => (v: string) =>
+    update(key, v === "" ? null : (Number(v) as never));
+
+  switch (tab) {
+    case "basic":
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+          <FormInput label="Name *" value={form.name} onChange={(v) => update("name", v)} placeholder="Sequoia Capital" />
+          <div>
+            <label className="block text-xs text-white/50 mb-1 font-medium">Type</label>
+            <select
+              value={form.type}
+              onChange={(e) => update("type", e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
+            >
+              {TYPE_OPTIONS.map((t) => (
+                <option key={t} value={t} className="bg-[#0F0F14]">{t.replace("_", " ")}</option>
+              ))}
+            </select>
+          </div>
+          <FormInput label="Website" value={form.website} onChange={(v) => update("website", v)} placeholder="https://..." />
+          <FormTextarea label="Description" value={form.description} onChange={(v) => update("description", v)} />
+          <FormTextarea label="Thesis" value={form.thesis} onChange={(v) => update("thesis", v)} placeholder="Investment thesis or focus areas..." rows={3} />
+          <FormInput label="AUM" value={form.aum} onChange={(v) => update("aum", v)} placeholder="$500M" />
+          <FormInput label="Partner Count" value={form.partnerCount} onChange={numUp("partnerCount")} type="number" />
+          <FormInput label="LinkedIn" value={form.linkedIn} onChange={(v) => update("linkedIn", v)} placeholder="https://linkedin.com/in/..." />
+          <FormInput label="Twitter" value={form.twitter} onChange={(v) => update("twitter", v)} placeholder="@handle" />
+        </div>
+      );
+
+    case "investment":
+      return (
+        <div className="space-y-4">
+          <div>
+            <span className="text-xs text-white/50 block mb-1.5 font-medium">Stages</span>
+            <MultiCheckbox options={STAGE_OPTIONS} selected={form.stages} onChange={(v) => update("stages", v)} />
+          </div>
+          <div>
+            <span className="text-xs text-white/50 block mb-1.5 font-medium">Sectors</span>
+            <MultiCheckbox options={SECTOR_OPTIONS} selected={form.sectors} onChange={(v) => update("sectors", v)} />
+          </div>
+          <div>
+            <span className="text-xs text-white/50 block mb-1.5 font-medium">Geographies</span>
+            <MultiCheckbox options={GEO_OPTIONS} selected={form.geographies} onChange={(v) => update("geographies", v)} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+            <FormInput label="Cheque Min ($)" value={form.chequeMin} onChange={numUp("chequeMin")} type="number" placeholder="50000" />
+            <FormInput label="Cheque Max ($)" value={form.chequeMax} onChange={numUp("chequeMax")} type="number" placeholder="2000000" />
+          </div>
+          <FormCommaArray label="Notable Deals" value={form.notableDeals} onChange={(v) => update("notableDeals", v)} placeholder="Stripe, Notion, Figma" />
+        </div>
+      );
+
+    case "location":
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+          <FormInput label="Country" value={form.country} onChange={(v) => update("country", v)} placeholder="US" />
+          <FormInput label="City" value={form.city} onChange={(v) => update("city", v)} placeholder="San Francisco" />
+          <FormCommaArray label="Currencies" value={form.currencies} onChange={(v) => update("currencies", v)} placeholder="USD, EUR, GBP" />
+        </div>
+      );
+
+    case "preferences":
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+          <FormCommaArray label="Business Models" value={form.businessModels} onChange={(v) => update("businessModels", v)} placeholder="B2B, B2C, B2B2C" />
+          <FormCommaArray label="Revenue Models" value={form.revenueModels} onChange={(v) => update("revenueModels", v)} placeholder="SaaS, Marketplace, Transactional" />
+          <FormCommaArray label="Customer Types" value={form.customerTypes} onChange={(v) => update("customerTypes", v)} placeholder="SMB, Mid-Market, Enterprise" />
+          <FormCommaArray label="Deal Structures" value={form.dealStructures} onChange={(v) => update("dealStructures", v)} placeholder="Equity, SAFE, Convertible Note" />
+          <FormInput label="Valuation Min ($)" value={form.valuationMin} onChange={numUp("valuationMin")} type="number" placeholder="1000000" />
+          <FormInput label="Valuation Max ($)" value={form.valuationMax} onChange={numUp("valuationMax")} type="number" placeholder="50000000" />
+          <FormInput label="Lead Preference" value={form.leadPreference} onChange={(v) => update("leadPreference", v)} placeholder="lead, co-lead, follow" />
+        </div>
+      );
+
+    case "requirements":
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+          <FormInput label="Min Revenue ($)" value={form.minRevenue} onChange={numUp("minRevenue")} type="number" placeholder="0" />
+          <FormInput label="Min Growth Rate (%)" value={form.minGrowthRate} onChange={numUp("minGrowthRate")} type="number" placeholder="20" />
+          <FormInput label="Min Team Size" value={form.minTeamSize} onChange={numUp("minTeamSize")} type="number" placeholder="2" />
+          <FormCheckbox label="Board Seat Required" checked={form.boardSeatRequired} onChange={(v) => update("boardSeatRequired", v)} />
+        </div>
+      );
+
+    case "fund":
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+          <FormInput label="Fund Vintage (year)" value={form.fundVintage} onChange={numUp("fundVintage")} type="number" placeholder="2024" />
+          <FormInput label="Fund Size ($)" value={form.fundSize} onChange={numUp("fundSize")} type="number" placeholder="100000000" />
+          <FormInput label="Deployment Pace" value={form.deploymentPace} onChange={(v) => update("deploymentPace", v)} placeholder="10-15 deals/year" />
+          <FormInput label="Average Check Count" value={form.averageCheckCount} onChange={numUp("averageCheckCount")} type="number" placeholder="30" />
+          <FormCheckbox label="Syndicate Open" checked={form.syndicateOpen} onChange={(v) => update("syndicateOpen", v)} />
+          <FormCheckbox label="Follow-On Reserve" checked={form.followOnReserve} onChange={(v) => update("followOnReserve", v)} />
+        </div>
+      );
+
+    case "focus":
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+          <FormCheckbox label="Impact Focus" checked={form.impactFocus} onChange={(v) => update("impactFocus", v)} />
+          <FormCheckbox label="Diversity Lens" checked={form.diversityLens} onChange={(v) => update("diversityLens", v)} />
+          <FormCommaArray label="Thesis Keywords" value={form.thesisKeywords} onChange={(v) => update("thesisKeywords", v)} placeholder="AI, climate, dev-tools" />
+          <FormCommaArray label="Portfolio Companies" value={form.portfolioCompanies} onChange={(v) => update("portfolioCompanies", v)} placeholder="Stripe, Notion, Figma" />
+          <FormCommaArray label="Co-Investors" value={form.coInvestors} onChange={(v) => update("coInvestors", v)} placeholder="a16z, Sequoia, YC" />
+        </div>
+      );
+
+    case "conflicts":
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3">
+          <FormCommaArray label="Portfolio Conflict Sectors" value={form.portfolioConflictSectors} onChange={(v) => update("portfolioConflictSectors", v)} placeholder="Sectors where portfolio has conflicts" />
+          <FormCommaArray label="Declined Sectors" value={form.declinedSectors} onChange={(v) => update("declinedSectors", v)} placeholder="Sectors explicitly declined" />
+        </div>
+      );
+
+    default:
+      return null;
+  }
+}
+
 function Pill({ text, color }: { text: string; color?: string }) {
   const cls = color ?? "bg-white/5 text-white/40";
   return (
@@ -307,10 +696,11 @@ function InvestorEditRow({
   );
 
   const [confirmDel, setConfirmDel] = useState(false);
+  const [editTab, setEditTab] = useState<EditTabKey>("basic");
 
   return (
     <tr>
-      <td colSpan={8} className="px-5 py-4 border-b border-white/5 bg-white/[0.01]">
+      <td colSpan={8} className="px-5 py-4 border-b border-white/5 bg-[#0F0F14]">
         {flash && (
           <div
             className={`mb-4 rounded-xl px-4 py-2.5 text-sm ${
@@ -323,191 +713,12 @@ function InvestorEditRow({
           </div>
         )}
 
-        {/* Identity */}
-        <SectionHeader title="Identity" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
-          <FieldRow label="Name">
-            <input
-              type="text"
-              value={form.name}
-              onChange={(e) => update("name", e.target.value)}
-              className="w-56 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-            />
-          </FieldRow>
-          <FieldRow label="Type">
-            <select
-              value={form.type}
-              onChange={(e) => update("type", e.target.value)}
-              className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-            >
-              {TYPE_OPTIONS.map((t) => (
-                <option key={t} value={t} className="bg-[#1A1A24]">
-                  {t.replace("_", " ")}
-                </option>
-              ))}
-            </select>
-          </FieldRow>
-          <FieldRow label="Website">
-            <input
-              type="text"
-              value={form.website}
-              onChange={(e) => update("website", e.target.value)}
-              placeholder="https://..."
-              className="w-56 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-            />
-          </FieldRow>
-          <FieldRow label="Description">
-            <textarea
-              value={form.description}
-              onChange={(e) => update("description", e.target.value)}
-              rows={2}
-              className="w-56 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white resize-none"
-            />
-          </FieldRow>
-        </div>
+        <TabBar active={editTab} onChange={setEditTab} />
 
-        {/* Matching Criteria */}
-        <SectionHeader title="Matching Criteria" />
-        <div className="space-y-3">
-          <div>
-            <span className="text-xs text-white/50 block mb-1.5">Stages</span>
-            <MultiCheckbox options={STAGE_OPTIONS} selected={form.stages} onChange={(v) => update("stages", v)} />
-          </div>
-          <div>
-            <span className="text-xs text-white/50 block mb-1.5">Sectors</span>
-            <MultiCheckbox options={SECTOR_OPTIONS} selected={form.sectors} onChange={(v) => update("sectors", v)} />
-          </div>
-          <div>
-            <span className="text-xs text-white/50 block mb-1.5">Geographies</span>
-            <MultiCheckbox options={GEO_OPTIONS} selected={form.geographies} onChange={(v) => update("geographies", v)} />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
-            <FieldRow label="Cheque Min ($)">
-              <input
-                type="number"
-                min={0}
-                value={form.chequeMin ?? ""}
-                onChange={(e) => update("chequeMin", e.target.value === "" ? null : Number(e.target.value))}
-                placeholder="50000"
-                className="w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-              />
-            </FieldRow>
-            <FieldRow label="Cheque Max ($)">
-              <input
-                type="number"
-                min={0}
-                value={form.chequeMax ?? ""}
-                onChange={(e) => update("chequeMax", e.target.value === "" ? null : Number(e.target.value))}
-                placeholder="2000000"
-                className="w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-              />
-            </FieldRow>
-          </div>
-          <div>
-            <span className="text-xs text-white/50 block mb-1.5">Thesis</span>
-            <textarea
-              value={form.thesis}
-              onChange={(e) => update("thesis", e.target.value)}
-              rows={3}
-              placeholder="Investment thesis or focus areas..."
-              className="w-full max-w-xl bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white resize-none"
-            />
-          </div>
-        </div>
+        <InvestorTabContent tab={editTab} form={form} update={update} />
 
-        {/* Portfolio */}
-        <SectionHeader title="Portfolio" />
-        <div className="space-y-2">
-          <span className="text-xs text-white/50 block mb-1">Notable Deals</span>
-          {form.notableDeals.map((deal, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <span className="text-[10px] text-white/20 w-5 text-right tabular-nums">{i + 1}.</span>
-              <input
-                type="text"
-                value={deal}
-                onChange={(e) => {
-                  const next = [...form.notableDeals];
-                  next[i] = e.target.value;
-                  update("notableDeals", next);
-                }}
-                className="flex-1 max-w-xs bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-              />
-              <button
-                type="button"
-                onClick={() => update("notableDeals", form.notableDeals.filter((_, j) => j !== i))}
-                className="text-white/20 hover:text-red-400 transition-colors p-1"
-                aria-label="Remove deal"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() => update("notableDeals", [...form.notableDeals, ""])}
-            className="text-xs text-electric hover:text-electric/80 transition-colors mt-1"
-          >
-            + Add deal
-          </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1 mt-2">
-          <FieldRow label="AUM">
-            <input
-              type="text"
-              value={form.aum}
-              onChange={(e) => update("aum", e.target.value)}
-              placeholder="$500M"
-              className="w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-            />
-          </FieldRow>
-          <FieldRow label="Partner Count">
-            <input
-              type="number"
-              min={0}
-              value={form.partnerCount ?? ""}
-              onChange={(e) => update("partnerCount", e.target.value === "" ? null : Number(e.target.value))}
-              className="w-20 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-            />
-          </FieldRow>
-        </div>
-
-        {/* Contact */}
-        <SectionHeader title="Contact" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
-          <FieldRow label="Email">
-            <input
-              type="email"
-              value={form.contactEmail}
-              onChange={(e) => update("contactEmail", e.target.value)}
-              placeholder="partner@firm.com"
-              className="w-56 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-            />
-          </FieldRow>
-          <FieldRow label="LinkedIn">
-            <input
-              type="text"
-              value={form.linkedIn}
-              onChange={(e) => update("linkedIn", e.target.value)}
-              placeholder="https://linkedin.com/in/..."
-              className="w-56 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-            />
-          </FieldRow>
-          <FieldRow label="Twitter">
-            <input
-              type="text"
-              value={form.twitter}
-              onChange={(e) => update("twitter", e.target.value)}
-              placeholder="@handle"
-              className="w-56 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-            />
-          </FieldRow>
-        </div>
-
-        {/* Admin */}
-        <SectionHeader title="Admin" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
+        {/* Admin toggles -- always visible */}
+        <div className="mt-4 pt-3 border-t border-white/5 grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-1">
           <FieldRow label="Source">
             <span className="text-xs text-white/30 font-mono bg-white/5 px-2 py-0.5 rounded">{source}</span>
           </FieldRow>
@@ -555,7 +766,7 @@ function InvestorEditRow({
             type="button"
             onClick={onSave}
             disabled={saving}
-            className="bg-electric text-white text-sm font-medium px-5 py-2 rounded-xl hover:bg-electric/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#4361EE] text-white text-sm font-medium px-5 py-2 rounded-xl hover:bg-[#4361EE]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>
@@ -579,6 +790,7 @@ function AddInvestorModal({
   const [form, setForm] = useState<InvestorForm>(emptyForm());
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [editTab, setEditTab] = useState<EditTabKey>("basic");
 
   const update = useCallback(
     <K extends keyof InvestorForm>(key: K, val: InvestorForm[K]) => {
@@ -590,6 +802,7 @@ function AddInvestorModal({
   async function handleCreate() {
     if (!form.name.trim()) {
       setError("Name is required");
+      setEditTab("basic");
       return;
     }
     setSaving(true);
@@ -614,7 +827,7 @@ function AddInvestorModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="bg-[#1A1A24] border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6">
+      <div className="bg-[#0F0F14] border border-white/10 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] overflow-y-auto p-6">
         <h2 className="text-lg font-bold text-white mb-1">Add Investor</h2>
         <p className="text-sm text-white/40 mb-4">Create a new investor profile for matching.</p>
 
@@ -624,99 +837,12 @@ function AddInvestorModal({
           </div>
         )}
 
-        {/* Name & Type */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3 mb-4">
-          <div>
-            <label className="block text-xs text-white/50 mb-1.5 font-medium">Name *</label>
-            <input
-              type="text"
-              value={form.name}
-              onChange={(e) => update("name", e.target.value)}
-              placeholder="Sequoia Capital"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/25"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-white/50 mb-1.5 font-medium">Type</label>
-            <select
-              value={form.type}
-              onChange={(e) => update("type", e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white"
-            >
-              {TYPE_OPTIONS.map((t) => (
-                <option key={t} value={t} className="bg-[#1A1A24]">
-                  {t.replace("_", " ")}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-xs text-white/50 mb-1.5 font-medium">Website</label>
-            <input
-              type="text"
-              value={form.website}
-              onChange={(e) => update("website", e.target.value)}
-              placeholder="https://..."
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/25"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-white/50 mb-1.5 font-medium">Description</label>
-            <textarea
-              value={form.description}
-              onChange={(e) => update("description", e.target.value)}
-              rows={2}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white resize-none placeholder:text-white/25"
-            />
-          </div>
-        </div>
+        <TabBar active={editTab} onChange={setEditTab} />
 
-        {/* Stages */}
-        <div className="mb-4">
-          <span className="text-xs text-white/50 block mb-1.5 font-medium">Stages</span>
-          <MultiCheckbox options={STAGE_OPTIONS} selected={form.stages} onChange={(v) => update("stages", v)} />
-        </div>
-
-        {/* Sectors */}
-        <div className="mb-4">
-          <span className="text-xs text-white/50 block mb-1.5 font-medium">Sectors</span>
-          <MultiCheckbox options={SECTOR_OPTIONS} selected={form.sectors} onChange={(v) => update("sectors", v)} />
-        </div>
-
-        {/* Geographies */}
-        <div className="mb-4">
-          <span className="text-xs text-white/50 block mb-1.5 font-medium">Geographies</span>
-          <MultiCheckbox options={GEO_OPTIONS} selected={form.geographies} onChange={(v) => update("geographies", v)} />
-        </div>
-
-        {/* Cheque range */}
-        <div className="grid grid-cols-2 gap-x-6 gap-y-3 mb-6">
-          <div>
-            <label className="block text-xs text-white/50 mb-1.5 font-medium">Cheque Min ($)</label>
-            <input
-              type="number"
-              min={0}
-              value={form.chequeMin ?? ""}
-              onChange={(e) => update("chequeMin", e.target.value === "" ? null : Number(e.target.value))}
-              placeholder="50000"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/25"
-            />
-          </div>
-          <div>
-            <label className="block text-xs text-white/50 mb-1.5 font-medium">Cheque Max ($)</label>
-            <input
-              type="number"
-              min={0}
-              value={form.chequeMax ?? ""}
-              onChange={(e) => update("chequeMax", e.target.value === "" ? null : Number(e.target.value))}
-              placeholder="2000000"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/25"
-            />
-          </div>
-        </div>
+        <InvestorTabContent tab={editTab} form={form} update={update} />
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/5">
+        <div className="flex items-center justify-end gap-2 pt-4 mt-4 border-t border-white/5">
           <button
             type="button"
             onClick={onClose}
@@ -728,7 +854,7 @@ function AddInvestorModal({
             type="button"
             onClick={handleCreate}
             disabled={saving}
-            className="bg-electric text-white text-sm font-medium px-5 py-2 rounded-xl hover:bg-electric/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-[#4361EE] text-white text-sm font-medium px-5 py-2 rounded-xl hover:bg-[#4361EE]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {saving ? "Creating..." : "Create Investor"}
           </button>

@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import TransactionActions from "./TransactionActions";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +49,9 @@ export default async function AdminTransactionsPage() {
 
   return (
     <div className="space-y-6">
+      {/* Actions bar */}
+      <TransactionActions />
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

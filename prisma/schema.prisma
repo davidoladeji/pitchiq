@@ -26,6 +26,36 @@ model Deck {
   piqScore      String   @default("{}") // JSON string of PIQScore
   source        String   @default("generated") // "generated" | "uploaded"
   originalFileName String? // original file name for uploaded decks
+
+  // Location & market
+  country         String?               // ISO 3166-1 alpha-2: "US", "GB", "NG", "IN"
+  city            String?               // "San Francisco", "Lagos", "London"
+  currency        String?  @default("USD") // ISO 4217: USD, EUR, GBP, NGN, INR
+  targetMarkets   String?  @default("[]") // JSON: ["US", "Europe", "Global"]
+
+  // Business model & traction
+  businessModel      String?  // "saas" | "marketplace" | "hardware" | "services" | "consumer" | "deeptech" | "biotech" | "media"
+  revenueModel       String?  // "subscription" | "transactional" | "advertising" | "licensing" | "freemium" | "usage-based" | "hybrid"
+  customerType       String?  // "b2b" | "b2c" | "b2b2c" | "b2g" | "d2c"
+  monthlyRevenue     Float?   // MRR in home currency
+  annualRevenue      Float?   // ARR in home currency
+  revenueGrowthRate  Float?   // Month-over-month % (e.g., 15.5 = 15.5%)
+  userCount          Int?     // Total users/customers
+  teamSize           Int?
+  foundedYear        Int?
+
+  // Fundraising specifics
+  dealStructure      String?  // "equity" | "safe" | "convertible_note" | "revenue_based"
+  preMoneyValuation  Float?   // In home currency
+  previousRaised     Float?   // Total previously raised, home currency
+  hasLeadInvestor    Boolean? @default(false)
+
+  // Team characteristics
+  founderCount         Int?
+  hasRepeatFounder     Boolean? @default(false)
+  hasTechnicalFounder  Boolean? @default(false)
+  founderDiversity     String?  @default("[]") // JSON: ["gender-diverse", "ethnicity-diverse", "immigrant-founded"]
+
   userId        String?
   owner         User?    @relation("UserDecks", fields: [userId], references: [id])
   workspaceId   String?
@@ -101,6 +131,7 @@ model User {
   batchJobs            BatchJob[]
   customDomains        CustomDomain[]
   practiceSessions     PitchPracticeSession[]
+  startupProfile       StartupProfile?
 }
 
 model Account {
@@ -351,6 +382,53 @@ model InvestorProfile {
   chequeMax       Int?                            // Maximum cheque in USD (e.g., 2000000)
   thesis          String?                         // Free-text investment thesis
 
+  // Granular location
+  country         String?                         // ISO 3166-1 alpha-2: "US", "GB", "SG"
+  city            String?                         // "Menlo Park", "London"
+  currencies      String   @default("[]")         // JSON: ["USD", "EUR"]
+
+  // Investment preferences
+  businessModels    String   @default("[]")       // JSON: ["saas", "marketplace", "deeptech"]
+  revenueModels     String   @default("[]")       // JSON: ["subscription", "transactional"]
+  customerTypes     String   @default("[]")       // JSON: ["b2b", "b2c"]
+  dealStructures    String   @default("[]")       // JSON: ["equity", "safe", "convertible_note"]
+  valuationMin      Float?                        // Min pre-money they'll consider (USD)
+  valuationMax      Float?                        // Max pre-money they'll consider (USD)
+
+  // Traction thresholds
+  minRevenue        Float?                        // Minimum MRR they look for (USD)
+  minGrowthRate     Float?                        // Minimum MoM growth % they want
+  minTeamSize       Int?
+
+  // Fund characteristics
+  fundVintage       Int?                          // Year current fund was raised
+  fundSize          Float?                        // Total fund size in USD
+  deploymentPace    String?                       // "active" | "moderate" | "slow" | "fully-deployed"
+  averageCheckCount Int?                          // Deals per year
+  leadPreference    String?                       // "lead-only" | "co-lead" | "follow" | "any"
+  boardSeatRequired Boolean  @default(false)
+  syndicateOpen     Boolean  @default(false)      // Open to syndication
+  followOnReserve   Boolean  @default(true)       // Reserves capital for follow-on
+
+  // Thesis & focus
+  impactFocus       Boolean  @default(false)      // ESG/impact-focused
+  diversityLens     Boolean  @default(false)      // Invests with diversity thesis
+  thesisKeywords    String   @default("[]")       // JSON: ["API-first", "developer tools", "vertical SaaS"]
+
+  // Portfolio intelligence
+  portfolioCompanies       String   @default("[]") // JSON: full portfolio for conflict detection
+  portfolioConflictSectors String   @default("[]") // JSON: sectors where they have competing bets
+
+  // Activity & responsiveness
+  lastActiveDate    DateTime?                     // Last known investment date
+  avgResponseDays   Int?                          // Average days to first response
+  avgCloseWeeks     Int?                          // Average weeks from first meeting to close
+  declinedSectors   String   @default("[]")       // JSON: sectors they explicitly avoid
+
+  // Network
+  coInvestors       String   @default("[]")       // JSON: frequent co-investor names
+  lpTypes           String   @default("[]")       // JSON: ["endowment", "pension", "sovereign-wealth", "corporate"]
+
   // Portfolio & credibility
   notableDeals    String   @default("[]")         // JSON: ["Stripe","Airbnb","Coinbase"]
   aum             String?                         // Assets under management (display text)
@@ -367,6 +445,8 @@ model InvestorProfile {
   enabled         Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  matchEvents     MatchEvent[]
 
   @@index([type])
   @@index([enabled])
@@ -385,6 +465,17 @@ model InvestorContact {
   tags           String    @default("[]") // JSON string[] — e.g., ["Tier 1","Warm intro","Fintech focus"]
   nextFollowUp   DateTime?
   investorProfileId String? // optional link to InvestorProfile (when saved from matching)
+
+  // Enhanced CRM fields
+  warmIntro          Boolean?  @default(false)    // User has a warm intro path
+  introSource        String?                      // "mutual connection", "portfolio founder", etc.
+  sentimentScore     Int?                         // -2 to +2 based on latest interaction
+  lastInteractionAt  DateTime?
+  dealProbability    Int?                         // 0-100 user estimate
+  expectedCloseDate  DateTime?
+  termSheetReceived  Boolean?  @default(false)
+  commitAmount       Float?                       // Amount committed if status = committed
+
   outreach       Outreach[]
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -493,4 +584,99 @@ model PitchPracticeSession {
   @@index([userId])
   @@index([deckId])
   @@index([userId, deckId])
+}
+
+// --- Startup profile (founder company info for matching) ---
+model StartupProfile {
+  id                 String   @id @default(uuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Core identity
+  companyName        String
+  tagline            String?
+  country            String                         // ISO 3166-1 alpha-2
+  city               String?
+  currency           String   @default("USD")       // ISO 4217
+
+  // Classification
+  industry           String                         // Primary industry
+  sectors            String   @default("[]")        // JSON: normalized sector tags
+  businessModel      String?                        // saas | marketplace | hardware | etc.
+  revenueModel       String?                        // subscription | transactional | etc.
+  customerType       String?                        // b2b | b2c | b2b2c | b2g
+
+  // Stage & traction
+  stage              String                         // pre-seed | seed | series-a | etc.
+  monthlyRevenue     Float?                         // MRR in home currency
+  annualRevenue      Float?                         // ARR in home currency
+  revenueGrowthRate  Float?                         // MoM %
+  userCount          Int?
+  teamSize           Int?
+  foundedYear        Int?
+
+  // Fundraising
+  fundingTarget      Float?                         // Amount seeking, home currency
+  dealStructure      String?                        // equity | safe | convertible_note
+  preMoneyValuation  Float?
+  previousRaised     Float?
+  hasLeadInvestor    Boolean  @default(false)
+  targetMarkets      String   @default("[]")        // JSON: ["US", "Europe"]
+
+  // Team
+  founderCount         Int?
+  hasRepeatFounder     Boolean  @default(false)
+  hasTechnicalFounder  Boolean  @default(false)
+  founderDiversity     String   @default("[]")      // JSON
+
+  // Preferences
+  investorTypePrefs    String   @default("[]")      // JSON: ["vc", "angel"]
+  leadNeeded           Boolean  @default(true)
+  boardSeatOk          Boolean  @default(true)
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// --- Match event analytics ---
+model MatchEvent {
+  id                 String   @id @default(uuid())
+  userId             String
+  investorProfileId  String
+  investorProfile    InvestorProfile @relation(fields: [investorProfileId], references: [id], onDelete: Cascade)
+  deckId             String?
+  fitScore           Int                            // Score at time of match
+  action             String                         // "viewed" | "saved" | "dismissed" | "contacted"
+  createdAt          DateTime @default(now())
+
+  @@index([userId])
+  @@index([investorProfileId])
+  @@index([createdAt])
+}
+
+// --- Notifications ---
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  type      String                                  // "new_matches" | "follow_up_due" | "pipeline_stale"
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  metadata  String   @default("{}")                 // JSON
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+  @@index([userId, createdAt])
+}
+
+// --- Matching algorithm config (admin-tunable) ---
+model MatchingConfig {
+  id              String   @id @default(uuid())
+  name            String   @unique @default("default")
+  weights         String   @default("{}")           // JSON: dimension → weight
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

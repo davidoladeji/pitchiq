@@ -31,27 +31,35 @@ export default function SignInPage() {
     <>
       <div className="min-h-screen bg-navy-50/50 flex items-center justify-center px-4">
         <div className="w-full max-w-sm">
-          <div className="text-center mb-8">
-            <Link
-              href="/"
-              aria-label="PitchIQ home"
-              className="inline-flex items-center gap-2.5 mb-6 min-h-[44px] min-w-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-            >
-              <div className="w-10 h-10 rounded-xl bg-navy flex items-center justify-center">
-                <span className="text-white font-bold text-lg">P</span>
-              </div>
-              <span className="font-bold text-2xl tracking-tight text-navy">
-                PitchIQ
-              </span>
-            </Link>
-            <h1 className="text-2xl font-bold text-navy tracking-tight mb-2">
-              Sign in to PitchIQ
-            </h1>
-            <p className="text-navy-500 text-sm">
-              Save decks, track PIQ scores, and access analytics.
-            </p>
-          </div>
-          <main id="main" tabIndex={-1} aria-label="Main content" className="outline-none">
+          <main
+            id="main"
+            tabIndex={-1}
+            aria-labelledby="signin-heading"
+            className="outline-none"
+          >
+            <div className="text-center mb-8">
+              <Link
+                href="/"
+                aria-label="PitchIQ home"
+                className="inline-flex items-center gap-2.5 mb-6 min-h-[44px] min-w-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-electric shadow-glow">
+                  <span className="font-bold text-white text-sm">P</span>
+                </div>
+                <span className="font-bold text-2xl tracking-tight text-navy">
+                  PitchIQ
+                </span>
+              </Link>
+              <h1
+                id="signin-heading"
+                className="text-2xl font-bold text-navy tracking-tight mb-2"
+              >
+                Sign in to PitchIQ
+              </h1>
+              <p className="text-navy-500 text-sm">
+                Save decks, track PIQ scores, and access analytics.
+              </p>
+            </div>
             <div className="bg-white rounded-2xl border border-navy-100 shadow-sm p-6 space-y-3">
               {providers ? (
                 Object.values(providers).map((provider) => (
@@ -60,7 +68,7 @@ export default function SignInPage() {
                     type="button"
                     onClick={() => signIn(provider.id, { callbackUrl: "/dashboard" })}
                     aria-label={`Sign in with ${provider.name}`}
-                    className="w-full min-h-[44px] flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-navy-200 text-sm font-medium text-navy shadow-sm hover:bg-navy-50 hover:border-navy-300 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    className="w-full min-h-[44px] flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-navy-200 text-sm font-medium text-navy shadow-sm hover:bg-navy-50 hover:border-navy-300 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >
                     {PROVIDER_ICONS[provider.id] && (
                       <svg
