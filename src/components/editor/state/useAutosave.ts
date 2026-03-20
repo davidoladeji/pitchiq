@@ -16,7 +16,6 @@ const DEBOUNCE_MS = 2_000; // 2-second debounce after last change
 export function useAutosave() {
   const autosave = useEditorStore((s) => s.autosave);
   const isDirty = useEditorStore((s) => s.isDirty);
-  const saving = useEditorStore((s) => s.saving);
 
   // Track when isDirty last became true (for debounce)
   const lastDirtyAt = useRef<number>(0);
