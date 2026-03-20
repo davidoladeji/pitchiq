@@ -176,25 +176,16 @@ export async function getPlanLimitsFromConfig(planKey: string): Promise<PlanLimi
   const config = await getPlanConfigByKey(planKey);
   if (!config) return null;
 
-  const {
-    // Strip non-PlanLimits fields
-    planKey: _pk,
-    sortOrder: _so,
-    enabled: _en,
-    displayName: _dn,
-    description: _desc,
-    price: _p,
-    priceUnit: _pu,
-    highlight: _h,
-    badge: _b,
-    ctaText: _ct,
-    ctaHref: _ch,
-    features: _f,
-    stripePriceId: _spi,
-    stripeAmount: _sa,
-    // Keep limits
-    ...limits
-  } = config;
+  // Extract only PlanLimits fields, stripping display/config metadata
+  const displayKeys = new Set([
+    "planKey", "sortOrder", "enabled", "displayName", "description",
+    "price", "priceUnit", "highlight", "badge", "ctaText", "ctaHref",
+    "features", "stripePriceId", "stripeAmount",
+  ]);
+  const limits: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(config)) {
+    if (!displayKeys.has(k)) limits[k] = v;
+  }
 
-  return limits;
+  return limits as PlanLimits;
 }
