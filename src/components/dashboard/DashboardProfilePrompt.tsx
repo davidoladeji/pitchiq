@@ -10,7 +10,7 @@ import Link from "next/link";
 export default function DashboardProfilePrompt({
   profileCount = 0,
   maxProfiles = 1,
-  plan = "starter",
+  plan: _plan = "starter",
   onUpgrade,
 }: {
   profileCount?: number;
