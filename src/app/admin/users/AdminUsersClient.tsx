@@ -11,6 +11,7 @@ interface AdminUser {
   suspended: boolean;
   suspendedAt: string | null;
   suspendedReason: string | null;
+  lastSeenAt: string | null;
   createdAt: string;
   hasSubscription: boolean;
   deckCount: number;
@@ -22,6 +23,22 @@ const PLAN_BADGES: Record<string, { bg: string; text: string }> = {
   growth: { bg: "bg-violet/15", text: "text-violet" },
   enterprise: { bg: "bg-amber-500/15", text: "text-amber-400" },
 };
+
+function formatRelativeTime(iso: string): string {
+  const now = Date.now();
+  const then = new Date(iso).getTime();
+  const diffMs = now - then;
+  const diffMin = Math.floor(diffMs / 60000);
+  if (diffMin < 1) return "Just now";
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHr = Math.floor(diffMin / 60);
+  if (diffHr < 24) return `${diffHr}h ago`;
+  const diffDay = Math.floor(diffHr / 24);
+  if (diffDay < 30) return `${diffDay}d ago`;
+  const diffMo = Math.floor(diffDay / 30);
+  if (diffMo < 12) return `${diffMo}mo ago`;
+  return new Date(iso).toLocaleDateString();
+}
 
 const ROLE_BADGES: Record<string, { bg: string; text: string }> = {
   user: { bg: "bg-white/5", text: "text-white/40" },
@@ -230,6 +247,7 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
                 <th className="px-5 py-3 text-xs font-semibold text-white/40 uppercase tracking-wider">Role</th>
                 <th className="px-5 py-3 text-xs font-semibold text-white/40 uppercase tracking-wider">Plan</th>
                 <th className="px-5 py-3 text-xs font-semibold text-white/40 uppercase tracking-wider">Decks</th>
+                <th className="px-5 py-3 text-xs font-semibold text-white/40 uppercase tracking-wider">Last Seen</th>
                 <th className="px-5 py-3 text-xs font-semibold text-white/40 uppercase tracking-wider">Joined</th>
                 <th className="px-5 py-3 text-xs font-semibold text-white/40 uppercase tracking-wider">Actions</th>
               </tr>
@@ -237,7 +255,7 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-5 py-10 text-center text-white/30 text-sm">
+                  <td colSpan={8} className="px-5 py-10 text-center text-white/30 text-sm">
                     {search ? "No users match your search." : "No users yet."}
                   </td>
                 </tr>
@@ -331,6 +349,15 @@ export default function AdminUsersClient({ initialUsers }: { initialUsers: Admin
                       </td>
                       <td className="px-5 py-3">
                         <span className="text-xs text-white/50">{u.deckCount}</span>
+                      </td>
+                      <td className="px-5 py-3">
+                        {u.lastSeenAt ? (
+                          <span className="text-xs text-white/50" title={new Date(u.lastSeenAt).toLocaleString()}>
+                            {formatRelativeTime(u.lastSeenAt)}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-white/20">Never</span>
+                        )}
                       </td>
                       <td className="px-5 py-3">
                         <span className="text-xs text-white/30">

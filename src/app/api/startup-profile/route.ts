@@ -117,6 +117,12 @@ export async function POST(req: NextRequest) {
 
     // Create new profile — check plan limit
     const currentCount = await prisma.startupProfile.count({ where: { userId } });
+    if (limits.maxStartupProfiles === 0) {
+      return NextResponse.json(
+        { error: "Startup profiles are available on Pro and above. Upgrade to create a profile for smarter investor matching." },
+        { status: 403 },
+      );
+    }
     if (currentCount >= limits.maxStartupProfiles) {
       return NextResponse.json(
         { error: `You have reached your plan limit of ${limits.maxStartupProfiles} startup profile${limits.maxStartupProfiles === 1 ? "" : "s"}. Upgrade to add more.` },

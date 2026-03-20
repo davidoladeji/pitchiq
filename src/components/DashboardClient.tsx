@@ -202,9 +202,14 @@ export default function DashboardClient({
             </div>
           )}
 
-          {/* Startup profile prompt — shown when user can add profiles */}
-          {(!hasProfile || (limits.maxStartupProfiles > 1 && profileCount < limits.maxStartupProfiles) || limits.maxStartupProfiles === Infinity) && (
-            <DashboardProfilePrompt profileCount={profileCount} maxProfiles={limits.maxStartupProfiles} />
+          {/* Startup profile prompt — upgrade CTA for starter, create/add for paid plans */}
+          {(limits.maxStartupProfiles === 0 || !hasProfile || (limits.maxStartupProfiles > 1 && profileCount < limits.maxStartupProfiles) || limits.maxStartupProfiles === Infinity) && (
+            <DashboardProfilePrompt
+              profileCount={profileCount}
+              maxProfiles={limits.maxStartupProfiles}
+              plan={effectivePlan}
+              onUpgrade={() => setShowPlanModal(true)}
+            />
           )}
 
           {/* Overview stats */}

@@ -32,6 +32,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
+    // Record last-seen timestamp for audit trail
+    await prisma.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } });
+
     const token = sessionCookieValue({ userId: user.id, role: user.role as Role });
     const res = NextResponse.json({ ok: true });
     res.cookies.set(getSessionCookieName(), token, {

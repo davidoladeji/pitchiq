@@ -74,6 +74,14 @@ export const authOptions: NextAuthOptions = {
           }
         }
       }
+      // Record last-seen timestamp for audit trail
+      if (user.email) {
+        const target = await prisma.user.findUnique({ where: { email: user.email }, select: { id: true } });
+        if (target) {
+          await prisma.user.update({ where: { id: target.id }, data: { lastSeenAt: new Date() } });
+        }
+      }
+
       return true;
     },
     async session({ session, user }) {

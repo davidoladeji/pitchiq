@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Building2,
   Tag,
@@ -671,6 +672,79 @@ export default function StartupProfilePage() {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: "#0F0F14" }}>
         <Loader2 className="w-8 h-8 animate-spin text-[#4361EE]" />
+      </div>
+    );
+  }
+
+  /* ---- Starter plan: locked state ---- */
+  if (limits.maxStartupProfiles === 0) {
+    return (
+      <div className="min-h-screen" style={{ background: "#0F0F14" }}>
+        <div className="mx-auto max-w-2xl px-4 py-8">
+          <div className="mb-6">
+            <h1 className="text-xl font-bold text-white">Startup Profiles</h1>
+            <p className="mt-1 text-sm text-white/40">
+              Startup profiles are available on Pro and above.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-white/[0.06] bg-[#16161E] p-6 sm:p-8">
+            <div className="flex flex-col items-center text-center">
+              {/* Icon */}
+              <div className="w-16 h-16 rounded-2xl bg-[#4361EE]/10 flex items-center justify-center mb-4">
+                <svg className="w-8 h-8 text-[#4361EE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              </div>
+
+              <h2 className="text-lg font-bold text-white mb-2">Unlock Startup Profiles</h2>
+              <p className="text-sm text-white/50 max-w-md leading-relaxed mb-6">
+                A startup profile lets PitchIQ match you against 80+ investors based on your stage,
+                sector, geography, and funding needs — delivering significantly higher match accuracy
+                than deck content alone.
+              </p>
+
+              {/* Benefits */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 w-full max-w-md">
+                {[
+                  { title: "Precision Matching", desc: "Stage, sector, and cheque-size scoring against real investor data" },
+                  { title: "Geography-Aware", desc: "Surface local and regional investors that fit your market" },
+                  { title: "Multiple Ventures", desc: "Paid plans support multiple profiles for different startups" },
+                  { title: "Better Results", desc: "Profile-matched founders see 3x more relevant investor results" },
+                ].map((b) => (
+                  <div key={b.title} className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-3 text-left">
+                    <h3 className="text-xs font-semibold text-white mb-0.5">{b.title}</h3>
+                    <p className="text-[11px] text-white/40 leading-relaxed">{b.desc}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTA */}
+              <Link
+                href="/billing"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#4361EE] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3651DE] hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4361EE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F0F14]"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                </svg>
+                Upgrade to Pro
+              </Link>
+              <p className="text-[11px] text-white/30 mt-3">
+                Pro includes 1 profile. Growth supports up to 3. Enterprise is unlimited.
+              </p>
+            </div>
+          </div>
+
+          {/* Back link */}
+          <div className="mt-6 text-center">
+            <Link
+              href="/dashboard"
+              className="text-xs text-white/40 hover:text-white/60 transition-colors"
+            >
+              &larr; Back to Dashboard
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }

@@ -73,7 +73,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     apiRateLimit: 0,
     maxBatchSize: 0,
     pitchPractice: false,
-    maxStartupProfiles: 1,
+    maxStartupProfiles: 0,
   },
   pro: {
     maxDecks: 5,

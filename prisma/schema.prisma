@@ -115,6 +115,7 @@ model User {
   customLogoUrl        String?
   customCompanyName    String?
   customAccentColor    String?
+  lastSeenAt           DateTime?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
   accounts             Account[]
@@ -378,8 +379,8 @@ model InvestorProfile {
   stages          String   @default("[]")         // JSON: ["pre-seed","seed","series-a","series-b"]
   sectors         String   @default("[]")         // JSON: ["fintech","saas","healthtech","ai","marketplace"]
   geographies     String   @default("[]")         // JSON: ["US","Europe","Global","Asia"]
-  chequeMin       Int?                            // Minimum cheque in USD (e.g., 50000)
-  chequeMax       Int?                            // Maximum cheque in USD (e.g., 2000000)
+  chequeMin       Float?                          // Minimum cheque in USD (e.g., 50000)
+  chequeMax       Float?                          // Maximum cheque in USD (e.g., 2000000)
   thesis          String?                         // Free-text investment thesis
 
   // Granular location
