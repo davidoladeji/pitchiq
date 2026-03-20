@@ -526,7 +526,7 @@ export default function DashboardInvestorMatch({
 
   if (!limits.investorCRM) {
     return (
-      <section className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
+      <section className="bg-[#0F0F14] border border-white/[0.08] rounded-2xl p-6 shadow-lg">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-8 h-8 rounded-lg bg-[#4361EE]/10 flex items-center justify-center">
             <Users className="w-4 h-4 text-[#4361EE]" />
@@ -536,7 +536,7 @@ export default function DashboardInvestorMatch({
         <p className="text-sm text-white/40 mb-4">
           Match your deck with investors most likely to be interested in your startup.
         </p>
-        <div className="relative rounded-xl border border-white/[0.06] bg-white/[0.02] p-8 text-center">
+        <div className="relative rounded-xl border border-white/[0.06] bg-white/[0.03] p-8 text-center">
           <div className="absolute inset-0 backdrop-blur-sm rounded-xl" />
           <div className="relative">
             <p className="text-white/50 text-sm mb-2">Investor matching is available on Growth plans and above.</p>
@@ -548,391 +548,447 @@ export default function DashboardInvestorMatch({
   }
 
   return (
-    <section className="bg-white/[0.02] border border-white/[0.06] rounded-2xl p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#4361EE]/10 flex items-center justify-center">
-            <Users className="w-4 h-4 text-[#4361EE]" />
-          </div>
-          <div>
-            <h2 className="text-base font-semibold text-white">Find Investors</h2>
-            <p className="text-xs text-white/30">
-              {matchSource === "profile" ? "Matched against your startup profile" : "Matched against your deck data"}
-            </p>
-          </div>
-        </div>
-        {matches.length > 0 && (
-          <span className="text-xs text-white/30">{filtered.length} of {matches.length} shown</span>
-        )}
-      </div>
-
-      {/* Match source toggle */}
-      <div className="flex items-center gap-2 mb-4 p-1 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-        <span className="text-[11px] text-white/30 px-2 shrink-0">Matching based on:</span>
-        {hasProfile && (
-          <button
-            type="button"
-            onClick={() => setMatchSource("profile")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              matchSource === "profile"
-                ? "bg-[#4361EE]/10 text-[#4361EE]"
-                : "text-white/40 hover:text-white/60"
-            }`}
-          >
-            <Building2 className="w-3 h-3" />
-            Your Startup Profile
-          </button>
-        )}
-        <button
-          type="button"
-          onClick={() => setMatchSource("deck")}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-            matchSource === "deck"
-              ? "bg-[#4361EE]/10 text-[#4361EE]"
-              : "text-white/40 hover:text-white/60"
-          }`}
-        >
-          Select a Deck
-        </button>
-      </div>
-
-      {/* Deck selector (when deck source) */}
-      {matchSource === "deck" && decks.length > 1 && (
-        <div className="mb-4">
-          <select
-            value={selectedDeck?.id || ""}
-            onChange={(e) => {
-              const d = decks.find((dk) => dk.id === e.target.value);
-              if (d) setSelectedDeck(d);
-            }}
-            className="w-full px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-sm text-white/70 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
-          >
-            {decks.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.title}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {/* Search + Filter toggle */}
-      {matches.length > 0 && (
-        <div className="space-y-3 mb-4">
-          {/* Search bar */}
-          <div className="flex items-center gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20" />
-              <input
-                type="text"
-                placeholder="Search investors..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 pr-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white/70 placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
-              />
+    <section className="bg-[#0F0F14] border border-white/[0.08] rounded-2xl overflow-hidden shadow-lg">
+      {/* Header bar */}
+      <div className="px-6 pt-6 pb-4 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-[#4361EE]/10 flex items-center justify-center">
+              <Users className="w-4.5 h-4.5 text-[#4361EE]" />
             </div>
+            <div>
+              <h2 className="text-base font-semibold text-white tracking-tight">Find Investors</h2>
+              <p className="text-[11px] text-white/35 mt-0.5">
+                {matchSource === "profile" ? "Matched against your startup profile" : "Matched against your deck data"}
+                {matches.length > 0 && <span className="text-white/20 ml-1.5">({filtered.length} of {matches.length})</span>}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Match source toggle */}
+        <div className="flex items-center gap-1 p-1 rounded-lg bg-white/[0.04] border border-white/[0.06]">
+          {hasProfile && (
             <button
               type="button"
-              onClick={() => setShowFilters(!showFilters)}
-              className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 ${
-                showFilters ? "bg-[#4361EE]/10 text-[#4361EE]" : "bg-white/[0.04] text-white/40 hover:text-white/60"
+              onClick={() => setMatchSource("profile")}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                matchSource === "profile"
+                  ? "bg-[#4361EE] text-white shadow-sm"
+                  : "text-white/40 hover:text-white/60 hover:bg-white/[0.04]"
               }`}
             >
-              <Filter className="w-3.5 h-3.5" />
-              Filters
+              <Building2 className="w-3 h-3" />
+              Startup Profile
             </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setMatchSource("deck")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+              matchSource === "deck"
+                ? "bg-[#4361EE] text-white shadow-sm"
+                : "text-white/40 hover:text-white/60 hover:bg-white/[0.04]"
+            }`}
+          >
+            Deck Analysis
+          </button>
+        </div>
+
+        {/* Deck selector (when deck source) */}
+        {matchSource === "deck" && decks.length > 1 && (
+          <div className="mt-3">
+            <select
+              value={selectedDeck?.id || ""}
+              onChange={(e) => {
+                const d = decks.find((dk) => dk.id === e.target.value);
+                if (d) setSelectedDeck(d);
+              }}
+              className="w-full px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] text-sm text-white/70 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
+            >
+              {decks.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.title}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+
+      {/* Search + Filters area */}
+      <div className="px-6 py-4">
+        {matches.length > 0 && (
+          <div className="space-y-3 mb-4">
+            {/* Search bar */}
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/25" />
+                <input
+                  type="text"
+                  placeholder="Search by name or sector..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-8 pr-3 py-2.5 rounded-lg bg-white/[0.06] border border-white/[0.08] text-xs text-white/80 placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-[#4361EE]/50 focus:border-[#4361EE]/30 transition-all"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowFilters(!showFilters)}
+                className={`px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1.5 border ${
+                  showFilters
+                    ? "bg-[#4361EE]/10 text-[#4361EE] border-[#4361EE]/20"
+                    : "bg-white/[0.04] text-white/40 hover:text-white/60 border-white/[0.08] hover:border-white/[0.12]"
+                }`}
+              >
+                <Filter className="w-3.5 h-3.5" />
+                Filters
+              </button>
+            </div>
+
+            {/* Filter row */}
+            {showFilters && (
+              <div className="flex flex-wrap items-center gap-2 p-3 rounded-xl bg-white/[0.03] border border-white/[0.06]">
+                {/* Type pills */}
+                <div className="flex items-center gap-1">
+                  {["all", "vc", "angel", "accelerator", "family_office"].map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => setFilterType(t)}
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-all ${
+                        filterType === t
+                          ? "bg-[#4361EE] text-white"
+                          : "bg-white/[0.04] text-white/40 hover:text-white/60 hover:bg-white/[0.08]"
+                      }`}
+                    >
+                      {t === "all" ? "All Types" : t === "family_office" ? "Family Office" : t.charAt(0).toUpperCase() + t.slice(1)}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Min score */}
+                <select
+                  value={minScore}
+                  onChange={(e) => setMinScore(Number(e.target.value))}
+                  className="px-2 py-1 rounded-lg bg-white/[0.06] border border-white/[0.08] text-[10px] text-white/60 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
+                >
+                  <option value={0}>Any Score</option>
+                  <option value={35}>35+</option>
+                  <option value={50}>50+</option>
+                  <option value={65}>65+</option>
+                  <option value={80}>80+</option>
+                </select>
+
+                {/* Region filter */}
+                {uniqueRegions.length > 0 && (
+                  <select
+                    value={filterRegion}
+                    onChange={(e) => setFilterRegion(e.target.value)}
+                    className="px-2 py-1 rounded-lg bg-white/[0.06] border border-white/[0.08] text-[10px] text-white/60 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
+                  >
+                    <option value="all">All Regions</option>
+                    {uniqueRegions.map((r) => (
+                      <option key={r} value={r}>{r}</option>
+                    ))}
+                  </select>
+                )}
+
+                {/* Lead preference filter */}
+                <select
+                  value={filterLead}
+                  onChange={(e) => setFilterLead(e.target.value)}
+                  className="px-2 py-1 rounded-lg bg-white/[0.06] border border-white/[0.08] text-[10px] text-white/60 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
+                >
+                  <option value="all">Any Lead Pref</option>
+                  <option value="lead-only">Lead Only</option>
+                  <option value="co-lead">Co-Lead</option>
+                  <option value="follow">Follow</option>
+                  <option value="any">Any</option>
+                </select>
+
+                {/* Hide dealbreakers */}
+                <label className="flex items-center gap-1.5 text-[10px] text-white/40 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={hideDealbreakers}
+                    onChange={(e) => setHideDealbreakers(e.target.checked)}
+                    className="rounded border-white/20 bg-white/5 text-[#4361EE] focus:ring-[#4361EE] w-3 h-3"
+                  />
+                  Hide dealbreakers
+                </label>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Trust disclaimer */}
+        <p className="text-[10px] text-white/20 italic mb-4">
+          Matches are based on publicly available investor data. A high match score does not guarantee investor interest.
+        </p>
+
+        {/* Error */}
+        {error && (
+          <div className="mb-4 px-3 py-2.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
+            {error}
+          </div>
+        )}
+
+        {/* Loading */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-16">
+            <svg className="w-6 h-6 animate-spin text-[#4361EE]" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            <span className="mt-3 text-sm text-white/40">Analyzing investor fit...</span>
+          </div>
+        )}
+
+        {/* Empty */}
+        {!loading && !error && matchSource === "deck" && decks.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-sm text-white/40">Create a deck first to find matching investors.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Results list */}
+      {!loading && filtered.length > 0 && (
+        <div className="px-6 pb-6">
+          {/* Column header */}
+          <div className="flex items-center gap-3 px-4 pb-2 mb-1 text-[10px] font-medium text-white/25 uppercase tracking-wider">
+            <span className="w-10 text-center shrink-0">Score</span>
+            <span className="flex-1">Investor</span>
+            <span className="hidden sm:block w-28 text-right">Cheque Range</span>
+            <span className="w-4 shrink-0" />
           </div>
 
-          {/* Filter row */}
-          {showFilters && (
-            <div className="flex flex-wrap items-center gap-2 p-3 rounded-lg bg-white/[0.02] border border-white/[0.06]">
-              {/* Type pills */}
-              <div className="flex items-center gap-1">
-                {["all", "vc", "angel", "accelerator", "family_office"].map((t) => (
+          <div className="space-y-1.5">
+            {filtered.slice(0, 30).map((m) => {
+              const isExpanded = expandedId === m.investorId;
+              const isSaved = savedIds.has(m.investorId);
+              const isSaving = savingId === m.investorId;
+              const badge = compatibilityBadge(m.compatibilityLabel);
+
+              return (
+                <div
+                  key={m.investorId}
+                  className={`rounded-xl border overflow-hidden transition-all ${
+                    isExpanded
+                      ? "border-[#4361EE]/20 bg-[#4361EE]/[0.03]"
+                      : "border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.10]"
+                  }`}
+                >
+                  {/* Row */}
                   <button
-                    key={t}
                     type="button"
-                    onClick={() => setFilterType(t)}
-                    className={`px-2.5 py-1 rounded-full text-[10px] font-medium transition-colors ${
-                      filterType === t
-                        ? "bg-[#4361EE]/15 text-[#4361EE]"
-                        : "bg-white/[0.04] text-white/40 hover:text-white/60"
-                    }`}
+                    onClick={() => setExpandedId(isExpanded ? null : m.investorId)}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors"
                   >
-                    {t === "all" ? "All Types" : t === "family_office" ? "Family Office" : t.charAt(0).toUpperCase() + t.slice(1)}
-                  </button>
-                ))}
-              </div>
+                    {/* Score circle */}
+                    <div className={`w-10 h-10 rounded-full ${fitScoreBg(m.fitScore)} flex items-center justify-center shrink-0 ring-1 ring-inset ${
+                      m.fitScore >= 80 ? "ring-emerald-500/20" : m.fitScore >= 65 ? "ring-[#4361EE]/20" : m.fitScore >= 50 ? "ring-amber-500/20" : "ring-white/[0.06]"
+                    }`}>
+                      <span className={`text-sm font-bold tabular-nums ${fitScoreColor(m.fitScore)}`}>{m.fitScore}</span>
+                    </div>
 
-              {/* Min score */}
-              <select
-                value={minScore}
-                onChange={(e) => setMinScore(Number(e.target.value))}
-                className="px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[10px] text-white/60 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
-              >
-                <option value={0}>Any Score</option>
-                <option value={35}>35+</option>
-                <option value={50}>50+</option>
-                <option value={65}>65+</option>
-                <option value={80}>80+</option>
-              </select>
-
-              {/* Region filter */}
-              {uniqueRegions.length > 0 && (
-                <select
-                  value={filterRegion}
-                  onChange={(e) => setFilterRegion(e.target.value)}
-                  className="px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[10px] text-white/60 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
-                >
-                  <option value="all">All Regions</option>
-                  {uniqueRegions.map((r) => (
-                    <option key={r} value={r}>{r}</option>
-                  ))}
-                </select>
-              )}
-
-              {/* Lead preference filter */}
-              <select
-                value={filterLead}
-                onChange={(e) => setFilterLead(e.target.value)}
-                className="px-2 py-1 rounded-lg bg-white/[0.04] border border-white/[0.08] text-[10px] text-white/60 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
-              >
-                <option value="all">Any Lead Pref</option>
-                <option value="lead-only">Lead Only</option>
-                <option value="co-lead">Co-Lead</option>
-                <option value="follow">Follow</option>
-                <option value="any">Any</option>
-              </select>
-
-              {/* Hide dealbreakers */}
-              <label className="flex items-center gap-1.5 text-[10px] text-white/40 cursor-pointer select-none">
-                <input
-                  type="checkbox"
-                  checked={hideDealbreakers}
-                  onChange={(e) => setHideDealbreakers(e.target.checked)}
-                  className="rounded border-white/20 bg-white/5 text-[#4361EE] focus:ring-[#4361EE] w-3 h-3"
-                />
-                Hide dealbreakers
-              </label>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Trust disclaimer */}
-      <p className="text-[11px] text-white/25 italic mb-4">
-        Matches are based on publicly available investor data. A high match score does not guarantee investor interest.
-      </p>
-
-      {/* Error */}
-      {error && (
-        <div className="mb-4 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs">
-          {error}
-        </div>
-      )}
-
-      {/* Loading */}
-      {loading && (
-        <div className="flex items-center justify-center py-12">
-          <svg className="w-5 h-5 animate-spin text-[#4361EE]" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          <span className="ml-2 text-sm text-white/40">Finding matches...</span>
-        </div>
-      )}
-
-      {/* Empty */}
-      {!loading && !error && matchSource === "deck" && decks.length === 0 && (
-        <div className="text-center py-8">
-          <p className="text-sm text-white/40">Create a deck first to find matching investors.</p>
-        </div>
-      )}
-
-      {/* Results */}
-      {!loading && filtered.length > 0 && (
-        <div className="space-y-2">
-          {filtered.slice(0, 30).map((m) => {
-            const isExpanded = expandedId === m.investorId;
-            const isSaved = savedIds.has(m.investorId);
-            const isSaving = savingId === m.investorId;
-            const badge = compatibilityBadge(m.compatibilityLabel);
-
-            return (
-              <div key={m.investorId} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
-                {/* Row */}
-                <button
-                  type="button"
-                  onClick={() => setExpandedId(isExpanded ? null : m.investorId)}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-white/[0.02] transition-colors"
-                >
-                  {/* Score */}
-                  <div className={`w-10 h-10 rounded-lg ${fitScoreBg(m.fitScore)} flex items-center justify-center shrink-0`}>
-                    <span className={`text-sm font-bold ${fitScoreColor(m.fitScore)}`}>{m.fitScore}</span>
-                  </div>
-
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-medium text-white truncate">{m.name}</span>
-                      {m.verified && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" title="Verified" />
-                      )}
-                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${TYPE_COLORS[m.type] || TYPE_COLORS.vc}`}>
-                        {m.type}
-                      </span>
-                      <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${badge.bg} ${badge.text}`}>
-                        {m.compatibilityLabel}
-                      </span>
-                      {m.dealbreakers.length > 0 && (
-                        <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/10 text-red-400">
-                          {m.dealbreakers.length} dealbreaker{m.dealbreakers.length > 1 ? "s" : ""}
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm font-semibold text-white truncate">{m.name}</span>
+                        {m.verified && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" title="Verified" />
+                        )}
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${TYPE_COLORS[m.type] || TYPE_COLORS.vc}`}>
+                          {m.type}
                         </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {m.topReasons.slice(0, 2).map((r) => (
-                        <span key={r} className="text-[11px] text-white/30 truncate">{r}</span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Cheque */}
-                  {m.chequeMin != null && m.chequeMax != null && (
-                    <span className="text-xs text-white/30 shrink-0 hidden sm:block">
-                      {formatAmount(m.chequeMin)} - {formatAmount(m.chequeMax)}
-                    </span>
-                  )}
-
-                  {/* Expand arrow */}
-                  <ChevronDown
-                    className={`w-4 h-4 text-white/20 shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`}
-                  />
-                </button>
-
-                {/* Expanded detail */}
-                {isExpanded && (
-                  <div className="px-4 pb-4 border-t border-white/[0.04]">
-                    {/* Dealbreakers */}
-                    {m.dealbreakers.length > 0 && (
-                      <div className="mt-3 mb-3 rounded-lg border border-red-500/20 bg-red-500/5 p-3 space-y-1">
-                        {m.dealbreakers.map((d, i) => (
-                          <p key={i} className="text-xs text-red-400 flex items-start gap-1.5">
-                            <XCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                            {d}
-                          </p>
+                        <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${badge.bg} ${badge.text}`}>
+                          {m.compatibilityLabel}
+                        </span>
+                        {m.dealbreakers.length > 0 && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/10 text-red-400">
+                            {m.dealbreakers.length} dealbreaker{m.dealbreakers.length > 1 ? "s" : ""}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        {m.topReasons.slice(0, 2).map((r, ri) => (
+                          <span key={r} className="text-[11px] text-white/30 truncate">
+                            {ri > 0 && <span className="text-white/10 mr-1.5">|</span>}
+                            {r}
+                          </span>
                         ))}
                       </div>
+                    </div>
+
+                    {/* Cheque */}
+                    {m.chequeMin != null && m.chequeMax != null && (
+                      <span className="text-xs text-white/35 shrink-0 hidden sm:block font-medium tabular-nums">
+                        {formatAmount(m.chequeMin)} – {formatAmount(m.chequeMax)}
+                      </span>
                     )}
 
-                    {/* Warnings */}
-                    {m.warnings.length > 0 && (
-                      <div className="mt-3 mb-3 rounded-lg border border-amber-500/20 bg-amber-500/5 p-3 space-y-1">
-                        {m.warnings.map((w, i) => (
-                          <p key={i} className="text-xs text-amber-400 flex items-start gap-1.5">
-                            <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                            {w}
-                          </p>
-                        ))}
-                      </div>
-                    )}
+                    {/* Expand arrow */}
+                    <ChevronDown
+                      className={`w-4 h-4 text-white/20 shrink-0 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                    />
+                  </button>
 
-                    {/* Description */}
-                    {m.description && (
-                      <p className="text-xs text-white/40 mt-3 mb-3">{m.description}</p>
-                    )}
-
-                    {/* Score breakdown bars */}
-                    <div className="space-y-2 mb-3">
-                      {m.reasons.filter((r) => r.maxScore > 0).map((r) => (
-                        <div key={r.dimension} className="space-y-0.5">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-1.5">
-                              {r.matched ? (
-                                <Check className="w-3 h-3 text-emerald-400" />
-                              ) : (
-                                <X className="w-3 h-3 text-white/20" />
-                              )}
-                              <span className="text-[11px] font-medium text-white/50">{r.dimension}</span>
-                            </div>
-                            <span className="text-[10px] text-white/30">{r.score}/{r.maxScore}</span>
-                          </div>
-                          <div className="h-1 rounded-full bg-white/[0.06] overflow-hidden ml-[18px]">
-                            <div
-                              className={`h-full rounded-full ${scoreBarColor(r.score, r.maxScore)}`}
-                              style={{ width: `${(r.score / r.maxScore) * 100}%` }}
-                            />
-                          </div>
-                          <p className="text-[10px] text-white/25 ml-[18px]">{r.detail}</p>
+                  {/* Expanded detail */}
+                  {isExpanded && (
+                    <div className="px-4 pb-4 border-t border-white/[0.06]">
+                      {/* Dealbreakers */}
+                      {m.dealbreakers.length > 0 && (
+                        <div className="mt-3 mb-3 rounded-lg border border-red-500/20 bg-red-500/[0.06] p-3 space-y-1">
+                          {m.dealbreakers.map((d, i) => (
+                            <p key={i} className="text-xs text-red-400 flex items-start gap-1.5">
+                              <XCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                              {d}
+                            </p>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-
-                    {/* Notable deals */}
-                    {m.notableDeals.length > 0 && (
-                      <div className="mb-3">
-                        <span className="text-[11px] text-white/30">Notable investments: </span>
-                        <span className="text-[11px] text-white/50">{m.notableDeals.slice(0, 5).join(", ")}</span>
-                      </div>
-                    )}
-
-                    {/* Stages + sectors pills */}
-                    <div className="flex flex-wrap gap-1 mb-3">
-                      {m.stages.map((s) => (
-                        <span key={s} className="px-1.5 py-0.5 rounded text-[10px] bg-white/[0.04] text-white/30">{s}</span>
-                      ))}
-                      {m.sectors.slice(0, 5).map((s) => (
-                        <span key={s} className="px-1.5 py-0.5 rounded text-[10px] bg-[#4361EE]/5 text-[#4361EE]/40">{s}</span>
-                      ))}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleSaveToPipeline(m)}
-                        disabled={isSaved || isSaving}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                          isSaved
-                            ? "bg-emerald-500/10 text-emerald-400 cursor-default"
-                            : "bg-[#4361EE]/10 text-[#4361EE] hover:bg-[#4361EE]/20 disabled:opacity-50"
-                        }`}
-                      >
-                        {isSaving ? "Saving..." : isSaved ? "Saved to Pipeline" : "Save to Pipeline"}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setDetailId(m.investorId)}
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.04] text-white/40 hover:text-white/60 transition-colors flex items-center gap-1"
-                      >
-                        <ChevronRight className="w-3 h-3" />
-                        View Details
-                      </button>
-                      {m.website && (
-                        <a
-                          href={m.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white/[0.04] text-white/40 hover:text-white/60 transition-colors flex items-center gap-1"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                          Website
-                        </a>
                       )}
+
+                      {/* Warnings */}
+                      {m.warnings.length > 0 && (
+                        <div className="mt-3 mb-3 rounded-lg border border-amber-500/20 bg-amber-500/[0.06] p-3 space-y-1">
+                          {m.warnings.map((w, i) => (
+                            <p key={i} className="text-xs text-amber-400 flex items-start gap-1.5">
+                              <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                              {w}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Description */}
+                      {m.description && (
+                        <p className="text-xs text-white/45 mt-3 mb-3 leading-relaxed">{m.description}</p>
+                      )}
+
+                      {/* Quick stats row */}
+                      <div className="grid grid-cols-3 gap-2 mb-4 mt-3">
+                        {m.aum && (
+                          <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] px-3 py-2">
+                            <span className="text-[9px] text-white/25 uppercase tracking-wider block">AUM</span>
+                            <span className="text-xs text-white/60 font-medium">{m.aum}</span>
+                          </div>
+                        )}
+                        {m.fundSize != null && (
+                          <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] px-3 py-2">
+                            <span className="text-[9px] text-white/25 uppercase tracking-wider block">Fund Size</span>
+                            <span className="text-xs text-white/60 font-medium">{formatAmount(m.fundSize)}</span>
+                          </div>
+                        )}
+                        {m.leadPreference && (
+                          <div className="rounded-lg bg-white/[0.03] border border-white/[0.06] px-3 py-2">
+                            <span className="text-[9px] text-white/25 uppercase tracking-wider block">Lead Pref</span>
+                            <span className="text-xs text-white/60 font-medium capitalize">{m.leadPreference}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Score breakdown bars */}
+                      <div className="space-y-2 mb-4">
+                        <h4 className="text-[10px] font-semibold text-white/40 uppercase tracking-wider">Score Breakdown</h4>
+                        {m.reasons.filter((r) => r.maxScore > 0).map((r) => (
+                          <div key={r.dimension} className="space-y-0.5">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-1.5">
+                                {r.matched ? (
+                                  <Check className="w-3 h-3 text-emerald-400" />
+                                ) : (
+                                  <X className="w-3 h-3 text-white/20" />
+                                )}
+                                <span className="text-[11px] font-medium text-white/50">{r.dimension}</span>
+                              </div>
+                              <span className="text-[10px] text-white/30 tabular-nums">{r.score}/{r.maxScore}</span>
+                            </div>
+                            <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden ml-[18px]">
+                              <div
+                                className={`h-full rounded-full transition-all ${scoreBarColor(r.score, r.maxScore)}`}
+                                style={{ width: `${(r.score / r.maxScore) * 100}%` }}
+                              />
+                            </div>
+                            <p className="text-[10px] text-white/25 ml-[18px]">{r.detail}</p>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Notable deals */}
+                      {m.notableDeals.length > 0 && (
+                        <div className="mb-3">
+                          <span className="text-[11px] text-white/30">Notable investments: </span>
+                          <span className="text-[11px] text-white/50">{m.notableDeals.slice(0, 5).join(", ")}</span>
+                        </div>
+                      )}
+
+                      {/* Stages + sectors pills */}
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {m.stages.map((s) => (
+                          <span key={s} className="px-1.5 py-0.5 rounded text-[10px] bg-white/[0.05] text-white/35 border border-white/[0.04]">{s}</span>
+                        ))}
+                        {m.sectors.slice(0, 5).map((s) => (
+                          <span key={s} className="px-1.5 py-0.5 rounded text-[10px] bg-[#4361EE]/[0.06] text-[#4361EE]/50 border border-[#4361EE]/10">{s}</span>
+                        ))}
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-2 pt-3 border-t border-white/[0.06]">
+                        <button
+                          type="button"
+                          onClick={() => handleSaveToPipeline(m)}
+                          disabled={isSaved || isSaving}
+                          className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+                            isSaved
+                              ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 cursor-default"
+                              : "bg-[#4361EE] text-white hover:bg-[#3651DE] disabled:opacity-50 shadow-sm"
+                          }`}
+                        >
+                          <Bookmark className="w-3 h-3 inline mr-1.5" />
+                          {isSaving ? "Saving..." : isSaved ? "Saved to Pipeline" : "Save to Pipeline"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDetailId(m.investorId)}
+                          className="px-4 py-2 rounded-lg text-xs font-medium bg-white/[0.06] text-white/50 hover:text-white/70 hover:bg-white/[0.08] transition-all flex items-center gap-1 border border-white/[0.06]"
+                        >
+                          <ChevronRight className="w-3 h-3" />
+                          Full Profile
+                        </button>
+                        {m.website && (
+                          <a
+                            href={m.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-4 py-2 rounded-lg text-xs font-medium bg-white/[0.06] text-white/50 hover:text-white/70 hover:bg-white/[0.08] transition-all flex items-center gap-1 border border-white/[0.06]"
+                          >
+                            <ExternalLink className="w-3 h-3" />
+                            Website
+                          </a>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 
       {/* No results after filter */}
       {!loading && !error && matches.length > 0 && filtered.length === 0 && (
-        <div className="text-center py-6">
+        <div className="text-center py-10 px-6">
           <p className="text-sm text-white/40">No investors match your current filters.</p>
+          <button
+            type="button"
+            onClick={() => { setFilterType("all"); setMinScore(0); setFilterRegion("all"); setFilterLead("all"); setHideDealbreakers(false); setSearchQuery(""); }}
+            className="mt-2 text-xs text-[#4361EE] hover:text-[#4361EE]/80 transition-colors"
+          >
+            Clear all filters
+          </button>
         </div>
       )}
 
