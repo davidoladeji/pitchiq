@@ -26,15 +26,40 @@ export async function PATCH(
     }
 
     const body = await req.json();
-    const { name, firm, email, status, notes } = body;
+    const { name, firm, email, status, notes, tags, nextFollowUp } = body;
 
     const validStatuses = ["identified", "contacted", "meeting", "due_diligence", "term_sheet", "committed", "passed"];
-    const data: Record<string, string | null> = {};
+    const data: Record<string, string | null | Date> = {};
     if (name !== undefined) data.name = name.trim();
     if (firm !== undefined) data.firm = firm?.trim() || null;
     if (email !== undefined) data.email = email?.trim() || null;
     if (status !== undefined && validStatuses.includes(status)) data.status = status;
     if (notes !== undefined) data.notes = notes.trim();
+
+    if (tags !== undefined) {
+      // Validate tags parses as a string array
+      try {
+        const parsed = JSON.parse(tags);
+        if (!Array.isArray(parsed) || !parsed.every((t: unknown) => typeof t === "string")) {
+          return NextResponse.json({ error: "tags must be a JSON string array" }, { status: 400 });
+        }
+        data.tags = tags;
+      } catch {
+        return NextResponse.json({ error: "tags must be valid JSON" }, { status: 400 });
+      }
+    }
+
+    if (nextFollowUp !== undefined) {
+      if (nextFollowUp === null) {
+        data.nextFollowUp = null;
+      } else {
+        const d = new Date(nextFollowUp);
+        if (isNaN(d.getTime())) {
+          return NextResponse.json({ error: "nextFollowUp must be a valid ISO date string" }, { status: 400 });
+        }
+        data.nextFollowUp = d;
+      }
+    }
 
     const updated = await prisma.investorContact.update({
       where: { id: params.id },

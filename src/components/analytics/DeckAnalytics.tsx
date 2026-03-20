@@ -136,6 +136,8 @@ export default function DeckAnalytics({
             <OverviewCards data={data} />
             <ViewsChart dailyViews={data.dailyViews} />
             <SlideEngagement slides={data.slideEngagement} />
+            <DropOffFunnel slides={data.slideEngagement} />
+            <EngagementRecommendations slides={data.slideEngagement} />
             <RevisitedSlides slides={data.slideEngagement} />
             <RecentViewers views={data.recentViews} />
           </>
@@ -278,6 +280,168 @@ function SlideEngagement({
             </div>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Viewer Drop-off Funnel ---------- */
+
+function DropOffFunnel({
+  slides,
+}: {
+  slides: AnalyticsData["slideEngagement"];
+}) {
+  if (slides.length === 0) return null;
+
+  const firstViews = slides[0].views;
+  if (firstViews === 0) return null;
+
+  const funnelData = slides.map((s, i) => {
+    const retention = Math.round((s.views / firstViews) * 100);
+    const prevRetention =
+      i > 0 ? Math.round((slides[i - 1].views / firstViews) * 100) : 100;
+    const drop = prevRetention - retention;
+    return {
+      slideIndex: s.slideIndex,
+      retention,
+      drop,
+      isBigDrop: drop > 30,
+    };
+  });
+
+  return (
+    <section>
+      <h3 className="mb-3 text-sm font-medium text-white/70">
+        Viewer Drop-off
+      </h3>
+      <div className="rounded-lg border border-white/10 bg-white/[0.03] p-4 space-y-2">
+        {funnelData.map((d) => (
+          <div key={d.slideIndex} className="flex items-center gap-3">
+            <span className="w-16 shrink-0 text-xs text-white/50 tabular-nums">
+              Slide {d.slideIndex + 1}
+            </span>
+            <div className="relative h-5 flex-1 overflow-hidden rounded bg-white/5">
+              <div
+                className="absolute inset-y-0 left-0 rounded"
+                style={{
+                  width: `${Math.max(d.retention, 2)}%`,
+                  backgroundColor: d.isBigDrop
+                    ? "rgba(239, 68, 68, 0.7)"
+                    : "rgba(67, 97, 238, 0.6)",
+                }}
+              />
+            </div>
+            <span
+              className={`w-14 shrink-0 text-right text-xs tabular-nums ${
+                d.isBigDrop ? "text-red-400" : "text-white/40"
+              }`}
+            >
+              {d.retention}%
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Engagement Recommendations ---------- */
+
+function EngagementRecommendations({
+  slides,
+}: {
+  slides: AnalyticsData["slideEngagement"];
+}) {
+  if (slides.length === 0) return null;
+
+  const firstViews = slides[0].views;
+  if (firstViews === 0) return null;
+
+  const avgTime =
+    slides.reduce((sum, s) => sum + s.avgTime, 0) / slides.length;
+
+  type Rec = { priority: number; text: string };
+  const recs: Rec[] = [];
+
+  // Check for big drop-offs
+  for (let i = 1; i < slides.length; i++) {
+    const prevRetention = (slides[i - 1].views / firstViews) * 100;
+    const curRetention = (slides[i].views / firstViews) * 100;
+    const drop = prevRetention - curRetention;
+    if (drop > 30) {
+      recs.push({
+        priority: 1,
+        text: `Consider revising Slide ${slides[i].slideIndex + 1} \u2014 significant viewer drop-off detected`,
+      });
+    }
+  }
+
+  // Check last slide retention
+  if (slides.length > 1) {
+    const lastRetention = (slides[slides.length - 1].views / firstViews) * 100;
+    if (lastRetention < 40) {
+      recs.push({
+        priority: 2,
+        text: "Many viewers don\u2019t reach your closing slide. Consider making your deck more concise.",
+      });
+    }
+  }
+
+  // Check for frequently revisited slides
+  const revisitedSlides = slides.filter((s) => s.revisits > 2);
+  if (revisitedSlides.length > 0) {
+    const labels = revisitedSlides
+      .map((s) => `Slide ${s.slideIndex + 1}`)
+      .join(", ");
+    recs.push({
+      priority: 3,
+      text: `${labels} ${revisitedSlides.length === 1 ? "is" : "are"} frequently re-read \u2014 likely decision factors for investors`,
+    });
+  }
+
+  // Check for low avgTime slides
+  for (const s of slides) {
+    if (s.avgTime < 500 && avgTime > 0 && s.avgTime < avgTime * 0.3) {
+      recs.push({
+        priority: 4,
+        text: `Slide ${s.slideIndex + 1} may lack engaging content \u2014 viewers skip through quickly`,
+      });
+    }
+  }
+
+  if (recs.length === 0) return null;
+
+  const sorted = recs.sort((a, b) => a.priority - b.priority).slice(0, 5);
+
+  return (
+    <section>
+      <h3 className="mb-3 text-sm font-medium text-white/70">
+        Insights &amp; Recommendations
+      </h3>
+      <div className="space-y-2">
+        {sorted.map((r, i) => (
+          <div
+            key={i}
+            className="flex items-start gap-3 rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-3"
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              className="mt-0.5 shrink-0 text-amber-400"
+            >
+              <path
+                d="M8 1C5.24 1 3 3.24 3 6c0 1.77.93 3.32 2.33 4.2.27.17.42.47.42.8v1h4.5v-1c0-.33.15-.63.42-.8A5 5 0 0013 6c0-2.76-2.24-5-5-5z"
+                fill="currentColor"
+                opacity="0.8"
+              />
+              <rect x="5.5" y="13" width="5" height="1.5" rx="0.75" fill="currentColor" opacity="0.6" />
+            </svg>
+            <p className="text-sm text-amber-200/90">{r.text}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

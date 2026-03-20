@@ -56,10 +56,23 @@ export async function GET(
         } catch {
           // leave as 0
         }
+
+        // Extract overall PIQ score from version snapshot
+        let piqScoreOverall: number | null = null;
+        try {
+          const piq = JSON.parse(v.piqScore);
+          if (piq && typeof piq.overall === "number") {
+            piqScoreOverall = piq.overall;
+          }
+        } catch {
+          // leave as null
+        }
+
         return {
           id: v.id,
           version: v.version,
           slideCount,
+          piqScore: piqScoreOverall,
           changeNote: v.changeNote,
           createdAt: v.createdAt.toISOString(),
         };

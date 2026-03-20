@@ -5,6 +5,8 @@ import { prisma } from "@/lib/db";
 import { getPlanLimits } from "@/lib/plan-limits";
 import crypto from "crypto";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/dashboard/investors
  * Aggregate viewer engagement data grouped by hashed IP.

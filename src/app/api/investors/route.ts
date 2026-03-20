@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, firm, email, status, notes, investorProfileId, tags } = body;
+    const { name, firm, email, status, notes, investorProfileId, tags, nextFollowUp } = body;
 
     if (!name?.trim()) {
       return NextResponse.json({ error: "Name is required" }, { status: 400 });
@@ -74,6 +74,7 @@ export async function POST(req: NextRequest) {
         notes: notes?.trim() || "",
         investorProfileId: investorProfileId || null,
         tags: Array.isArray(tags) ? JSON.stringify(tags) : (tags || "[]"),
+        nextFollowUp: nextFollowUp ? new Date(nextFollowUp) : null,
       },
     });
 
