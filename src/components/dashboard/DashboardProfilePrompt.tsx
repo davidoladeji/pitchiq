@@ -3,11 +3,22 @@
 import Link from "next/link";
 
 /**
- * Prompts users to complete their startup profile.
- * Shown on dashboard when hasProfile is false.
- * Each deck may map to a different startup, so profiles improve investor matching.
+ * Prompts users to complete their startup profile or add more profiles.
+ * Shown on dashboard when hasProfile is false, or when the user can add more.
  */
-export default function DashboardProfilePrompt() {
+export default function DashboardProfilePrompt({
+  profileCount = 0,
+  maxProfiles = 1,
+}: {
+  profileCount?: number;
+  maxProfiles?: number;
+}) {
+  const hasAny = profileCount > 0;
+  const canAddMore = maxProfiles === Infinity || profileCount < maxProfiles;
+
+  // If user has profiles and can't add more, nothing to prompt
+  if (hasAny && !canAddMore) return null;
+
   return (
     <section className="rounded-2xl border border-electric/20 bg-white p-5 sm:p-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
@@ -30,12 +41,31 @@ export default function DashboardProfilePrompt() {
 
         {/* Copy */}
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-bold text-navy">Set Up Your Startup Profile</h3>
-          <p className="text-xs text-navy-500 mt-0.5 leading-relaxed">
-            Tell us about your company — sector, stage, geography, and funding details.
-            This powers smarter investor matching and lets you match against your profile
-            instead of just a single deck.
-          </p>
+          {!hasAny ? (
+            <>
+              <h3 className="text-sm font-bold text-navy">Set Up Your Startup Profile</h3>
+              <p className="text-xs text-navy-500 mt-0.5 leading-relaxed">
+                Tell us about your company — sector, stage, geography, and funding details.
+                This powers smarter investor matching and lets you match against your profile
+                instead of just a single deck.
+                {maxProfiles > 1 && (
+                  <span className="block mt-1 text-navy-400">
+                    Your plan supports up to {maxProfiles === Infinity ? "unlimited" : maxProfiles} startup profile{maxProfiles === 1 ? "" : "s"}.
+                  </span>
+                )}
+              </p>
+            </>
+          ) : (
+            <>
+              <h3 className="text-sm font-bold text-navy">Add Another Startup Profile</h3>
+              <p className="text-xs text-navy-500 mt-0.5 leading-relaxed">
+                You have {profileCount} profile{profileCount === 1 ? "" : "s"}.
+                {maxProfiles === Infinity
+                  ? " Your plan supports unlimited profiles."
+                  : ` Your plan supports up to ${maxProfiles} — add another to match different ventures against investors.`}
+              </p>
+            </>
+          )}
         </div>
 
         {/* CTA */}
@@ -46,7 +76,7 @@ export default function DashboardProfilePrompt() {
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
-          Complete Profile
+          {hasAny ? "Manage Profiles" : "Complete Profile"}
         </Link>
       </div>
     </section>

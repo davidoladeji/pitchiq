@@ -111,16 +111,23 @@ export async function GET(req: NextRequest) {
 
   const source = req.nextUrl.searchParams.get("source");
   const deckId = req.nextUrl.searchParams.get("deckId");
+  const profileId = req.nextUrl.searchParams.get("profileId");
 
   // Build match input from either startup profile or deck
   let matchInput;
   let matchSource: "profile" | "deck" = "deck";
 
   if (source === "profile") {
-    // Fetch startup profile
-    const profile = await prisma.startupProfile.findUnique({
-      where: { userId: session.user.id },
-    });
+    // Fetch startup profile — specific or most recent
+    const profile = profileId
+      ? await prisma.startupProfile.findUnique({ where: { id: profileId } })
+      : await prisma.startupProfile.findFirst({
+          where: { userId: session.user.id },
+          orderBy: { updatedAt: "desc" },
+        });
+    if (profile && profile.userId !== session.user.id) {
+      return NextResponse.json({ error: "Profile not found." }, { status: 404 });
+    }
     if (!profile) {
       return NextResponse.json(
         { error: "No startup profile found. Create one first." },

@@ -131,7 +131,7 @@ model User {
   batchJobs            BatchJob[]
   customDomains        CustomDomain[]
   practiceSessions     PitchPracticeSession[]
-  startupProfile       StartupProfile?
+  startupProfiles      StartupProfile[]
 }
 
 model Account {
@@ -589,7 +589,7 @@ model PitchPracticeSession {
 // --- Startup profile (founder company info for matching) ---
 model StartupProfile {
   id                 String   @id @default(uuid())
-  userId             String   @unique
+  userId             String
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Core identity

@@ -72,6 +72,11 @@ interface MatchResult {
   avgCloseWeeks?: number | null;
 }
 
+interface ProfileOption {
+  id: string;
+  companyName: string;
+}
+
 interface DeckOption {
   shareId: string;
   title: string;
@@ -401,10 +406,12 @@ export default function DashboardInvestorMatch({
   plan,
   decks,
   hasProfile,
+  profileCount = 0,
 }: {
   plan: string;
   decks: Array<{ shareId: string; title: string; id: string }>;
   hasProfile?: boolean;
+  profileCount?: number;
 }) {
   const limits = getPlanLimits(plan);
   const [matches, setMatches] = useState<MatchResult[]>([]);
@@ -420,6 +427,37 @@ export default function DashboardInvestorMatch({
   const [matchSource, setMatchSource] = useState<"profile" | "deck">(
     hasProfile ? "profile" : "deck"
   );
+
+  // Profile selector for multi-profile users
+  const [profiles, setProfiles] = useState<ProfileOption[]>([]);
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
+
+  // Fetch profiles when user has multiple
+  useEffect(() => {
+    if (profileCount <= 1) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/startup-profile");
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled && data.profiles) {
+          const list: ProfileOption[] = data.profiles.map((p: { id: string; companyName: string }) => ({
+            id: p.id,
+            companyName: p.companyName,
+          }));
+          setProfiles(list);
+          if (list.length > 0 && !selectedProfileId) {
+            setSelectedProfileId(list[0].id);
+          }
+        }
+      } catch {
+        // Silently handle
+      }
+    })();
+    return () => { cancelled = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profileCount]);
 
   // Filters
   const [filterType, setFilterType] = useState<string>("all");
@@ -437,13 +475,16 @@ export default function DashboardInvestorMatch({
     }
   }, [decks, selectedDeck]);
 
-  const fetchMatches = useCallback(async (source: "profile" | "deck", deckId?: string) => {
+  const fetchMatches = useCallback(async (source: "profile" | "deck", deckId?: string, profileIdParam?: string | null) => {
     setLoading(true);
     setError("");
     try {
       const params = new URLSearchParams();
       if (source === "profile") {
         params.set("source", "profile");
+        if (profileIdParam) {
+          params.set("profileId", profileIdParam);
+        }
       } else if (deckId) {
         params.set("deckId", deckId);
       }
@@ -462,14 +503,14 @@ export default function DashboardInvestorMatch({
     }
   }, []);
 
-  // Fetch matches when source or deck changes
+  // Fetch matches when source, deck, or selected profile changes
   useEffect(() => {
     if (matchSource === "profile") {
-      fetchMatches("profile");
+      fetchMatches("profile", undefined, selectedProfileId);
     } else if (selectedDeck?.id) {
       fetchMatches("deck", selectedDeck.id);
     }
-  }, [matchSource, selectedDeck, fetchMatches]);
+  }, [matchSource, selectedDeck, selectedProfileId, fetchMatches]);
 
   const handleSaveToPipeline = async (match: MatchResult) => {
     setSavingId(match.investorId);
@@ -604,6 +645,23 @@ export default function DashboardInvestorMatch({
             Deck Analysis
           </button>
         </div>
+
+        {/* Profile selector (when profile source and multiple profiles) */}
+        {matchSource === "profile" && profiles.length > 1 && (
+          <div className="mt-3">
+            <select
+              value={selectedProfileId || ""}
+              onChange={(e) => setSelectedProfileId(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg bg-white/[0.06] border border-white/[0.08] text-sm text-white/70 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
+            >
+              {profiles.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.companyName}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Profile setup nudge */}
         {!hasProfile && (

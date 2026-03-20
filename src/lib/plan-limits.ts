@@ -37,6 +37,7 @@ export interface PlanLimits {
   apiRateLimit: number; // requests per minute
   maxBatchSize: number;
   pitchPractice: boolean;
+  maxStartupProfiles: number;
 }
 
 const ALL_THEME_IDS = THEMES.map((t) => t.id);
@@ -72,6 +73,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     apiRateLimit: 0,
     maxBatchSize: 0,
     pitchPractice: false,
+    maxStartupProfiles: 1,
   },
   pro: {
     maxDecks: 5,
@@ -103,6 +105,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     apiRateLimit: 0,
     maxBatchSize: 0,
     pitchPractice: false,
+    maxStartupProfiles: 1,
   },
   growth: {
     maxDecks: Infinity,
@@ -134,6 +137,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     apiRateLimit: 0,
     maxBatchSize: 0,
     pitchPractice: true,
+    maxStartupProfiles: 3,
   },
   enterprise: {
     maxDecks: Infinity,
@@ -165,6 +169,7 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     apiRateLimit: 100,
     maxBatchSize: 50,
     pitchPractice: true,
+    maxStartupProfiles: Infinity,
   },
 };
 

@@ -15,7 +15,18 @@ import {
   CheckCircle2,
   X,
   Loader2,
+  Plus,
+  Trash2,
 } from "lucide-react";
+import { getPlanLimits } from "@/lib/plan-limits";
+
+interface ProfileSummary {
+  id: string;
+  companyName: string;
+  industry: string;
+  stage: string;
+  updatedAt: string;
+}
 
 /* ------------------------------------------------------------------ */
 /*  Country data                                                       */
@@ -383,6 +394,15 @@ export default function StartupProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
+  // Multi-profile state
+  const [profiles, setProfiles] = useState<ProfileSummary[]>([]);
+  const [editingProfileId, setEditingProfileId] = useState<string | null>(null);
+  const [plan, setPlan] = useState("starter");
+  const [deleting, setDeleting] = useState<string | null>(null);
+
+  const limits = getPlanLimits(plan);
+  const canAddMore = limits.maxStartupProfiles === Infinity || profiles.length < limits.maxStartupProfiles;
+
   // Country search state
   const [countrySearch, setCountrySearch] = useState("");
   const [countryOpen, setCountryOpen] = useState(false);
@@ -390,53 +410,89 @@ export default function StartupProfilePage() {
   // Industry suggestion state
   const [industrySuggOpen, setIndustrySuggOpen] = useState(false);
 
-  /* ---- Load existing profile ---- */
+  /* ---- Populate form from profile data ---- */
+  const populateForm = useCallback((p: Record<string, unknown>) => {
+    setForm({
+      companyName: (p.companyName as string) || "",
+      tagline: (p.tagline as string) || "",
+      country: (p.country as string) || "",
+      city: (p.city as string) || "",
+      currency: (p.currency as string) || "USD",
+      foundedYear: p.foundedYear?.toString() || "",
+      industry: (p.industry as string) || "",
+      sectors: parseJsonArray(p.sectors as string | string[] | null),
+      businessModel: (p.businessModel as string) || "",
+      revenueModel: (p.revenueModel as string) || "",
+      customerType: (p.customerType as string) || "",
+      targetMarkets: parseJsonArray(p.targetMarkets as string | string[] | null),
+      monthlyRevenue: p.monthlyRevenue?.toString() || "",
+      annualRevenue: p.annualRevenue?.toString() || "",
+      revenueGrowthRate: p.revenueGrowthRate?.toString() || "",
+      userCount: p.userCount?.toString() || "",
+      teamSize: p.teamSize?.toString() || "",
+      stage: (p.stage as string) || "",
+      fundingTarget: p.fundingTarget?.toString() || "",
+      dealStructure: (p.dealStructure as string) || "",
+      preMoneyValuation: p.preMoneyValuation?.toString() || "",
+      previousRaised: p.previousRaised?.toString() || "",
+      hasLeadInvestor: (p.hasLeadInvestor as boolean) ?? false,
+      leadNeeded: (p.leadNeeded as boolean) ?? true,
+      boardSeatOk: (p.boardSeatOk as boolean) ?? true,
+      founderCount: p.founderCount?.toString() || "",
+      hasRepeatFounder: (p.hasRepeatFounder as boolean) ?? false,
+      hasTechnicalFounder: (p.hasTechnicalFounder as boolean) ?? false,
+      founderDiversity: parseJsonArray(p.founderDiversity as string | string[] | null),
+      investorTypePrefs: parseJsonArray(p.investorTypePrefs as string | string[] | null),
+    });
+    const c = COUNTRIES.find((c) => c.code === (p.country as string));
+    if (c) setCountrySearch(c.name);
+    else setCountrySearch("");
+  }, []);
+
+  /* ---- Load existing profiles ---- */
+  const loadProfiles = useCallback(async () => {
+    try {
+      const res = await fetch("/api/startup-profile");
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.profiles) {
+        setProfiles(
+          data.profiles.map((p: Record<string, unknown>) => ({
+            id: p.id as string,
+            companyName: (p.companyName as string) || "Untitled",
+            industry: (p.industry as string) || "",
+            stage: (p.stage as string) || "",
+            updatedAt: (p.updatedAt as string) || "",
+          })),
+        );
+        return data.profiles;
+      }
+    } catch {
+      // ignore
+    }
+    return [];
+  }, []);
+
   useEffect(() => {
     (async () => {
       try {
         const res = await fetch("/api/startup-profile");
-        if (res.status === 403) {
-          router.push("/dashboard");
-          return;
-        }
         const data = await res.json();
-        if (data.profile) {
-          const p = data.profile;
-          setForm({
-            companyName: p.companyName || "",
-            tagline: p.tagline || "",
-            country: p.country || "",
-            city: p.city || "",
-            currency: p.currency || "USD",
-            foundedYear: p.foundedYear?.toString() || "",
-            industry: p.industry || "",
-            sectors: parseJsonArray(p.sectors),
-            businessModel: p.businessModel || "",
-            revenueModel: p.revenueModel || "",
-            customerType: p.customerType || "",
-            targetMarkets: parseJsonArray(p.targetMarkets),
-            monthlyRevenue: p.monthlyRevenue?.toString() || "",
-            annualRevenue: p.annualRevenue?.toString() || "",
-            revenueGrowthRate: p.revenueGrowthRate?.toString() || "",
-            userCount: p.userCount?.toString() || "",
-            teamSize: p.teamSize?.toString() || "",
-            stage: p.stage || "",
-            fundingTarget: p.fundingTarget?.toString() || "",
-            dealStructure: p.dealStructure || "",
-            preMoneyValuation: p.preMoneyValuation?.toString() || "",
-            previousRaised: p.previousRaised?.toString() || "",
-            hasLeadInvestor: p.hasLeadInvestor ?? false,
-            leadNeeded: p.leadNeeded ?? true,
-            boardSeatOk: p.boardSeatOk ?? true,
-            founderCount: p.founderCount?.toString() || "",
-            hasRepeatFounder: p.hasRepeatFounder ?? false,
-            hasTechnicalFounder: p.hasTechnicalFounder ?? false,
-            founderDiversity: parseJsonArray(p.founderDiversity),
-            investorTypePrefs: parseJsonArray(p.investorTypePrefs),
-          });
-          // Set country search display
-          const c = COUNTRIES.find((c) => c.code === p.country);
-          if (c) setCountrySearch(c.name);
+        if (data.plan) setPlan(data.plan);
+        if (data.profiles && data.profiles.length > 0) {
+          setProfiles(
+            data.profiles.map((p: Record<string, unknown>) => ({
+              id: p.id as string,
+              companyName: (p.companyName as string) || "Untitled",
+              industry: (p.industry as string) || "",
+              stage: (p.stage as string) || "",
+              updatedAt: (p.updatedAt as string) || "",
+            })),
+          );
+          // Auto-select and populate the first (most recent) profile
+          const first = data.profiles[0];
+          setEditingProfileId(first.id as string);
+          populateForm(first);
         }
       } catch {
         // ignore fetch errors on load
@@ -444,7 +500,7 @@ export default function StartupProfilePage() {
         setLoading(false);
       }
     })();
-  }, [router]);
+  }, [populateForm]);
 
   /* ---- Save to API ---- */
   const saveProfile = useCallback(async () => {
@@ -452,7 +508,7 @@ export default function StartupProfilePage() {
     setError(null);
     setSaved(false);
     try {
-      const body = {
+      const body: Record<string, unknown> = {
         ...form,
         sectors: JSON.stringify(form.sectors),
         targetMarkets: JSON.stringify(form.targetMarkets),
@@ -469,6 +525,10 @@ export default function StartupProfilePage() {
         previousRaised: form.previousRaised ? Number(form.previousRaised) : null,
         founderCount: form.founderCount ? Number(form.founderCount) : null,
       };
+      // Include id if editing an existing profile
+      if (editingProfileId) {
+        body.id = editingProfileId;
+      }
       const res = await fetch("/api/startup-profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -479,6 +539,12 @@ export default function StartupProfilePage() {
         setError(data.error || "Failed to save");
         return false;
       }
+      // If we just created a new profile, set its id for subsequent saves
+      if (!editingProfileId && data.profile?.id) {
+        setEditingProfileId(data.profile.id);
+      }
+      // Refresh profiles list
+      await loadProfiles();
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
       return true;
@@ -488,7 +554,68 @@ export default function StartupProfilePage() {
     } finally {
       setSaving(false);
     }
-  }, [form]);
+  }, [form, editingProfileId, loadProfiles]);
+
+  /* ---- Delete profile ---- */
+  const deleteProfile = useCallback(async (profileId: string) => {
+    setDeleting(profileId);
+    setError(null);
+    try {
+      const res = await fetch(`/api/startup-profile?id=${profileId}`, { method: "DELETE" });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Failed to delete");
+        return;
+      }
+      // Refresh list
+      const freshProfiles = await loadProfiles();
+      // If we deleted the currently edited profile, select another or clear form
+      if (editingProfileId === profileId) {
+        if (freshProfiles && freshProfiles.length > 0) {
+          setEditingProfileId(freshProfiles[0].id as string);
+          populateForm(freshProfiles[0]);
+        } else {
+          setEditingProfileId(null);
+          setForm(EMPTY_FORM);
+          setCountrySearch("");
+        }
+        setStep(0);
+      }
+    } catch {
+      setError("Network error");
+    } finally {
+      setDeleting(null);
+    }
+  }, [editingProfileId, loadProfiles, populateForm]);
+
+  /* ---- Start new profile ---- */
+  const startNewProfile = useCallback(() => {
+    setEditingProfileId(null);
+    setForm(EMPTY_FORM);
+    setCountrySearch("");
+    setStep(0);
+    setError(null);
+    setSaved(false);
+  }, []);
+
+  /* ---- Select existing profile to edit ---- */
+  const selectProfile = useCallback(async (profileId: string) => {
+    setError(null);
+    setSaved(false);
+    setStep(0);
+    try {
+      const res = await fetch("/api/startup-profile");
+      if (!res.ok) return;
+      const data = await res.json();
+      const p = data.profiles?.find((prof: { id: string }) => prof.id === profileId);
+      if (p) {
+        setEditingProfileId(p.id);
+        populateForm(p);
+      }
+    } catch {
+      // ignore
+    }
+  }, [populateForm]);
 
   /* ---- Field updater ---- */
   const set = useCallback(<K extends keyof ProfileForm>(key: K, value: ProfileForm[K]) => {
@@ -930,11 +1057,90 @@ export default function StartupProfilePage() {
       <div className="mx-auto max-w-2xl px-4 py-8">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-xl font-bold text-white">Startup Profile</h1>
-          <p className="mt-1 text-sm text-white/40">
-            Complete your profile to get matched with relevant investors.
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl font-bold text-white">Startup Profiles</h1>
+              <p className="mt-1 text-sm text-white/40">
+                {profiles.length === 0
+                  ? "Create your first profile to get matched with relevant investors."
+                  : limits.maxStartupProfiles === Infinity
+                    ? `${profiles.length} profile${profiles.length === 1 ? "" : "s"}`
+                    : `${profiles.length} of ${limits.maxStartupProfiles} profile${limits.maxStartupProfiles === 1 ? "" : "s"} used`}
+              </p>
+            </div>
+            {canAddMore && profiles.length > 0 && (
+              <button
+                type="button"
+                onClick={startNewProfile}
+                className="flex items-center gap-1.5 rounded-lg bg-[#4361EE] px-3 py-2 text-xs font-medium text-white transition hover:bg-[#3651DE]"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                New Profile
+              </button>
+            )}
+          </div>
         </div>
+
+        {/* Profile selector tabs */}
+        {profiles.length > 1 && (
+          <div className="mb-4 flex flex-wrap gap-2">
+            {profiles.map((p) => (
+              <div key={p.id} className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => selectProfile(p.id)}
+                  className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition ${
+                    editingProfileId === p.id
+                      ? "border-[#4361EE] bg-[#4361EE]/20 text-[#4361EE]"
+                      : "border-white/10 bg-white/5 text-white/50 hover:border-white/20 hover:text-white/70"
+                  }`}
+                >
+                  {p.companyName}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => deleteProfile(p.id)}
+                  disabled={deleting === p.id}
+                  className="p-1 rounded text-white/20 hover:text-red-400 transition-colors disabled:opacity-50"
+                  title="Delete profile"
+                >
+                  {deleting === p.id ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <Trash2 className="w-3 h-3" />
+                  )}
+                </button>
+              </div>
+            ))}
+            {!editingProfileId && (
+              <span className="rounded-lg border border-[#4361EE] bg-[#4361EE]/20 px-3 py-1.5 text-xs font-medium text-[#4361EE]">
+                New Profile
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Single profile with delete option */}
+        {profiles.length === 1 && editingProfileId && (
+          <div className="mb-4 flex items-center justify-between rounded-lg border border-white/[0.06] bg-white/[0.02] px-3 py-2">
+            <span className="text-xs text-white/50">
+              Editing: <span className="text-white/70 font-medium">{profiles[0].companyName}</span>
+            </span>
+            <button
+              type="button"
+              onClick={() => deleteProfile(profiles[0].id)}
+              disabled={deleting === profiles[0].id}
+              className="flex items-center gap-1 text-xs text-white/30 hover:text-red-400 transition-colors disabled:opacity-50"
+            >
+              {deleting === profiles[0].id ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <Trash2 className="w-3 h-3" />
+              )}
+              Delete
+            </button>
+          </div>
+        )}
 
         {/* Progress bar */}
         <div className="mb-6">

@@ -58,7 +58,7 @@ export default async function AdminMatchingAnalyticsPage() {
       },
     }),
     prisma.user.count({
-      where: { startupProfile: null, plan: { not: "starter" } },
+      where: { startupProfiles: { none: {} }, plan: { not: "starter" } },
     }),
     prisma.investorProfile.count({
       where: {

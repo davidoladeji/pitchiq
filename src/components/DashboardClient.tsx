@@ -47,6 +47,7 @@ export default function DashboardClient({
   upgradedPlan,
   activities = [],
   hasProfile = false,
+  profileCount = 0,
 }: {
   decks: DeckSummary[];
   userName: string;
@@ -54,6 +55,7 @@ export default function DashboardClient({
   upgradedPlan?: string;
   activities?: ActivityItem[];
   hasProfile?: boolean;
+  profileCount?: number;
 }) {
   const [showUpgradeSuccess, setShowUpgradeSuccess] = useState(!!upgradedPlan);
   const [showPlanModal, setShowPlanModal] = useState(false);
@@ -200,8 +202,10 @@ export default function DashboardClient({
             </div>
           )}
 
-          {/* Startup profile prompt — shown when user hasn't set up their profile */}
-          {!hasProfile && <DashboardProfilePrompt />}
+          {/* Startup profile prompt — shown when user can add profiles */}
+          {(!hasProfile || (limits.maxStartupProfiles > 1 && profileCount < limits.maxStartupProfiles) || limits.maxStartupProfiles === Infinity) && (
+            <DashboardProfilePrompt profileCount={profileCount} maxProfiles={limits.maxStartupProfiles} />
+          )}
 
           {/* Overview stats */}
           <DashboardOverview decks={decks} totalViews={totalViews} plan={effectivePlan} />
@@ -220,6 +224,7 @@ export default function DashboardClient({
             plan={effectivePlan}
             decks={decks.map((d) => ({ shareId: d.shareId, title: d.title, id: d.id }))}
             hasProfile={hasProfile}
+            profileCount={profileCount}
           />
 
           {/* Investor CRM (Growth+ only) */}

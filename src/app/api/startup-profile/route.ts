@@ -7,7 +7,8 @@ import { getPlanLimits } from "@/lib/plan-limits";
 export const dynamic = "force-dynamic";
 
 /**
- * GET /api/startup-profile — return the authenticated user's startup profile
+ * GET /api/startup-profile — return all startup profiles for the authenticated user.
+ * Backward-compat: also returns `profile` (the most recently updated one).
  */
 export async function GET() {
   try {
@@ -17,14 +18,19 @@ export async function GET() {
       return NextResponse.json({ error: "Sign in required" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { plan: true } });
-    const limits = getPlanLimits(user?.plan ?? "starter");
-    if (!limits.investorCRM) {
-      return NextResponse.json({ error: "Upgrade to Growth to access Startup Profile" }, { status: 403 });
-    }
+    const [profiles, user] = await Promise.all([
+      prisma.startupProfile.findMany({
+        where: { userId },
+        orderBy: { updatedAt: "desc" },
+      }),
+      prisma.user.findUnique({ where: { id: userId }, select: { plan: true } }),
+    ]);
 
-    const profile = await prisma.startupProfile.findUnique({ where: { userId } });
-    return NextResponse.json({ profile });
+    return NextResponse.json({
+      profile: profiles[0] || null,
+      profiles,
+      plan: user?.plan ?? "starter",
+    });
   } catch (error) {
     console.error("[startup-profile] GET error:", error);
     return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
@@ -32,7 +38,9 @@ export async function GET() {
 }
 
 /**
- * POST /api/startup-profile — create or update the startup profile
+ * POST /api/startup-profile — create or update a startup profile.
+ * If body contains `id`, updates that specific profile (verifies ownership).
+ * If no `id`, creates a new profile (subject to plan limits).
  */
 export async function POST(req: NextRequest) {
   try {
@@ -44,9 +52,6 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.findUnique({ where: { id: userId }, select: { plan: true } });
     const limits = getPlanLimits(user?.plan ?? "starter");
-    if (!limits.investorCRM) {
-      return NextResponse.json({ error: "Upgrade to Growth to access Startup Profile" }, { status: 403 });
-    }
 
     const body = await req.json();
 
@@ -97,15 +102,64 @@ export async function POST(req: NextRequest) {
       boardSeatOk: body.boardSeatOk ?? true,
     };
 
-    const profile = await prisma.startupProfile.upsert({
-      where: { userId },
-      create: { userId, ...data },
-      update: data,
+    // Update existing profile
+    if (body.id) {
+      const existing = await prisma.startupProfile.findUnique({ where: { id: body.id } });
+      if (!existing || existing.userId !== userId) {
+        return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+      }
+      const profile = await prisma.startupProfile.update({
+        where: { id: body.id },
+        data,
+      });
+      return NextResponse.json({ profile }, { status: 200 });
+    }
+
+    // Create new profile — check plan limit
+    const currentCount = await prisma.startupProfile.count({ where: { userId } });
+    if (currentCount >= limits.maxStartupProfiles) {
+      return NextResponse.json(
+        { error: `You have reached your plan limit of ${limits.maxStartupProfiles} startup profile${limits.maxStartupProfiles === 1 ? "" : "s"}. Upgrade to add more.` },
+        { status: 403 },
+      );
+    }
+
+    const profile = await prisma.startupProfile.create({
+      data: { userId, ...data },
     });
 
     return NextResponse.json({ profile }, { status: 200 });
   } catch (error) {
     console.error("[startup-profile] POST error:", error);
     return NextResponse.json({ error: "Failed to save profile" }, { status: 500 });
+  }
+}
+
+/**
+ * DELETE /api/startup-profile?id=xxx — delete a specific profile.
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    const userId = (session?.user as { id?: string })?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Sign in required" }, { status: 401 });
+    }
+
+    const profileId = req.nextUrl.searchParams.get("id");
+    if (!profileId) {
+      return NextResponse.json({ error: "Profile id is required" }, { status: 400 });
+    }
+
+    const existing = await prisma.startupProfile.findUnique({ where: { id: profileId } });
+    if (!existing || existing.userId !== userId) {
+      return NextResponse.json({ error: "Profile not found" }, { status: 404 });
+    }
+
+    await prisma.startupProfile.delete({ where: { id: profileId } });
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    console.error("[startup-profile] DELETE error:", error);
+    return NextResponse.json({ error: "Failed to delete profile" }, { status: 500 });
   }
 }

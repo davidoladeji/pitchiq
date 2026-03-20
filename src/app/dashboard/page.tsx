@@ -58,13 +58,13 @@ export default async function DashboardPage({
         },
       },
     }),
-    prisma.startupProfile.findUnique({
+    prisma.startupProfile.count({
       where: { userId: session.user.id },
-      select: { id: true },
     }),
   ]);
 
-  const hasProfile = !!startupProfile;
+  const profileCount = startupProfile;
+  const hasProfile = profileCount > 0;
 
   const serialized = decks.map((d) => ({
     id: d.id,
@@ -124,6 +124,7 @@ export default async function DashboardPage({
       upgradedPlan={searchParams.upgraded}
       activities={activities}
       hasProfile={hasProfile}
+      profileCount={profileCount}
     />
   );
 }

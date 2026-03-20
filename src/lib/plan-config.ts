@@ -115,6 +115,7 @@ function rowToConfig(row: Record<string, unknown>): PlanConfigFull {
     apiRateLimit: row.apiRateLimit as number,
     maxBatchSize: row.maxBatchSize as number,
     pitchPractice: row.pitchPractice as boolean,
+    maxStartupProfiles: toInf((row.maxStartupProfiles as number) ?? 1),
   };
 }
 
