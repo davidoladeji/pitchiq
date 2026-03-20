@@ -74,11 +74,15 @@ export const authOptions: NextAuthOptions = {
           }
         }
       }
-      // Record last-seen timestamp for audit trail
+      // Record last-seen timestamp for audit trail (non-blocking – must not break login)
       if (user.email) {
-        const target = await prisma.user.findUnique({ where: { email: user.email }, select: { id: true } });
-        if (target) {
-          await prisma.user.update({ where: { id: target.id }, data: { lastSeenAt: new Date() } });
+        try {
+          const target = await prisma.user.findUnique({ where: { email: user.email }, select: { id: true } });
+          if (target) {
+            await prisma.user.update({ where: { id: target.id }, data: { lastSeenAt: new Date() } });
+          }
+        } catch (e) {
+          console.warn("Failed to update lastSeenAt:", e);
         }
       }
 

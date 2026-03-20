@@ -32,8 +32,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    // Record last-seen timestamp for audit trail
-    await prisma.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } });
+    // Record last-seen timestamp for audit trail (non-blocking – must not break login)
+    try {
+      await prisma.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } });
+    } catch (e) {
+      console.warn("Failed to update lastSeenAt:", e);
+    }
 
     const token = sessionCookieValue({ userId: user.id, role: user.role as Role });
     const res = NextResponse.json({ ok: true });
