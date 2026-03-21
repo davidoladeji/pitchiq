@@ -12,13 +12,38 @@ import { SEED_INVESTORS } from "@/lib/investor-seed-data";
 
 export const dynamic = "force-dynamic";
 
-/** Auto-seed investors if the table is empty. */
+/** Auto-seed investors if the table is empty, and fix corrupted cheque values. */
 async function ensureSeeded() {
   const count = await prisma.investorProfile.count();
-  if (count > 0) return;
 
-  for (const investor of SEED_INVESTORS) {
-    await prisma.investorProfile.create({ data: investor });
+  if (count === 0) {
+    for (const investor of SEED_INVESTORS) {
+      await prisma.investorProfile.create({ data: investor });
+    }
+    return;
+  }
+
+  // Back-fill: fix corrupted cheque values (null, zero, or denormalized floats < $1)
+  try {
+    const seedRows = await prisma.investorProfile.findMany({
+      where: { source: "seed" },
+      select: { id: true, name: true, chequeMin: true, chequeMax: true },
+    });
+    const seedMap = new Map(SEED_INVESTORS.map((s) => [s.name, s]));
+    for (const row of seedRows) {
+      const seed = seedMap.get(row.name);
+      if (!seed || (seed.chequeMin == null && seed.chequeMax == null)) continue;
+      const minBad = row.chequeMin == null || row.chequeMin < 1;
+      const maxBad = row.chequeMax == null || row.chequeMax < 1;
+      if (minBad || maxBad) {
+        await prisma.investorProfile.update({
+          where: { id: row.id },
+          data: { chequeMin: seed.chequeMin ?? null, chequeMax: seed.chequeMax ?? null },
+        });
+      }
+    }
+  } catch (e) {
+    console.error("Failed to back-fill cheque values:", e);
   }
 }
 

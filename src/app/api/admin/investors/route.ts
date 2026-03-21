@@ -23,29 +23,32 @@ async function ensureSeeded() {
     return;
   }
 
-  // Back-fill: update any seed investors whose chequeMin/chequeMax are still null
-  const nullCheque = await prisma.investorProfile.findMany({
-    where: {
-      source: "seed",
-      OR: [{ chequeMin: null }, { chequeMax: null }],
-    },
-    select: { id: true, name: true },
+  // Back-fill: update any seed investors whose chequeMin/chequeMax are null, zero,
+  // or corrupted (e.g. denormalized floats like 9.88e-320)
+  const badCheque = await prisma.investorProfile.findMany({
+    where: { source: "seed" },
+    select: { id: true, name: true, chequeMin: true, chequeMax: true },
   });
-
-  if (nullCheque.length === 0) return;
 
   const seedMap = new Map(SEED_INVESTORS.map((s) => [s.name, s]));
 
-  for (const row of nullCheque) {
+  for (const row of badCheque) {
     const seed = seedMap.get(row.name);
     if (!seed || (seed.chequeMin == null && seed.chequeMax == null)) continue;
-    await prisma.investorProfile.update({
-      where: { id: row.id },
-      data: {
-        chequeMin: seed.chequeMin ?? null,
-        chequeMax: seed.chequeMax ?? null,
-      },
-    });
+
+    // Fix if null, zero, or suspiciously tiny (< $1 means corrupted)
+    const minBad = row.chequeMin == null || row.chequeMin < 1;
+    const maxBad = row.chequeMax == null || row.chequeMax < 1;
+
+    if (minBad || maxBad) {
+      await prisma.investorProfile.update({
+        where: { id: row.id },
+        data: {
+          chequeMin: seed.chequeMin ?? null,
+          chequeMax: seed.chequeMax ?? null,
+        },
+      });
+    }
   }
 }
 
