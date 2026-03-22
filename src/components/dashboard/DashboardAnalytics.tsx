@@ -33,9 +33,9 @@ function CustomTooltip({
 }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-white rounded-xl border border-navy-200 px-3 py-2 shadow-lg">
-      <p className="text-xs text-navy-500 mb-0.5">{label ? formatDate(label) : ""}</p>
-      <p className="text-sm font-bold text-navy tabular-nums">
+    <div className="bg-white dark:bg-navy-800 rounded-xl border border-navy-200 dark:border-white/10 px-3 py-2 shadow-lg">
+      <p className="text-xs text-navy-500 dark:text-navy-300 mb-0.5">{label ? formatDate(label) : ""}</p>
+      <p className="text-sm font-bold text-navy dark:text-white tabular-nums">
         {payload[0].value} view{payload[0].value !== 1 ? "s" : ""}
       </p>
     </div>
@@ -62,10 +62,10 @@ export default function DashboardAnalytics({
     : dailyViews;
 
   return (
-    <section aria-labelledby="dashboard-analytics-heading" className="bg-white rounded-2xl border border-navy-200 p-4 sm:p-6 relative overflow-hidden">
+    <section aria-labelledby="dashboard-analytics-heading" className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-6 relative overflow-hidden">
       <div className="flex items-center justify-between mb-4">
-        <h3 id="dashboard-analytics-heading" className="text-sm font-bold text-navy font-display">View Trends</h3>
-        <span className="text-xs text-navy-500">Last 30 days</span>
+        <h3 id="dashboard-analytics-heading" className="text-sm font-bold text-navy dark:text-white font-display">View Trends</h3>
+        <span className="text-xs text-navy-500 dark:text-navy-300">Last 30 days</span>
       </div>
 
       {loading ? (
@@ -117,15 +117,15 @@ export default function DashboardAnalytics({
 
       {/* Gated overlay */}
       {isGated && !loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-[2px] rounded-2xl">
+        <div className="absolute inset-0 flex items-center justify-center bg-white/60 dark:bg-navy-800/60 backdrop-blur-[2px] rounded-2xl">
           <div className="text-center px-4">
-            <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center mx-auto mb-3">
+            <div className="w-10 h-10 rounded-xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mx-auto mb-3">
               <svg className="w-5 h-5 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
             </div>
-            <p className="text-sm font-bold text-navy mb-1">Full Analytics</p>
-            <p className="text-xs text-navy-500 mb-3 max-w-[200px] mx-auto">
+            <p className="text-sm font-bold text-navy dark:text-white mb-1">Full Analytics</p>
+            <p className="text-xs text-navy-500 dark:text-navy-300 mb-3 max-w-[200px] mx-auto">
               Upgrade to Growth for detailed view trends and engagement data.
             </p>
             <Link

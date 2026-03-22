@@ -110,7 +110,7 @@ export default function NotificationBell() {
           setOpen(!open);
           if (!open) fetchNotifications();
         }}
-        className="relative p-2 rounded-lg text-navy-400 hover:text-navy-700 hover:bg-navy-100 transition-colors"
+        className="relative p-2 rounded-lg text-navy-400 hover:text-navy-700 dark:hover:text-navy-100 hover:bg-navy-100 dark:hover:bg-white/10 transition-colors"
         aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
       >
         <svg
@@ -135,10 +135,10 @@ export default function NotificationBell() {
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 bg-white border border-navy-200 rounded-xl shadow-xl overflow-hidden z-50">
+        <div className="absolute right-0 top-full mt-2 w-80 max-h-96 bg-white dark:bg-navy-800 border border-navy-200 dark:border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-navy-100">
-            <span className="text-sm font-semibold text-navy">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-navy-100 dark:border-white/5">
+            <span className="text-sm font-semibold text-navy dark:text-white">
               Notifications
             </span>
             {unreadCount > 0 && (
@@ -152,7 +152,7 @@ export default function NotificationBell() {
           </div>
 
           {/* List */}
-          <div className="overflow-y-auto max-h-[320px] divide-y divide-navy-100">
+          <div className="overflow-y-auto max-h-[320px] divide-y divide-navy-100 dark:divide-white/5">
             {loading && notifications.length === 0 ? (
               <div className="p-6 text-center text-navy-400 text-sm">
                 Loading...
@@ -168,7 +168,7 @@ export default function NotificationBell() {
                   onClick={() => {
                     if (!n.read) markRead(n.id);
                   }}
-                  className={`w-full text-left px-4 py-3 hover:bg-navy-50 transition-colors ${
+                  className={`w-full text-left px-4 py-3 hover:bg-navy-50 dark:hover:bg-white/5 transition-colors ${
                     !n.read ? "bg-electric/5" : ""
                   }`}
                 >
@@ -180,7 +180,7 @@ export default function NotificationBell() {
                       <div className="flex items-center gap-2">
                         <span
                           className={`text-sm font-medium truncate ${
-                            n.read ? "text-navy-400" : "text-navy"
+                            n.read ? "text-navy-400" : "text-navy dark:text-white"
                           }`}
                         >
                           {n.title}
@@ -189,10 +189,10 @@ export default function NotificationBell() {
                           <span className="w-2 h-2 rounded-full bg-electric shrink-0" />
                         )}
                       </div>
-                      <p className="text-xs text-navy-500 mt-0.5 line-clamp-2">
+                      <p className="text-xs text-navy-500 dark:text-navy-300 mt-0.5 line-clamp-2">
                         {n.message}
                       </p>
-                      <span className="text-[10px] text-navy-300 mt-1 block">
+                      <span className="text-[10px] text-navy-300 dark:text-navy-500 mt-1 block">
                         {timeAgo(n.createdAt)}
                       </span>
                     </div>

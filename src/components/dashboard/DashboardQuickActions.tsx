@@ -130,22 +130,22 @@ export default function DashboardQuickActions({ plan = "starter" }: { plan?: str
 
   return (
     <section aria-label="Quick actions">
-      <h2 className="text-lg font-bold text-navy font-display mb-4">Quick Actions</h2>
+      <h2 className="text-lg font-bold text-navy dark:text-white font-display mb-4">Quick Actions</h2>
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {actions.map((action) => (
           <Link
             key={action.label}
             href={action.href}
             aria-label={`${action.label} — ${action.description}`}
-            className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            className="group bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
             <div className={`w-10 h-10 rounded-xl ${action.bgColor} flex items-center justify-center mb-3 ${action.color} group-hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:group-hover:scale-100`}>
               {action.icon}
             </div>
-            <h3 className="text-sm font-bold text-navy group-hover:text-electric transition-colors">
+            <h3 className="text-sm font-bold text-navy dark:text-white group-hover:text-electric transition-colors">
               {action.label}
             </h3>
-            <p className="text-xs text-navy-500 mt-0.5 line-clamp-2">
+            <p className="text-xs text-navy-500 dark:text-navy-300 mt-0.5 line-clamp-2">
               {action.description}
             </p>
           </Link>

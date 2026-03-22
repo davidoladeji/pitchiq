@@ -81,15 +81,15 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
   if (decks.length === 0) {
     return (
       <section aria-label="Your decks">
-        <h2 className="text-lg font-bold text-navy font-display mb-4">Your Decks</h2>
-        <div className="bg-white rounded-2xl border border-navy-200 p-10 sm:p-12 text-center">
+        <h2 className="text-lg font-bold text-navy dark:text-white font-display mb-4">Your Decks</h2>
+        <div className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-10 sm:p-12 text-center">
           <div className="w-14 h-14 rounded-2xl bg-electric/5 border border-electric/10 flex items-center justify-center mx-auto mb-4">
             <svg className="w-7 h-7 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </div>
-          <h3 className="text-base font-bold text-navy mb-2">Create your first deck</h3>
-          <p className="text-sm text-navy-500 mb-5 max-w-sm mx-auto">
+          <h3 className="text-base font-bold text-navy dark:text-white mb-2">Create your first deck</h3>
+          <p className="text-sm text-navy-500 dark:text-navy-300 mb-5 max-w-sm mx-auto">
             Describe your startup and get an AI-generated pitch deck with a PIQ Score in 60 seconds.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -102,7 +102,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
             </Link>
             <Link
               href="/ideas"
-              className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy-500 text-sm font-medium hover:border-electric/30 hover:text-electric transition-all"
+              className="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 dark:border-white/10 text-navy-500 dark:text-navy-300 text-sm font-medium hover:border-electric/30 hover:text-electric transition-all"
             >
               Explore ideas first
             </Link>
@@ -115,8 +115,8 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
   return (
     <section aria-label="Your decks">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-bold text-navy font-display">Your Decks</h2>
-        <span className="text-xs text-navy-500">{decks.length} deck{decks.length !== 1 ? "s" : ""}</span>
+        <h2 className="text-lg font-bold text-navy dark:text-white font-display">Your Decks</h2>
+        <span className="text-xs text-navy-500 dark:text-navy-300">{decks.length} deck{decks.length !== 1 ? "s" : ""}</span>
       </div>
       <div className="grid gap-3">
         {decks.map((deck) => {
@@ -124,7 +124,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
           return (
             <div
               key={deck.id}
-              className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5"
+              className="group bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-5 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5"
             >
               <div className="flex items-center gap-4">
                 {/* Score ring */}
@@ -134,7 +134,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/deck/${deck.shareId}`}
-                    className="font-bold text-navy text-sm sm:text-base hover:text-electric transition-colors truncate block"
+                    className="font-bold text-navy dark:text-white text-sm sm:text-base hover:text-electric transition-colors truncate block"
                   >
                     {deck.title}
                   </Link>
@@ -165,7 +165,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
 
                 {/* View count */}
                 <div className="text-center shrink-0 hidden sm:block">
-                  <div className="text-sm font-bold text-navy tabular-nums">{deck.viewCount}</div>
+                  <div className="text-sm font-bold text-navy dark:text-white tabular-nums">{deck.viewCount}</div>
                   <div className="text-[10px] text-navy-500 uppercase tracking-wider">Views</div>
                 </div>
 
@@ -178,7 +178,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
                   )}
                   <Link
                     href={`/editor/${deck.shareId}`}
-                    className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-lg border border-navy-200 text-xs font-medium text-navy-500 hover:border-electric/30 hover:text-electric transition-all"
+                    className="hidden sm:inline-flex items-center px-3 py-1.5 rounded-lg border border-navy-200 dark:border-white/10 text-xs font-medium text-navy-500 dark:text-navy-300 hover:border-electric/30 hover:text-electric transition-all"
                   >
                     Edit
                   </Link>
@@ -192,7 +192,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
               </div>
 
               {/* Bottom row: date + mobile views */}
-              <div className="flex items-center justify-between mt-3 pt-3 border-t border-navy-100">
+              <div className="flex items-center justify-between mt-3 pt-3 border-t border-navy-100 dark:border-white/5">
                 <span className="text-[11px] text-navy-500">
                   {new Date(deck.createdAt).toLocaleDateString("en-US", {
                     month: "short",

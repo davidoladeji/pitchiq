@@ -100,7 +100,7 @@ export default function DashboardClient({
   }, []);
 
   return (
-    <div className="min-h-screen bg-navy-50">
+    <div className="min-h-screen bg-navy-50 dark:bg-navy-950">
       <AppNav />
 
       <main
@@ -115,7 +115,7 @@ export default function DashboardClient({
             <div>
               <h1
                 id="dashboard-page-heading"
-                className="text-xl sm:text-2xl md:text-3xl font-bold text-navy font-display tracking-tight"
+                className="text-xl sm:text-2xl md:text-3xl font-bold text-navy dark:text-white font-display tracking-tight"
               >
                 Hey {userName}
               </h1>

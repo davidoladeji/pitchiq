@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useCallback, useEffect } from "react";
 import AuthButton from "@/components/AuthButton";
 import NotificationBell from "@/components/dashboard/NotificationBell";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const SCROLL_THRESHOLD_PX = 20;
 
@@ -52,8 +53,8 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
       ? "bg-navy/95 border-white/10 shadow-xl shadow-black/30 backdrop-blur-xl"
       : "bg-navy/80 border-white/[0.08] backdrop-blur-xl"
     : scrolled
-      ? "glass border-navy-200/60 shadow-lg shadow-black/5"
-      : "bg-white/60 border-navy-200/40 backdrop-blur-xl";
+      ? "glass border-navy-200/60 shadow-lg shadow-black/5 dark:bg-navy-800/90 dark:border-white/10"
+      : "bg-white/60 border-navy-200/40 backdrop-blur-xl dark:bg-navy-900/60 dark:border-white/[0.08]";
 
   const textColor = isLanding
     ? "text-white/70 hover:text-white"
@@ -179,6 +180,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
         >
           {logo}
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <NotificationBell />
             <AuthButton />
           </div>

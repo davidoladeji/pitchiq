@@ -87,15 +87,15 @@ function txBadge(type: string): { label: string; cls: string } {
 
 function Skeleton() {
   return (
-    <div className="bg-white border border-navy-200 rounded-2xl p-4 animate-pulse">
+    <div className="bg-white dark:bg-navy-800 border border-navy-200 dark:border-white/10 rounded-2xl p-4 animate-pulse">
       <div className="flex items-center gap-2 mb-3">
-        <div className="w-5 h-5 rounded bg-navy-100" />
-        <div className="h-4 w-32 rounded bg-navy-100" />
+        <div className="w-5 h-5 rounded bg-navy-100 dark:bg-navy-900" />
+        <div className="h-4 w-32 rounded bg-navy-100 dark:bg-navy-900" />
       </div>
       <div className="space-y-3">
-        <div className="h-8 w-20 rounded bg-navy-100" />
-        <div className="h-3 w-full rounded bg-navy-50" />
-        <div className="h-3 w-3/4 rounded bg-navy-50" />
+        <div className="h-8 w-20 rounded bg-navy-100 dark:bg-navy-900" />
+        <div className="h-3 w-full rounded bg-navy-50 dark:bg-navy-950" />
+        <div className="h-3 w-3/4 rounded bg-navy-50 dark:bg-navy-950" />
       </div>
     </div>
   );
@@ -138,8 +138,8 @@ export default function PaygStatus() {
   const recentThree = recentCredits.slice(0, 3);
 
   return (
-    <div className="bg-white border border-navy-200 rounded-2xl p-4 shadow-sm">
-      <h3 className="text-sm font-bold text-navy mb-3 flex items-center gap-1.5">
+    <div className="bg-white dark:bg-navy-800 border border-navy-200 dark:border-white/10 rounded-2xl p-4 shadow-sm">
+      <h3 className="text-sm font-bold text-navy dark:text-white mb-3 flex items-center gap-1.5">
         <CreditCard className="w-4 h-4 text-electric" />
         Pay As You Go
       </h3>
@@ -163,7 +163,7 @@ export default function PaygStatus() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           <Coins className="w-4 h-4 text-amber-500" />
-          <span className="text-xl font-bold text-navy tabular-nums">
+          <span className="text-xl font-bold text-navy dark:text-white tabular-nums">
             {creditBalance}
           </span>
           <span className="text-xs text-navy-400">credits</span>
@@ -179,8 +179,8 @@ export default function PaygStatus() {
 
       {/* Upgrade prompt */}
       {showUpgrade && !activePass && (
-        <div className="rounded-xl bg-navy-50 border border-navy-200 p-3 mb-3">
-          <p className="text-xs text-navy-500 mb-2">
+        <div className="rounded-xl bg-navy-50 dark:bg-navy-950 border border-navy-200 dark:border-white/10 p-3 mb-3">
+          <p className="text-xs text-navy-500 dark:text-navy-300 mb-2">
             Unlock more features with a plan, pass, or credits.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -229,7 +229,7 @@ export default function PaygStatus() {
                     >
                       {badge.label}
                     </span>
-                    <span className="text-navy-600 truncate">
+                    <span className="text-navy-600 dark:text-navy-200 truncate">
                       {tx.description}
                     </span>
                   </div>
@@ -240,7 +240,7 @@ export default function PaygStatus() {
                       {tx.amount >= 0 ? "+" : ""}
                       {tx.amount}
                     </span>
-                    <span className="text-navy-300">
+                    <span className="text-navy-300 dark:text-navy-500">
                       {relativeTime(tx.createdAt)}
                     </span>
                   </div>

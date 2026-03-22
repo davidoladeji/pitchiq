@@ -62,7 +62,7 @@ function DurationSelector({
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             selected === d
               ? "bg-electric text-white shadow-lg shadow-electric/25"
-              : "bg-navy-100 text-navy-500 hover:bg-navy-200 hover:text-navy-700"
+              : "bg-navy-100 dark:bg-navy-900 text-navy-500 dark:text-navy-300 hover:bg-navy-200 dark:hover:bg-white/10 hover:text-navy-700 dark:hover:text-navy-100"
           }`}
         >
           {d} day{d > 1 ? "s" : ""}
@@ -88,17 +88,17 @@ function PassCard({
 
   return (
     <div
-      className={`bg-white border ${TIER_ACCENTS[tier.id] ?? "border-navy-200"} rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5`}
+      className={`bg-white dark:bg-navy-800 border ${TIER_ACCENTS[tier.id] ?? "border-navy-200 dark:border-white/10"} rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5`}
     >
       <div className="flex items-center gap-2 mb-1">
         <div className="text-electric">{TIER_ICONS[tier.id]}</div>
-        <h3 className="text-lg font-bold text-navy">{tier.name}</h3>
+        <h3 className="text-lg font-bold text-navy dark:text-white">{tier.name}</h3>
       </div>
-      <p className="text-xs text-navy-400 mb-4">{tier.description}</p>
+      <p className="text-xs text-navy-400 dark:text-navy-400 mb-4">{tier.description}</p>
 
       <ul className="space-y-2 mb-6 flex-1">
         {tier.features.map((f) => (
-          <li key={f} className="flex items-start gap-2 text-sm text-navy-600">
+          <li key={f} className="flex items-start gap-2 text-sm text-navy-600 dark:text-navy-200">
             <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
             <span>{f}</span>
           </li>
@@ -106,7 +106,7 @@ function PassCard({
       </ul>
 
       <div className="mb-4">
-        <div className="text-3xl font-bold text-navy tabular-nums">
+        <div className="text-3xl font-bold text-navy dark:text-white tabular-nums">
           ${formatCents(price)}
         </div>
         <p className="text-xs text-navy-400 mt-0.5">
@@ -145,10 +145,10 @@ function CreditPackCard({
 
   return (
     <div
-      className={`relative bg-white border rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 ${
+      className={`relative bg-white dark:bg-navy-800 border rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 ${
         pack.popular
           ? "ring-2 ring-electric border-electric/30"
-          : "border-navy-200"
+          : "border-navy-200 dark:border-white/10"
       }`}
     >
       {pack.popular && (
@@ -157,10 +157,10 @@ function CreditPackCard({
         </span>
       )}
 
-      <h3 className="text-lg font-bold text-navy mb-1">{pack.name}</h3>
+      <h3 className="text-lg font-bold text-navy dark:text-white mb-1">{pack.name}</h3>
 
       <div className="flex items-baseline gap-1 mb-1">
-        <span className="text-3xl font-bold text-navy tabular-nums">
+        <span className="text-3xl font-bold text-navy dark:text-white tabular-nums">
           {pack.credits}
         </span>
         <span className="text-sm text-navy-400">credits</span>
@@ -174,7 +174,7 @@ function CreditPackCard({
       {pack.bonus === 0 && <div className="mb-3" />}
 
       <div className="mb-1">
-        <span className="text-2xl font-bold text-navy tabular-nums">
+        <span className="text-2xl font-bold text-navy dark:text-white tabular-nums">
           ${formatCents(pack.priceCents)}
         </span>
       </div>
@@ -189,7 +189,7 @@ function CreditPackCard({
         className={`mt-auto w-full inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 ${
           pack.popular
             ? "bg-electric text-white hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0"
-            : "bg-navy-100 text-navy-700 hover:bg-navy-200 hover:-translate-y-0.5 active:translate-y-0"
+            : "bg-navy-100 dark:bg-navy-900 text-navy-700 dark:text-navy-100 hover:bg-navy-200 dark:hover:bg-white/10 hover:-translate-y-0.5 active:translate-y-0"
         }`}
       >
         {loading ? (
@@ -263,7 +263,7 @@ export default function PaygPricingSection() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold text-navy font-display">
+          <h2 className="text-3xl sm:text-4xl font-bold text-navy dark:text-white font-display">
             Pay As You Go
           </h2>
           <p className="text-navy-400 mt-3 text-lg">
@@ -272,14 +272,14 @@ export default function PaygPricingSection() {
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center justify-center gap-1 bg-navy-100 rounded-xl p-1 max-w-xs mx-auto mb-10">
+        <div className="flex items-center justify-center gap-1 bg-navy-100 dark:bg-navy-900 rounded-xl p-1 max-w-xs mx-auto mb-10">
           <button
             type="button"
             onClick={() => setTab("passes")}
             className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               tab === "passes"
                 ? "bg-electric text-white shadow-lg shadow-electric/20"
-                : "text-navy-500 hover:text-navy-700"
+                : "text-navy-500 dark:text-navy-300 hover:text-navy-700 dark:hover:text-navy-100"
             }`}
           >
             Period Passes
@@ -290,7 +290,7 @@ export default function PaygPricingSection() {
             className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               tab === "credits"
                 ? "bg-electric text-white shadow-lg shadow-electric/20"
-                : "text-navy-500 hover:text-navy-700"
+                : "text-navy-500 dark:text-navy-300 hover:text-navy-700 dark:hover:text-navy-100"
             }`}
           >
             Credit Packs
@@ -337,13 +337,13 @@ export default function PaygPricingSection() {
 
             {/* Credit Cost Table */}
             <div className="mt-12">
-              <h3 className="text-lg font-bold text-navy mb-4">
+              <h3 className="text-lg font-bold text-navy dark:text-white mb-4">
                 Credit Costs
               </h3>
-              <div className="overflow-x-auto rounded-2xl border border-navy-200 bg-white">
+              <div className="overflow-x-auto rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-navy-200 bg-navy-50">
+                    <tr className="border-b border-navy-200 dark:border-white/10 bg-navy-50 dark:bg-navy-950">
                       <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-navy-400">
                         Action
                       </th>
@@ -358,13 +358,13 @@ export default function PaygPricingSection() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-navy-100">
+                  <tbody className="divide-y divide-navy-100 dark:divide-white/5">
                     {DEFAULT_CREDIT_ACTIONS.map((action) => (
                       <tr
                         key={action.action}
-                        className="hover:bg-navy-50/50 transition-colors"
+                        className="hover:bg-navy-50/50 dark:hover:bg-white/5 transition-colors"
                       >
-                        <td className="px-4 py-3 text-navy-700 font-medium">
+                        <td className="px-4 py-3 text-navy-700 dark:text-navy-100 font-medium">
                           {action.displayName}
                         </td>
                         <td className="px-4 py-3">
@@ -377,7 +377,7 @@ export default function PaygPricingSection() {
                           {action.description}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="px-2 py-0.5 rounded-md bg-navy-100 text-navy-500 text-xs font-medium capitalize">
+                          <span className="px-2 py-0.5 rounded-md bg-navy-100 dark:bg-navy-900 text-navy-500 dark:text-navy-300 text-xs font-medium capitalize">
                             {action.requiredPlan}
                           </span>
                         </td>

@@ -18,6 +18,12 @@
   --section-py-sm: 2.5rem;
 }
 
+/* ── Dark mode overrides ── */
+.dark {
+  --background: #0f0f1a;
+  --foreground: #E8E8ED;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
