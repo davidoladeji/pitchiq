@@ -124,7 +124,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
   // Locked / gated state
   if (!hasAccess) {
     return (
-      <section className="bg-white rounded-2xl border border-navy-200 p-5 sm:p-6">
+      <section className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-5 sm:p-6">
         <div className="flex items-center gap-2 mb-3">
           <svg
             className="w-5 h-5 text-navy-400"
@@ -139,9 +139,9 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
               d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0v-9m-4.5 4.5h9"
             />
           </svg>
-          <h2 className="text-lg font-bold text-navy">Custom Domain</h2>
+          <h2 className="text-lg font-bold text-navy dark:text-white">Custom Domain</h2>
         </div>
-        <div className="relative overflow-hidden rounded-xl bg-navy-50/60 p-6 text-center">
+        <div className="relative overflow-hidden rounded-xl bg-navy-50/60 dark:bg-navy-950/60 p-6 text-center">
           <div className="absolute inset-0 backdrop-blur-[2px]" />
           <div className="relative z-10">
             <svg
@@ -157,9 +157,9 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
                 d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
               />
             </svg>
-            <p className="text-sm text-navy-500">
+            <p className="text-sm text-navy-500 dark:text-navy-300">
               Serve decks from your own domain.{" "}
-              <span className="font-semibold text-navy">
+              <span className="font-semibold text-navy dark:text-white">
                 Available on Growth &amp; Enterprise.
               </span>
             </p>
@@ -170,7 +170,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
   }
 
   return (
-    <section className="bg-white rounded-2xl border border-navy-200 p-5 sm:p-6">
+    <section className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-5 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
         <svg
           className="w-5 h-5 text-navy-400"
@@ -185,7 +185,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
             d="M12 21a9 9 0 100-18 9 9 0 000 18zm0 0v-9m-4.5 4.5h9"
           />
         </svg>
-        <h2 className="text-lg font-bold text-navy">Custom Domain</h2>
+        <h2 className="text-lg font-bold text-navy dark:text-white">Custom Domain</h2>
       </div>
 
       {/* Add domain form */}
@@ -195,7 +195,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
           placeholder="decks.yourcompany.com"
           value={newDomain}
           onChange={(e) => setNewDomain(e.target.value)}
-          className="flex-1 rounded-lg border border-navy-200 bg-navy-50/40 px-3 py-2 text-sm text-navy placeholder:text-navy-400 outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="flex-1 rounded-lg border border-navy-200 dark:border-white/10 bg-navy-50/40 dark:bg-navy-900 px-3 py-2 text-sm text-navy dark:text-white placeholder:text-navy-400 dark:placeholder:text-navy-500 outline-none focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
         />
         <button
           type="submit"
@@ -227,7 +227,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
           {domains.map((d) => (
             <li
               key={d.id}
-              className="rounded-xl border border-navy-100 bg-navy-50/30 p-4"
+              className="rounded-xl border border-navy-100 dark:border-white/5 bg-navy-50/30 dark:bg-navy-950/30 p-4"
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
@@ -246,7 +246,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
                       />
                     </svg>
                   )}
-                  <span className="font-medium text-navy text-sm">
+                  <span className="font-medium text-navy dark:text-white text-sm">
                     {d.domain}
                   </span>
                   {statusBadge(d.status)}
@@ -270,7 +270,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
                     }
                     aria-expanded={expandedId === d.id}
                     aria-label={expandedId === d.id ? "Hide DNS info" : "Show DNS info"}
-                    className="rounded-lg border border-navy-200 px-3 py-1 text-xs font-medium text-navy-500 transition hover:bg-navy-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    className="rounded-lg border border-navy-200 dark:border-white/10 px-3 py-1 text-xs font-medium text-navy-500 dark:text-navy-300 transition hover:bg-navy-50 dark:hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
                   >
                     {expandedId === d.id ? "Hide" : "DNS Info"}
                   </button>
@@ -287,17 +287,17 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
 
               {/* DNS instructions */}
               {expandedId === d.id && (
-                <div className="mt-3 rounded-lg bg-navy-50 border border-navy-100 p-3">
-                  <p className="text-xs font-semibold text-navy-600 mb-1">
+                <div className="mt-3 rounded-lg bg-navy-50 dark:bg-navy-950 border border-navy-100 dark:border-white/5 p-3">
+                  <p className="text-xs font-semibold text-navy-600 dark:text-navy-200 mb-1">
                     DNS Configuration
                   </p>
-                  <div className="space-y-1 text-xs text-navy-500">
+                  <div className="space-y-1 text-xs text-navy-500 dark:text-navy-300">
                     <p>
                       <span className="font-medium">Type:</span> TXT
                     </p>
                     <p>
                       <span className="font-medium">Name:</span>{" "}
-                      <code className="rounded bg-navy-100 px-1 py-0.5 text-navy font-mono">
+                      <code className="rounded bg-navy-100 dark:bg-navy-900 px-1 py-0.5 text-navy dark:text-white font-mono">
                         _pitchiq-verify.{d.domain}
                       </code>
                     </p>

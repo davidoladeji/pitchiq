@@ -22,7 +22,7 @@ function statusBadge(status: string): { label: string; classes: string } {
     case "failed":
       return { label: "Failed", classes: "bg-red-50 text-red-700" };
     default:
-      return { label: "Pending", classes: "bg-navy-100 text-navy-600" };
+      return { label: "Pending", classes: "bg-navy-100 dark:bg-navy-900 text-navy-600 dark:text-navy-200" };
   }
 }
 
@@ -63,8 +63,8 @@ export default function DashboardBatchJobs({ plan }: { plan: string }) {
   // Locked state for non-enterprise plans
   if (!isEnterprise) {
     return (
-      <div className="bg-white rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] z-10 flex flex-col items-center justify-center">
+      <div className="bg-white dark:bg-navy-800 rounded-2xl p-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-white/60 dark:bg-navy-800/60 backdrop-blur-[1px] z-10 flex flex-col items-center justify-center">
           <svg
             className="w-8 h-8 text-navy-300 mb-2"
             fill="none"
@@ -78,7 +78,7 @@ export default function DashboardBatchJobs({ plan }: { plan: string }) {
               d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
             />
           </svg>
-          <p className="text-sm font-medium text-navy-600 mb-1">Enterprise Feature</p>
+          <p className="text-sm font-medium text-navy-600 dark:text-navy-200 mb-1">Enterprise Feature</p>
           <Link
             href="/#pricing"
             className="text-xs text-electric font-medium hover:underline"
@@ -86,24 +86,24 @@ export default function DashboardBatchJobs({ plan }: { plan: string }) {
             Upgrade to unlock
           </Link>
         </div>
-        <h3 className="text-lg font-semibold text-navy-900 mb-3">Batch Scoring</h3>
+        <h3 className="text-lg font-semibold text-navy-900 dark:text-white mb-3">Batch Scoring</h3>
         <div className="space-y-2 opacity-40">
-          <div className="h-12 bg-navy-50 rounded-lg" />
-          <div className="h-12 bg-navy-50 rounded-lg" />
-          <div className="h-12 bg-navy-50 rounded-lg" />
+          <div className="h-12 bg-navy-50 dark:bg-navy-950 rounded-lg" />
+          <div className="h-12 bg-navy-50 dark:bg-navy-950 rounded-lg" />
+          <div className="h-12 bg-navy-50 dark:bg-navy-950 rounded-lg" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl p-6">
+    <div className="bg-white dark:bg-navy-800 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-navy-900">Batch Scoring</h3>
+        <h3 className="text-lg font-semibold text-navy-900 dark:text-white">Batch Scoring</h3>
         <div className="flex items-center gap-2">
           <Link
             href="/batch-score"
-            className="text-xs text-navy-500 hover:text-navy-700 font-medium transition"
+            className="text-xs text-navy-500 dark:text-navy-300 hover:text-navy-700 dark:hover:text-navy-100 font-medium transition"
           >
             View All
           </Link>
@@ -122,7 +122,7 @@ export default function DashboardBatchJobs({ plan }: { plan: string }) {
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-14 bg-navy-50 rounded-lg animate-pulse motion-reduce:animate-none" />
+            <div key={i} className="h-14 bg-navy-50 dark:bg-navy-950 rounded-lg animate-pulse motion-reduce:animate-none" />
           ))}
         </div>
       ) : jobs.length === 0 ? (
@@ -156,11 +156,11 @@ export default function DashboardBatchJobs({ plan }: { plan: string }) {
               <Link
                 key={job.id}
                 href="/batch-score"
-                className="flex items-center justify-between px-3 py-2.5 bg-navy-50 rounded-lg hover:bg-navy-100/70 transition group"
+                className="flex items-center justify-between px-3 py-2.5 bg-navy-50 dark:bg-navy-950 rounded-lg hover:bg-navy-100/70 dark:hover:bg-white/10 transition group"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium text-navy-800 truncate">
+                    <p className="text-sm font-medium text-navy-800 dark:text-navy-100 truncate">
                       {job.name}
                     </p>
                     <span

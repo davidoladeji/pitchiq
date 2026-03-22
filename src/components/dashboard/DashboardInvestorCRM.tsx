@@ -27,7 +27,7 @@ function formatTime(seconds: number): string {
 function getEngagementLevel(totalTime: number): { label: string; color: string } {
   if (totalTime >= 300) return { label: "High", color: "text-green-600 bg-green-50" };
   if (totalTime >= 60) return { label: "Medium", color: "text-amber-600 bg-amber-50" };
-  return { label: "Low", color: "text-navy-400 bg-navy-50" };
+  return { label: "Low", color: "text-navy-400 bg-navy-50 dark:bg-navy-950" };
 }
 
 export default function DashboardInvestorCRM({ plan }: { plan: string }) {
@@ -62,15 +62,15 @@ export default function DashboardInvestorCRM({ plan }: { plan: string }) {
   if (!isGrowth) return null;
 
   return (
-    <div className="rounded-2xl border border-navy-100 bg-white p-5 sm:p-6">
+    <div className="rounded-2xl border border-navy-100 dark:border-white/5 bg-white dark:bg-navy-800 p-5 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
-        <div className="w-8 h-8 rounded-lg bg-green-50 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-500/10 flex items-center justify-center">
           <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
           </svg>
         </div>
         <div>
-          <h3 className="font-bold text-navy text-sm">Investor CRM</h3>
+          <h3 className="font-bold text-navy dark:text-white text-sm">Investor CRM</h3>
           <p className="text-[10px] text-navy-400">Viewer engagement insights</p>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function DashboardInvestorCRM({ plan }: { plan: string }) {
       {loading ? (
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-12 rounded-xl bg-navy-50 animate-pulse motion-reduce:animate-none" />
+            <div key={i} className="h-12 rounded-xl bg-navy-50 dark:bg-navy-950 animate-pulse motion-reduce:animate-none" />
           ))}
         </div>
       ) : investors.length === 0 ? (
@@ -107,22 +107,22 @@ export default function DashboardInvestorCRM({ plan }: { plan: string }) {
                 <button
                   type="button"
                   onClick={() => setExpanded(isExpanded ? null : investor.viewerId)}
-                  className="w-full grid grid-cols-12 gap-2 px-3 py-2.5 rounded-xl hover:bg-navy-50/50 transition-colors text-left"
+                  className="w-full grid grid-cols-12 gap-2 px-3 py-2.5 rounded-xl hover:bg-navy-50/50 dark:hover:bg-white/5 transition-colors text-left"
                 >
                   <div className="col-span-3 flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-navy-100 flex items-center justify-center shrink-0">
+                    <div className="w-6 h-6 rounded-full bg-navy-100 dark:bg-navy-900 flex items-center justify-center shrink-0">
                       <span className="text-[9px] font-bold text-navy-400">
                         #{investor.viewerId.slice(0, 4)}
                       </span>
                     </div>
-                    <span className="text-xs font-mono text-navy truncate">
+                    <span className="text-xs font-mono text-navy dark:text-white truncate">
                       {investor.viewerId.slice(0, 8)}
                     </span>
                   </div>
-                  <div className="col-span-2 text-center text-xs font-semibold text-navy">
+                  <div className="col-span-2 text-center text-xs font-semibold text-navy dark:text-white">
                     {investor.totalViews}
                   </div>
-                  <div className="col-span-2 text-center text-xs text-navy-600">
+                  <div className="col-span-2 text-center text-xs text-navy-600 dark:text-navy-200">
                     {formatTime(investor.totalTime)}
                   </div>
                   <div className="col-span-2 flex justify-center">
@@ -137,7 +137,7 @@ export default function DashboardInvestorCRM({ plan }: { plan: string }) {
 
                 {/* Expanded: per-deck breakdown */}
                 {isExpanded && investor.decksViewed.length > 0 && (
-                  <div className="ml-8 mr-3 mb-2 rounded-lg bg-navy-50/50 border border-navy-100 p-3 space-y-1.5">
+                  <div className="ml-8 mr-3 mb-2 rounded-lg bg-navy-50/50 dark:bg-navy-950/50 border border-navy-100 dark:border-white/5 p-3 space-y-1.5">
                     <p className="text-[10px] font-semibold text-navy-400 mb-1.5">Decks viewed:</p>
                     {investor.decksViewed.map((deck) => (
                       <div key={deck.shareId} className="flex items-center justify-between text-[11px]">

@@ -80,7 +80,7 @@ export default function BillingClient({
   };
 
   return (
-    <div className="min-h-screen bg-navy-50">
+    <div className="min-h-screen bg-navy-50 dark:bg-navy-950">
       <AppNav />
 
       <main
@@ -94,25 +94,25 @@ export default function BillingClient({
           <div>
             <h1
               id="billing-page-heading"
-              className="text-2xl font-bold text-navy font-display tracking-tight"
+              className="text-2xl font-bold text-navy dark:text-white font-display tracking-tight"
             >
               Billing & Subscription
             </h1>
-            <p className="text-sm text-navy-500 mt-1">
+            <p className="text-sm text-navy-500 dark:text-navy-300 mt-1">
               Manage your plan, payment method, and invoices.
             </p>
           </div>
 
           {/* Current plan card */}
-          <div className="rounded-2xl border border-navy-200 bg-white p-6 space-y-5">
+          <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800 p-6 space-y-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-sm font-bold text-navy-500 uppercase tracking-wider mb-2">Current Plan</h2>
+                <h2 className="text-sm font-bold text-navy-500 dark:text-navy-300 uppercase tracking-wider mb-2">Current Plan</h2>
                 <div className="flex items-center gap-3">
                   <span className={`px-3 py-1.5 rounded-lg text-sm font-bold ${info.color} ${info.bgColor}`}>
                     {info.label}
                   </span>
-                  <span className="text-xl font-bold text-navy">{info.price}</span>
+                  <span className="text-xl font-bold text-navy dark:text-white">{info.price}</span>
                 </div>
               </div>
               {isPaid && hasSubscription && (
@@ -122,7 +122,7 @@ export default function BillingClient({
                   disabled={managingBilling}
                   aria-label={managingBilling ? "Opening Stripe..." : "Manage billing in Stripe"}
                   aria-busy={managingBilling}
-                  className="min-h-[44px] px-4 py-2 rounded-xl border border-navy-200 text-sm font-medium text-navy hover:bg-navy-50 transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white inline-flex items-center justify-center gap-2"
+                  className="min-h-[44px] px-4 py-2 rounded-xl border border-navy-200 dark:border-white/10 text-sm font-medium text-navy dark:text-white hover:bg-navy-50 dark:hover:bg-white/5 transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800 inline-flex items-center justify-center gap-2"
                 >
                   {managingBilling ? (
                     <>
@@ -140,9 +140,9 @@ export default function BillingClient({
             </div>
 
             {planExpiresAt && (
-              <p className="text-xs text-navy-500">
+              <p className="text-xs text-navy-500 dark:text-navy-300">
                 Next billing date:{" "}
-                <span className="font-medium text-navy">
+                <span className="font-medium text-navy dark:text-white">
                   {new Date(planExpiresAt).toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -153,27 +153,27 @@ export default function BillingClient({
             )}
 
             {/* Plan features summary */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-navy-100">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-navy-100 dark:border-white/5">
               <div>
-                <div className="text-xs text-navy-400 mb-1">Decks</div>
-                <div className="text-sm font-bold text-navy">
+                <div className="text-xs text-navy-400 dark:text-navy-400 mb-1">Decks</div>
+                <div className="text-sm font-bold text-navy dark:text-white">
                   {deckCount} / {limits.maxDecks === Infinity ? "Unlimited" : limits.maxDecks}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-navy-400 mb-1">Themes</div>
-                <div className="text-sm font-bold text-navy">
+                <div className="text-xs text-navy-400 dark:text-navy-400 mb-1">Themes</div>
+                <div className="text-sm font-bold text-navy dark:text-white">
                   {limits.allowedThemes.length === 1 ? "1 theme" : "All themes"}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-navy-400 mb-1">PPTX Export</div>
+                <div className="text-xs text-navy-400 dark:text-navy-400 mb-1">PPTX Export</div>
                 <div className={`text-sm font-bold ${limits.pptxExport ? "text-emerald-600" : "text-navy-300"}`}>
                   {limits.pptxExport ? "Included" : "Not included"}
                 </div>
               </div>
               <div>
-                <div className="text-xs text-navy-400 mb-1">Analytics</div>
+                <div className="text-xs text-navy-400 dark:text-navy-400 mb-1">Analytics</div>
                 <div className={`text-sm font-bold ${limits.analytics ? "text-emerald-600" : "text-navy-300"}`}>
                   {limits.analytics ? "Included" : "Not included"}
                 </div>
@@ -183,11 +183,11 @@ export default function BillingClient({
 
           {/* Upgrade / Change plan */}
           {!isPaid && (
-            <div className="rounded-2xl border border-electric/15 bg-white p-6">
+            <div className="rounded-2xl border border-electric/15 bg-white dark:bg-navy-800 p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="font-bold text-navy text-sm mb-1">Upgrade your plan</h3>
-                  <p className="text-xs text-navy-500">
+                  <h3 className="font-bold text-navy dark:text-white text-sm mb-1">Upgrade your plan</h3>
+                  <p className="text-xs text-navy-500 dark:text-navy-300">
                     Unlock unlimited decks, full PIQ coaching, all themes, and more.
                   </p>
                 </div>
@@ -204,11 +204,11 @@ export default function BillingClient({
           )}
 
           {isPaid && (
-            <div className="rounded-2xl border border-navy-200 bg-white p-6">
+            <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800 p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="font-bold text-navy text-sm mb-1">Want to change plans?</h3>
-                  <p className="text-xs text-navy-500">
+                  <h3 className="font-bold text-navy dark:text-white text-sm mb-1">Want to change plans?</h3>
+                  <p className="text-xs text-navy-500 dark:text-navy-300">
                     Compare all plans and switch anytime. Changes take effect immediately.
                   </p>
                 </div>
@@ -216,7 +216,7 @@ export default function BillingClient({
                   type="button"
                   onClick={() => setShowPlanModal(true)}
                   aria-label="Compare plans and switch"
-                  className="shrink-0 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-semibold hover:bg-navy-50 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="shrink-0 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 dark:border-white/10 text-navy dark:text-white text-sm font-semibold hover:bg-navy-50 dark:hover:bg-white/5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
                 >
                   Compare Plans
                 </button>
@@ -226,8 +226,8 @@ export default function BillingClient({
 
           {/* Billing actions */}
           {isPaid && hasSubscription && (
-            <div className="rounded-2xl border border-navy-200 bg-white p-6 space-y-4">
-              <h2 className="text-sm font-bold text-navy-500 uppercase tracking-wider">Billing Actions</h2>
+            <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800 p-6 space-y-4">
+              <h2 className="text-sm font-bold text-navy-500 dark:text-navy-300 uppercase tracking-wider">Billing Actions</h2>
               <div className="space-y-3">
                 <button
                   type="button"
@@ -235,10 +235,10 @@ export default function BillingClient({
                   disabled={managingBilling}
                   aria-label={managingBilling ? "Opening Stripe..." : "Update payment method"}
                   aria-busy={managingBilling}
-                  className="w-full min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl border border-navy-200 hover:bg-navy-50 transition-colors text-left disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="w-full min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl border border-navy-200 dark:border-white/10 hover:bg-navy-50 dark:hover:bg-white/5 transition-colors text-left disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
                 >
                   <div>
-                    <div className="text-sm font-medium text-navy">Update payment method</div>
+                    <div className="text-sm font-medium text-navy dark:text-white">Update payment method</div>
                     <div className="text-xs text-navy-400">Change your credit card or billing details</div>
                   </div>
                   <svg className="w-4 h-4 text-navy-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
@@ -251,10 +251,10 @@ export default function BillingClient({
                   disabled={managingBilling}
                   aria-label={managingBilling ? "Opening Stripe..." : "View invoices"}
                   aria-busy={managingBilling}
-                  className="w-full min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl border border-navy-200 hover:bg-navy-50 transition-colors text-left disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="w-full min-h-[44px] flex items-center justify-between px-4 py-3 rounded-xl border border-navy-200 dark:border-white/10 hover:bg-navy-50 dark:hover:bg-white/5 transition-colors text-left disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
                 >
                   <div>
-                    <div className="text-sm font-medium text-navy">View invoices</div>
+                    <div className="text-sm font-medium text-navy dark:text-white">View invoices</div>
                     <div className="text-xs text-navy-400">Download past invoices and receipts</div>
                   </div>
                   <svg className="w-4 h-4 text-navy-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden>
@@ -282,13 +282,13 @@ export default function BillingClient({
           )}
 
           {/* Account info */}
-          <div className="rounded-2xl border border-navy-200 bg-white p-6">
-            <h2 className="text-sm font-bold text-navy-500 uppercase tracking-wider mb-4">Account</h2>
+          <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800 p-6">
+            <h2 className="text-sm font-bold text-navy-500 dark:text-navy-300 uppercase tracking-wider mb-4">Account</h2>
             <div className="space-y-3">
               {memberSince && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-navy-500">Member since</span>
-                  <span className="font-medium text-navy">
+                  <span className="text-navy-500 dark:text-navy-300">Member since</span>
+                  <span className="font-medium text-navy dark:text-white">
                     {new Date(memberSince).toLocaleDateString("en-US", {
                       month: "long",
                       year: "numeric",
@@ -297,8 +297,8 @@ export default function BillingClient({
                 </div>
               )}
               <div className="flex items-center justify-between text-sm">
-                <span className="text-navy-500">Total decks created</span>
-                <span className="font-medium text-navy">{deckCount}</span>
+                <span className="text-navy-500 dark:text-navy-300">Total decks created</span>
+                <span className="font-medium text-navy dark:text-white">{deckCount}</span>
               </div>
             </div>
           </div>
@@ -311,7 +311,7 @@ export default function BillingClient({
             <Link
               href="/dashboard"
               aria-label="Back to dashboard"
-              className="text-sm text-navy-500 hover:text-electric font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white rounded"
+              className="text-sm text-navy-500 dark:text-navy-300 hover:text-electric font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950 rounded"
             >
               &larr; Back to Dashboard
             </Link>

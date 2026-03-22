@@ -95,20 +95,20 @@ export default function DashboardApiKeys({
   // Locked state for non-enterprise users
   if (!hasApiAccess) {
     return (
-      <div className="bg-white rounded-2xl border border-navy-200 p-5 sm:p-6">
+      <div className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-5 sm:p-6">
         <div className="flex items-center gap-2 mb-4">
           <svg className="w-5 h-5 text-navy-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
-          <h2 className="text-lg font-bold text-navy">API Access</h2>
+          <h2 className="text-lg font-bold text-navy dark:text-white">API Access</h2>
         </div>
         <div className="text-center py-8">
-          <div className="w-12 h-12 rounded-full bg-navy-100 flex items-center justify-center mx-auto mb-3">
+          <div className="w-12 h-12 rounded-full bg-navy-100 dark:bg-navy-900 flex items-center justify-center mx-auto mb-3">
             <svg className="w-6 h-6 text-navy-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
             </svg>
           </div>
-          <p className="text-navy-600 text-sm mb-1 font-medium">Enterprise Feature</p>
+          <p className="text-navy-600 dark:text-navy-200 text-sm mb-1 font-medium">Enterprise Feature</p>
           <p className="text-navy-400 text-xs mb-4">
             Programmatic access to deck generation and scoring via REST API.
           </p>
@@ -125,13 +125,13 @@ export default function DashboardApiKeys({
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-navy-200 p-5 sm:p-6">
+    <div className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <svg className="w-5 h-5 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
           </svg>
-          <h2 className="text-lg font-bold text-navy">API Keys</h2>
+          <h2 className="text-lg font-bold text-navy dark:text-white">API Keys</h2>
         </div>
         <a
           href="/docs/api"
@@ -149,7 +149,7 @@ export default function DashboardApiKeys({
             Copy your API key now. It will not be shown again.
           </p>
           <div className="flex items-center gap-2">
-            <code className="flex-1 text-xs bg-white border border-amber-300 rounded-lg px-3 py-2 font-mono text-navy break-all select-all">
+            <code className="flex-1 text-xs bg-white dark:bg-navy-900 border border-amber-300 dark:border-amber-600 rounded-lg px-3 py-2 font-mono text-navy dark:text-white break-all select-all">
               {revealedKey}
             </code>
             <button
@@ -179,7 +179,7 @@ export default function DashboardApiKeys({
           placeholder="Key name (optional)"
           value={newKeyName}
           onChange={(e) => setNewKeyName(e.target.value)}
-          className="flex-1 text-sm border border-navy-200 rounded-lg px-3 py-2 text-navy placeholder:text-navy-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white focus-visible:border-electric"
+          className="flex-1 text-sm border border-navy-200 dark:border-white/10 rounded-lg px-3 py-2 text-navy dark:text-white dark:bg-navy-900 placeholder:text-navy-300 dark:placeholder:text-navy-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800 focus-visible:border-electric"
           maxLength={100}
           aria-label="API key name (optional)"
         />
@@ -209,16 +209,16 @@ export default function DashboardApiKeys({
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-navy-200 bg-white"
+                className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800"
               >
                 <div className="min-w-0 flex-1">
-                  <div className="h-4 w-32 rounded bg-navy-100 animate-pulse motion-reduce:animate-none" />
+                  <div className="h-4 w-32 rounded bg-navy-100 dark:bg-navy-900 animate-pulse motion-reduce:animate-none" />
                   <div className="flex items-center gap-3 mt-2">
-                    <div className="h-3 w-24 rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
-                    <div className="h-3 w-20 rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
+                    <div className="h-3 w-24 rounded bg-navy-50 dark:bg-navy-950 animate-pulse motion-reduce:animate-none" />
+                    <div className="h-3 w-20 rounded bg-navy-50 dark:bg-navy-950 animate-pulse motion-reduce:animate-none" />
                   </div>
                 </div>
-                <div className="h-6 w-14 rounded bg-navy-100 animate-pulse motion-reduce:animate-none flex-shrink-0" />
+                <div className="h-6 w-14 rounded bg-navy-100 dark:bg-navy-900 animate-pulse motion-reduce:animate-none flex-shrink-0" />
               </div>
             ))}
           </div>
@@ -234,13 +234,13 @@ export default function DashboardApiKeys({
               key={k.id}
               className={`flex items-center justify-between gap-3 px-4 py-3 rounded-xl border ${
                 k.revoked
-                  ? "border-navy-100 bg-navy-50 opacity-60"
-                  : "border-navy-200 bg-white"
+                  ? "border-navy-100 dark:border-white/5 bg-navy-50 dark:bg-navy-950 opacity-60"
+                  : "border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800"
               }`}
             >
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-navy truncate">
+                  <span className="text-sm font-semibold text-navy dark:text-white truncate">
                     {k.name}
                   </span>
                   {k.revoked && (
@@ -250,7 +250,7 @@ export default function DashboardApiKeys({
                   )}
                 </div>
                 <div className="flex items-center gap-3 mt-1">
-                  <code className="text-xs text-navy-500 font-mono">
+                  <code className="text-xs text-navy-500 dark:text-navy-300 font-mono">
                     {k.keyPrefix}...
                   </code>
                   <span className="text-[11px] text-navy-400">

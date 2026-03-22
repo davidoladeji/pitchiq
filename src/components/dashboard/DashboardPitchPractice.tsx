@@ -64,9 +64,9 @@ export default function DashboardPitchPractice({
   // Locked state for non-growth users
   if (!limits.pitchPractice) {
     return (
-      <section className="rounded-2xl border border-navy-100 bg-white p-6">
+      <section className="rounded-2xl border border-navy-100 dark:border-white/5 bg-white dark:bg-navy-800 p-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-navy flex items-center gap-2">
+          <h2 className="text-base font-bold text-navy dark:text-white flex items-center gap-2">
             <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
             </svg>
@@ -76,13 +76,13 @@ export default function DashboardPitchPractice({
             Growth
           </span>
         </div>
-        <p className="text-xs text-navy-500 mb-4">
+        <p className="text-xs text-navy-500 dark:text-navy-300 mb-4">
           Practice your pitch with AI feedback on pacing, timing, and delivery.
           Upgrade to Growth to unlock.
         </p>
         <Link
           href="/billing"
-          className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="min-h-[44px] inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
           aria-label="View plans and upgrade to Growth for Pitch Practice"
         >
           Upgrade to Growth
@@ -96,9 +96,9 @@ export default function DashboardPitchPractice({
     decks && decks.length > 0 ? `/practice/${decks[0].shareId}` : null;
 
   return (
-    <section className="rounded-2xl border border-navy-100 bg-white p-6 space-y-4">
+    <section className="rounded-2xl border border-navy-100 dark:border-white/5 bg-white dark:bg-navy-800 p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-bold text-navy flex items-center gap-2">
+        <h2 className="text-base font-bold text-navy dark:text-white flex items-center gap-2">
           <svg className="w-5 h-5 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
           </svg>
@@ -107,7 +107,7 @@ export default function DashboardPitchPractice({
         {practiceLink && (
           <Link
             href={practiceLink}
-            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-xl bg-electric text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center px-4 py-2 rounded-xl bg-electric text-white text-xs font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
             aria-label="Practice a deck with AI feedback"
           >
             Practice a Deck
@@ -118,14 +118,14 @@ export default function DashboardPitchPractice({
       {loading ? (
         <div className="text-center py-6" role="status">
           <div
-            className="w-5 h-5 border-2 border-electric border-t-transparent rounded-full animate-spin motion-reduce:animate-none motion-reduce:border-electric/40 mx-auto ring-2 ring-electric/15 ring-offset-2 ring-offset-white motion-reduce:ring-0"
+            className="w-5 h-5 border-2 border-electric border-t-transparent rounded-full animate-spin motion-reduce:animate-none motion-reduce:border-electric/40 mx-auto ring-2 ring-electric/15 ring-offset-2 ring-offset-white dark:ring-offset-navy-800 motion-reduce:ring-0"
             aria-hidden="true"
           />
           <span className="sr-only">Loading pitch practice</span>
         </div>
       ) : sessions.length === 0 ? (
         <div className="text-center py-6">
-          <p className="text-sm text-navy-400">No practice sessions yet.</p>
+          <p className="text-sm text-navy-400 dark:text-navy-400">No practice sessions yet.</p>
           {practiceLink ? (
             <Link
               href={practiceLink}
@@ -134,7 +134,7 @@ export default function DashboardPitchPractice({
               Start your first practice
             </Link>
           ) : (
-            <p className="text-xs text-navy-300 mt-1">
+            <p className="text-xs text-navy-300 dark:text-navy-400 mt-1">
               Create a deck first, then practice your pitch.
             </p>
           )}
@@ -147,10 +147,10 @@ export default function DashboardPitchPractice({
               <Link
                 key={s.id}
                 href={`/practice/${s.deckShareId}`}
-                className="flex items-center justify-between p-3 rounded-xl border border-navy-100 hover:bg-navy-50/50 transition-colors group"
+                className="flex items-center justify-between p-3 rounded-xl border border-navy-100 dark:border-white/5 hover:bg-navy-50/50 dark:hover:bg-white/5 transition-colors group"
               >
                 <div className="min-w-0">
-                  <span className="text-sm font-medium text-navy group-hover:text-electric transition-colors truncate block">
+                  <span className="text-sm font-medium text-navy dark:text-white group-hover:text-electric transition-colors truncate block">
                     {s.deckTitle}
                   </span>
                   <div className="flex items-center gap-2 text-[10px] text-navy-400 mt-0.5">
@@ -165,10 +165,10 @@ export default function DashboardPitchPractice({
                     <span
                       className={`px-1.5 py-0.5 rounded-full font-semibold ${
                         s.status === "completed"
-                          ? "bg-emerald-50 text-emerald-600"
+                          ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600"
                           : s.status === "in_progress"
-                            ? "bg-amber-50 text-amber-600"
-                            : "bg-navy-100 text-navy-400"
+                            ? "bg-amber-50 dark:bg-amber-500/10 text-amber-600"
+                            : "bg-navy-100 dark:bg-navy-900 text-navy-400"
                       }`}
                     >
                       {s.status === "completed"

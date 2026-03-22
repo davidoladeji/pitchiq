@@ -100,15 +100,15 @@ export default function DashboardABTests({
   const appUrl = typeof window !== "undefined" ? window.location.origin : "";
 
   return (
-    <div className="rounded-2xl border border-navy-100 bg-white p-5 sm:p-6">
+    <div className="rounded-2xl border border-navy-100 dark:border-white/5 bg-white dark:bg-navy-800 p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-500/10 flex items-center justify-center">
             <svg className="w-4 h-4 text-violet-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
             </svg>
           </div>
-          <h3 className="font-bold text-navy text-sm">A/B Tests</h3>
+          <h3 className="font-bold text-navy dark:text-white text-sm">A/B Tests</h3>
         </div>
         {!showCreate && decks.length >= 2 && (
           <button
@@ -126,16 +126,16 @@ export default function DashboardABTests({
 
       {/* Create form */}
       {showCreate && (
-        <div className="rounded-xl border border-navy-200 bg-navy-50/50 p-4 mb-4 space-y-3">
-          <p className="text-xs font-semibold text-navy">Select two decks to compare:</p>
+        <div className="rounded-xl border border-navy-200 dark:border-white/10 bg-navy-50/50 dark:bg-navy-950/50 p-4 mb-4 space-y-3">
+          <p className="text-xs font-semibold text-navy dark:text-white">Select two decks to compare:</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label htmlFor="ab-deck-a" className="block text-[11px] font-medium text-navy-500 mb-1">Deck A</label>
+              <label htmlFor="ab-deck-a" className="block text-[11px] font-medium text-navy-500 dark:text-navy-300 mb-1">Deck A</label>
               <select
                 id="ab-deck-a"
                 value={deckAId}
                 onChange={(e) => setDeckAId(e.target.value)}
-                className="w-full rounded-lg border border-navy-200 bg-white px-3 py-2 text-xs text-navy focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="w-full rounded-lg border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900 px-3 py-2 text-xs text-navy dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
               >
                 <option value="">Select a deck...</option>
                 {decks.map((d) => (
@@ -146,12 +146,12 @@ export default function DashboardABTests({
               </select>
             </div>
             <div>
-              <label htmlFor="ab-deck-b" className="block text-[11px] font-medium text-navy-500 mb-1">Deck B</label>
+              <label htmlFor="ab-deck-b" className="block text-[11px] font-medium text-navy-500 dark:text-navy-300 mb-1">Deck B</label>
               <select
                 id="ab-deck-b"
                 value={deckBId}
                 onChange={(e) => setDeckBId(e.target.value)}
-                className="w-full rounded-lg border border-navy-200 bg-white px-3 py-2 text-xs text-navy focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                className="w-full rounded-lg border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900 px-3 py-2 text-xs text-navy dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-800"
               >
                 <option value="">Select a deck...</option>
                 {decks.map((d) => (
@@ -176,7 +176,7 @@ export default function DashboardABTests({
               type="button"
               onClick={() => { setShowCreate(false); setDeckAId(""); setDeckBId(""); setError(""); }}
               disabled={creating}
-              className="px-4 py-2 rounded-lg bg-navy-50 text-navy-400 text-xs font-semibold hover:text-navy transition-colors disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-navy-50 dark:bg-navy-950 text-navy-400 text-xs font-semibold hover:text-navy dark:hover:text-white transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
@@ -188,7 +188,7 @@ export default function DashboardABTests({
       {loading && (
         <div className="space-y-3">
           {[1, 2].map((i) => (
-            <div key={i} className="h-16 rounded-xl bg-navy-50 animate-pulse motion-reduce:animate-none" />
+            <div key={i} className="h-16 rounded-xl bg-navy-50 dark:bg-navy-950 animate-pulse motion-reduce:animate-none" />
           ))}
         </div>
       )}
@@ -196,7 +196,7 @@ export default function DashboardABTests({
       {/* Empty state */}
       {!loading && tests.length === 0 && !showCreate && (
         <div className="text-center py-6">
-          <div className="w-12 h-12 rounded-xl bg-navy-50 flex items-center justify-center mx-auto mb-3">
+          <div className="w-12 h-12 rounded-xl bg-navy-50 dark:bg-navy-950 flex items-center justify-center mx-auto mb-3">
             <svg className="w-6 h-6 text-navy-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
             </svg>
@@ -228,7 +228,7 @@ export default function DashboardABTests({
             const shareLink = `${appUrl}/api/ab/${test.shareSlug}`;
 
             return (
-              <div key={test.id} className="rounded-xl border border-navy-100 bg-navy-50/30 p-4">
+              <div key={test.id} className="rounded-xl border border-navy-100 dark:border-white/5 bg-navy-50/30 dark:bg-navy-950/30 p-4">
                 <div className="flex items-start justify-between gap-2 mb-3">
                   <div className="min-w-0">
                     <p className="text-[11px] text-navy-400 mb-0.5">A/B Test</p>
@@ -255,31 +255,31 @@ export default function DashboardABTests({
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="w-4 text-[10px] font-bold text-electric">A</span>
-                    <div className="flex-1 h-6 rounded-lg bg-navy-100 overflow-hidden relative">
+                    <div className="flex-1 h-6 rounded-lg bg-navy-100 dark:bg-navy-900 overflow-hidden relative">
                       <div
                         className="h-full bg-electric/20 rounded-lg transition-all"
                         style={{ width: `${aPct}%` }}
                       />
-                      <span className="absolute inset-0 flex items-center px-2 text-[11px] font-semibold text-navy truncate">
+                      <span className="absolute inset-0 flex items-center px-2 text-[11px] font-semibold text-navy dark:text-white truncate">
                         {test.deckA.title}
                       </span>
                     </div>
-                    <span className="text-[11px] font-bold text-navy w-12 text-right">
+                    <span className="text-[11px] font-bold text-navy dark:text-white w-12 text-right">
                       {test.deckA.views} <span className="font-normal text-navy-400">({aPct}%)</span>
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-4 text-[10px] font-bold text-violet-600">B</span>
-                    <div className="flex-1 h-6 rounded-lg bg-navy-100 overflow-hidden relative">
+                    <div className="flex-1 h-6 rounded-lg bg-navy-100 dark:bg-navy-900 overflow-hidden relative">
                       <div
                         className="h-full bg-violet-200/50 rounded-lg transition-all"
                         style={{ width: `${bPct}%` }}
                       />
-                      <span className="absolute inset-0 flex items-center px-2 text-[11px] font-semibold text-navy truncate">
+                      <span className="absolute inset-0 flex items-center px-2 text-[11px] font-semibold text-navy dark:text-white truncate">
                         {test.deckB.title}
                       </span>
                     </div>
-                    <span className="text-[11px] font-bold text-navy w-12 text-right">
+                    <span className="text-[11px] font-bold text-navy dark:text-white w-12 text-right">
                       {test.deckB.views} <span className="font-normal text-navy-400">({bPct}%)</span>
                     </span>
                   </div>
