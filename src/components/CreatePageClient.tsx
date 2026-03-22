@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import DeckForm from "@/components/DeckForm";
@@ -11,7 +12,7 @@ import PIQScoreCard from "@/components/PIQScoreCard";
 import ExportMenu from "@/components/ExportMenu";
 import PlanCompareModal from "@/components/PlanCompareModal";
 import TemplateBrowser from "@/components/TemplateBrowser";
-import { DeckData } from "@/lib/types";
+import { DeckData, DeckInput } from "@/lib/types";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { type DeckTemplate, applyTemplate } from "@/lib/templates";
 
@@ -25,6 +26,7 @@ export default function CreatePageClient({
   deckCount?: number;
 }) {
   const { status } = useSession();
+  const searchParams = useSearchParams();
   const limits = getPlanLimits(userPlan);
   const [deck, setDeck] = useState<DeckData | null>(null);
   const [copied, setCopied] = useState(false);
@@ -34,6 +36,44 @@ export default function CreatePageClient({
   const [hasGithub, setHasGithub] = useState(false);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<DeckTemplate | null>(null);
+
+  // ── Prefill from scored deck ──────────────────────────────────────────
+  const fromDeckShareId = searchParams.get("from");
+  const [prefillDefaults, setPrefillDefaults] = useState<Partial<DeckInput> | null>(null);
+  const [prefillLoading, setPrefillLoading] = useState(!!fromDeckShareId);
+  const [prefillSource, setPrefillSource] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!fromDeckShareId) return;
+    let cancelled = false;
+    async function loadPrefill() {
+      try {
+        const res = await fetch(`/api/decks/${fromDeckShareId}/extracted-content`);
+        if (!res.ok) throw new Error("Failed to load");
+        const data = await res.json();
+        if (cancelled) return;
+        const c = data.content;
+        const defaults: Partial<DeckInput> = {};
+        if (c.companyName) defaults.companyName = c.companyName;
+        if (c.industry) defaults.industry = c.industry;
+        if (c.stage) defaults.stage = c.stage;
+        if (c.fundingTarget) defaults.fundingTarget = c.fundingTarget;
+        if (c.problem) defaults.problem = c.problem;
+        if (c.solution) defaults.solution = c.solution;
+        if (c.keyMetrics) defaults.keyMetrics = c.keyMetrics;
+        if (c.teamInfo) defaults.teamInfo = c.teamInfo;
+        if (data.themeId) defaults.themeId = data.themeId;
+        setPrefillDefaults(defaults);
+        setPrefillSource(data.deckTitle || fromDeckShareId);
+      } catch {
+        // Silently fail — user can still fill manually
+      } finally {
+        if (!cancelled) setPrefillLoading(false);
+      }
+    }
+    loadPrefill();
+    return () => { cancelled = true; };
+  }, [fromDeckShareId]);
 
   useEffect(() => {
     fetch("/api/auth/has-github")
@@ -253,8 +293,39 @@ export default function CreatePageClient({
               </div>
             )}
 
+            {/* Prefill from scored deck indicator */}
+            {prefillLoading && (
+              <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-electric/5 border border-electric/15 animate-pulse">
+                <svg className="w-5 h-5 text-electric animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span className="text-sm font-medium text-navy dark:text-white">
+                  Loading content from your scored deck...
+                </span>
+              </div>
+            )}
+
+            {prefillSource && !prefillLoading && (
+              <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20">
+                <svg className="w-5 h-5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                </svg>
+                <span className="text-sm font-medium text-emerald-800 dark:text-emerald-300">
+                  Pre-filled from <strong>&ldquo;{prefillSource}&rdquo;</strong> — review and adjust, then generate your improved deck.
+                </span>
+                <button
+                  type="button"
+                  onClick={() => { setPrefillDefaults(null); setPrefillSource(null); }}
+                  className="ml-auto min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-xs text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 font-medium rounded-lg"
+                  aria-label="Clear prefilled data"
+                >
+                  Clear
+                </button>
+              </div>
+            )}
+
             {/* Selected template indicator */}
-            {selectedTemplate && (
+            {selectedTemplate && !prefillDefaults && (
               <div className="flex items-center gap-3 mb-4 p-3 rounded-xl bg-electric/5 border border-electric/15">
                 <svg className={`w-5 h-5 ${selectedTemplate.color}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d={selectedTemplate.icon} />
@@ -279,10 +350,13 @@ export default function CreatePageClient({
                   onGenerated={handleGenerated}
                   userPlan={userPlan}
                   templateDefaults={
-                    selectedTemplate
-                      ? applyTemplate(selectedTemplate, {})
-                      : undefined
+                    prefillDefaults
+                      ? prefillDefaults
+                      : selectedTemplate
+                        ? applyTemplate(selectedTemplate, {})
+                        : undefined
                   }
+                  initialStep={prefillDefaults ? 4 : undefined}
                 />
               )}
               {mode === "github" && (

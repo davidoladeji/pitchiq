@@ -16,7 +16,7 @@ export default function DashboardRefinePrompt({
 
   return (
     <Link
-      href={`/score?deck=${deckShareId}&refine=true`}
+      href={`/create?from=${deckShareId}`}
       title={`Generate an AI-improved version of "${deckTitle}"`}
       className="inline-flex items-center gap-1 text-xs text-[#4361EE] hover:underline transition-colors"
     >

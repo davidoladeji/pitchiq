@@ -12,6 +12,8 @@ interface DeckFormProps {
   onGenerated: (deck: DeckData) => void;
   userPlan?: string;
   templateDefaults?: Partial<DeckInput>;
+  /** Start at a specific step (0-4). Used for prefill from scored decks. */
+  initialStep?: number;
 }
 
 const STEPS = [
@@ -95,11 +97,11 @@ function StepIndicator({
 }
 
 
-export default function DeckForm({ onGenerated, userPlan = "starter", templateDefaults }: DeckFormProps) {
+export default function DeckForm({ onGenerated, userPlan = "starter", templateDefaults, initialStep }: DeckFormProps) {
   const planLimits = getPlanLimits(userPlan);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(initialStep ?? 0);
   const [form, setForm] = useState<DeckInput>({
     companyName: "",
     industry: "",
