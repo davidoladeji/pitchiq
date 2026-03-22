@@ -163,11 +163,11 @@ function InvestorDetailModal({
       <div className="absolute inset-0 bg-black/60" />
       {/* Slide-over panel */}
       <div
-        className="relative w-full max-w-lg bg-[#0F0F14] border-l border-navy-200 dark:border-white/[0.06] overflow-y-auto"
+        className="relative w-full max-w-lg bg-white dark:bg-navy-950 border-l border-navy-200 dark:border-white/[0.06] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-[#0F0F14]/95 backdrop-blur border-b border-navy-200 dark:border-white/[0.06] px-6 py-4">
+        <div className="sticky top-0 z-10 bg-white dark:bg-navy-950/95 backdrop-blur border-b border-navy-200 dark:border-white/[0.06] px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={`w-12 h-12 rounded-xl ${fitScoreBg(match.fitScore)} flex items-center justify-center`}>
@@ -568,7 +568,7 @@ export default function DashboardInvestorMatch({
 
   if (!limits.investorCRM) {
     return (
-      <section className="bg-[#0F0F14] border border-navy-200 dark:border-white/[0.08] rounded-2xl p-6 shadow-lg">
+      <section className="bg-white dark:bg-navy-950 border border-navy-200 dark:border-white/[0.08] rounded-2xl p-6 shadow-lg">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-8 h-8 rounded-lg bg-[#4361EE]/10 flex items-center justify-center">
             <Users className="w-4 h-4 text-[#4361EE]" />
@@ -590,7 +590,7 @@ export default function DashboardInvestorMatch({
   }
 
   return (
-    <section className="bg-[#0F0F14] border border-navy-200 dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-lg">
+    <section className="bg-white dark:bg-navy-950 border border-navy-200 dark:border-white/[0.08] rounded-2xl overflow-hidden shadow-lg">
       {/* Header bar */}
       <div className="px-6 pt-6 pb-4 border-b border-navy-200 dark:border-white/[0.06]">
         <div className="flex items-center justify-between mb-4">
