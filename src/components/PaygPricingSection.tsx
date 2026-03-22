@@ -259,7 +259,7 @@ export default function PaygPricingSection() {
   // ── Render ─────────────────────────────────────────────────────────────
 
   return (
-    <section id="payg" className="py-16 sm:py-24">
+    <section id="payg" className="py-16 sm:py-24 bg-navy rounded-3xl mx-4 sm:mx-6">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-10">
