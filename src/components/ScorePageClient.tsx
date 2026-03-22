@@ -224,7 +224,7 @@ export default function ScorePageClient({
 
   if (status === "unauthenticated") {
     return (
-      <div className="min-h-screen bg-navy-50">
+      <div className="min-h-screen bg-navy-50 dark:bg-navy-950">
         <AppNav />
         <main
           id="main"
@@ -256,7 +256,7 @@ export default function ScorePageClient({
   }
 
   return (
-    <div className="min-h-screen bg-navy-50">
+    <div className="min-h-screen bg-navy-50 dark:bg-navy-950">
       <AppNav />
 
       <main
@@ -278,11 +278,11 @@ export default function ScorePageClient({
             </div>
             <h1
               id="score-page-heading"
-              className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy mb-3 tracking-tight"
+              className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy dark:text-white mb-3 tracking-tight"
             >
               Score Your Pitch Deck
             </h1>
-            <p className="text-navy-600 text-base sm:text-lg max-w-lg mx-auto">
+            <p className="text-navy-600 dark:text-navy-300 text-base sm:text-lg max-w-lg mx-auto">
               Upload your existing deck and get an instant fundability score
               with actionable feedback from our AI evaluator.
             </p>
@@ -290,7 +290,7 @@ export default function ScorePageClient({
 
           {/* Upload card */}
           {state !== "result" && (
-            <div className="bg-white rounded-2xl shadow-sm border border-navy-100 p-6 sm:p-8 animate-fade-in">
+            <div className="bg-white dark:bg-navy-900 rounded-2xl shadow-sm border border-navy-100 dark:border-white/10 p-6 sm:p-8 animate-fade-in">
               <DeckUploader
                 onFileSelected={handleFileSelected}
                 disabled={isProcessing}
@@ -301,10 +301,10 @@ export default function ScorePageClient({
               {isProcessing && (
                 <div className="mt-4 space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-navy-600 font-medium">{statusLabel}</span>
+                    <span className="text-navy-600 dark:text-navy-300 font-medium">{statusLabel}</span>
                     <span className="text-navy-400">{progress}%</span>
                   </div>
-                  <div className="h-2 rounded-full bg-navy-100 overflow-hidden">
+                  <div className="h-2 rounded-full bg-navy-100 dark:bg-navy-900 overflow-hidden">
                     <div
                       className="h-full rounded-full bg-electric transition-all duration-500 ease-out motion-reduce:transition-none"
                       style={{ width: `${progress}%` }}
@@ -318,10 +318,10 @@ export default function ScorePageClient({
                 <div className="mt-5">
                   <label
                     htmlFor="company-name"
-                    className="block text-sm font-medium text-navy-700 mb-1.5"
+                    className="block text-sm font-medium text-navy-700 dark:text-navy-200 mb-1.5"
                   >
                     Company name{" "}
-                    <span className="text-navy-500 font-normal">(optional — auto-detected from deck)</span>
+                    <span className="text-navy-500 dark:text-navy-400 font-normal">(optional — auto-detected from deck)</span>
                   </label>
                   <input
                     id="company-name"
@@ -330,7 +330,7 @@ export default function ScorePageClient({
                     onChange={(e) => setCompanyName(e.target.value)}
                     placeholder="e.g. Acme Inc."
                     disabled={isProcessing}
-                    className="w-full px-4 py-2.5 rounded-xl border border-navy-200 text-sm text-navy placeholder:text-navy-500 outline-none transition-all disabled:opacity-50 focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                    className="w-full px-4 py-2.5 rounded-xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900 text-sm text-navy dark:text-white placeholder:text-navy-400 dark:placeholder:text-navy-500 outline-none transition-all disabled:opacity-50 focus-visible:border-electric focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950"
                   />
                 </div>
               )}
