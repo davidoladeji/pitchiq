@@ -104,7 +104,7 @@ export default function BillingClient({
           </div>
 
           {/* Current plan card */}
-          <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800 p-6 space-y-5">
+          <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900 p-6 space-y-5">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h2 className="text-sm font-bold text-navy-500 dark:text-navy-300 uppercase tracking-wider mb-2">Current Plan</h2>
@@ -183,7 +183,7 @@ export default function BillingClient({
 
           {/* Upgrade / Change plan */}
           {!isPaid && (
-            <div className="rounded-2xl border border-electric/15 bg-white dark:bg-navy-800 p-6">
+            <div className="rounded-2xl border border-electric/15 bg-white dark:bg-navy-900 p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="font-bold text-navy dark:text-white text-sm mb-1">Upgrade your plan</h3>
@@ -204,7 +204,7 @@ export default function BillingClient({
           )}
 
           {isPaid && (
-            <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800 p-6">
+            <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900 p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                   <h3 className="font-bold text-navy dark:text-white text-sm mb-1">Want to change plans?</h3>
@@ -226,7 +226,7 @@ export default function BillingClient({
 
           {/* Billing actions */}
           {isPaid && hasSubscription && (
-            <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800 p-6 space-y-4">
+            <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900 p-6 space-y-4">
               <h2 className="text-sm font-bold text-navy-500 dark:text-navy-300 uppercase tracking-wider">Billing Actions</h2>
               <div className="space-y-3">
                 <button
@@ -282,7 +282,7 @@ export default function BillingClient({
           )}
 
           {/* Account info */}
-          <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800 p-6">
+          <div className="rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900 p-6">
             <h2 className="text-sm font-bold text-navy-500 dark:text-navy-300 uppercase tracking-wider mb-4">Account</h2>
             <div className="space-y-3">
               {memberSince && (

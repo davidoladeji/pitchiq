@@ -82,7 +82,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
     return (
       <section aria-label="Your decks">
         <h2 className="text-lg font-bold text-navy dark:text-white font-display mb-4">Your Decks</h2>
-        <div className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-10 sm:p-12 text-center">
+        <div className="bg-white dark:bg-navy-900 rounded-2xl border border-navy-200 dark:border-white/10 p-10 sm:p-12 text-center">
           <div className="w-14 h-14 rounded-2xl bg-electric/5 border border-electric/10 flex items-center justify-center mx-auto mb-4">
             <svg className="w-7 h-7 text-electric" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -124,7 +124,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
           return (
             <div
               key={deck.id}
-              className="group bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-5 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5"
+              className="group bg-white dark:bg-navy-900 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-5 transition-all duration-300 hover:shadow-card-hover hover:-translate-y-0.5"
             >
               <div className="flex items-center gap-4">
                 {/* Score ring */}
@@ -139,9 +139,9 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
                     {deck.title}
                   </Link>
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
-                    <span className="text-xs text-navy-500">{deck.companyName}</span>
-                    <span className="text-navy-200">|</span>
-                    <span className="text-xs text-navy-500 capitalize">{deck.themeId}</span>
+                    <span className="text-xs text-navy-500 dark:text-navy-300">{deck.companyName}</span>
+                    <span className="text-navy-200 dark:text-navy-600">|</span>
+                    <span className="text-xs text-navy-500 dark:text-navy-300 capitalize">{deck.themeId}</span>
                     {deck.isPremium && (
                       <span className="px-1.5 py-0.5 rounded bg-electric/10 text-electric font-bold text-[10px] uppercase">
                         Pro
@@ -153,7 +153,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
                       </span>
                     )}
                     {deck.source === "refined" && deck.refinedScoreDelta != null && deck.refinedScoreDelta > 0 && (
-                      <span className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 font-bold text-[10px]">
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 font-bold text-[10px]">
                         +{deck.refinedScoreDelta} pts
                       </span>
                     )}
@@ -166,7 +166,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
                 {/* View count */}
                 <div className="text-center shrink-0 hidden sm:block">
                   <div className="text-sm font-bold text-navy dark:text-white tabular-nums">{deck.viewCount}</div>
-                  <div className="text-[10px] text-navy-500 uppercase tracking-wider">Views</div>
+                  <div className="text-[10px] text-navy-500 dark:text-navy-400 uppercase tracking-wider">Views</div>
                 </div>
 
                 {/* Actions */}
@@ -193,14 +193,14 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
 
               {/* Bottom row: date + mobile views */}
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-navy-100 dark:border-white/5">
-                <span className="text-[11px] text-navy-500">
+                <span className="text-[11px] text-navy-500 dark:text-navy-400">
                   {new Date(deck.createdAt).toLocaleDateString("en-US", {
                     month: "short",
                     day: "numeric",
                     year: "numeric",
                   })}
                 </span>
-                <span className="text-[11px] text-navy-500 sm:hidden tabular-nums">
+                <span className="text-[11px] text-navy-500 dark:text-navy-400 sm:hidden tabular-nums">
                   {deck.viewCount} view{deck.viewCount !== 1 ? "s" : ""}
                 </span>
               </div>

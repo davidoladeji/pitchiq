@@ -87,7 +87,7 @@ function txBadge(type: string): { label: string; cls: string } {
 
 function Skeleton() {
   return (
-    <div className="bg-white dark:bg-navy-800 border border-navy-200 dark:border-white/10 rounded-2xl p-4 animate-pulse">
+    <div className="bg-white dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-4 animate-pulse">
       <div className="flex items-center gap-2 mb-3">
         <div className="w-5 h-5 rounded bg-navy-100 dark:bg-navy-900" />
         <div className="h-4 w-32 rounded bg-navy-100 dark:bg-navy-900" />
@@ -138,7 +138,7 @@ export default function PaygStatus() {
   const recentThree = recentCredits.slice(0, 3);
 
   return (
-    <div className="bg-white dark:bg-navy-800 border border-navy-200 dark:border-white/10 rounded-2xl p-4 shadow-sm">
+    <div className="bg-white dark:bg-navy-900 border border-navy-200 dark:border-white/10 rounded-2xl p-4 shadow-sm">
       <h3 className="text-sm font-bold text-navy dark:text-white mb-3 flex items-center gap-1.5">
         <CreditCard className="w-4 h-4 text-electric" />
         Pay As You Go

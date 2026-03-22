@@ -100,7 +100,7 @@ export default function DashboardABTests({
   const appUrl = typeof window !== "undefined" ? window.location.origin : "";
 
   return (
-    <div className="rounded-2xl border border-navy-100 dark:border-white/5 bg-white dark:bg-navy-800 p-5 sm:p-6">
+    <div className="rounded-2xl border border-navy-100 dark:border-white/5 bg-white dark:bg-navy-900 p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-violet-50 dark:bg-violet-500/10 flex items-center justify-center">

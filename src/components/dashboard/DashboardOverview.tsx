@@ -124,7 +124,7 @@ export default function DashboardOverview({
           const content = (
             <div
               key={stat.label}
-              className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-6 hover:shadow-card-hover hover:-translate-y-0.5 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+              className="bg-white dark:bg-navy-900 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-6 hover:shadow-card-hover hover:-translate-y-0.5 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0"
             >
               <div className="flex items-center gap-3 mb-3">
                 <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl ${stat.bgColor} flex items-center justify-center shrink-0 ${stat.color}`}>

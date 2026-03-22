@@ -357,7 +357,7 @@ function EditContactModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60" />
       <div
-        className="relative bg-white dark:bg-[#0F0F14] border border-navy-200 dark:border-white/[0.06] rounded-2xl w-full max-w-md p-6 space-y-4 mx-4"
+        className="relative bg-white dark:bg-navy-950 border border-navy-200 dark:border-white/[0.06] rounded-2xl w-full max-w-md p-6 space-y-4 mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-sm font-semibold text-navy dark:text-white">Edit Deal Details - {contact.name}</h3>
@@ -703,7 +703,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
 
   if (!limits.fundraiseTracker) {
     return (
-      <section className="rounded-2xl border border-navy-200 dark:border-white/[0.08] bg-white dark:bg-[#0F0F14] p-6 shadow-lg">
+      <section className="rounded-2xl border border-navy-200 dark:border-white/[0.08] bg-white dark:bg-navy-950 p-6 shadow-lg">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-base font-semibold text-navy dark:text-white flex items-center gap-2">
             <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -730,7 +730,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
   const editContact = editModalId ? contacts.find((c) => c.id === editModalId) : null;
 
   return (
-    <section className="rounded-2xl border border-navy-200 dark:border-white/[0.08] bg-white dark:bg-[#0F0F14] p-6 space-y-5 shadow-lg">
+    <section className="rounded-2xl border border-navy-200 dark:border-white/[0.08] bg-white dark:bg-navy-950 p-6 space-y-5 shadow-lg">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-navy dark:text-white flex items-center gap-2">
           <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

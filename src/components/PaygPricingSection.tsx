@@ -88,7 +88,7 @@ function PassCard({
 
   return (
     <div
-      className={`bg-white dark:bg-navy-800 border ${TIER_ACCENTS[tier.id] ?? "border-navy-200 dark:border-white/10"} rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5`}
+      className={`bg-white dark:bg-navy-900 border ${TIER_ACCENTS[tier.id] ?? "border-navy-200 dark:border-white/10"} rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5`}
     >
       <div className="flex items-center gap-2 mb-1">
         <div className="text-electric">{TIER_ICONS[tier.id]}</div>
@@ -145,7 +145,7 @@ function CreditPackCard({
 
   return (
     <div
-      className={`relative bg-white dark:bg-navy-800 border rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 ${
+      className={`relative bg-white dark:bg-navy-900 border rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 ${
         pack.popular
           ? "ring-2 ring-electric border-electric/30"
           : "border-navy-200 dark:border-white/10"
@@ -340,7 +340,7 @@ export default function PaygPricingSection() {
               <h3 className="text-lg font-bold text-navy dark:text-white mb-4">
                 Credit Costs
               </h3>
-              <div className="overflow-x-auto rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-800">
+              <div className="overflow-x-auto rounded-2xl border border-navy-200 dark:border-white/10 bg-white dark:bg-navy-900">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-navy-200 dark:border-white/10 bg-navy-50 dark:bg-navy-950">

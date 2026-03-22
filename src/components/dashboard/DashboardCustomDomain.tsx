@@ -124,7 +124,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
   // Locked / gated state
   if (!hasAccess) {
     return (
-      <section className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-5 sm:p-6">
+      <section className="bg-white dark:bg-navy-900 rounded-2xl border border-navy-200 dark:border-white/10 p-5 sm:p-6">
         <div className="flex items-center gap-2 mb-3">
           <svg
             className="w-5 h-5 text-navy-400"
@@ -170,7 +170,7 @@ export default function DashboardCustomDomain({ plan }: { plan: string }) {
   }
 
   return (
-    <section className="bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-5 sm:p-6">
+    <section className="bg-white dark:bg-navy-900 rounded-2xl border border-navy-200 dark:border-white/10 p-5 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
         <svg
           className="w-5 h-5 text-navy-400"

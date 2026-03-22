@@ -62,7 +62,7 @@ export default function DashboardInvestorCRM({ plan }: { plan: string }) {
   if (!isGrowth) return null;
 
   return (
-    <div className="rounded-2xl border border-navy-100 dark:border-white/5 bg-white dark:bg-navy-800 p-5 sm:p-6">
+    <div className="rounded-2xl border border-navy-100 dark:border-white/5 bg-white dark:bg-navy-900 p-5 sm:p-6">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-8 h-8 rounded-lg bg-green-50 dark:bg-green-500/10 flex items-center justify-center">
           <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>

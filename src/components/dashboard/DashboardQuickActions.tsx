@@ -137,7 +137,7 @@ export default function DashboardQuickActions({ plan = "starter" }: { plan?: str
             key={action.label}
             href={action.href}
             aria-label={`${action.label} — ${action.description}`}
-            className="group bg-white dark:bg-navy-800 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+            className="group bg-white dark:bg-navy-900 rounded-2xl border border-navy-200 dark:border-white/10 p-4 sm:p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
             <div className={`w-10 h-10 rounded-xl ${action.bgColor} flex items-center justify-center mb-3 ${action.color} group-hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:group-hover:scale-100`}>
               {action.icon}

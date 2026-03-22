@@ -53,7 +53,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
       ? "bg-navy/95 border-white/10 shadow-xl shadow-black/30 backdrop-blur-xl"
       : "bg-navy/80 border-white/[0.08] backdrop-blur-xl"
     : scrolled
-      ? "glass border-navy-200/60 shadow-lg shadow-black/5 dark:bg-navy-800/90 dark:border-white/10"
+      ? "glass border-navy-200/60 shadow-lg shadow-black/5 dark:bg-navy-900/90 dark:border-white/10"
       : "bg-white/60 border-navy-200/40 backdrop-blur-xl dark:bg-navy-900/60 dark:border-white/[0.08]";
 
   const textColor = isLanding

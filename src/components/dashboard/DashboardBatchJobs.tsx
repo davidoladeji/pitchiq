@@ -63,8 +63,8 @@ export default function DashboardBatchJobs({ plan }: { plan: string }) {
   // Locked state for non-enterprise plans
   if (!isEnterprise) {
     return (
-      <div className="bg-white dark:bg-navy-800 rounded-2xl p-6 relative overflow-hidden">
-        <div className="absolute inset-0 bg-white/60 dark:bg-navy-800/60 backdrop-blur-[1px] z-10 flex flex-col items-center justify-center">
+      <div className="bg-white dark:bg-navy-900 rounded-2xl p-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-white/60 dark:bg-navy-900/60 backdrop-blur-[1px] z-10 flex flex-col items-center justify-center">
           <svg
             className="w-8 h-8 text-navy-300 mb-2"
             fill="none"
@@ -97,7 +97,7 @@ export default function DashboardBatchJobs({ plan }: { plan: string }) {
   }
 
   return (
-    <div className="bg-white dark:bg-navy-800 rounded-2xl p-6">
+    <div className="bg-white dark:bg-navy-900 rounded-2xl p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-navy-900 dark:text-white">Batch Scoring</h3>
         <div className="flex items-center gap-2">

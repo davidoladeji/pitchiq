@@ -100,7 +100,7 @@ export default function DashboardProfilePrompt({
 
   // ── Paid plans: create / add more profiles ──────────────────────────
   return (
-    <section className="rounded-2xl border border-electric/20 bg-white dark:bg-navy-800 p-5 sm:p-6">
+    <section className="rounded-2xl border border-electric/20 bg-white dark:bg-navy-900 p-5 sm:p-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         {/* Icon */}
         <div className="w-12 h-12 rounded-xl bg-electric/10 flex items-center justify-center shrink-0">
