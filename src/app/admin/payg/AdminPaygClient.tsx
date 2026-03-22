@@ -231,6 +231,13 @@ export default function AdminPaygClient() {
     msg: string;
   } | null>(null);
 
+  // Create pass form
+  const [createEmail, setCreateEmail] = useState("");
+  const [createTier, setCreateTier] = useState("basic");
+  const [createDays, setCreateDays] = useState(7);
+  const [creating, setCreating] = useState(false);
+  const [createFlash, setCreateFlash] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+
   // Extend modal
   const [extendPass, setExtendPass] = useState<PassRow | null>(null);
 
@@ -352,6 +359,31 @@ export default function AdminPaygClient() {
     }
   }
 
+  // ── Create pass ──
+  async function handleCreatePass(e: React.FormEvent) {
+    e.preventDefault();
+    if (!createEmail.trim()) return;
+    setCreating(true);
+    setCreateFlash(null);
+    try {
+      const res = await fetch("/api/admin/payg/passes/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: createEmail.trim(), tier: createTier, durationDays: createDays }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to create pass");
+      setCreateFlash({ type: "success", msg: `Pass created for ${createEmail.trim()} — ${createTier} for ${createDays} days` });
+      setCreateEmail("");
+      fetchPasses();
+      fetchStats();
+    } catch (err) {
+      setCreateFlash({ type: "error", msg: err instanceof Error ? err.message : "Failed to create pass" });
+    } finally {
+      setCreating(false);
+    }
+  }
+
   // ── Active passes count ──
   const activePassCount =
     stats?.activePassesByTier.reduce((sum, g) => sum + g.count, 0) ?? 0;
@@ -428,6 +460,61 @@ export default function AdminPaygClient() {
           </div>
         </div>
       )}
+
+      {/* ── Create Pass Form ── */}
+      <div className="rounded-2xl bg-white/[0.03] border border-white/5 px-5 py-4">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-white/30 mb-3">
+          Create Period Pass
+        </h3>
+        {createFlash && (
+          <div className={`rounded-lg px-3 py-2 text-xs mb-3 ${createFlash.type === "success" ? "bg-emerald-500/10 border border-emerald-500/20 text-emerald-400" : "bg-red-500/10 border border-red-500/20 text-red-400"}`}>
+            {createFlash.msg}
+          </div>
+        )}
+        <form onSubmit={handleCreatePass} className="flex flex-wrap gap-3 items-end">
+          <div className="flex-1 min-w-[200px]">
+            <label className="block text-[11px] text-white/30 mb-1">User Email</label>
+            <input
+              type="email"
+              value={createEmail}
+              onChange={(e) => setCreateEmail(e.target.value)}
+              placeholder="user@example.com"
+              required
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/20 outline-none focus:border-[#4361EE]"
+            />
+          </div>
+          <div className="w-32">
+            <label className="block text-[11px] text-white/30 mb-1">Tier</label>
+            <select
+              value={createTier}
+              onChange={(e) => setCreateTier(e.target.value)}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white"
+            >
+              <option value="basic">Basic</option>
+              <option value="growth">Growth</option>
+              <option value="full">Full</option>
+            </select>
+          </div>
+          <div className="w-24">
+            <label className="block text-[11px] text-white/30 mb-1">Days</label>
+            <input
+              type="number"
+              value={createDays}
+              onChange={(e) => setCreateDays(Number(e.target.value))}
+              min={1}
+              max={365}
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={creating || !createEmail.trim()}
+            className="px-4 py-2 rounded-xl bg-[#4361EE] text-white text-sm font-semibold hover:bg-[#3651d4] disabled:opacity-40 transition-colors"
+          >
+            {creating ? "Creating..." : "Create Pass"}
+          </button>
+        </form>
+      </div>
 
       {/* ── Action flash ── */}
       {actionFlash && (
