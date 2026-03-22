@@ -670,19 +670,34 @@ export default function StartupProfilePage() {
   /* ---- Loading state ---- */
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0F0F14" }}>
-        <Loader2 className="w-8 h-8 animate-spin text-[#4361EE]" />
-      </div>
+      <main
+        id="main"
+        tabIndex={-1}
+        className="min-h-screen flex flex-col items-center justify-center outline-none"
+        style={{ background: "#0F0F14" }}
+        aria-busy="true"
+      >
+        <span className="sr-only">Loading startup profiles</span>
+        <Loader2 className="w-8 h-8 animate-spin motion-reduce:animate-none text-[#4361EE]" aria-hidden />
+      </main>
     );
   }
 
   /* ---- Starter plan: locked state ---- */
   if (limits.maxStartupProfiles === 0) {
     return (
-      <div className="min-h-screen" style={{ background: "#0F0F14" }}>
+      <main
+        id="main"
+        tabIndex={-1}
+        className="min-h-screen outline-none"
+        style={{ background: "#0F0F14" }}
+        aria-labelledby="startup-profile-page-heading"
+      >
         <div className="mx-auto max-w-2xl px-4 py-8">
           <div className="mb-6">
-            <h1 className="text-xl font-bold text-white">Startup Profiles</h1>
+            <h1 id="startup-profile-page-heading" className="text-xl font-bold text-white">
+              Startup Profiles
+            </h1>
             <p className="mt-1 text-sm text-white/40">
               Startup profiles are available on Pro and above.
             </p>
@@ -722,7 +737,7 @@ export default function StartupProfilePage() {
               {/* CTA */}
               <Link
                 href="/billing"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#4361EE] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3651DE] hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4361EE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F0F14]"
+                className="inline-flex items-center gap-2 min-h-[44px] rounded-xl bg-[#4361EE] px-6 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#3651DE] hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4361EE] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F0F14]"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -745,7 +760,7 @@ export default function StartupProfilePage() {
             </Link>
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -1119,7 +1134,13 @@ export default function StartupProfilePage() {
   /*  Render                                                           */
   /* ---------------------------------------------------------------- */
   return (
-    <div className="min-h-screen" style={{ background: "#0F0F14" }}>
+    <main
+      id="main"
+      tabIndex={-1}
+      className="min-h-screen outline-none"
+      style={{ background: "#0F0F14" }}
+      aria-labelledby="startup-profile-page-heading"
+    >
       {/* Close dropdown on outside click */}
       {(countryOpen || industrySuggOpen) && (
         <div
@@ -1133,7 +1154,9 @@ export default function StartupProfilePage() {
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl font-bold text-white">Startup Profiles</h1>
+              <h1 id="startup-profile-page-heading" className="text-xl font-bold text-white">
+                Startup Profiles
+              </h1>
               <p className="mt-1 text-sm text-white/40">
                 {profiles.length === 0
                   ? "Create your first profile to get matched with relevant investors."
@@ -1179,7 +1202,7 @@ export default function StartupProfilePage() {
                   title="Delete profile"
                 >
                   {deleting === p.id ? (
-                    <Loader2 className="w-3 h-3 animate-spin" />
+                    <Loader2 className="w-3 h-3 animate-spin motion-reduce:animate-none" aria-hidden />
                   ) : (
                     <Trash2 className="w-3 h-3" />
                   )}
@@ -1207,7 +1230,7 @@ export default function StartupProfilePage() {
               className="flex items-center gap-1 text-xs text-white/30 hover:text-red-400 transition-colors disabled:opacity-50"
             >
               {deleting === profiles[0].id ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
+                <Loader2 className="w-3 h-3 animate-spin motion-reduce:animate-none" aria-hidden />
               ) : (
                 <Trash2 className="w-3 h-3" />
               )}
@@ -1299,7 +1322,7 @@ export default function StartupProfilePage() {
               disabled={saving}
               className="flex items-center gap-1 rounded-lg bg-[#4361EE] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#3651DE] disabled:opacity-50"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+              {saving ? <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden /> : null}
               Next
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -1310,13 +1333,13 @@ export default function StartupProfilePage() {
               disabled={saving}
               className="flex items-center gap-1 rounded-lg bg-[#4361EE] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#3651DE] disabled:opacity-50"
             >
-              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+              {saving ? <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden /> : <Save className="w-4 h-4" />}
               Save & Find Matches
             </button>
           )}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 

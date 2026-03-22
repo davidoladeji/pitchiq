@@ -652,7 +652,7 @@ function Pill({ text, color }: { text: string; color?: string }) {
 
 function TableSkeleton() {
   return (
-    <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-6 animate-pulse space-y-4">
+    <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-6 animate-pulse motion-reduce:animate-none space-y-4">
       {[1, 2, 3, 4, 5].map((i) => (
         <div key={i} className="flex items-center gap-4">
           <div className="h-4 w-40 bg-white/5 rounded" />

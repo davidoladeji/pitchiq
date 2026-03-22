@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import { rateLimit } from "@/lib/rate-limit";
+import { checkAccess } from "@/lib/credit-gate";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,16 @@ export async function GET() {
         { error: "Too many requests" },
         { status: 429 }
       );
+    }
+
+    // Only charge credits once per day for analytics viewing
+    const today = new Date().toISOString().slice(0, 10);
+    const gate = await checkAccess(userId, "analytics_view", {
+      resourceId: `analytics-daily-${today}`,
+      description: "View deck analytics"
+    });
+    if (!gate.allowed) {
+      return NextResponse.json({ error: gate.error || "Analytics requires Growth plan, a pass, or credits.", upgradeOptions: gate.upgradeOptions }, { status: 403 });
     }
 
     // Get all user decks with their views

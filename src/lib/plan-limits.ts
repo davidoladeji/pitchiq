@@ -204,3 +204,33 @@ export function isPlanAtLeast(plan: string, minPlan: string): boolean {
   if (minIndex === -1) return false;
   return planIndex >= minIndex;
 }
+
+/**
+ * Get effective plan limits for a user, considering subscription + PAYG.
+ * This is the NEW entry point — resolves subscription, period passes, and credits.
+ * Falls back to getPlanLimits(user.plan) if entitlement resolution fails.
+ */
+export async function getEffectiveLimits(userId: string) {
+  try {
+    const { resolveEntitlements } = await import("@/lib/entitlements");
+    return resolveEntitlements(userId);
+  } catch (e) {
+    console.error("[getEffectiveLimits] Failed, falling back to plan-based limits:", e);
+    // Fallback: just use the user's subscription plan
+    const { prisma } = await import("@/lib/db");
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { plan: true },
+    });
+    const plan = user?.plan || "starter";
+    const limits = getPlanLimits(plan);
+    return {
+      limits,
+      source: { type: "subscription" as const, plan },
+      allSources: [{ type: "subscription" as const, plan }],
+      hasActiveEntitlement: plan !== "starter",
+      creditBalance: 0,
+      activePass: null,
+    };
+  }
+}

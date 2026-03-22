@@ -83,8 +83,12 @@ export default function AdminMatchingConfigPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="w-6 h-6 border-2 border-[#4361EE] border-t-transparent rounded-full animate-spin" />
+      <div className="flex flex-col items-center justify-center h-64 gap-2" role="status">
+        <span className="sr-only">Loading matching configuration</span>
+        <div
+          className="w-6 h-6 border-2 border-[#4361EE] border-t-transparent rounded-full animate-spin motion-reduce:animate-none motion-reduce:border-[#4361EE]/40"
+          aria-hidden
+        />
       </div>
     );
   }

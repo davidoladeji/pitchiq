@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
-import { getPlanLimits } from "@/lib/plan-limits";
+import { checkAccess } from "@/lib/credit-gate";
 import { nanoid } from "nanoid";
 
 /**
@@ -17,16 +17,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Sign in required" }, { status: 401 });
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { plan: true },
-    });
-    const limits = getPlanLimits(user?.plan || "starter");
-    if (!limits.abTesting) {
-      return NextResponse.json(
-        { error: "Upgrade to Growth to use A/B testing" },
-        { status: 403 }
-      );
+    const gate = await checkAccess(userId, "ab_test", { description: "Create A/B test" });
+    if (!gate.allowed) {
+      return NextResponse.json({ error: gate.error || "A/B testing requires Growth plan, a pass, or credits.", upgradeOptions: gate.upgradeOptions }, { status: 403 });
     }
 
     const { deckAShareId, deckBShareId } = (await req.json()) as {

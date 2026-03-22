@@ -133,6 +133,10 @@ model User {
   customDomains        CustomDomain[]
   practiceSessions     PitchPracticeSession[]
   startupProfiles      StartupProfile[]
+  // PAYG
+  periodPasses         PeriodPass[]
+  creditBalance        CreditBalance?
+  creditTransactions   CreditTransaction[]
 }
 
 model Account {
@@ -670,6 +674,80 @@ model Notification {
 
   @@index([userId, read])
   @@index([userId, createdAt])
+}
+
+// --- Period Pass: time-bound access at a tier level ---
+model PeriodPass {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tier            String   // "basic" | "growth" | "full"
+  startsAt        DateTime
+  expiresAt       DateTime
+  durationDays    Int      // 1, 3, 7, 14, 30, etc.
+
+  // Stripe
+  stripePaymentId String?
+  amountCents     Int      // What they paid
+  currency        String   @default("usd")
+
+  // Status
+  status          String   @default("active") // "active" | "expired" | "refunded"
+  autoRenew       Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([expiresAt])
+}
+
+// --- Credit balance ---
+model CreditBalance {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  balance   Int      @default(0)  // Current credit balance
+  lifetime  Int      @default(0)  // Total credits ever purchased (for loyalty/stats)
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+// --- Credit transactions (full audit trail) ---
+model CreditTransaction {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type         String   // "purchase" | "usage" | "refund" | "bonus" | "expiry"
+  amount       Int      // Positive for additions, negative for usage
+  balanceAfter Int      // Balance after this transaction (for audit trail)
+
+  // For purchases
+  packId            String?
+  stripePaymentId   String?
+  amountCents       Int?     // What they paid in cents
+
+  // For usage
+  action       String?  // "create_deck" | "ai_generation" | "export_pptx" | etc.
+  resourceId   String?  // ID of the deck/resource the credit was spent on
+
+  description  String?  // Human-readable: "Created deck 'Series A Pitch'"
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+  @@index([userId, type])
+  @@index([createdAt])
+}
+
+// --- Admin-configurable PAYG pricing ---
+model PaygConfig {
+  id        String   @id @default(uuid())
+  key       String   @unique  // Config key
+  value     String             // JSON value
+  updatedAt DateTime @updatedAt
 }
 
 // --- Matching algorithm config (admin-tunable) ---

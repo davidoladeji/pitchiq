@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
-import { getPlanLimits } from "@/lib/plan-limits";
+import { checkAccess } from "@/lib/credit-gate";
 import { SEED_INVESTORS } from "@/lib/investor-seed-data";
 
 export const dynamic = "force-dynamic";
@@ -86,17 +86,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Check plan gating — investorCRM required (Growth+)
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { plan: true },
-  });
-  const userPlan = user?.plan || "starter";
-  const limits = getPlanLimits(userPlan);
-
-  if (!limits.investorCRM) {
+  const gate = await checkAccess(userId, "investor_match", { description: "Investor discovery" });
+  if (!gate.allowed) {
     return NextResponse.json(
-      { error: "Investor discovery requires a Growth plan or higher" },
+      { error: gate.error || "Investor discovery requires Growth plan, a pass, or credits.", upgradeOptions: gate.upgradeOptions },
       { status: 403 },
     );
   }

@@ -137,9 +137,9 @@ export default function DashboardQuickActions({ plan = "starter" }: { plan?: str
             key={action.label}
             href={action.href}
             aria-label={`${action.label} — ${action.description}`}
-            className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all"
+            className="group bg-white rounded-2xl border border-navy-200 p-4 sm:p-5 hover:shadow-card-hover hover:-translate-y-0.5 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0"
           >
-            <div className={`w-10 h-10 rounded-xl ${action.bgColor} flex items-center justify-center mb-3 ${action.color} group-hover:scale-110 transition-transform`}>
+            <div className={`w-10 h-10 rounded-xl ${action.bgColor} flex items-center justify-center mb-3 ${action.color} group-hover:scale-110 transition-transform motion-reduce:transition-none motion-reduce:group-hover:scale-100`}>
               {action.icon}
             </div>
             <h3 className="text-sm font-bold text-navy group-hover:text-electric transition-colors">

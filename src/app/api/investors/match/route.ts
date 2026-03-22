@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
-import { getPlanLimits } from "@/lib/plan-limits";
+import { checkAccess } from "@/lib/credit-gate";
 import {
   rankInvestors,
   deckToMatchInput,
@@ -115,24 +115,16 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { plan: true },
-  });
-  if (!user) {
-    return NextResponse.json({ error: "User not found" }, { status: 404 });
-  }
+  const source = req.nextUrl.searchParams.get("source");
+  const deckId = req.nextUrl.searchParams.get("deckId");
 
-  const limits = getPlanLimits(user.plan);
-  if (!limits.investorCRM) {
+  const gate = await checkAccess(session.user.id, "investor_match", { resourceId: deckId || undefined, description: "Investor matching" });
+  if (!gate.allowed) {
     return NextResponse.json(
-      { error: "Investor matching requires Growth plan or higher." },
+      { error: gate.error || "Investor matching requires Growth plan, a pass, or credits.", upgradeOptions: gate.upgradeOptions },
       { status: 403 },
     );
   }
-
-  const source = req.nextUrl.searchParams.get("source");
-  const deckId = req.nextUrl.searchParams.get("deckId");
   const profileId = req.nextUrl.searchParams.get("profileId");
 
   // Build match input from either startup profile or deck

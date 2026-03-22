@@ -1,0 +1,264 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import {
+  Clock,
+  Coins,
+  ArrowUpRight,
+  ShoppingCart,
+  Calendar,
+  CreditCard,
+  Sparkles,
+} from "lucide-react";
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+interface ActivePass {
+  tier: string;
+  expiresAt: string;
+  daysLeft: number;
+  startsAt: string;
+}
+
+interface CreditTransaction {
+  id: string;
+  type: string;
+  amount: number;
+  description: string;
+  createdAt: string;
+}
+
+interface PaygStatusData {
+  subscription: { plan: string; active: boolean };
+  activePasses: ActivePass[];
+  creditBalance: number;
+  effectivePlan: string;
+  recentCredits: CreditTransaction[];
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const TIER_LABELS: Record<string, string> = {
+  basic: "Basic Pass",
+  growth: "Growth Pass",
+  full: "Full Access",
+};
+
+const TIER_COLORS: Record<string, string> = {
+  basic: "bg-[#4361EE]/15 text-[#4361EE]",
+  growth: "bg-violet-500/15 text-violet-400",
+  full: "bg-amber-500/15 text-amber-400",
+};
+
+function relativeTime(dateStr: string): string {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60_000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days}d ago`;
+}
+
+function txBadge(type: string): { label: string; cls: string } {
+  switch (type) {
+    case "purchase":
+      return { label: "Purchase", cls: "bg-emerald-500/15 text-emerald-400" };
+    case "usage":
+      return { label: "Usage", cls: "bg-orange-500/15 text-orange-400" };
+    case "bonus":
+      return { label: "Bonus", cls: "bg-[#4361EE]/15 text-[#4361EE]" };
+    case "refund":
+      return { label: "Refund", cls: "bg-violet-500/15 text-violet-400" };
+    default:
+      return { label: type, cls: "bg-white/[0.06] text-white/50" };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Skeleton
+// ---------------------------------------------------------------------------
+
+function Skeleton() {
+  return (
+    <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4 animate-pulse">
+      <div className="flex items-center gap-2 mb-3">
+        <div className="w-5 h-5 rounded bg-white/10" />
+        <div className="h-4 w-32 rounded bg-white/10" />
+      </div>
+      <div className="space-y-3">
+        <div className="h-8 w-20 rounded bg-white/[0.06]" />
+        <div className="h-3 w-full rounded bg-white/[0.04]" />
+        <div className="h-3 w-3/4 rounded bg-white/[0.04]" />
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
+
+export default function PaygStatus() {
+  const [data, setData] = useState<PaygStatusData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        const res = await fetch("/api/payg/status");
+        if (!res.ok) throw new Error("fetch failed");
+        const json = await res.json();
+        if (!cancelled) setData(json);
+      } catch {
+        // silently fail — widget is non-critical
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (loading) return <Skeleton />;
+  if (!data) return null;
+
+  const { activePasses, creditBalance, effectivePlan, recentCredits } = data;
+  const activePass = activePasses[0] ?? null;
+  const showUpgrade = effectivePlan === "starter";
+  const recentThree = recentCredits.slice(0, 3);
+
+  return (
+    <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4">
+      <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-1.5">
+        <CreditCard className="w-4 h-4 text-[#4361EE]" />
+        Pay As You Go
+      </h3>
+
+      {/* Active pass */}
+      {activePass && (
+        <div className="flex items-center gap-2 mb-3">
+          <span
+            className={`px-2 py-0.5 rounded-md text-xs font-semibold ${TIER_COLORS[activePass.tier] ?? "bg-white/[0.06] text-white/50"}`}
+          >
+            {TIER_LABELS[activePass.tier] ?? activePass.tier}
+          </span>
+          <span className="flex items-center gap-1 text-xs text-white/50">
+            <Clock className="w-3 h-3" />
+            {activePass.daysLeft} day{activePass.daysLeft !== 1 ? "s" : ""} left
+          </span>
+        </div>
+      )}
+
+      {/* Credit balance */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Coins className="w-4 h-4 text-amber-400" />
+          <span className="text-xl font-bold text-white tabular-nums">
+            {creditBalance}
+          </span>
+          <span className="text-xs text-white/40">credits</span>
+        </div>
+        <Link
+          href="/dashboard/credits"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[#4361EE] hover:text-[#3651DE] transition-colors"
+        >
+          <ShoppingCart className="w-3 h-3" />
+          Buy More
+        </Link>
+      </div>
+
+      {/* Upgrade prompt */}
+      {showUpgrade && !activePass && (
+        <div className="rounded-xl bg-white/[0.03] border border-white/5 p-3 mb-3">
+          <p className="text-xs text-white/50 mb-2">
+            Unlock more features with a plan, pass, or credits.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/#pricing"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#4361EE]/10 text-[#4361EE] text-[10px] font-semibold hover:bg-[#4361EE]/20 transition-colors"
+            >
+              <Sparkles className="w-3 h-3" />
+              Subscribe
+            </Link>
+            <Link
+              href="/#payg"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-500/10 text-violet-400 text-[10px] font-semibold hover:bg-violet-500/20 transition-colors"
+            >
+              <Calendar className="w-3 h-3" />
+              Get a Pass
+            </Link>
+            <Link
+              href="/dashboard/credits"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-[10px] font-semibold hover:bg-amber-500/20 transition-colors"
+            >
+              <Coins className="w-3 h-3" />
+              Buy Credits
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Recent transactions */}
+      {recentThree.length > 0 && (
+        <div>
+          <p className="text-[10px] uppercase tracking-wider text-white/30 font-semibold mb-2">
+            Recent Activity
+          </p>
+          <ul className="space-y-1.5">
+            {recentThree.map((tx) => {
+              const badge = txBadge(tx.type);
+              return (
+                <li
+                  key={tx.id}
+                  className="flex items-center justify-between text-xs"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-medium shrink-0 ${badge.cls}`}
+                    >
+                      {badge.label}
+                    </span>
+                    <span className="text-white/60 truncate">
+                      {tx.description}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0 ml-2">
+                    <span
+                      className={`font-semibold tabular-nums ${tx.amount >= 0 ? "text-emerald-400" : "text-red-400"}`}
+                    >
+                      {tx.amount >= 0 ? "+" : ""}
+                      {tx.amount}
+                    </span>
+                    <span className="text-white/30">
+                      {relativeTime(tx.createdAt)}
+                    </span>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+          {recentCredits.length > 3 && (
+            <Link
+              href="/dashboard/credits"
+              className="inline-flex items-center gap-1 text-[10px] font-medium text-[#4361EE] hover:text-[#3651DE] mt-2 transition-colors"
+            >
+              View all
+              <ArrowUpRight className="w-3 h-3" />
+            </Link>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

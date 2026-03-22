@@ -15,7 +15,7 @@ export default function PIQScorePage() {
       <header>
         <AppNav />
       </header>
-      <main id="main" tabIndex={-1} className="pt-24" aria-label="Main content">
+      <main id="main" tabIndex={-1} className="pt-24 outline-none" aria-labelledby="piq-score-hero-heading">
         <PIQScoreExplainer />
       </main>
       <Footer />

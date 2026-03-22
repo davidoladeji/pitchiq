@@ -202,7 +202,58 @@ async function handleOneTimePayment(session: Stripe.Checkout.Session) {
     typeof session.payment_intent === "string"
       ? session.payment_intent
       : session.payment_intent?.id;
-  const deckId = session.metadata?.deckId ?? null;
+  const metadata = session.metadata || {};
+
+  // --- Period Pass ---
+  if (metadata.type === "period_pass") {
+    const userId = metadata.userId;
+    const tier = metadata.tier;
+    const durationDays = parseInt(metadata.durationDays || "0", 10);
+
+    if (userId && tier && durationDays > 0) {
+      const now = new Date();
+      await prisma.periodPass.create({
+        data: {
+          userId,
+          tier,
+          startsAt: now,
+          expiresAt: new Date(now.getTime() + durationDays * 24 * 60 * 60 * 1000),
+          durationDays,
+          stripePaymentId: paymentIntentId || session.id,
+          amountCents: session.amount_total ?? 0,
+          currency: session.currency ?? "usd",
+          status: "active",
+        },
+      });
+      console.log(`[Webhook] Period pass created: ${tier} for ${durationDays}d, user ${userId}`);
+    }
+  }
+
+  // --- Credit Purchase ---
+  if (metadata.type === "credit_purchase") {
+    const userId = metadata.userId;
+    const packId = metadata.packId;
+    const credits = parseInt(metadata.credits || "0", 10);
+    const bonus = parseInt(metadata.bonus || "0", 10);
+
+    if (userId && credits > 0) {
+      const { addCredits } = await import("@/lib/credits");
+      await addCredits(userId, credits + bonus, "purchase", {
+        packId: packId || undefined,
+        stripePaymentId: paymentIntentId || session.id,
+        amountCents: session.amount_total ?? 0,
+      });
+      console.log(`[Webhook] Credits added: ${credits}+${bonus} bonus for user ${userId}`);
+    }
+  }
+
+  // --- Always record transaction ---
+  const userId = metadata.userId || null;
+  // Resolve userId from customer if not in metadata
+  let resolvedUserId = userId;
+  if (!resolvedUserId) {
+    resolvedUserId = await resolveUserId(null, session.customer);
+  }
 
   await prisma.transaction.create({
     data: {
@@ -210,7 +261,7 @@ async function handleOneTimePayment(session: Stripe.Checkout.Session) {
       amountCents: session.amount_total ?? 0,
       currency: session.currency ?? "usd",
       status: "succeeded",
-      deckId: deckId || undefined,
+      userId: resolvedUserId || undefined,
     },
   });
 }

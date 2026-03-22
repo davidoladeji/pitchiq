@@ -895,7 +895,10 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
       {/* Content */}
       {loading ? (
         <div className="text-center py-8" role="status">
-          <div className="w-5 h-5 border-2 border-[#4361EE] border-t-transparent rounded-full animate-spin mx-auto" aria-hidden="true" />
+          <div
+            className="w-5 h-5 border-2 border-[#4361EE] border-t-transparent rounded-full animate-spin motion-reduce:animate-none motion-reduce:border-[#4361EE]/40 mx-auto"
+            aria-hidden="true"
+          />
           <span className="sr-only">Loading investor contacts</span>
         </div>
       ) : contacts.length === 0 ? (

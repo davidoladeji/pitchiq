@@ -6,6 +6,7 @@ import { generateDeck } from "@/lib/generate-deck";
 import { scoreDeck } from "@/lib/piq-score";
 import { DeckInput } from "@/lib/types";
 import { getPlanLimits } from "@/lib/plan-limits";
+import { checkAccess } from "@/lib/credit-gate";
 import { nanoid } from "nanoid";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -62,13 +63,15 @@ export async function POST(req: NextRequest) {
     const planLimits = getPlanLimits(userPlan);
 
     if (deckCount >= planLimits.maxDecks) {
-      return NextResponse.json(
-        {
-          error: `You've reached your deck limit (${planLimits.maxDecks}). Upgrade your plan for more decks.`,
-          code: "PLAN_LIMIT",
-        },
-        { status: 403 }
-      );
+      // NEW: Try credit-based access
+      const gate = await checkAccess(userId, "create_deck", { description: `Create deck: ${body.companyName || "Untitled"}` });
+      if (!gate.allowed) {
+        return NextResponse.json(
+          { error: `You've reached your deck limit (${planLimits.maxDecks}). Upgrade your plan, get a pass, or use credits.`, code: "PLAN_LIMIT", upgradeOptions: gate.upgradeOptions },
+          { status: 403 },
+        );
+      }
+      // Credits were used to bypass limit — continue with creation
     }
 
     // Validate theme for ALL users (not just authenticated)

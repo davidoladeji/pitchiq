@@ -242,7 +242,7 @@ function SectionHeader({ title }: { title: string }) {
 
 function CardSkeleton() {
   return (
-    <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-6 animate-pulse">
+    <div className="rounded-2xl bg-white/[0.03] border border-white/5 p-6 animate-pulse motion-reduce:animate-none">
       <div className="flex items-center gap-4">
         <div className="h-4 w-20 bg-white/5 rounded" />
         <div className="h-5 w-32 bg-white/5 rounded" />

@@ -11,7 +11,10 @@ export default function PIQScoreExplainer() {
         <span className="inline-block px-3.5 py-1.5 rounded-full bg-electric/10 text-electric text-[11px] font-semibold uppercase tracking-[0.2em] mb-5">
           PIQ Score Methodology
         </span>
-        <h1 className="text-4xl sm:text-5xl md:text-display-lg font-display font-bold text-navy tracking-[-0.02em] mb-5">
+        <h1
+          id="piq-score-hero-heading"
+          className="text-4xl sm:text-5xl md:text-display-lg font-display font-bold text-navy tracking-[-0.02em] mb-5"
+        >
           How investors evaluate startups
         </h1>
         <p className="text-lg text-navy-500 max-w-xl mx-auto leading-relaxed mb-8">
@@ -22,7 +25,7 @@ export default function PIQScoreExplainer() {
         <Link
           href="/create"
           aria-label="Get your PIQ Score — create your pitch deck in 60 seconds"
-          className="inline-flex items-center justify-center min-h-[44px] px-8 py-3.5 rounded-full bg-electric text-white font-semibold text-base shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="inline-flex items-center justify-center min-h-[44px] px-8 py-3.5 rounded-full bg-electric text-white font-semibold text-base shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           Get Your PIQ Score
         </Link>
@@ -312,7 +315,7 @@ export default function PIQScoreExplainer() {
         <Link
           href="/create"
           aria-label="Get your PIQ Score — create your pitch deck in 60 seconds"
-          className="inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+          className="inline-flex items-center justify-center min-h-[44px] px-10 py-4 rounded-full bg-electric text-white font-semibold text-lg shadow-lg shadow-electric/25 transition-all duration-300 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
         >
           Get Your PIQ Score
         </Link>

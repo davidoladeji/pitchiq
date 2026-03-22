@@ -86,7 +86,15 @@ export default function DeckViewerClient() {
           Loading deck
         </p>
         <AppNav />
-        <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content">
+        <main
+          id="main"
+          tabIndex={-1}
+          className="pt-24 pb-16 px-4 sm:px-6 outline-none"
+          aria-labelledby="deck-viewer-loading-heading"
+        >
+          <h1 id="deck-viewer-loading-heading" className="sr-only">
+            Loading deck
+          </h1>
           <div className="max-w-5xl mx-auto">
             <div className="text-center mb-8">
               <div className="h-8 w-48 mx-auto rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none mb-3" />
@@ -123,7 +131,12 @@ export default function DeckViewerClient() {
 
   if (error || !deck) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-navy-50 px-6">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="min-h-screen flex flex-col items-center justify-center bg-navy-50 px-6 outline-none"
+        aria-labelledby="deck-not-found-heading"
+      >
         <div className="w-16 h-16 rounded-2xl bg-navy-100 flex items-center justify-center mb-6">
           <svg
             className="w-8 h-8 text-navy-400"
@@ -140,7 +153,7 @@ export default function DeckViewerClient() {
             />
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-navy mb-2 tracking-tight">
+        <h1 id="deck-not-found-heading" className="text-2xl font-bold text-navy mb-2 tracking-tight">
           Deck not found
         </h1>
         <p className="text-navy-500 mb-8 text-center max-w-sm">{error}</p>
@@ -160,7 +173,7 @@ export default function DeckViewerClient() {
             Go to PitchIQ
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -168,10 +181,15 @@ export default function DeckViewerClient() {
     <div className="min-h-screen bg-navy-50">
       <AppNav />
 
-      <div className="pt-24 pb-16 px-4 sm:px-6 animate-fade-in">
+      <main
+        id="main"
+        tabIndex={-1}
+        className="pt-24 pb-16 px-4 sm:px-6 animate-fade-in motion-reduce:animate-none outline-none"
+        aria-labelledby="deck-viewer-title"
+      >
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-navy mb-1 tracking-tight">
+            <h1 id="deck-viewer-title" className="text-xl sm:text-2xl font-bold text-navy mb-1 tracking-tight">
               {deck.title}
             </h1>
             <p className="text-navy-500 text-sm mb-4">{deck.slides.length} slides</p>
@@ -293,7 +311,7 @@ export default function DeckViewerClient() {
             )}
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

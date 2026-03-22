@@ -105,7 +105,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
     <Link
       href="/create"
       aria-label="Get started — create your pitch deck"
-      className={`min-h-[44px] inline-flex items-center justify-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+      className={`min-h-[44px] inline-flex items-center justify-center px-4 py-1.5 rounded-full text-[13px] font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
         isLanding
           ? "bg-white text-navy hover:bg-navy-100 hover:shadow-md"
           : "bg-navy text-white hover:bg-navy/80 hover:shadow-md"
@@ -240,7 +240,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
 
         {/* Menu content */}
         <div
-          className={`relative z-10 flex flex-col justify-between h-full pt-24 pb-10 px-6 sm:px-8 transition-transform duration-300 ${
+          className={`relative z-10 flex flex-col justify-between h-full pt-24 pb-10 px-6 sm:px-8 transition-transform duration-300 motion-reduce:transition-none ${
             isMenuOpen ? "translate-y-0" : "-translate-y-4"
           }`}
         >
@@ -260,7 +260,7 @@ export default function AppNav({ variant = "app" }: AppNavProps) {
               href="/create"
               onClick={closeMenu}
               aria-label="Get started — create your pitch deck"
-              className="min-h-[44px] w-full inline-flex items-center justify-center py-3.5 rounded-full bg-electric hover:bg-electric-600 text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+              className="min-h-[44px] w-full inline-flex items-center justify-center py-3.5 rounded-full bg-electric hover:bg-electric-600 text-white font-semibold text-base shadow-lg shadow-electric/25 hover:shadow-glow transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
             >
               Get Started
             </Link>
