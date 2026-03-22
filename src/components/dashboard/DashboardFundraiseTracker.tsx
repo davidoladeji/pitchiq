@@ -35,7 +35,7 @@ interface InvestorContact {
 }
 
 const STATUSES = [
-  { value: "identified", label: "Identified", color: "bg-white/[0.06] text-white/50", darkColor: "border-white/10" },
+  { value: "identified", label: "Identified", color: "bg-navy-100 dark:bg-white/[0.06] text-navy-500 dark:text-white/50", darkColor: "border-navy-200 dark:border-white/10" },
   { value: "contacted", label: "Contacted", color: "bg-[#4361EE]/15 text-[#4361EE]", darkColor: "border-[#4361EE]/30" },
   { value: "meeting", label: "Meeting", color: "bg-indigo-500/15 text-indigo-400", darkColor: "border-indigo-500/30" },
   { value: "due_diligence", label: "Due Diligence", color: "bg-amber-500/15 text-amber-400", darkColor: "border-amber-500/30" },
@@ -139,14 +139,14 @@ function KanbanCard({
       draggable
       onDragStart={onDragStart}
       onClick={onClick}
-      className="px-3 py-2.5 rounded-lg bg-white/[0.03] border border-white/[0.06] cursor-grab active:cursor-grabbing hover:bg-white/[0.05] transition-colors"
+      className="px-3 py-2.5 rounded-lg bg-white dark:bg-white/[0.03] border border-navy-200 dark:border-white/[0.06] cursor-grab active:cursor-grabbing hover:bg-navy-100 dark:hover:bg-white/[0.05] transition-colors"
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-white truncate">{contact.name}</span>
+        <span className="text-xs font-medium text-navy dark:text-white truncate">{contact.name}</span>
         {sentiment && <span className="text-sm">{sentiment}</span>}
       </div>
       {contact.firm && (
-        <span className="text-[10px] text-white/30 block truncate">{contact.firm}</span>
+        <span className="text-[10px] text-navy-300 dark:text-white/30 block truncate">{contact.firm}</span>
       )}
       <div className="flex items-center gap-2 mt-1.5 flex-wrap">
         {contact.warmIntro && (
@@ -155,10 +155,10 @@ function KanbanCard({
           </span>
         )}
         {contact.dealProbability != null && (
-          <span className="text-[9px] text-white/30">{contact.dealProbability}% prob</span>
+          <span className="text-[9px] text-navy-300 dark:text-white/30">{contact.dealProbability}% prob</span>
         )}
         {lastDays != null && (
-          <span className={`text-[9px] ${lastDays > 14 ? "text-amber-400" : "text-white/30"}`}>
+          <span className={`text-[9px] ${lastDays > 14 ? "text-amber-400" : "text-navy-300 dark:text-white/30"}`}>
             {lastDays}d ago
           </span>
         )}
@@ -227,16 +227,16 @@ function KanbanBoard({
           <div
             key={col.value}
             className={`w-52 shrink-0 rounded-xl border ${
-              dragOverCol === col.value ? "border-[#4361EE]/40 bg-[#4361EE]/5" : "border-white/[0.06] bg-white/[0.02]"
+              dragOverCol === col.value ? "border-[#4361EE]/40 bg-[#4361EE]/5" : "border-navy-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02]"
             } transition-colors`}
             onDragOver={(e) => handleDragOver(e, col.value)}
             onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, col.value)}
           >
             {/* Column header */}
-            <div className="px-3 py-2.5 border-b border-white/[0.06]">
+            <div className="px-3 py-2.5 border-b border-navy-200 dark:border-white/[0.06]">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-white/60">{col.label}</span>
+                <span className="text-[11px] font-semibold text-navy-500 dark:text-white/60">{col.label}</span>
                 <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${col.color}`}>
                   {col.contacts.length}
                 </span>
@@ -295,19 +295,19 @@ function PipelineAnalytics({ contacts }: { contacts: InvestorContact[] }) {
   });
 
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 mb-4">
+    <div className="rounded-xl border border-navy-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] p-4 mb-4">
       <div className="flex flex-wrap items-center gap-4">
         {/* Pipeline value */}
         <div>
-          <span className="text-[10px] text-white/30 block">Pipeline Value</span>
-          <span className="text-lg font-bold text-white">{formatAmount(pipelineValue)}</span>
+          <span className="text-[10px] text-navy-300 dark:text-white/30 block">Pipeline Value</span>
+          <span className="text-lg font-bold text-navy dark:text-white">{formatAmount(pipelineValue)}</span>
         </div>
         {/* Stage counts */}
         <div className="flex items-center gap-3 ml-auto">
           {stageConversions.filter((s) => s.count > 0).map((s) => (
             <div key={s.from} className="text-center">
-              <span className="text-[10px] text-white/30 block">{s.from}</span>
-              <span className="text-sm font-semibold text-white">{s.count}</span>
+              <span className="text-[10px] text-navy-300 dark:text-white/30 block">{s.from}</span>
+              <span className="text-sm font-semibold text-navy dark:text-white">{s.count}</span>
             </div>
           ))}
         </div>
@@ -357,19 +357,19 @@ function EditContactModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/60" />
       <div
-        className="relative bg-[#0F0F14] border border-white/[0.06] rounded-2xl w-full max-w-md p-6 space-y-4 mx-4"
+        className="relative bg-white dark:bg-[#0F0F14] border border-navy-200 dark:border-white/[0.06] rounded-2xl w-full max-w-md p-6 space-y-4 mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-sm font-semibold text-white">Edit Deal Details - {contact.name}</h3>
+        <h3 className="text-sm font-semibold text-navy dark:text-white">Edit Deal Details - {contact.name}</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Warm intro */}
           <div className="flex items-center gap-3">
-            <label className="flex items-center gap-2 text-xs text-white/60 cursor-pointer">
+            <label className="flex items-center gap-2 text-xs text-navy-500 dark:text-white/60 cursor-pointer">
               <input
                 type="checkbox"
                 checked={warmIntro}
                 onChange={(e) => setWarmIntro(e.target.checked)}
-                className="rounded border-white/20 bg-white/5 text-[#4361EE] focus:ring-[#4361EE] w-3.5 h-3.5"
+                className="rounded border-navy-300 dark:border-white/20 bg-navy-50 dark:bg-white/5 text-[#4361EE] focus:ring-[#4361EE] w-3.5 h-3.5"
               />
               Warm Intro Available
             </label>
@@ -380,13 +380,13 @@ function EditContactModal({
               placeholder="Intro source (e.g., mutual connection, portfolio founder)"
               value={introSource}
               onChange={(e) => setIntroSource(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white/70 placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
+              className="w-full px-3 py-2 rounded-lg bg-navy-50 dark:bg-white/[0.04] border border-navy-200 dark:border-white/[0.08] text-xs text-navy-600 dark:text-white/70 placeholder:text-navy-300 dark:placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
             />
           )}
 
           {/* Sentiment */}
           <div>
-            <label className="text-[11px] text-white/40 block mb-1.5">
+            <label className="text-[11px] text-navy-400 dark:text-white/40 block mb-1.5">
               Sentiment: {SENTIMENT_EMOJIS[sentiment]} {sentimentLabel(sentiment)}
             </label>
             <div className="flex items-center gap-2">
@@ -396,7 +396,7 @@ function EditContactModal({
                   type="button"
                   onClick={() => setSentiment(s)}
                   className={`w-8 h-8 rounded-lg text-base transition-colors ${
-                    sentiment === s ? "bg-[#4361EE]/20 ring-1 ring-[#4361EE]" : "bg-white/[0.04] hover:bg-white/[0.08]"
+                    sentiment === s ? "bg-[#4361EE]/20 ring-1 ring-[#4361EE]" : "bg-navy-50 dark:bg-white/[0.04] hover:bg-navy-100 dark:hover:bg-white/[0.08]"
                   }`}
                 >
                   {SENTIMENT_EMOJIS[s]}
@@ -407,7 +407,7 @@ function EditContactModal({
 
           {/* Deal probability */}
           <div>
-            <label className="text-[11px] text-white/40 block mb-1.5">
+            <label className="text-[11px] text-navy-400 dark:text-white/40 block mb-1.5">
               Deal Probability: {dealProb}%
             </label>
             <input
@@ -416,41 +416,41 @@ function EditContactModal({
               max={100}
               value={dealProb}
               onChange={(e) => setDealProb(Number(e.target.value))}
-              className="w-full h-1.5 rounded-full appearance-none bg-white/[0.06] accent-[#4361EE]"
+              className="w-full h-1.5 rounded-full appearance-none bg-navy-100 dark:bg-white/[0.06] accent-[#4361EE]"
             />
           </div>
 
           {/* Expected close date */}
           <div>
-            <label className="text-[11px] text-white/40 block mb-1.5">Expected Close Date</label>
+            <label className="text-[11px] text-navy-400 dark:text-white/40 block mb-1.5">Expected Close Date</label>
             <input
               type="date"
               value={expectedClose}
               onChange={(e) => setExpectedClose(e.target.value)}
-              className="px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white/70 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
+              className="px-3 py-2 rounded-lg bg-navy-50 dark:bg-white/[0.04] border border-navy-200 dark:border-white/[0.08] text-xs text-navy-600 dark:text-white/70 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
             />
           </div>
 
           {/* Term sheet */}
-          <label className="flex items-center gap-2 text-xs text-white/60 cursor-pointer">
+          <label className="flex items-center gap-2 text-xs text-navy-500 dark:text-white/60 cursor-pointer">
             <input
               type="checkbox"
               checked={termSheet}
               onChange={(e) => setTermSheet(e.target.checked)}
-              className="rounded border-white/20 bg-white/5 text-[#4361EE] focus:ring-[#4361EE] w-3.5 h-3.5"
+              className="rounded border-navy-300 dark:border-white/20 bg-navy-50 dark:bg-white/5 text-[#4361EE] focus:ring-[#4361EE] w-3.5 h-3.5"
             />
             Term Sheet Received
           </label>
 
           {/* Commit amount */}
           <div>
-            <label className="text-[11px] text-white/40 block mb-1.5">Commit Amount (USD)</label>
+            <label className="text-[11px] text-navy-400 dark:text-white/40 block mb-1.5">Commit Amount (USD)</label>
             <input
               type="number"
               placeholder="e.g., 500000"
               value={commitAmt}
               onChange={(e) => setCommitAmt(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.08] text-xs text-white/70 placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
+              className="w-full px-3 py-2 rounded-lg bg-navy-50 dark:bg-white/[0.04] border border-navy-200 dark:border-white/[0.08] text-xs text-navy-600 dark:text-white/70 placeholder:text-navy-300 dark:placeholder:text-white/20 focus:outline-none focus:ring-1 focus:ring-[#4361EE]"
             />
           </div>
 
@@ -464,7 +464,7 @@ function EditContactModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg bg-white/[0.04] text-white/40 text-xs font-medium hover:text-white/60 transition-colors"
+              className="px-4 py-2 rounded-lg bg-navy-50 dark:bg-white/[0.04] text-navy-400 dark:text-white/40 text-xs font-medium hover:text-navy-500 dark:hover:text-white/60 transition-colors"
             >
               Cancel
             </button>
@@ -703,9 +703,9 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
 
   if (!limits.fundraiseTracker) {
     return (
-      <section className="rounded-2xl border border-white/[0.08] bg-[#0F0F14] p-6 shadow-lg">
+      <section className="rounded-2xl border border-navy-200 dark:border-white/[0.08] bg-white dark:bg-[#0F0F14] p-6 shadow-lg">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-semibold text-white flex items-center gap-2">
+          <h2 className="text-base font-semibold text-navy dark:text-white flex items-center gap-2">
             <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
             </svg>
@@ -713,7 +713,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
           </h2>
           <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-400">Growth</span>
         </div>
-        <p className="text-xs text-white/40">
+        <p className="text-xs text-navy-400 dark:text-white/40">
           Track investor conversations, manage your pipeline, and log outreach activities.
           Upgrade to Growth to unlock.
         </p>
@@ -730,22 +730,22 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
   const editContact = editModalId ? contacts.find((c) => c.id === editModalId) : null;
 
   return (
-    <section className="rounded-2xl border border-white/[0.08] bg-[#0F0F14] p-6 space-y-5 shadow-lg">
+    <section className="rounded-2xl border border-navy-200 dark:border-white/[0.08] bg-white dark:bg-[#0F0F14] p-6 space-y-5 shadow-lg">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-white flex items-center gap-2">
+        <h2 className="text-base font-semibold text-navy dark:text-white flex items-center gap-2">
           <svg className="w-5 h-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z" />
           </svg>
           Fundraise Tracker
-          <span className="text-xs font-normal text-white/30">({contacts.length} contacts)</span>
+          <span className="text-xs font-normal text-navy-300 dark:text-white/30">({contacts.length} contacts)</span>
         </h2>
         <div className="flex items-center gap-2">
           {/* View toggle */}
-          <div className="flex items-center rounded-lg border border-white/[0.06] overflow-hidden">
+          <div className="flex items-center rounded-lg border border-navy-200 dark:border-white/[0.06] overflow-hidden">
             <button
               onClick={() => setViewMode("list")}
               className={`px-2.5 py-1 text-[10px] font-medium transition-colors ${
-                viewMode === "list" ? "bg-[#4361EE]/10 text-[#4361EE]" : "text-white/40 hover:text-white/60"
+                viewMode === "list" ? "bg-[#4361EE]/10 text-[#4361EE]" : "text-navy-400 dark:text-white/40 hover:text-navy-500 dark:hover:text-white/60"
               }`}
             >
               List
@@ -753,7 +753,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
             <button
               onClick={() => setViewMode("kanban")}
               className={`px-2.5 py-1 text-[10px] font-medium transition-colors ${
-                viewMode === "kanban" ? "bg-[#4361EE]/10 text-[#4361EE]" : "text-white/40 hover:text-white/60"
+                viewMode === "kanban" ? "bg-[#4361EE]/10 text-[#4361EE]" : "text-navy-400 dark:text-white/40 hover:text-navy-500 dark:hover:text-white/60"
               }`}
             >
               Kanban
@@ -806,13 +806,13 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
           placeholder="Search by name or firm..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-1 min-w-[160px] px-3 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.04] text-xs text-white/70 placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
+          className="flex-1 min-w-[160px] px-3 py-1.5 rounded-lg border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-xs text-navy-600 dark:text-white/70 placeholder:text-navy-300 dark:placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
         />
         {allTags.length > 0 && (
           <select
             value={filterTag}
             onChange={(e) => setFilterTag(e.target.value)}
-            className="px-2 py-1.5 rounded-lg border border-white/[0.08] bg-white/[0.04] text-xs text-white/60 outline-none focus:ring-1 focus:ring-[#4361EE]"
+            className="px-2 py-1.5 rounded-lg border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-xs text-navy-500 dark:text-white/60 outline-none focus:ring-1 focus:ring-[#4361EE]"
           >
             <option value="">All tags</option>
             {allTags.map((t) => (
@@ -820,19 +820,19 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
             ))}
           </select>
         )}
-        <label className="flex items-center gap-1.5 text-xs text-white/40 cursor-pointer select-none">
+        <label className="flex items-center gap-1.5 text-xs text-navy-400 dark:text-white/40 cursor-pointer select-none">
           <input
             type="checkbox"
             checked={filterOverdue}
             onChange={(e) => setFilterOverdue(e.target.checked)}
-            className="rounded border-white/20 bg-white/5 text-[#4361EE] focus:ring-[#4361EE] w-3 h-3"
+            className="rounded border-navy-300 dark:border-white/20 bg-navy-50 dark:bg-white/5 text-[#4361EE] focus:ring-[#4361EE] w-3 h-3"
           />
           Overdue
         </label>
         {(searchQuery || filterTag || filterOverdue) && (
           <button
             onClick={() => { setSearchQuery(""); setFilterTag(""); setFilterOverdue(false); }}
-            className="text-[10px] text-white/30 hover:text-white/50 underline"
+            className="text-[10px] text-navy-300 dark:text-white/30 hover:text-navy-500 dark:hover:text-white/50 underline"
           >
             Clear filters
           </button>
@@ -841,14 +841,14 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
 
       {/* Add Contact Form */}
       {showAddForm && (
-        <form onSubmit={handleAddContact} className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 space-y-3">
+        <form onSubmit={handleAddContact} className="rounded-xl border border-navy-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] p-4 space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input
               type="text"
               placeholder="Contact name *"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-white/[0.08] bg-white/[0.04] text-xs text-white/70 placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
+              className="px-3 py-2 rounded-lg border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-xs text-navy-600 dark:text-white/70 placeholder:text-navy-300 dark:placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
               required
             />
             <input
@@ -856,19 +856,19 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
               placeholder="Firm / Fund"
               value={newFirm}
               onChange={(e) => setNewFirm(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-white/[0.08] bg-white/[0.04] text-xs text-white/70 placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
+              className="px-3 py-2 rounded-lg border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-xs text-navy-600 dark:text-white/70 placeholder:text-navy-300 dark:placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
             />
             <input
               type="email"
               placeholder="Email"
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-white/[0.08] bg-white/[0.04] text-xs text-white/70 placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
+              className="px-3 py-2 rounded-lg border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-xs text-navy-600 dark:text-white/70 placeholder:text-navy-300 dark:placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
             />
             <select
               value={newStatus}
               onChange={(e) => setNewStatus(e.target.value)}
-              className="px-3 py-2 rounded-lg border border-white/[0.08] bg-white/[0.04] text-xs text-white/60 outline-none focus:ring-1 focus:ring-[#4361EE]"
+              className="px-3 py-2 rounded-lg border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-xs text-navy-500 dark:text-white/60 outline-none focus:ring-1 focus:ring-[#4361EE]"
             >
               {STATUSES.map((s) => (
                 <option key={s.value} value={s.value}>{s.label}</option>
@@ -880,7 +880,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
             value={newNotes}
             onChange={(e) => setNewNotes(e.target.value)}
             rows={2}
-            className="w-full px-3 py-2 rounded-lg border border-white/[0.08] bg-white/[0.04] text-xs text-white/70 placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE] resize-none"
+            className="w-full px-3 py-2 rounded-lg border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-xs text-navy-600 dark:text-white/70 placeholder:text-navy-300 dark:placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE] resize-none"
           />
           {error && <p className="text-xs text-red-400">{error}</p>}
           <button
@@ -903,8 +903,8 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
         </div>
       ) : contacts.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-sm text-white/40">No investor contacts yet.</p>
-          <p className="text-xs text-white/25 mt-1">Add your first contact to start tracking your fundraise.</p>
+          <p className="text-sm text-navy-400 dark:text-white/40">No investor contacts yet.</p>
+          <p className="text-xs text-navy-300 dark:text-white/25 mt-1">Add your first contact to start tracking your fundraise.</p>
         </div>
       ) : viewMode === "kanban" ? (
         /* Kanban View */
@@ -915,7 +915,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
         />
       ) : filteredContacts.length === 0 ? (
         <div className="text-center py-6">
-          <p className="text-sm text-white/40">No contacts match your filters.</p>
+          <p className="text-sm text-navy-400 dark:text-white/40">No contacts match your filters.</p>
           <button
             onClick={() => { setSearchQuery(""); setFilterTag(""); setFilterOverdue(false); }}
             className="text-xs text-[#4361EE] hover:underline mt-1"
@@ -935,17 +935,17 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
             const sentiment = contact.sentimentScore != null ? SENTIMENT_EMOJIS[contact.sentimentScore] : null;
 
             return (
-              <div key={contact.id} className="rounded-xl border border-white/[0.06] bg-white/[0.02] overflow-hidden">
+              <div key={contact.id} className="rounded-xl border border-navy-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02] overflow-hidden">
                 {/* Contact Row */}
                 <div
-                  className="flex items-center gap-3 p-3 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                  className="flex items-center gap-3 p-3 cursor-pointer hover:bg-navy-50 dark:hover:bg-white/[0.02] transition-colors"
                   onClick={() => setExpandedId(isExpanded ? null : contact.id)}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-semibold text-white truncate">{contact.name}</span>
+                      <span className="text-sm font-semibold text-navy dark:text-white truncate">{contact.name}</span>
                       {contact.firm && (
-                        <span className="text-xs text-white/30 truncate">@ {contact.firm}</span>
+                        <span className="text-xs text-navy-300 dark:text-white/30 truncate">@ {contact.firm}</span>
                       )}
                       {sentiment && <span className="text-sm">{sentiment}</span>}
                       {contact.warmIntro && (
@@ -962,15 +962,15 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                         </span>
                       ))}
                       {contactTags.length > 3 && (
-                        <span className="text-[9px] text-white/30">+{contactTags.length - 3}</span>
+                        <span className="text-[9px] text-navy-300 dark:text-white/30">+{contactTags.length - 3}</span>
                       )}
                     </div>
                     <div className="flex items-center gap-2">
                       {contact.email && (
-                        <p className="text-[10px] text-white/30 truncate">{contact.email}</p>
+                        <p className="text-[10px] text-navy-300 dark:text-white/30 truncate">{contact.email}</p>
                       )}
                       {contact.dealProbability != null && (
-                        <span className="text-[10px] text-white/30">{contact.dealProbability}% prob</span>
+                        <span className="text-[10px] text-navy-300 dark:text-white/30">{contact.dealProbability}% prob</span>
                       )}
                       {overdue && (
                         <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-red-500/10 text-red-400">
@@ -978,7 +978,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                         </span>
                       )}
                       {hasFutureFollowUp && (
-                        <span className="flex items-center gap-0.5 text-[10px] text-white/30">
+                        <span className="flex items-center gap-0.5 text-[10px] text-navy-300 dark:text-white/30">
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
                           </svg>
@@ -989,7 +989,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="text-[10px] text-white/20">
+                    <span className="text-[10px] text-navy-200 dark:text-white/20">
                       {contact._count.outreach} outreach
                     </span>
                     <select
@@ -1006,7 +1006,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                       ))}
                     </select>
                     <svg
-                      className={`w-4 h-4 text-white/20 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+                      className={`w-4 h-4 text-navy-200 dark:text-white/20 transition-transform ${isExpanded ? "rotate-180" : ""}`}
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -1019,41 +1019,41 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="border-t border-white/[0.04] p-3 bg-white/[0.01] space-y-3">
+                  <div className="border-t border-navy-100 dark:border-white/[0.04] p-3 bg-navy-50/50 dark:bg-white/[0.01] space-y-3">
                     {contact.notes && (
-                      <p className="text-xs text-white/40 italic">{contact.notes}</p>
+                      <p className="text-xs text-navy-400 dark:text-white/40 italic">{contact.notes}</p>
                     )}
 
                     {/* Deal details row */}
                     <div className="flex flex-wrap gap-3">
                       {contact.dealProbability != null && (
                         <div className="text-center">
-                          <span className="text-[9px] text-white/20 block">Probability</span>
-                          <span className="text-xs font-semibold text-white/60">{contact.dealProbability}%</span>
+                          <span className="text-[9px] text-navy-200 dark:text-white/20 block">Probability</span>
+                          <span className="text-xs font-semibold text-navy-500 dark:text-white/60">{contact.dealProbability}%</span>
                         </div>
                       )}
                       {contact.commitAmount != null && (
                         <div className="text-center">
-                          <span className="text-[9px] text-white/20 block">Commit</span>
+                          <span className="text-[9px] text-navy-200 dark:text-white/20 block">Commit</span>
                           <span className="text-xs font-semibold text-emerald-400">{formatAmount(contact.commitAmount)}</span>
                         </div>
                       )}
                       {contact.termSheetReceived && (
                         <div className="text-center">
-                          <span className="text-[9px] text-white/20 block">Term Sheet</span>
+                          <span className="text-[9px] text-navy-200 dark:text-white/20 block">Term Sheet</span>
                           <span className="text-xs font-semibold text-violet-400">Received</span>
                         </div>
                       )}
                       {contact.warmIntro && contact.introSource && (
                         <div className="text-center">
-                          <span className="text-[9px] text-white/20 block">Intro Source</span>
-                          <span className="text-xs text-white/50">{contact.introSource}</span>
+                          <span className="text-[9px] text-navy-200 dark:text-white/20 block">Intro Source</span>
+                          <span className="text-xs text-navy-500 dark:text-white/50">{contact.introSource}</span>
                         </div>
                       )}
                       {contact.expectedCloseDate && (
                         <div className="text-center">
-                          <span className="text-[9px] text-white/20 block">Expected Close</span>
-                          <span className="text-xs text-white/50">{formatFollowUpDate(contact.expectedCloseDate)}</span>
+                          <span className="text-[9px] text-navy-200 dark:text-white/20 block">Expected Close</span>
+                          <span className="text-xs text-navy-500 dark:text-white/50">{formatFollowUpDate(contact.expectedCloseDate)}</span>
                         </div>
                       )}
                     </div>
@@ -1068,7 +1068,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
 
                     {/* Tags Section */}
                     <div className="space-y-1.5">
-                      <span className="text-xs font-semibold text-white/50">Tags</span>
+                      <span className="text-xs font-semibold text-navy-500 dark:text-white/50">Tags</span>
                       <div className="flex flex-wrap gap-1.5">
                         {contactTags.map((tag) => (
                           <span
@@ -1101,14 +1101,14 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                             }
                           }
                         }}
-                        className="w-full max-w-xs px-2 py-1 rounded-md border border-white/[0.08] bg-white/[0.04] text-[10px] text-white/60 placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
+                        className="w-full max-w-xs px-2 py-1 rounded-md border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-[10px] text-navy-500 dark:text-white/60 placeholder:text-navy-300 dark:placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE]"
                       />
                       <div className="flex flex-wrap gap-1">
                         {SUGGESTED_TAGS.filter((t) => !contactTags.includes(t)).map((tag) => (
                           <button
                             key={tag}
                             onClick={() => addTagToContact(contact.id, contactTags, tag)}
-                            className="px-1.5 py-0.5 rounded-full text-[9px] font-medium border border-white/[0.08] text-white/30 hover:bg-[#4361EE]/10 hover:text-[#4361EE] hover:border-[#4361EE]/30 transition-colors"
+                            className="px-1.5 py-0.5 rounded-full text-[9px] font-medium border border-navy-200 dark:border-white/[0.08] text-navy-300 dark:text-white/30 hover:bg-[#4361EE]/10 hover:text-[#4361EE] hover:border-[#4361EE]/30 transition-colors"
                           >
                             + {tag}
                           </button>
@@ -1118,7 +1118,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
 
                     {/* Follow-up Section */}
                     <div className="space-y-1.5">
-                      <span className="text-xs font-semibold text-white/50">Follow-up Reminder</span>
+                      <span className="text-xs font-semibold text-navy-500 dark:text-white/50">Follow-up Reminder</span>
                       <div className="flex items-center gap-2">
                         <input
                           type="date"
@@ -1134,12 +1134,12 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                               val ? new Date(val + "T00:00:00").toISOString() : null
                             );
                           }}
-                          className="px-2 py-1 rounded-md border border-white/[0.08] bg-white/[0.04] text-[10px] text-white/60 outline-none focus:ring-1 focus:ring-[#4361EE]"
+                          className="px-2 py-1 rounded-md border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-[10px] text-navy-500 dark:text-white/60 outline-none focus:ring-1 focus:ring-[#4361EE]"
                         />
                         {contact.nextFollowUp && (
                           <button
                             onClick={() => handleFollowUpChange(contact.id, null)}
-                            className="text-[10px] text-white/30 hover:text-red-400 underline transition-colors"
+                            className="text-[10px] text-navy-300 dark:text-white/30 hover:text-red-400 underline transition-colors"
                           >
                             Clear follow-up
                           </button>
@@ -1153,7 +1153,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                     {/* Outreach Timeline */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-white/50">Outreach History</span>
+                        <span className="text-xs font-semibold text-navy-500 dark:text-white/50">Outreach History</span>
                         <button
                           onClick={() => setAddingOutreach(addingOutreach === contact.id ? null : contact.id)}
                           className="text-[10px] font-semibold text-[#4361EE] hover:underline"
@@ -1165,7 +1165,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                       {addingOutreach === contact.id && (
                         <form
                           onSubmit={(e) => handleAddOutreach(e, contact.id)}
-                          className="flex flex-col gap-2 p-2 rounded-lg border border-white/[0.06] bg-white/[0.02]"
+                          className="flex flex-col gap-2 p-2 rounded-lg border border-navy-200 dark:border-white/[0.06] bg-white dark:bg-white/[0.02]"
                         >
                           <div className="flex gap-2">
                             {OUTREACH_TYPES.map((t) => (
@@ -1176,7 +1176,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                                 className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-semibold transition-colors ${
                                   outreachType === t.value
                                     ? "bg-[#4361EE]/10 text-[#4361EE]"
-                                    : "text-white/40 hover:text-white/60"
+                                    : "text-navy-400 dark:text-white/40 hover:text-navy-500 dark:hover:text-white/60"
                                 }`}
                               >
                                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -1191,7 +1191,7 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                             value={outreachContent}
                             onChange={(e) => setOutreachContent(e.target.value)}
                             rows={2}
-                            className="w-full px-2 py-1.5 rounded-md border border-white/[0.08] bg-white/[0.04] text-xs text-white/70 placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE] resize-none"
+                            className="w-full px-2 py-1.5 rounded-md border border-navy-200 dark:border-white/[0.08] bg-navy-50 dark:bg-white/[0.04] text-xs text-navy-600 dark:text-white/70 placeholder:text-navy-300 dark:placeholder:text-white/20 outline-none focus:ring-1 focus:ring-[#4361EE] resize-none"
                             required
                           />
                           <button
@@ -1209,12 +1209,12 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                             const typeConfig = OUTREACH_TYPES.find((t) => t.value === entry.type) || OUTREACH_TYPES[3];
                             return (
                               <div key={entry.id} className="flex items-start gap-2 text-xs">
-                                <svg className="w-3.5 h-3.5 text-white/20 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                                <svg className="w-3.5 h-3.5 text-navy-200 dark:text-white/20 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                   <path strokeLinecap="round" strokeLinejoin="round" d={typeConfig.icon} />
                                 </svg>
                                 <div className="flex-1 min-w-0">
-                                  <span className="text-white/50">{entry.content}</span>
-                                  <span className="text-white/20 ml-2">
+                                  <span className="text-navy-500 dark:text-white/50">{entry.content}</span>
+                                  <span className="text-navy-200 dark:text-white/20 ml-2">
                                     {new Date(entry.sentAt).toLocaleDateString()}
                                   </span>
                                 </div>
@@ -1222,13 +1222,13 @@ export default function DashboardFundraiseTracker({ plan }: { plan: string }) {
                             );
                           })}
                           {contact._count.outreach > 5 && (
-                            <p className="text-[10px] text-white/20 pl-5">
+                            <p className="text-[10px] text-navy-200 dark:text-white/20 pl-5">
                               +{contact._count.outreach - 5} more
                             </p>
                           )}
                         </div>
                       ) : (
-                        <p className="text-[10px] text-white/20">No outreach logged yet.</p>
+                        <p className="text-[10px] text-navy-200 dark:text-white/20">No outreach logged yet.</p>
                       )}
                     </div>
 
