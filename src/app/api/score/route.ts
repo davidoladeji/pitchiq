@@ -8,6 +8,7 @@ import { SlideData } from "@/lib/types";
 import { nanoid } from "nanoid";
 import { rateLimit } from "@/lib/rate-limit";
 import { isExtendConfigured, parseFile } from "@/lib/extend";
+import { extractDeckContent, ExtractedDeckContent } from "@/lib/deck-content-extractor";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -155,6 +156,7 @@ async function handleExtendScore(req: NextRequest, userId: string) {
   // Optionally persist
   let deckId: string | undefined;
   let shareId: string | undefined;
+  let savedDeckId: string | undefined;
 
   if (saveDeck) {
     shareId = nanoid(10);
@@ -179,6 +181,35 @@ async function handleExtendScore(req: NextRequest, userId: string) {
       },
     });
     deckId = deck.id;
+    savedDeckId = deck.id;
+  }
+
+  // Extract and store content for Smart Refine (non-blocking)
+  let extracted: ExtractedDeckContent | null = null;
+  if (savedDeckId) {
+    try {
+      const slideTexts = slides.map((s: SlideData) =>
+        [s.title, s.subtitle, ...(s.content || [])].filter(Boolean).join("\n")
+      );
+      extracted = await extractDeckContent(slideTexts, `${companyName} — Uploaded Deck`);
+
+      await prisma.deck.update({
+        where: { id: savedDeckId },
+        data: {
+          uploadedSlideTexts: JSON.stringify(slideTexts),
+          extractedContent: JSON.stringify(extracted),
+          problem: extracted.problem || "",
+          solution: extracted.solution || "",
+          keyMetrics: extracted.keyMetrics || "",
+          teamInfo: extracted.teamInfo || "",
+          industry: extracted.industry || "",
+          stage: extracted.stage || "",
+          fundingTarget: extracted.fundingTarget || "",
+        },
+      });
+    } catch (e) {
+      console.error("[Score] Content extraction failed (non-blocking):", e);
+    }
   }
 
   return NextResponse.json({
@@ -187,6 +218,8 @@ async function handleExtendScore(req: NextRequest, userId: string) {
     companyName,
     deckId,
     shareId,
+    extractedContent: extracted || null,
+    refinementAvailable: !!savedDeckId,
   });
 }
 
@@ -322,6 +355,7 @@ async function handleLocalScore(req: NextRequest, userId: string) {
   // Optionally persist as a deck
   let deckId: string | undefined;
   let shareId: string | undefined;
+  let savedDeckId: string | undefined;
 
   if (saveDeck) {
     shareId = nanoid(10);
@@ -347,6 +381,35 @@ async function handleLocalScore(req: NextRequest, userId: string) {
       },
     });
     deckId = deck.id;
+    savedDeckId = deck.id;
+  }
+
+  // Extract and store content for Smart Refine (non-blocking)
+  let extracted: ExtractedDeckContent | null = null;
+  if (savedDeckId) {
+    try {
+      const slideTexts = slides.map((s: SlideData) =>
+        [s.title, s.subtitle, ...(s.content || [])].filter(Boolean).join("\n")
+      );
+      extracted = await extractDeckContent(slideTexts, `${companyName} — Uploaded Deck`);
+
+      await prisma.deck.update({
+        where: { id: savedDeckId },
+        data: {
+          uploadedSlideTexts: JSON.stringify(slideTexts),
+          extractedContent: JSON.stringify(extracted),
+          problem: extracted.problem || "",
+          solution: extracted.solution || "",
+          keyMetrics: extracted.keyMetrics || "",
+          teamInfo: extracted.teamInfo || "",
+          industry: extracted.industry || "",
+          stage: extracted.stage || "",
+          fundingTarget: extracted.fundingTarget || "",
+        },
+      });
+    } catch (e) {
+      console.error("[Score] Content extraction failed (non-blocking):", e);
+    }
   }
 
   return NextResponse.json({
@@ -355,6 +418,8 @@ async function handleLocalScore(req: NextRequest, userId: string) {
     companyName,
     deckId,
     shareId,
+    extractedContent: extracted || null,
+    refinementAvailable: !!savedDeckId,
   });
 }
 

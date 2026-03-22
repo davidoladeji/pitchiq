@@ -117,6 +117,7 @@ export const DEFAULT_CREDIT_ACTIONS: CreditAction[] = [
   { action: "investor_lens", displayName: "Investor Lens", cost: 2, description: "View deck through investor perspective", requiredPlan: "growth" },
   { action: "ab_test", displayName: "A/B Test", cost: 2, description: "Create an A/B test for a deck", requiredPlan: "growth" },
   { action: "analytics_view", displayName: "Analytics View", cost: 1, description: "View deck analytics", requiredPlan: "growth" },
+  { action: "deck_refinement", displayName: "Smart Deck Refinement", cost: 5, description: "AI-powered deck improvement from PIQ feedback", requiredPlan: "pro" },
 ];
 
 // ---------------------------------------------------------------------------

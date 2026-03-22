@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import DeckReportButton from "@/components/dashboard/DeckReportButton";
+import DashboardRefinePrompt from "@/components/dashboard/DashboardRefinePrompt";
 
 interface DeckSummary {
   id: string;
@@ -13,6 +14,9 @@ interface DeckSummary {
   isPremium: boolean;
   createdAt: string;
   viewCount: number;
+  source?: string;
+  refinedFromId?: string;
+  refinedScoreDelta?: number;
 }
 
 function parsePiqOverall(piqJson: string): number | null {
@@ -142,6 +146,19 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
                       <span className="px-1.5 py-0.5 rounded bg-electric/10 text-electric font-bold text-[10px] uppercase">
                         Pro
                       </span>
+                    )}
+                    {deck.source === "refined" && (
+                      <span className="px-1.5 py-0.5 rounded bg-electric/10 text-electric font-bold text-[10px] uppercase">
+                        Refined
+                      </span>
+                    )}
+                    {deck.source === "refined" && deck.refinedScoreDelta != null && deck.refinedScoreDelta > 0 && (
+                      <span className="px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-600 font-bold text-[10px]">
+                        +{deck.refinedScoreDelta} pts
+                      </span>
+                    )}
+                    {piqOverall !== null && piqOverall < 75 && deck.source !== "refined" && (
+                      <DashboardRefinePrompt deckShareId={deck.shareId} deckTitle={deck.title} score={piqOverall} />
                     )}
                   </div>
                 </div>

@@ -56,6 +56,14 @@ model Deck {
   hasTechnicalFounder  Boolean? @default(false)
   founderDiversity     String?  @default("[]") // JSON: ["gender-diverse", "ethnicity-diverse", "immigrant-founded"]
 
+  // Smart Refine: content extraction & refinement lineage
+  uploadedSlideTexts  String?          // JSON: string[] — raw text per slide from upload
+  extractedContent    String?          // JSON: ExtractedDeckContent — AI-extracted structured data
+  refinedFromId       String?          // ID of the deck this was refined from
+  refinedFrom         Deck?    @relation("DeckRefinements", fields: [refinedFromId], references: [id])
+  refinements         Deck[]   @relation("DeckRefinements")
+  refinementNotes     String?          // JSON: improvements summary from refinement
+
   userId        String?
   owner         User?    @relation("UserDecks", fields: [userId], references: [id])
   workspaceId   String?
@@ -73,6 +81,7 @@ model Deck {
 
   @@index([userId])
   @@index([workspaceId])
+  @@index([refinedFromId])
 }
 
 model View {
