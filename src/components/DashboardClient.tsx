@@ -19,6 +19,7 @@ import DashboardBatchJobs from "@/components/dashboard/DashboardBatchJobs";
 import DashboardCustomDomain from "@/components/dashboard/DashboardCustomDomain";
 import DashboardPitchPractice from "@/components/dashboard/DashboardPitchPractice";
 import DashboardProfilePrompt from "@/components/dashboard/DashboardProfilePrompt";
+import PaygStatus from "@/components/dashboard/PaygStatus";
 import PlanCompareModal from "@/components/PlanCompareModal";
 
 interface DeckSummary {
@@ -217,6 +218,9 @@ export default function DashboardClient({
 
           {/* Quick actions */}
           <DashboardQuickActions plan={effectivePlan} />
+
+          {/* PAYG status widget */}
+          <PaygStatus />
 
           {/* A/B Testing (Growth+ only) */}
           <DashboardABTests

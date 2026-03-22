@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import PlanCompareModal from "@/components/PlanCompareModal";
+import PaygPricingSection from "@/components/PaygPricingSection";
 import { getPlanLimits } from "@/lib/plan-limits";
 
 const FALLBACK_PLAN_INFO: Record<string, { label: string; price: string; color: string; bgColor: string }> = {
@@ -301,6 +302,9 @@ export default function BillingClient({
               </div>
             </div>
           </div>
+
+          {/* Pay As You Go section */}
+          <PaygPricingSection />
 
           {/* Back to dashboard */}
           <div className="text-center">

@@ -10,6 +10,7 @@ import LandingPersonas from "@/components/landing/LandingPersonas";
 import LandingFeatures from "@/components/landing/LandingFeatures";
 import LandingSocialProof from "@/components/landing/LandingSocialProof";
 import LandingPricing from "@/components/landing/LandingPricing";
+import PaygPricingSection from "@/components/PaygPricingSection";
 import LandingTrust from "@/components/landing/LandingTrust";
 import LandingCTA from "@/components/landing/LandingCTA";
 
@@ -33,6 +34,7 @@ export default function Home() {
         <LandingFeatures />
         <LandingSocialProof />
         <LandingPricing />
+        <PaygPricingSection />
         <LandingTrust />
         <LandingCTA />
       </main>
