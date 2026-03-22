@@ -50,9 +50,9 @@ const TIER_LABELS: Record<string, string> = {
 };
 
 const TIER_COLORS: Record<string, string> = {
-  basic: "bg-[#4361EE]/15 text-[#4361EE]",
-  growth: "bg-violet-500/15 text-violet-400",
-  full: "bg-amber-500/15 text-amber-400",
+  basic: "bg-electric/10 text-electric",
+  growth: "bg-violet-100 text-violet-700",
+  full: "bg-amber-100 text-amber-700",
 };
 
 function relativeTime(dateStr: string): string {
@@ -69,15 +69,15 @@ function relativeTime(dateStr: string): string {
 function txBadge(type: string): { label: string; cls: string } {
   switch (type) {
     case "purchase":
-      return { label: "Purchase", cls: "bg-emerald-500/15 text-emerald-400" };
+      return { label: "Purchase", cls: "bg-emerald-100 text-emerald-700" };
     case "usage":
-      return { label: "Usage", cls: "bg-orange-500/15 text-orange-400" };
+      return { label: "Usage", cls: "bg-orange-100 text-orange-700" };
     case "bonus":
-      return { label: "Bonus", cls: "bg-[#4361EE]/15 text-[#4361EE]" };
+      return { label: "Bonus", cls: "bg-electric/10 text-electric" };
     case "refund":
-      return { label: "Refund", cls: "bg-violet-500/15 text-violet-400" };
+      return { label: "Refund", cls: "bg-violet-100 text-violet-700" };
     default:
-      return { label: type, cls: "bg-white/[0.06] text-white/50" };
+      return { label: type, cls: "bg-navy-100 text-navy-500" };
   }
 }
 
@@ -87,15 +87,15 @@ function txBadge(type: string): { label: string; cls: string } {
 
 function Skeleton() {
   return (
-    <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4 animate-pulse">
+    <div className="bg-white border border-navy-200 rounded-2xl p-4 animate-pulse">
       <div className="flex items-center gap-2 mb-3">
-        <div className="w-5 h-5 rounded bg-white/10" />
-        <div className="h-4 w-32 rounded bg-white/10" />
+        <div className="w-5 h-5 rounded bg-navy-100" />
+        <div className="h-4 w-32 rounded bg-navy-100" />
       </div>
       <div className="space-y-3">
-        <div className="h-8 w-20 rounded bg-white/[0.06]" />
-        <div className="h-3 w-full rounded bg-white/[0.04]" />
-        <div className="h-3 w-3/4 rounded bg-white/[0.04]" />
+        <div className="h-8 w-20 rounded bg-navy-100" />
+        <div className="h-3 w-full rounded bg-navy-50" />
+        <div className="h-3 w-3/4 rounded bg-navy-50" />
       </div>
     </div>
   );
@@ -138,9 +138,9 @@ export default function PaygStatus() {
   const recentThree = recentCredits.slice(0, 3);
 
   return (
-    <div className="bg-white/[0.03] border border-white/5 rounded-2xl p-4">
-      <h3 className="text-sm font-bold text-white mb-3 flex items-center gap-1.5">
-        <CreditCard className="w-4 h-4 text-[#4361EE]" />
+    <div className="bg-white border border-navy-200 rounded-2xl p-4 shadow-sm">
+      <h3 className="text-sm font-bold text-navy mb-3 flex items-center gap-1.5">
+        <CreditCard className="w-4 h-4 text-electric" />
         Pay As You Go
       </h3>
 
@@ -148,11 +148,11 @@ export default function PaygStatus() {
       {activePass && (
         <div className="flex items-center gap-2 mb-3">
           <span
-            className={`px-2 py-0.5 rounded-md text-xs font-semibold ${TIER_COLORS[activePass.tier] ?? "bg-white/[0.06] text-white/50"}`}
+            className={`px-2 py-0.5 rounded-md text-xs font-semibold ${TIER_COLORS[activePass.tier] ?? "bg-navy-100 text-navy-500"}`}
           >
             {TIER_LABELS[activePass.tier] ?? activePass.tier}
           </span>
-          <span className="flex items-center gap-1 text-xs text-white/50">
+          <span className="flex items-center gap-1 text-xs text-navy-400">
             <Clock className="w-3 h-3" />
             {activePass.daysLeft} day{activePass.daysLeft !== 1 ? "s" : ""} left
           </span>
@@ -162,15 +162,15 @@ export default function PaygStatus() {
       {/* Credit balance */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <Coins className="w-4 h-4 text-amber-400" />
-          <span className="text-xl font-bold text-white tabular-nums">
+          <Coins className="w-4 h-4 text-amber-500" />
+          <span className="text-xl font-bold text-navy tabular-nums">
             {creditBalance}
           </span>
-          <span className="text-xs text-white/40">credits</span>
+          <span className="text-xs text-navy-400">credits</span>
         </div>
         <Link
           href="/dashboard/credits"
-          className="inline-flex items-center gap-1 text-xs font-medium text-[#4361EE] hover:text-[#3651DE] transition-colors"
+          className="inline-flex items-center gap-1 text-xs font-medium text-electric hover:text-electric-dark transition-colors"
         >
           <ShoppingCart className="w-3 h-3" />
           Buy More
@@ -179,28 +179,28 @@ export default function PaygStatus() {
 
       {/* Upgrade prompt */}
       {showUpgrade && !activePass && (
-        <div className="rounded-xl bg-white/[0.03] border border-white/5 p-3 mb-3">
-          <p className="text-xs text-white/50 mb-2">
+        <div className="rounded-xl bg-navy-50 border border-navy-200 p-3 mb-3">
+          <p className="text-xs text-navy-500 mb-2">
             Unlock more features with a plan, pass, or credits.
           </p>
           <div className="flex flex-wrap gap-2">
             <Link
               href="/#pricing"
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#4361EE]/10 text-[#4361EE] text-[10px] font-semibold hover:bg-[#4361EE]/20 transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-electric/10 text-electric text-[10px] font-semibold hover:bg-electric/20 transition-colors"
             >
               <Sparkles className="w-3 h-3" />
               Subscribe
             </Link>
             <Link
               href="/#payg"
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-500/10 text-violet-400 text-[10px] font-semibold hover:bg-violet-500/20 transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-violet-100 text-violet-700 text-[10px] font-semibold hover:bg-violet-200 transition-colors"
             >
               <Calendar className="w-3 h-3" />
               Get a Pass
             </Link>
             <Link
               href="/dashboard/credits"
-              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-[10px] font-semibold hover:bg-amber-500/20 transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-100 text-amber-700 text-[10px] font-semibold hover:bg-amber-200 transition-colors"
             >
               <Coins className="w-3 h-3" />
               Buy Credits
@@ -212,7 +212,7 @@ export default function PaygStatus() {
       {/* Recent transactions */}
       {recentThree.length > 0 && (
         <div>
-          <p className="text-[10px] uppercase tracking-wider text-white/30 font-semibold mb-2">
+          <p className="text-[10px] uppercase tracking-wider text-navy-400 font-semibold mb-2">
             Recent Activity
           </p>
           <ul className="space-y-1.5">
@@ -229,18 +229,18 @@ export default function PaygStatus() {
                     >
                       {badge.label}
                     </span>
-                    <span className="text-white/60 truncate">
+                    <span className="text-navy-600 truncate">
                       {tx.description}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 ml-2">
                     <span
-                      className={`font-semibold tabular-nums ${tx.amount >= 0 ? "text-emerald-400" : "text-red-400"}`}
+                      className={`font-semibold tabular-nums ${tx.amount >= 0 ? "text-emerald-600" : "text-red-500"}`}
                     >
                       {tx.amount >= 0 ? "+" : ""}
                       {tx.amount}
                     </span>
-                    <span className="text-white/30">
+                    <span className="text-navy-300">
                       {relativeTime(tx.createdAt)}
                     </span>
                   </div>
@@ -251,7 +251,7 @@ export default function PaygStatus() {
           {recentCredits.length > 3 && (
             <Link
               href="/dashboard/credits"
-              className="inline-flex items-center gap-1 text-[10px] font-medium text-[#4361EE] hover:text-[#3651DE] mt-2 transition-colors"
+              className="inline-flex items-center gap-1 text-[10px] font-medium text-electric hover:text-electric-dark mt-2 transition-colors"
             >
               View all
               <ArrowUpRight className="w-3 h-3" />

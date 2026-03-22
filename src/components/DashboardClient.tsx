@@ -109,7 +109,7 @@ export default function DashboardClient({
         className="pt-24 pb-16 px-4 sm:px-6 outline-none"
         aria-labelledby="dashboard-page-heading"
       >
-        <div className="max-w-6xl mx-auto space-y-6">
+        <div className="w-full max-w-[1600px] mx-auto space-y-6">
           {/* Header row */}
           <div className="flex items-start justify-between gap-4">
             <div>

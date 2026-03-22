@@ -32,9 +32,9 @@ const TIER_ICONS: Record<string, React.ReactNode> = {
 };
 
 const TIER_ACCENTS: Record<string, string> = {
-  basic: "border-[#4361EE]/40",
-  growth: "border-violet-500/40",
-  full: "border-amber-400/40",
+  basic: "border-electric/30 hover:border-electric/50",
+  growth: "border-violet-300 hover:border-violet-400",
+  full: "border-amber-300 hover:border-amber-400",
 };
 
 function formatCents(cents: number): string {
@@ -61,8 +61,8 @@ function DurationSelector({
           onClick={() => onChange(d)}
           className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
             selected === d
-              ? "bg-[#4361EE] text-white shadow-lg shadow-[#4361EE]/25"
-              : "bg-white/[0.04] text-white/50 hover:bg-white/[0.08] hover:text-white/70"
+              ? "bg-electric text-white shadow-lg shadow-electric/25"
+              : "bg-navy-100 text-navy-500 hover:bg-navy-200 hover:text-navy-700"
           }`}
         >
           {d} day{d > 1 ? "s" : ""}
@@ -88,28 +88,28 @@ function PassCard({
 
   return (
     <div
-      className={`bg-white/[0.03] border ${TIER_ACCENTS[tier.id] ?? "border-white/10"} rounded-2xl p-6 flex flex-col`}
+      className={`bg-white border ${TIER_ACCENTS[tier.id] ?? "border-navy-200"} rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5`}
     >
       <div className="flex items-center gap-2 mb-1">
-        <div className="text-[#4361EE]">{TIER_ICONS[tier.id]}</div>
-        <h3 className="text-lg font-bold text-white">{tier.name}</h3>
+        <div className="text-electric">{TIER_ICONS[tier.id]}</div>
+        <h3 className="text-lg font-bold text-navy">{tier.name}</h3>
       </div>
-      <p className="text-xs text-white/50 mb-4">{tier.description}</p>
+      <p className="text-xs text-navy-400 mb-4">{tier.description}</p>
 
       <ul className="space-y-2 mb-6 flex-1">
         {tier.features.map((f) => (
-          <li key={f} className="flex items-start gap-2 text-sm text-white/70">
-            <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+          <li key={f} className="flex items-start gap-2 text-sm text-navy-600">
+            <Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
             <span>{f}</span>
           </li>
         ))}
       </ul>
 
       <div className="mb-4">
-        <div className="text-3xl font-bold text-white tabular-nums">
+        <div className="text-3xl font-bold text-navy tabular-nums">
           ${formatCents(price)}
         </div>
-        <p className="text-xs text-white/40 mt-0.5">
+        <p className="text-xs text-navy-400 mt-0.5">
           ${formatCents(perDay)}/day for {duration} day{duration > 1 ? "s" : ""}
         </p>
       </div>
@@ -118,7 +118,7 @@ function PassCard({
         type="button"
         onClick={onBuy}
         disabled={loading}
-        className="w-full inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 rounded-xl bg-[#4361EE] text-white text-sm font-semibold shadow-sm hover:bg-[#3651DE] hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+        className="w-full inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold shadow-sm hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
       >
         {loading ? (
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -145,40 +145,40 @@ function CreditPackCard({
 
   return (
     <div
-      className={`relative bg-white/[0.03] border rounded-2xl p-6 flex flex-col ${
+      className={`relative bg-white border rounded-2xl p-6 flex flex-col shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 ${
         pack.popular
-          ? "ring-1 ring-[#4361EE] border-[#4361EE]/30"
-          : "border-white/10"
+          ? "ring-2 ring-electric border-electric/30"
+          : "border-navy-200"
       }`}
     >
       {pack.popular && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-[#4361EE] text-white text-[10px] font-bold uppercase tracking-wider">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-electric text-white text-[10px] font-bold uppercase tracking-wider">
           Popular
         </span>
       )}
 
-      <h3 className="text-lg font-bold text-white mb-1">{pack.name}</h3>
+      <h3 className="text-lg font-bold text-navy mb-1">{pack.name}</h3>
 
       <div className="flex items-baseline gap-1 mb-1">
-        <span className="text-3xl font-bold text-white tabular-nums">
+        <span className="text-3xl font-bold text-navy tabular-nums">
           {pack.credits}
         </span>
-        <span className="text-sm text-white/40">credits</span>
+        <span className="text-sm text-navy-400">credits</span>
       </div>
 
       {pack.bonus > 0 && (
-        <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-400 mb-3">
+        <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-600 mb-3">
           +{pack.bonus} bonus
         </span>
       )}
       {pack.bonus === 0 && <div className="mb-3" />}
 
       <div className="mb-1">
-        <span className="text-2xl font-bold text-white tabular-nums">
+        <span className="text-2xl font-bold text-navy tabular-nums">
           ${formatCents(pack.priceCents)}
         </span>
       </div>
-      <p className="text-xs text-white/40 mb-5">
+      <p className="text-xs text-navy-400 mb-5">
         ${formatCents(perCredit)} per credit
       </p>
 
@@ -188,8 +188,8 @@ function CreditPackCard({
         disabled={loading}
         className={`mt-auto w-full inline-flex items-center justify-center gap-2 min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 ${
           pack.popular
-            ? "bg-[#4361EE] text-white hover:bg-[#3651DE] hover:-translate-y-0.5 active:translate-y-0"
-            : "bg-white/[0.06] text-white hover:bg-white/[0.1] hover:-translate-y-0.5 active:translate-y-0"
+            ? "bg-electric text-white hover:bg-electric-dark hover:-translate-y-0.5 active:translate-y-0"
+            : "bg-navy-100 text-navy-700 hover:bg-navy-200 hover:-translate-y-0.5 active:translate-y-0"
         }`}
       >
         {loading ? (
@@ -259,27 +259,27 @@ export default function PaygPricingSection() {
   // ── Render ─────────────────────────────────────────────────────────────
 
   return (
-    <section id="payg" className="py-16 sm:py-24 bg-navy rounded-3xl mx-4 sm:mx-6">
+    <section id="payg" className="py-16 sm:py-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white font-display">
+          <h2 className="text-3xl sm:text-4xl font-bold text-navy font-display">
             Pay As You Go
           </h2>
-          <p className="text-white/50 mt-3 text-lg">
+          <p className="text-navy-400 mt-3 text-lg">
             No commitment. Use PitchIQ when you need it.
           </p>
         </div>
 
         {/* Tab switcher */}
-        <div className="flex items-center justify-center gap-1 bg-white/[0.04] rounded-xl p-1 max-w-xs mx-auto mb-10">
+        <div className="flex items-center justify-center gap-1 bg-navy-100 rounded-xl p-1 max-w-xs mx-auto mb-10">
           <button
             type="button"
             onClick={() => setTab("passes")}
             className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               tab === "passes"
-                ? "bg-[#4361EE] text-white shadow-lg shadow-[#4361EE]/20"
-                : "text-white/50 hover:text-white/70"
+                ? "bg-electric text-white shadow-lg shadow-electric/20"
+                : "text-navy-500 hover:text-navy-700"
             }`}
           >
             Period Passes
@@ -289,8 +289,8 @@ export default function PaygPricingSection() {
             onClick={() => setTab("credits")}
             className={`flex-1 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               tab === "credits"
-                ? "bg-[#4361EE] text-white shadow-lg shadow-[#4361EE]/20"
-                : "text-white/50 hover:text-white/70"
+                ? "bg-electric text-white shadow-lg shadow-electric/20"
+                : "text-navy-500 hover:text-navy-700"
             }`}
           >
             Credit Packs
@@ -337,47 +337,47 @@ export default function PaygPricingSection() {
 
             {/* Credit Cost Table */}
             <div className="mt-12">
-              <h3 className="text-lg font-bold text-white mb-4">
+              <h3 className="text-lg font-bold text-navy mb-4">
                 Credit Costs
               </h3>
-              <div className="overflow-x-auto rounded-2xl border border-white/10">
+              <div className="overflow-x-auto rounded-2xl border border-navy-200 bg-white">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b border-white/10 bg-white/[0.03]">
-                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-white/40">
+                    <tr className="border-b border-navy-200 bg-navy-50">
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-navy-400">
                         Action
                       </th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-white/40">
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-navy-400">
                         Credits
                       </th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-white/40 hidden sm:table-cell">
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-navy-400 hidden sm:table-cell">
                         Description
                       </th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-white/40">
+                      <th className="text-left px-4 py-3 text-xs font-semibold uppercase tracking-wider text-navy-400">
                         Min Plan
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-navy-100">
                     {DEFAULT_CREDIT_ACTIONS.map((action) => (
                       <tr
                         key={action.action}
-                        className="hover:bg-white/[0.02] transition-colors"
+                        className="hover:bg-navy-50/50 transition-colors"
                       >
-                        <td className="px-4 py-3 text-white/80 font-medium">
+                        <td className="px-4 py-3 text-navy-700 font-medium">
                           {action.displayName}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="inline-flex items-center gap-1 text-[#4361EE] font-semibold tabular-nums">
+                          <span className="inline-flex items-center gap-1 text-electric font-semibold tabular-nums">
                             <Coins className="w-3.5 h-3.5" />
                             {action.cost}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-white/50 hidden sm:table-cell">
+                        <td className="px-4 py-3 text-navy-400 hidden sm:table-cell">
                           {action.description}
                         </td>
                         <td className="px-4 py-3">
-                          <span className="px-2 py-0.5 rounded-md bg-white/[0.06] text-white/50 text-xs font-medium capitalize">
+                          <span className="px-2 py-0.5 rounded-md bg-navy-100 text-navy-500 text-xs font-medium capitalize">
                             {action.requiredPlan}
                           </span>
                         </td>
