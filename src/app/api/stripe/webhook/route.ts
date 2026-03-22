@@ -173,16 +173,28 @@ async function handleSubscriptionCheckout(session: Stripe.Checkout.Session) {
     });
   }
 
-  // Record transaction
-  await prisma.transaction.create({
-    data: {
-      stripePaymentId: subscriptionId || session.id,
-      amountCents: session.amount_total ?? 0,
-      currency: session.currency ?? "usd",
-      status: "succeeded",
-      userId: userId || undefined,
-    },
+  // Record transaction — use payment intent as canonical ID to avoid duplicates
+  const piId =
+    typeof session.payment_intent === "string"
+      ? session.payment_intent
+      : session.payment_intent?.id;
+  const txnStripeId = piId || subscriptionId || session.id;
+
+  // Avoid duplicate if sync already created one for this payment intent
+  const existingTxn = await prisma.transaction.findFirst({
+    where: { stripePaymentId: txnStripeId },
   });
+  if (!existingTxn) {
+    await prisma.transaction.create({
+      data: {
+        stripePaymentId: txnStripeId,
+        amountCents: session.amount_total ?? 0,
+        currency: session.currency ?? "usd",
+        status: "succeeded",
+        userId: userId || undefined,
+      },
+    });
+  }
 }
 
 async function handleOneTimePayment(session: Stripe.Checkout.Session) {
