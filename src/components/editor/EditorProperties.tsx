@@ -2,6 +2,8 @@
 
 import { useEditorStore } from "./state/editorStore";
 import { SlideData, SlideBlock } from "@/lib/types";
+import { BLOCK_META } from "@/lib/editor/block-types";
+import BlockPropertiesV2 from "./BlockPropertiesV2";
 
 interface EditorPropertiesProps {
   plan: string;
@@ -16,6 +18,9 @@ export default function EditorProperties({ plan }: EditorPropertiesProps) {
   const updateBlock = useEditorStore((s) => s.updateBlock);
   const removeBlock = useEditorStore((s) => s.removeBlock);
 
+  // V2 block system
+  const slideBlocks = useEditorStore((s) => s.slideBlocks);
+
   const slide = slides[selectedSlideIndex];
   if (!slide) {
     return (
@@ -25,27 +30,42 @@ export default function EditorProperties({ plan }: EditorPropertiesProps) {
     );
   }
 
-  const selectedBlock = selectedBlockId
-    ? slide.editorBlocks?.find((b) => b.id === selectedBlockId)
+  // Check for v2 block first (primary system), then fall back to v1 legacy blocks
+  const slideId = slide.id || `slide-${selectedSlideIndex}`;
+  const v2Block = selectedBlockId && slideBlocks[slideId]
+    ? slideBlocks[slideId][selectedBlockId] ?? null
     : null;
+
+  const v1Block = !v2Block && selectedBlockId
+    ? slide.editorBlocks?.find((b) => b.id === selectedBlockId) ?? null
+    : null;
+
+  const hasBlockSelected = !!(v2Block || v1Block);
+  const blockTypeLabel = v2Block
+    ? (BLOCK_META[v2Block.type]?.label ?? v2Block.type)
+    : v1Block
+      ? v1Block.type
+      : "";
 
   return (
     <div className="h-full bg-white border-l border-navy-200 flex flex-col overflow-hidden">
       <div className="p-4 border-b border-navy-100 shrink-0">
         <h3 className="text-sm font-bold text-navy">
-          {selectedBlock ? "Block Properties" : "Slide Properties"}
+          {hasBlockSelected ? "Block Properties" : "Slide Properties"}
         </h3>
         <p className="text-xs text-navy-500 mt-0.5">
-          {selectedBlock
-            ? `${selectedBlock.type} block`
+          {hasBlockSelected
+            ? `${blockTypeLabel} block`
             : `Slide ${selectedSlideIndex + 1} of ${slides.length}`}
         </p>
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto p-4 space-y-5">
-        {selectedBlock ? (
+        {v2Block ? (
+          <BlockPropertiesV2 block={v2Block} slideId={slideId} />
+        ) : v1Block ? (
           <BlockProperties
-            block={selectedBlock}
+            block={v1Block}
             slideIndex={selectedSlideIndex}
             updateBlock={updateBlock}
             removeBlock={removeBlock}
