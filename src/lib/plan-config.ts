@@ -116,6 +116,8 @@ function rowToConfig(row: Record<string, unknown>): PlanConfigFull {
     maxBatchSize: row.maxBatchSize as number,
     pitchPractice: row.pitchPractice as boolean,
     maxStartupProfiles: toInf((row.maxStartupProfiles as number) ?? 1),
+    generationSkills: (row.generationSkills as PlanConfigFull["generationSkills"]) ?? "none",
+    generationAPICalls: (row.generationAPICalls as number) ?? 1,
   };
 }
 

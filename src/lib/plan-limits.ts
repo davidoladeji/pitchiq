@@ -38,6 +38,10 @@ export interface PlanLimits {
   maxBatchSize: number;
   pitchPractice: boolean;
   maxStartupProfiles: number;
+
+  /* Generation skills (agentic pipeline) */
+  generationSkills: "none" | "basic" | "full" | "premium";
+  generationAPICalls: number;
 }
 
 const ALL_THEME_IDS = THEMES.map((t) => t.id);
@@ -74,6 +78,8 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     maxBatchSize: 0,
     pitchPractice: false,
     maxStartupProfiles: 0,
+    generationSkills: "none",
+    generationAPICalls: 1,
   },
   pro: {
     maxDecks: 5,
@@ -106,6 +112,8 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     maxBatchSize: 0,
     pitchPractice: false,
     maxStartupProfiles: 1,
+    generationSkills: "basic",
+    generationAPICalls: 5,
   },
   growth: {
     maxDecks: Infinity,
@@ -138,6 +146,8 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     maxBatchSize: 0,
     pitchPractice: true,
     maxStartupProfiles: 3,
+    generationSkills: "full",
+    generationAPICalls: 15,
   },
   enterprise: {
     maxDecks: Infinity,
@@ -170,6 +180,8 @@ const PLAN_CONFIGS: Record<string, PlanLimits> = {
     maxBatchSize: 50,
     pitchPractice: true,
     maxStartupProfiles: Infinity,
+    generationSkills: "premium",
+    generationAPICalls: 25,
   },
 };
 

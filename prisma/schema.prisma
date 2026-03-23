@@ -147,6 +147,7 @@ model User {
   periodPasses         PeriodPass[]
   creditBalance        CreditBalance?
   creditTransactions   CreditTransaction[]
+  generationJobs       GenerationJob[]
 }
 
 model Account {
@@ -768,4 +769,25 @@ model MatchingConfig {
   active          Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+// --- Generation Jobs (skill pipeline tracking) ---
+model GenerationJob {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id])
+  deckId          String?
+  status          String    @default("pending") // pending | running | completed | failed
+  input           String    // JSON: DeckInput
+  progress        Int       @default(0) // 0-100
+  currentPhase    String?
+  skillResults    String?   // JSON: skill outputs
+  critiqueResults String?   // JSON: critique outputs
+  error           String?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([userId])
+  @@index([status])
 }
