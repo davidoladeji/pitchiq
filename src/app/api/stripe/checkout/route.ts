@@ -27,9 +27,17 @@ const FALLBACK_PRICES: Record<string, { priceId?: string; amount: number; name: 
 async function resolvePlanPricing(plan: string): Promise<{ priceId?: string; amount: number; name: string } | null> {
   const dbConfig = await getPlanConfigByKey(plan);
   if (dbConfig) {
+    const dbAmount = dbConfig.stripeAmount;
+    const fallbackAmount = FALLBACK_PRICES[plan]?.amount || 0;
+
+    // If the DB has a custom amount that differs from the fallback, use price_data
+    // instead of a fixed Stripe Price ID (which has an old amount baked in).
+    // This ensures admin price changes take effect immediately.
+    const useInlinePrice = dbAmount && dbAmount !== fallbackAmount;
+
     return {
-      priceId: dbConfig.stripePriceId || undefined,
-      amount: dbConfig.stripeAmount || FALLBACK_PRICES[plan]?.amount || 0,
+      priceId: useInlinePrice ? undefined : (dbConfig.stripePriceId || undefined),
+      amount: dbAmount || fallbackAmount,
       name: `PitchIQ ${dbConfig.displayName}`,
     };
   }
