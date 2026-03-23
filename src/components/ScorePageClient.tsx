@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import DeckUploader from "@/components/DeckUploader";
@@ -18,6 +19,7 @@ export default function ScorePageClient({
   userPlan?: string;
 }) {
   const { status } = useSession();
+  const router = useRouter();
   const limits = getPlanLimits(userPlan);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [state, setState] = useState<PageState>("idle");
@@ -27,6 +29,8 @@ export default function ScorePageClient({
   const [slideCount, setSlideCount] = useState(0);
   const [detectedName, setDetectedName] = useState("");
   const [shareId, setShareId] = useState<string | null>(null);
+  const [refining, setRefining] = useState(false);
+  const [refineError, setRefineError] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [progress, setProgress] = useState(0);
   const [extendEnabled, setExtendEnabled] = useState<boolean | null>(null);
@@ -194,6 +198,37 @@ export default function ScorePageClient({
     } catch {
       setErrorMsg("Network error. Please try again.");
       setState("error");
+    }
+  }
+
+  async function handleRefine() {
+    if (!shareId) return;
+    setRefining(true);
+    setRefineError("");
+
+    try {
+      const res = await fetch(`/api/decks/${shareId}/refine-deck`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ investorType: "vc" }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (data.code === "ACCESS_DENIED") {
+          setRefineError("upgrade");
+        } else {
+          setRefineError(data.error || "Refinement failed. Please try again.");
+        }
+        setRefining(false);
+        return;
+      }
+
+      router.push(`/editor/${data.newDeck.shareId}`);
+    } catch {
+      setRefineError("Network error. Please try again.");
+      setRefining(false);
     }
   }
 
@@ -393,30 +428,84 @@ export default function ScorePageClient({
 
               <PIQScoreCard score={score} detail={limits.piqScoreDetail} />
 
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
-                <Link
-                  href={shareId ? `/create?from=${shareId}` : "/create"}
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
-                  Create AI-Enhanced Deck
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setState("idle");
-                    setScore(null);
-                    setFile(null);
-                    setShareId(null);
-                    setProgress(0);
-                  }}
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-navy-200 dark:border-white/15 text-navy dark:text-white text-sm font-semibold hover:border-navy-300 dark:hover:border-white/25 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950"
-                >
-                  Score Another Deck
-                </button>
-              </div>
+              {refining ? (
+                <div className="flex flex-col items-center gap-3 pt-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-5 h-5 rounded-full border-2 border-electric border-t-transparent animate-spin motion-reduce:animate-none"
+                      aria-hidden="true"
+                    />
+                    <span className="text-sm font-medium text-navy-600 dark:text-navy-300">
+                      AI is building your enhanced deck&hellip;
+                    </span>
+                  </div>
+                  <p className="text-xs text-navy-400 dark:text-navy-500">
+                    Using PIQ feedback to improve weak dimensions. This may take a minute.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-3 pt-4">
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
+                    {shareId ? (
+                      <button
+                        type="button"
+                        onClick={handleRefine}
+                        className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                        </svg>
+                        Create AI-Enhanced Deck
+                      </button>
+                    ) : (
+                      <Link
+                        href="/create"
+                        className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                        </svg>
+                        Create AI-Enhanced Deck
+                      </Link>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setState("idle");
+                        setScore(null);
+                        setFile(null);
+                        setShareId(null);
+                        setRefineError("");
+                        setProgress(0);
+                      }}
+                      className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-navy-200 dark:border-white/15 text-navy dark:text-white text-sm font-semibold hover:border-navy-300 dark:hover:border-white/25 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950"
+                    >
+                      Score Another Deck
+                    </button>
+                  </div>
+
+                  {refineError === "upgrade" && (
+                    <div className="w-full max-w-md p-3 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-700/30 text-center">
+                      <p className="text-sm text-amber-800 dark:text-amber-300 mb-2">
+                        Deck refinement requires a Pro plan or credits.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setShowPlanModal(true)}
+                        className="text-sm font-semibold text-electric hover:underline"
+                      >
+                        View Plans
+                      </button>
+                    </div>
+                  )}
+
+                  {refineError && refineError !== "upgrade" && (
+                    <div className="w-full max-w-md p-3 rounded-xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-700/30" role="alert">
+                      <p className="text-sm text-red-700 dark:text-red-300">{refineError}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Upgrade CTA for free users */}
               {userPlan === "starter" && (

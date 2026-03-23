@@ -121,6 +121,7 @@ export async function scoreDeckWithVision(
       body: JSON.stringify({
         model: "claude-sonnet-4-20250514",
         max_tokens: 1500,
+        temperature: 0,
         messages: [
           {
             role: "user",
@@ -215,6 +216,7 @@ async function aiScore(
     body: JSON.stringify({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1500,
+      temperature: 0,
       messages: [
         {
           role: "user",
