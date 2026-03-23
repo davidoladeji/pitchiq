@@ -18,7 +18,7 @@ export async function generateDeck(input: DeckInput): Promise<SlideData[]> {
   const client = new Anthropic({ apiKey });
   const investorGuidance = INVESTOR_PROMPTS[input.investorType] || INVESTOR_PROMPTS.vc;
 
-  const prompt = `Generate a professional 10-14 slide pitch deck for an investor presentation. Return ONLY valid JSON — no markdown, no code fences, no explanation.
+  const prompt = `Generate a professional 12-16 slide pitch deck for an investor presentation. Return ONLY valid JSON — no markdown, no code fences, no explanation.
 
 Company: ${input.companyName}
 Industry: ${input.industry}
@@ -36,7 +36,7 @@ Return a JSON array of slide objects. Each slide MUST have:
 - "title": string (slide heading)
 - "subtitle": string (optional subheading)
 - "content": string[] (bullet points — always include even for visual slides)
-- "type": one of: "title", "content", "stats", "comparison", "cta", "chart", "metrics", "team", "timeline"
+- "type": one of: "title", "content", "stats", "comparison", "cta", "chart", "metrics", "team", "timeline", "image-content", "logo-grid", "table"
 - "layout": one of: "default", "centered", "split", "two-column", "stat-highlight" (for "content" type slides ONLY — vary these across slides!)
 - "accent": boolean (true for slides that should be visually emphasized)
 
@@ -45,34 +45,47 @@ PLUS these optional fields for visual slides:
 - "metrics": [{"label":"string","value":"string","change":"string","trend":"up"|"down"|"neutral"},...] — for type "metrics" (4-6 KPI cards)
 - "team": [{"name":"string","role":"string","bio":"string"},...] — for type "team"
 - "timeline": [{"date":"string","title":"string","description":"string","completed":boolean},...] — for type "timeline"
+- "imagePrompt": string (descriptive prompt for stock photo, e.g. "modern SaaS dashboard on laptop screen", "diverse team collaborating in startup office") — for type "image-content"
+- "logos": [{"name":"string"},...] — for type "logo-grid" (customer logos, partner brands, integrations)
+- "tableData": { "columns": ["Feature","Us","Competitor A","Competitor B"], "rows": [["Feature 1","✓","✗","✗"],...] } — for type "table"
 
 IMPORTANT about layout field for content slides: Vary the layout across content slides. NEVER use the same layout for consecutive content slides. Use "split" for problem/solution contrast, "centered" for feature highlights, "stat-highlight" when a slide leads with a key number or stat, "two-column" for lists of 6+ items, "default" for standard bullets. Write content items that mix styles — include stat-leading items (e.g. "85% of enterprises face..."), short punchy statements, and contextual explanations. Avoid making all bullets the same length. Assign accent:true to 3-5 slides spread across the deck, not consecutively.
 
-IMPORTANT: Make each deck UNIQUE and VISUALLY DIVERSE. You MUST use a MIX of slide types:
+VISUAL RICHNESS IS CRITICAL — investors see hundreds of text-heavy decks. Make this one STAND OUT:
 - At least 2 "chart" slides with realistic chartData (market size, revenue projections, growth)
 - At least 1 "metrics" slide with KPI cards (MRR, users, growth rate, etc)
 - 1 "team" slide with team member details
 - 1 "timeline" slide for milestones/roadmap
-- Use "comparison" for competitive positioning
+- 1-2 "image-content" slides with imagePrompt (for product, solution, or problem visualization)
+- 1 "table" slide for competitive comparison (feature matrix with checkmarks ✓/✗)
+- 1 "logo-grid" slide for social proof (customer logos, partners, integrations, or press mentions)
+- Use "comparison" ONLY when a numbered list is better than a table
 - Vary accent patterns — don't alternate predictably
 
 Slide order (optimize for ${input.investorType} investors):
 1. Title (type: "title") — bold opening
-2. Problem (type: "content") — pain point
-3. Solution (type: "content", accent) — your answer
+2. Problem (type: "image-content") — pain point with a vivid image (provide imagePrompt describing the problem visually)
+3. Solution (type: "image-content", accent) — product screenshot concept (provide imagePrompt like "clean SaaS dashboard showing key features")
 4. Market Opportunity (type: "chart") — TAM/SAM/SOM as bar or pie chart with real numbers
 5. Product / How It Works (type: "content" or "timeline") — product walkthrough
 6. Business Model (type: "content") — revenue mechanics
 7. Traction & Metrics (type: "metrics") — KPI cards with growth numbers
-8. Growth Trajectory (type: "chart") — revenue or user growth as line/area chart
-9. Competition (type: "comparison") — why you win
-10. Team (type: "team") — founder bios
-11. Roadmap (type: "timeline") — next 12-18 months
-12. Financial Projections (type: "chart") — revenue forecast as bar chart
-13. The Ask (type: "content", accent) — funding amount and use of funds
-14. CTA (type: "cta") — closing
+8. Social Proof (type: "logo-grid") — customer logos, partners, press, or integrations
+9. Growth Trajectory (type: "chart") — revenue or user growth as line/area chart
+10. Competitive Landscape (type: "table") — feature comparison matrix with columns for you vs 2-3 competitors
+11. Team (type: "team") — founder bios
+12. Roadmap (type: "timeline") — next 12-18 months
+13. Financial Projections (type: "chart") — revenue forecast as bar chart
+14. The Ask (type: "content", accent) — funding amount and use of funds as pie chart
+15. CTA (type: "cta") — closing
 
-Make content compelling and SPECIFIC to this company. Use realistic numbers (don't say "$X" — invent plausible figures). Generate names for team members if not provided. Chart data must have 4-7 data points with realistic values. Every deck should feel bespoke.`;
+For "image-content" slides: Write an imagePrompt that describes a SPECIFIC, realistic scene or product UI relevant to the company. Be descriptive (e.g. "modern mobile app interface showing personalized nutrition recommendations with colorful food cards" NOT just "app screenshot"). The image will be fetched from Unsplash stock photos.
+
+For "logo-grid" slides: Include 6-8 recognizable company names relevant to the industry as potential customers, partners, or integrations. Use real company names that make sense for the industry.
+
+For "table" slides: Create a feature comparison with 4-6 rows and 3-4 columns. Use ✓, ✗, and descriptive values. Make your company clearly win on key differentiators.
+
+Make content compelling and SPECIFIC to this company. Use realistic numbers (don't say "$X" — invent plausible figures). Generate names for team members if not provided. Chart data must have 4-7 data points with realistic values. Every deck should feel bespoke and visually premium.`;
 
   const response = await client.messages.create({
     model: "claude-sonnet-4-20250514",
@@ -89,6 +102,9 @@ Make content compelling and SPECIFIC to this company. Use realistic numbers (don
 
     // Enrich chart slides with Thesys-generated data if available
     slides = await enrichChartsWithThesys(slides, input);
+
+    // Fetch stock images for image-content slides
+    slides = await enrichSlidesWithImages(slides);
 
     return slides;
   } catch {
@@ -114,6 +130,38 @@ async function enrichChartsWithThesys(slides: SlideData[], input: DeckInput): Pr
       );
       if (chartData) {
         slide.chartData = chartData;
+      }
+    })
+  );
+
+  return slides;
+}
+
+/**
+ * Fetch stock images from Unsplash for slides with imagePrompt.
+ */
+async function enrichSlidesWithImages(slides: SlideData[]): Promise<SlideData[]> {
+  const unsplashKey = process.env.UNSPLASH_ACCESS_KEY;
+  const imageSlides = slides.filter((s) => s.type === "image-content" && s.imagePrompt && !s.imageUrl);
+
+  if (imageSlides.length === 0 || !unsplashKey) return slides;
+
+  await Promise.all(
+    imageSlides.map(async (slide) => {
+      try {
+        const query = encodeURIComponent(slide.imagePrompt!.slice(0, 100));
+        const res = await fetch(
+          `https://api.unsplash.com/search/photos?query=${query}&per_page=1&orientation=landscape`,
+          { headers: { Authorization: `Client-ID ${unsplashKey}` } }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          if (data.results?.[0]?.urls?.regular) {
+            slide.imageUrl = data.results[0].urls.regular;
+          }
+        }
+      } catch {
+        // Image fetch failed — slide renders fine without image
       }
     })
   );
@@ -163,16 +211,18 @@ function generateFallbackDeck(input: DeckInput): SlideData[] {
       title: "The Problem",
       subtitle: "A growing pain point",
       content: problemBullets,
-      type: "content",
+      type: "image-content",
       layout: "split",
+      imagePrompt: `${input.industry} industry pain point frustration concept`,
     },
     {
       title: "Our Solution",
       subtitle: `How ${input.companyName} solves it`,
       content: solutionBullets,
-      type: "content",
+      type: "image-content",
       layout: "centered",
       accent: true,
+      imagePrompt: `modern ${input.industry} software dashboard clean UI`,
     },
     {
       title: "Market Opportunity",
@@ -243,14 +293,33 @@ function generateFallbackDeck(input: DeckInput): SlideData[] {
       },
     },
     {
-      title: "Why We Win",
-      subtitle: "Competitive advantage",
+      title: "Trusted By Industry Leaders",
+      subtitle: "Our growing ecosystem of partners and customers",
+      content: ["Enterprise-ready platform with proven integrations"],
+      type: "logo-grid",
+      logos: [
+        { name: "Salesforce" }, { name: "HubSpot" }, { name: "Slack" },
+        { name: "Stripe" }, { name: "AWS" }, { name: "Google Cloud" },
+      ],
+    },
+    {
+      title: "Competitive Landscape",
+      subtitle: "How we compare to alternatives",
       content: [
         solutionBullets[0] || input.solution.slice(0, 80),
-        ...problemBullets.slice(0, 2).map((p) => `We address: ${p}`),
         "Defensible moat through data and network effects",
-      ].filter(Boolean).slice(0, 4),
-      type: "comparison",
+      ],
+      type: "table",
+      tableData: {
+        columns: ["Feature", input.companyName, "Competitor A", "Competitor B"],
+        rows: [
+          ["AI-Powered Analysis", "✓", "✗", "Partial"],
+          ["Real-time Dashboard", "✓", "✓", "✗"],
+          ["Enterprise SSO", "✓", "✗", "✓"],
+          ["Custom Integrations", "✓", "Limited", "✗"],
+          ["24/7 Support", "✓", "✗", "✗"],
+        ],
+      },
     },
     {
       title: "The Team",

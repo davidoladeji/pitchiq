@@ -29,6 +29,8 @@ const TYPE_ICONS: Record<SlideData["type"], string> = {
   team: "\u263A",
   timeline: "\u23F1",
   "image-content": "\u25A3",
+  "logo-grid": "\u25A6",
+  table: "\u2637",
 };
 
 const TYPE_LABELS: Record<SlideData["type"], string> = {
@@ -42,6 +44,8 @@ const TYPE_LABELS: Record<SlideData["type"], string> = {
   team: "Team",
   timeline: "Timeline",
   "image-content": "Image",
+  "logo-grid": "Logos",
+  table: "Table",
 };
 
 interface SlideThumbProps {

@@ -568,6 +568,193 @@ function ComparisonSlide({ slide, accentHex = ELECTRIC_HEX }: { slide: SlideData
   );
 }
 
+function ImageContentSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
+  const isDark = !!accent;
+  const bg = isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)";
+  const fg = isDark ? "var(--t-text)" : "var(--t-text-on-light)";
+  const accentColor = isDark ? "var(--t-accent-light)" : "var(--t-accent)";
+  const items = slide.content.slice(0, 6);
+
+  return (
+    <div className="flex flex-col h-full relative overflow-hidden" style={{ background: bg, color: fg }}>
+      {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 relative z-10">
+        {/* Text side */}
+        <div className="flex flex-col justify-center p-4 sm:p-6 md:p-8 lg:p-10">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
+          {slide.subtitle && (
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60 mb-4" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>
+              {slide.subtitle}
+            </p>
+          )}
+          <div className="space-y-2.5">
+            {items.map((item, i) => (
+              <div key={i} className="flex items-start gap-2.5">
+                <span className="w-1.5 rounded-full mt-1.5 shrink-0 min-h-[0.75rem]" style={{ background: accentColor }} aria-hidden="true" />
+                <p className="text-sm sm:text-base leading-relaxed opacity-90">{item}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Image side */}
+        <div className="relative overflow-hidden">
+          {slide.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={slide.imageUrl}
+              alt={slide.imagePrompt || slide.title}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)" }}
+            >
+              <div className="text-center p-6">
+                <svg className="w-16 h-16 mx-auto mb-3 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 001.5-1.5V5.25a1.5 1.5 0 00-1.5-1.5H3.75a1.5 1.5 0 00-1.5 1.5v14.25a1.5 1.5 0 001.5 1.5z" />
+                </svg>
+                <p className="text-sm opacity-30">{slide.imagePrompt || "Product visual"}</p>
+              </div>
+            </div>
+          )}
+          {/* Gradient overlay on the image edge */}
+          <div
+            className="absolute inset-y-0 left-0 w-16"
+            style={{ background: `linear-gradient(to right, ${bg}, transparent)` }}
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LogoGridSlide({ slide, accent }: { slide: SlideData; accent?: boolean }) {
+  const isDark = !!accent;
+  const logos = (slide.logos || []).slice(0, 12);
+  const gridCols = logos.length <= 4 ? "grid-cols-2 sm:grid-cols-4" : logos.length <= 6 ? "grid-cols-2 sm:grid-cols-3" : "grid-cols-3 sm:grid-cols-4";
+
+  return (
+    <div
+      className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden"
+      style={{
+        background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
+        color: isDark ? "var(--t-text)" : "var(--t-text-on-light)",
+      }}
+    >
+      {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+      <div className="mb-6 md:mb-8 relative z-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
+        {slide.subtitle && (
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>
+            {slide.subtitle}
+          </p>
+        )}
+      </div>
+
+      <div className={`flex-1 grid ${gridCols} gap-4 md:gap-6 items-center justify-items-center relative z-10 max-w-3xl mx-auto w-full`}>
+        {logos.map((logo, i) => (
+          <div
+            key={i}
+            className="w-full p-4 md:p-6 rounded-xl flex items-center justify-center min-h-[80px]"
+            style={{
+              background: isDark ? "var(--t-card-bg)" : "rgba(0,0,0,0.03)",
+              border: isDark ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.06)",
+            }}
+          >
+            <span className="text-sm md:text-base font-semibold tracking-wide opacity-60 text-center">{logo.name}</span>
+          </div>
+        ))}
+      </div>
+
+      {slide.content.length > 0 && (
+        <div className="mt-4 text-center relative z-10">
+          <p className="text-sm opacity-50">{slide.content[0]}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TableSlide({ slide, accent, accentHex = ELECTRIC_HEX }: { slide: SlideData; accent?: boolean; accentHex?: string }) {
+  const isDark = !!accent;
+  const tableData = slide.tableData;
+
+  return (
+    <div
+      className="flex flex-col h-full p-4 sm:p-6 md:p-8 lg:p-12 relative overflow-hidden"
+      style={{
+        background: isDark ? "var(--t-bg-dark)" : "var(--t-bg-light)",
+        color: isDark ? "var(--t-text)" : "var(--t-text-on-light)",
+      }}
+    >
+      {isDark && <div className="absolute inset-0 bg-grid-dark opacity-10 pointer-events-none" aria-hidden="true" />}
+      <div className="mb-4 md:mb-6 relative z-10">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl tracking-tight mb-2 text-balance" style={headingStyle}>{slide.title}</h2>
+        {slide.subtitle && (
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-60" style={{ color: isDark ? "var(--t-text-secondary)" : undefined }}>
+            {slide.subtitle}
+          </p>
+        )}
+      </div>
+
+      <div className="flex-1 min-h-0 overflow-auto relative z-10">
+        {tableData?.columns && tableData.rows ? (
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                {tableData.columns.map((col, i) => (
+                  <th
+                    key={i}
+                    className="text-left text-xs sm:text-sm font-bold uppercase tracking-wider p-3 md:p-4"
+                    style={{
+                      borderBottom: `2px solid ${accentHex}`,
+                      color: i === 1 ? accentHex : undefined,
+                      opacity: i === 0 ? 0.5 : 1,
+                    }}
+                  >
+                    {col}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {tableData.rows.map((row, ri) => (
+                <tr key={ri}>
+                  {row.map((cell, ci) => (
+                    <td
+                      key={ci}
+                      className="text-sm sm:text-base p-3 md:p-4 font-medium"
+                      style={{
+                        borderBottom: isDark ? "1px solid rgba(255,255,255,0.06)" : "1px solid rgba(0,0,0,0.06)",
+                        color: cell === "✓" ? EMERALD_HEX : cell === "✗" ? "#ef4444" : undefined,
+                        fontWeight: ci === 1 ? 700 : ci === 0 ? 600 : 400,
+                        opacity: ci === 0 ? 0.7 : 1,
+                      }}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="space-y-3">
+            {slide.content.map((item, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <span className="w-1 rounded-full mt-2 shrink-0 min-h-[1rem]" style={{ background: accentHex }} aria-hidden="true" />
+                <p className="text-sm sm:text-base md:text-lg leading-relaxed opacity-90">{item}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function CtaSlide({ slide, companyName, accentHex }: { slide: SlideData; companyName: string; accentHex?: string }) {
   return (
     <div
@@ -616,6 +803,12 @@ function renderSlide(slide: SlideData, companyName: string, accentHex?: string) 
       return <StatsSlide slide={slide} accent={slide.accent} />;
     case "comparison":
       return <ComparisonSlide slide={slide} accentHex={accentHex} />;
+    case "image-content":
+      return <ImageContentSlide slide={slide} accent={slide.accent} />;
+    case "logo-grid":
+      return <LogoGridSlide slide={slide} accent={slide.accent} />;
+    case "table":
+      return <TableSlide slide={slide} accent={slide.accent} accentHex={accentHex} />;
     case "cta":
       return <CtaSlide slide={slide} companyName={companyName} accentHex={accentHex} />;
     default:

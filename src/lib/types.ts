@@ -49,7 +49,7 @@ export interface SlideData {
   title: string;
   subtitle?: string;
   content: string[];
-  type: "title" | "content" | "stats" | "comparison" | "cta" | "chart" | "metrics" | "team" | "timeline" | "image-content";
+  type: "title" | "content" | "stats" | "comparison" | "cta" | "chart" | "metrics" | "team" | "timeline" | "image-content" | "logo-grid" | "table";
   layout?: "default" | "centered" | "split" | "two-column" | "stat-highlight";
   accent?: boolean;
   chartData?: {
@@ -61,7 +61,9 @@ export interface SlideData {
   team?: TeamMember[];
   timeline?: TimelineItem[];
   imageUrl?: string;
-  imagePrompt?: string; // For Thesys image generation
+  imagePrompt?: string; // For AI/stock image generation
+  logos?: { name: string; url?: string }[]; // For logo-grid slides (trusted by / partners)
+  tableData?: { columns: string[]; rows: string[][] }; // For table slides (competitive comparison)
   editorBlocks?: SlideBlock[]; // structured block data for editor (when present, editor uses this)
   editorBlocksV2?: Record<string, unknown>; // v2 typed blocks (runtime-only, stripped before API save)
 }

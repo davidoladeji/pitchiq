@@ -165,6 +165,17 @@ CRITICAL RULES:
 6. Use a MIX of slide types for visual variety: content, chart, metrics, team, timeline, comparison, stats.
 7. For each slide, vary the layout field across content slides — use split, centered, two-column, stat-highlight, default.
 
+VISUAL RICHNESS: Use a MIX of slide types for a premium deck. Available types:
+- "image-content": split layout with text + image. Include "imagePrompt" (descriptive stock photo query, e.g. "modern SaaS dashboard on laptop")
+- "logo-grid": social proof with customer/partner logos. Include "logos": [{"name":"CompanyName"},...]
+- "table": feature comparison matrix. Include "tableData": {"columns":["Feature","Us","Competitor A"],"rows":[["Feature 1","✓","✗"],...]}
+- Plus all existing types: title, content, chart, metrics, team, timeline, comparison, stats, cta
+
+You MUST include at least:
+- 1-2 "image-content" slides (problem, solution, or product with imagePrompt)
+- 1 "table" slide for competitive comparison (with actual feature matrix using ✓/✗)
+- 1 "logo-grid" slide for social proof (6-8 real company names relevant to the industry)
+
 Return ONLY valid JSON (no markdown fences, no explanation) with this exact structure:
 {
   "slides": [
@@ -172,13 +183,16 @@ Return ONLY valid JSON (no markdown fences, no explanation) with this exact stru
       "title": "string",
       "subtitle": "string (optional)",
       "content": ["string", "string", ...],
-      "type": "title" | "content" | "stats" | "comparison" | "cta" | "chart" | "metrics" | "team" | "timeline",
+      "type": "title" | "content" | "stats" | "comparison" | "cta" | "chart" | "metrics" | "team" | "timeline" | "image-content" | "logo-grid" | "table",
       "layout": "default" | "centered" | "split" | "two-column" | "stat-highlight" (for content slides only),
       "accent": true | false,
       "chartData": { "type": "bar"|"pie"|"line"|"area", "data": [{"label":"string","value":number},...], "label":"string" },
       "metrics": [{"label":"string","value":"string","change":"string","trend":"up"|"down"|"neutral"},...],
       "team": [{"name":"string","role":"string","bio":"string"},...],
-      "timeline": [{"date":"string","title":"string","description":"string","completed":boolean},...]
+      "timeline": [{"date":"string","title":"string","description":"string","completed":boolean},...],
+      "imagePrompt": "string (descriptive stock photo prompt for image-content slides)",
+      "logos": [{"name":"string"},...],
+      "tableData": { "columns": ["string",...], "rows": [["string",...]] }
     }
   ],
   "improvements": [
@@ -187,7 +201,7 @@ Return ONLY valid JSON (no markdown fences, no explanation) with this exact stru
   "summary": "string (2-3 sentence summary of key improvements made)"
 }
 
-Include chartData only for "chart" type slides, metrics only for "metrics" type, team only for "team" type, timeline only for "timeline" type. Include layout only for "content" type slides.`;
+Include chartData only for "chart" type slides, metrics only for "metrics" type, team only for "team" type, timeline only for "timeline" type, imagePrompt only for "image-content" type, logos only for "logo-grid" type, tableData only for "table" type. Include layout only for "content" type slides.`;
 
 /**
  * Refine a pitch deck using AI analysis of content and PIQ feedback.
@@ -303,6 +317,9 @@ async function aiRefinement(
     if (slide.metrics && clean.type === "metrics") clean.metrics = slide.metrics;
     if (slide.team && clean.type === "team") clean.team = slide.team;
     if (slide.timeline && clean.type === "timeline") clean.timeline = slide.timeline;
+    if (slide.imagePrompt && clean.type === "image-content") clean.imagePrompt = slide.imagePrompt;
+    if (slide.logos && clean.type === "logo-grid") clean.logos = slide.logos;
+    if (slide.tableData && clean.type === "table") clean.tableData = slide.tableData;
 
     return clean;
   });
@@ -331,6 +348,8 @@ function isValidSlideType(
     "team",
     "timeline",
     "image-content",
+    "logo-grid",
+    "table",
   ].includes(type);
 }
 
