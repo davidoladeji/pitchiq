@@ -940,7 +940,7 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
               onClick={() => goTo(i)}
               className={`flex items-center justify-center rounded-lg transition-all duration-200 text-[10px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
                 i === currentSlide
-                  ? "min-w-[32px] h-[28px] bg-gradient-to-r from-violet to-electric text-white shadow-md shadow-violet/30 px-2"
+                  ? "min-w-[32px] h-[28px] bg-violet text-white shadow-md shadow-violet/30 px-2"
                   : "min-w-[28px] h-[28px] bg-white/5 text-white/30 hover:bg-white/10 hover:text-white/60 px-1.5"
               }`}
               aria-label={`Go to slide ${i + 1}`}

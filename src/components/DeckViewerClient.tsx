@@ -166,7 +166,7 @@ export default function DeckViewerClient() {
           <Link
             href="/create"
             aria-label="Create your own pitch deck"
-            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-gradient-to-r from-violet to-electric text-white font-medium shadow-lg shadow-violet/25 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-violet text-white font-medium shadow-lg shadow-violet/25 hover:bg-violet-light hover:-translate-y-0.5 active:translate-y-0 transition-all"
           >
             Create a deck
           </Link>
@@ -185,7 +185,7 @@ export default function DeckViewerClient() {
   // Button base styles for the action bar
   const btnBase = "inline-flex items-center justify-center gap-2 rounded-2xl text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950";
   const btnOutline = `${btnBase} min-h-[42px] px-6 py-2.5 border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white hover:border-white/20 backdrop-blur-sm`;
-  const btnPrimary = `${btnBase} min-h-[42px] px-7 py-2.5 bg-gradient-to-r from-violet to-electric text-white font-semibold shadow-lg shadow-violet/25 hover:shadow-xl hover:shadow-violet/30 hover:-translate-y-0.5 active:translate-y-0`;
+  const btnPrimary = `${btnBase} min-h-[42px] px-7 py-2.5 bg-violet text-white font-semibold shadow-lg shadow-violet/25 hover:bg-violet-light hover:-translate-y-0.5 active:translate-y-0`;
   const btnAccent = `${btnBase} min-h-[42px] px-6 py-2.5 bg-violet/15 border border-violet/25 text-violet-light hover:bg-violet/25 hover:text-white`;
 
   return (
@@ -195,7 +195,7 @@ export default function DeckViewerClient() {
       <main
         id="main"
         tabIndex={-1}
-        className="pt-24 pb-20 px-4 sm:px-6 animate-fade-in motion-reduce:animate-none outline-none"
+        className="pt-24 pb-8 px-4 sm:px-6 animate-fade-in motion-reduce:animate-none outline-none"
         aria-labelledby="deck-viewer-title"
       >
         <div className="max-w-5xl mx-auto">
@@ -301,7 +301,7 @@ export default function DeckViewerClient() {
 
             {/* Upgrade CTA for starter-tier decks only */}
             {ownerPlan === "starter" && (
-              <div className="w-full max-w-2xl rounded-2xl border border-violet/15 bg-gradient-to-r from-violet/5 via-navy-900 to-electric/5 p-5">
+              <div className="w-full max-w-2xl rounded-2xl border border-violet/15 bg-navy-900 p-5">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
