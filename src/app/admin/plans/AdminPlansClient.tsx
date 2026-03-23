@@ -387,7 +387,18 @@ function PlanCard({
               <input
                 type="text"
                 value={form.price}
-                onChange={(e) => update("price", e.target.value)}
+                onChange={(e) => {
+                  const newPrice = e.target.value;
+                  update("price", newPrice);
+                  // Auto-sync stripeAmount when price changes (extract number, convert to cents)
+                  const match = newPrice.match(/\$?\s*(\d+(?:\.\d{1,2})?)/);
+                  if (match) {
+                    const dollars = parseFloat(match[1]);
+                    if (!isNaN(dollars)) {
+                      update("stripeAmount", Math.round(dollars * 100));
+                    }
+                  }
+                }}
                 placeholder="$29"
                 className="w-32 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
               />
@@ -403,28 +414,47 @@ function PlanCard({
                 <option value="">None</option>
               </select>
             </FieldRow>
-            <FieldRow label="Stripe Price ID">
+            <FieldRow label="Stripe Charge Amount (cents)">
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={form.stripeAmount ?? ""}
+                  onChange={(e) =>
+                    update(
+                      "stripeAmount",
+                      e.target.value === "" ? null : Number(e.target.value)
+                    )
+                  }
+                  placeholder="2900"
+                  className="w-28 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
+                />
+                {form.stripeAmount != null && (
+                  <span className="text-xs text-white/40">= ${(form.stripeAmount / 100).toFixed(2)}</span>
+                )}
+              </div>
+              {/* Mismatch warning */}
+              {(() => {
+                const displayMatch = form.price.match(/\$?\s*(\d+(?:\.\d{1,2})?)/);
+                const displayCents = displayMatch ? Math.round(parseFloat(displayMatch[1]) * 100) : null;
+                if (displayCents && form.stripeAmount != null && displayCents !== form.stripeAmount) {
+                  return (
+                    <p className="text-[11px] text-amber-400 mt-1">
+                      Display price ({form.price}) does not match charge amount (${(form.stripeAmount / 100).toFixed(2)}). Customers will be charged ${(form.stripeAmount / 100).toFixed(2)}.
+                    </p>
+                  );
+                }
+                return null;
+              })()}
+            </FieldRow>
+            <FieldRow label="Stripe Price ID (optional)">
               <input
                 type="text"
                 value={form.stripePriceId}
                 onChange={(e) => update("stripePriceId", e.target.value)}
-                placeholder="price_..."
-                className="w-48 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white font-mono text-xs"
+                placeholder="price_... (leave empty to use amount above)"
+                className="w-64 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white font-mono text-xs"
               />
-            </FieldRow>
-            <FieldRow label="Amount (cents)">
-              <input
-                type="number"
-                value={form.stripeAmount ?? ""}
-                onChange={(e) =>
-                  update(
-                    "stripeAmount",
-                    e.target.value === "" ? null : Number(e.target.value)
-                  )
-                }
-                placeholder="2900"
-                className="w-28 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-sm text-white"
-              />
+              <p className="text-[10px] text-white/30 mt-0.5">Only used if Stripe Charge Amount is empty. Amount above takes priority.</p>
             </FieldRow>
           </div>
 
