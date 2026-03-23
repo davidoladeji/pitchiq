@@ -884,7 +884,7 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
         ))}
       </div>
 
-      <div id="slide-container" className="relative aspect-[16/9] w-full max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-premium-lg border border-navy-200/50">
+      <div id="slide-container" className="relative aspect-[16/9] w-full max-w-6xl mx-auto rounded-2xl overflow-hidden shadow-2xl shadow-black/30 border border-white/10">
         <div className={`absolute inset-0 transition-opacity duration-300 ease-out ${isTransitioning ? "opacity-90" : "opacity-100"}`}>
           {renderSlide(slides[currentSlide], companyName, theme.accent)}
         </div>
@@ -900,14 +900,14 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
         )}
 
         <button onClick={() => goTo(currentSlide - 1)} className="absolute left-0 top-0 w-1/4 h-full cursor-w-resize opacity-30 sm:opacity-0 sm:hover:opacity-100 transition-opacity" aria-label="Previous slide">
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 flex items-center justify-center backdrop-blur-md border border-white/10">
             <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </div>
         </button>
         <button onClick={() => goTo(currentSlide + 1)} className="absolute right-0 top-0 w-1/4 h-full cursor-e-resize opacity-30 sm:opacity-0 sm:hover:opacity-100 transition-opacity" aria-label="Next slide">
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/20 flex items-center justify-center backdrop-blur-sm">
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/30 flex items-center justify-center backdrop-blur-md border border-white/10">
             <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
@@ -915,42 +915,57 @@ const SlideRenderer = forwardRef<SlideRendererHandle, SlideRendererProps>(functi
         </button>
       </div>
 
-      {/* Screen reader: announce slide change so keyboard/sr users get context (WCAG 2.1 AA) */}
+      {/* Screen reader: announce slide change */}
       <p className="sr-only" role="status" aria-live="polite" aria-atomic="true">
         Slide {currentSlide + 1} of {slides.length}
       </p>
 
-      <div className="flex items-center justify-center gap-4 mt-6" role="group" aria-label="Slide navigation">
-        <button onClick={() => goTo(currentSlide - 1)} disabled={currentSlide === 0} className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-navy-200 text-navy disabled:opacity-25 hover:border-navy-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white" aria-label="Previous slide">
+      {/* Slide navigation bar — numbered, functional, purple-themed */}
+      <div className="flex items-center justify-center gap-3 mt-6" role="group" aria-label="Slide navigation">
+        <button
+          onClick={() => goTo(currentSlide - 1)}
+          disabled={currentSlide === 0}
+          className="min-h-[40px] min-w-[40px] p-2 rounded-xl bg-white/5 border border-white/10 text-white/60 disabled:opacity-20 hover:bg-white/10 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+          aria-label="Previous slide"
+        >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
 
-        <div className="flex gap-1.5 items-center overflow-x-auto max-w-[280px] sm:max-w-none">
+        <div className="flex gap-1 items-center overflow-x-auto max-w-[320px] sm:max-w-none py-1 px-1">
           {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
-              className={`min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
-                i === currentSlide ? "bg-navy w-6 h-2.5" : "bg-navy-200 hover:bg-navy-300 w-2.5 h-2.5"
+              className={`flex items-center justify-center rounded-lg transition-all duration-200 text-[10px] font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
+                i === currentSlide
+                  ? "min-w-[32px] h-[28px] bg-gradient-to-r from-violet to-electric text-white shadow-md shadow-violet/30 px-2"
+                  : "min-w-[28px] h-[28px] bg-white/5 text-white/30 hover:bg-white/10 hover:text-white/60 px-1.5"
               }`}
               aria-label={`Go to slide ${i + 1}`}
               aria-current={i === currentSlide ? "true" : undefined}
-            />
+            >
+              {i + 1}
+            </button>
           ))}
         </div>
 
-        <button onClick={() => goTo(currentSlide + 1)} disabled={currentSlide === slides.length - 1} className="min-h-[44px] min-w-[44px] p-2.5 rounded-xl bg-white border border-navy-200 text-navy disabled:opacity-25 hover:border-navy-300 hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all disabled:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white" aria-label="Next slide">
+        <button
+          onClick={() => goTo(currentSlide + 1)}
+          disabled={currentSlide === slides.length - 1}
+          className="min-h-[40px] min-w-[40px] p-2 rounded-xl bg-white/5 border border-white/10 text-white/60 disabled:opacity-20 hover:bg-white/10 hover:text-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
+          aria-label="Next slide"
+        >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
           </svg>
         </button>
       </div>
 
-      <p className="text-center text-xs text-navy-500 mt-3 hidden md:block">
-        Use <kbd className="px-1.5 py-0.5 rounded bg-navy-100 border border-navy-200 text-navy-500 text-xs font-mono">&larr;</kbd>{" "}
-        <kbd className="px-1.5 py-0.5 rounded bg-navy-100 border border-navy-200 text-navy-500 text-xs font-mono">&rarr;</kbd> to navigate
+      <p className="text-center text-[10px] text-white/25 mt-2 hidden md:block">
+        Use <kbd className="px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/30 text-[10px] font-mono">&larr;</kbd>{" "}
+        <kbd className="px-1.5 py-0.5 rounded-md bg-white/5 border border-white/10 text-white/30 text-[10px] font-mono">&rarr;</kbd> to navigate
       </p>
     </div>
   );
