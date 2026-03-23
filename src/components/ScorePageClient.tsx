@@ -26,6 +26,7 @@ export default function ScorePageClient({
   const [score, setScore] = useState<PIQScore | null>(null);
   const [slideCount, setSlideCount] = useState(0);
   const [detectedName, setDetectedName] = useState("");
+  const [shareId, setShareId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
   const [progress, setProgress] = useState(0);
   const [extendEnabled, setExtendEnabled] = useState<boolean | null>(null);
@@ -152,6 +153,7 @@ export default function ScorePageClient({
       setScore(data.piqScore);
       setSlideCount(data.slideCount);
       setDetectedName(data.companyName);
+      setShareId(data.shareId || null);
       setProgress(100);
       setState("result");
     } catch {
@@ -186,6 +188,7 @@ export default function ScorePageClient({
       setScore(data.piqScore);
       setSlideCount(data.slideCount);
       setDetectedName(data.companyName);
+      setShareId(data.shareId || null);
       setProgress(100);
       setState("result");
     } catch {
@@ -380,10 +383,10 @@ export default function ScorePageClient({
                   </svg>
                   Analysis complete
                 </p>
-                <h2 id="score-result-heading" className="text-xl font-bold text-navy">
+                <h2 id="score-result-heading" className="text-xl font-bold text-navy dark:text-white">
                   {detectedName || companyName || "Your Deck"}
                 </h2>
-                <p className="text-navy-500 text-sm mt-1">
+                <p className="text-navy-500 dark:text-navy-400 text-sm mt-1">
                   {slideCount} slide{slideCount !== 1 ? "s" : ""} analyzed
                 </p>
               </div>
@@ -392,8 +395,8 @@ export default function ScorePageClient({
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4">
                 <Link
-                  href="/create"
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  href={shareId ? `/create?from=${shareId}` : "/create"}
+                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-electric text-white text-sm font-semibold shadow-lg shadow-electric/25 hover:bg-electric-600 hover:shadow-glow hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
@@ -406,9 +409,10 @@ export default function ScorePageClient({
                     setState("idle");
                     setScore(null);
                     setFile(null);
+                    setShareId(null);
                     setProgress(0);
                   }}
-                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-navy-200 text-navy text-sm font-semibold hover:border-navy-300 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  className="w-full sm:w-auto min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-xl border-2 border-navy-200 dark:border-white/15 text-navy dark:text-white text-sm font-semibold hover:border-navy-300 dark:hover:border-white/25 shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-navy-950"
                 >
                   Score Another Deck
                 </button>
@@ -416,11 +420,11 @@ export default function ScorePageClient({
 
               {/* Upgrade CTA for free users */}
               {userPlan === "starter" && (
-                <div className="max-w-xl mx-auto rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-violet-50 p-6">
+                <div className="max-w-xl mx-auto rounded-2xl border border-electric/15 bg-gradient-to-r from-electric/5 via-white to-violet-50 dark:from-electric/10 dark:via-navy-900 dark:to-violet-950/30 p-6">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                     <div className="flex-1 min-w-0">
-                      <h3 className="font-bold text-navy text-sm mb-1">Unlock full insights</h3>
-                      <p className="text-navy-500 text-xs sm:text-sm">
+                      <h3 className="font-bold text-navy dark:text-white text-sm mb-1">Unlock full insights</h3>
+                      <p className="text-navy-500 dark:text-navy-400 text-xs sm:text-sm">
                         See dimension-by-dimension breakdown, specific feedback, and actionable
                         recommendations to improve your score.
                       </p>
