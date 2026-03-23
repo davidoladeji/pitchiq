@@ -28,16 +28,22 @@ async function resolvePlanPricing(plan: string): Promise<{ priceId?: string; amo
   const dbConfig = await getPlanConfigByKey(plan);
   if (dbConfig) {
     const dbAmount = dbConfig.stripeAmount;
-    const fallbackAmount = FALLBACK_PRICES[plan]?.amount || 0;
 
-    // If the DB has a custom amount that differs from the fallback, use price_data
-    // instead of a fixed Stripe Price ID (which has an old amount baked in).
-    // This ensures admin price changes take effect immediately.
-    const useInlinePrice = dbAmount && dbAmount !== fallbackAmount;
+    // Always use inline price_data with the DB amount so admin price changes
+    // take effect immediately. Stripe Price IDs have amounts baked in and
+    // can't be updated — they'd show stale prices after admin edits.
+    // Only fall back to stripePriceId if there's no stripeAmount in the DB.
+    if (dbAmount) {
+      return {
+        priceId: undefined,
+        amount: dbAmount,
+        name: `PitchIQ ${dbConfig.displayName}`,
+      };
+    }
 
     return {
-      priceId: useInlinePrice ? undefined : (dbConfig.stripePriceId || undefined),
-      amount: dbAmount || fallbackAmount,
+      priceId: dbConfig.stripePriceId || undefined,
+      amount: FALLBACK_PRICES[plan]?.amount || 0,
       name: `PitchIQ ${dbConfig.displayName}`,
     };
   }
