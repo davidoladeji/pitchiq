@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import AppNav from "@/components/AppNav";
 import DeckUploader from "@/components/DeckUploader";
@@ -20,6 +20,7 @@ export default function ScorePageClient({
 }) {
   const { status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const limits = getPlanLimits(userPlan);
   const [showPlanModal, setShowPlanModal] = useState(false);
   const [state, setState] = useState<PageState>("idle");
@@ -43,6 +44,33 @@ export default function ScorePageClient({
       .then((d) => setExtendEnabled(d.extendEnabled === true))
       .catch(() => setExtendEnabled(false));
   }, []);
+
+  // Load existing deck score from URL params (e.g. /score?deck=IMfkmwYThr&refine=true)
+  useEffect(() => {
+    const deckParam = searchParams.get("deck");
+    if (!deckParam || score) return;
+
+    setState("scoring");
+    fetch(`/api/decks/${deckParam}`)
+      .then((r) => {
+        if (!r.ok) throw new Error("Deck not found");
+        return r.json();
+      })
+      .then((data) => {
+        if (data.piqScore?.overall) {
+          setScore(data.piqScore);
+          setSlideCount(data.slideCount || data.slides?.length || 0);
+          setDetectedName(data.companyName || "");
+          setShareId(deckParam);
+          setState("result");
+        } else {
+          setState("idle");
+        }
+      })
+      .catch(() => {
+        setState("idle");
+      });
+  }, [searchParams, score]);
 
   useEffect(() => {
     if (state !== "result" || !score) return;
