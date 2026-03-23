@@ -27,6 +27,14 @@ export async function GET(
       id: true,
       title: true,
       companyName: true,
+      industry: true,
+      stage: true,
+      fundingTarget: true,
+      investorType: true,
+      problem: true,
+      solution: true,
+      keyMetrics: true,
+      teamInfo: true,
       extractedContent: true,
       uploadedSlideTexts: true,
       piqScore: true,
@@ -76,18 +84,18 @@ export async function GET(
     }
   }
 
-  // Fallback: return whatever basic info we have from the deck record
+  // Fallback: return the deck's stored form fields directly
   const fallback: Partial<ExtractedDeckContent> = {
     companyName: deck.companyName || "",
-    problem: "",
-    solution: "",
-    industry: "",
-    stage: "",
-    fundingTarget: "",
-    keyMetrics: "",
-    teamInfo: "",
+    problem: deck.problem || "",
+    solution: deck.solution || "",
+    industry: deck.industry || "",
+    stage: deck.stage || "",
+    fundingTarget: deck.fundingTarget || "",
+    keyMetrics: deck.keyMetrics || "",
+    teamInfo: deck.teamInfo || "",
     slideTexts: [],
-    extractionConfidence: "low",
+    extractionConfidence: deck.problem ? "high" : "low",
   };
 
   return NextResponse.json({
