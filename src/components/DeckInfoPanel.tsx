@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import {
   X, Building2, Users, DollarSign, Lightbulb, TrendingUp,
   Palette, Sparkles, RefreshCw, Copy, ChevronDown, ChevronRight,
-  Calendar, Briefcase, BarChart3, Zap,
+  Calendar, Briefcase, BarChart3, Zap, MessageSquareText,
 } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -236,6 +236,7 @@ export default function DeckInfoPanel({ deck, isOwner, onClose, mode = "overlay"
   const [saving, setSaving] = useState(false);
   const [confirmRegenerate, setConfirmRegenerate] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
+  const [copiedPrompt, setCopiedPrompt] = useState(false);
 
   const handleSave = useCallback(async (field: string, value: string) => {
     if (!isOwner) return;
@@ -284,6 +285,56 @@ export default function DeckInfoPanel({ deck, isOwner, onClose, mode = "overlay"
   const handleDuplicate = useCallback(() => {
     router.push(`/create?from=${deck.shareId}`);
   }, [deck.shareId, router]);
+
+  const handleExportPrompt = useCallback(() => {
+    const lines: string[] = [
+      "Create a professional investor pitch deck with the following company information:",
+      "",
+    ];
+
+    if (deck.companyName) lines.push(`Company Name: ${deck.companyName}`);
+    if (deck.industry) lines.push(`Industry: ${deck.industry}`);
+    if (deck.stage) lines.push(`Stage: ${deck.stage}`);
+    if (deck.fundingTarget) lines.push(`Funding Target: ${deck.fundingTarget}`);
+    if (deck.investorType) lines.push(`Investor Type: ${formatLabel(deck.investorType)}`);
+    if (deck.businessModel) lines.push(`Business Model: ${deck.businessModel}`);
+    if (deck.revenueModel) lines.push(`Revenue Model: ${deck.revenueModel}`);
+    if (deck.customerType) lines.push(`Customer Type: ${deck.customerType}`);
+
+    if (deck.problem) {
+      lines.push("");
+      lines.push(`Problem: ${deck.problem}`);
+    }
+    if (deck.solution) {
+      lines.push("");
+      lines.push(`Solution: ${deck.solution}`);
+    }
+    if (deck.keyMetrics) {
+      lines.push("");
+      lines.push(`Key Metrics / Traction: ${deck.keyMetrics}`);
+    }
+    if (deck.teamInfo) {
+      lines.push("");
+      lines.push(`Team: ${deck.teamInfo}`);
+    }
+
+    lines.push("");
+    lines.push("Requirements:");
+    lines.push("- Generate 10-14 slides");
+    lines.push("- Include: Title, Problem, Solution, Market Opportunity (TAM/SAM/SOM), Product/How It Works, Business Model, Traction & Metrics, Competition, Team, Roadmap, Financial Projections, The Ask (use of funds), and a Call to Action");
+    lines.push("- Use a mix of slide types: text slides, data/chart slides, metric dashboards, timelines, and comparison tables");
+    lines.push("- Write in a tone appropriate for the industry and stage");
+    lines.push("- Use the company's real data — do not invent metrics");
+    lines.push("- For missing data, use industry-appropriate estimates marked with ~");
+    lines.push(`- Structure the narrative for ${deck.investorType === "angel" ? "angel investors (lead with founder story, then problem/solution)" : deck.investorType === "accelerator" ? "accelerator applications (lead with traction and growth rate)" : "venture capital investors (lead with market size, then traction, then team)"}`);
+    lines.push("- Each slide should have: a compelling title (not generic), 2-4 bullet points, and a clear purpose in the narrative arc");
+
+    const prompt = lines.join("\n");
+    navigator.clipboard.writeText(prompt).then(() => {
+      setCopiedPrompt(true);
+      setTimeout(() => setCopiedPrompt(false), 2500);
+    });
+  }, [deck]);
 
   const onSave = isOwner ? handleSave : undefined;
 
@@ -428,26 +479,29 @@ export default function DeckInfoPanel({ deck, isOwner, onClose, mode = "overlay"
         <div className="shrink-0 px-4 py-3 border-t border-navy-800 space-y-2">
           {!confirmRegenerate ? (
             <>
-              <p className="text-[11px] text-navy-400 flex items-center gap-1">
-                <Lightbulb size={11} />
-                Changed your inputs? Regenerate with updated info.
-              </p>
               <div className="flex gap-2">
                 <button
                   onClick={() => setConfirmRegenerate(true)}
                   className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-electric/10 text-electric text-xs font-medium hover:bg-electric/20 transition-colors"
                 >
                   <RefreshCw size={12} />
-                  Regenerate Deck
+                  Regenerate
                 </button>
                 <button
                   onClick={handleDuplicate}
                   className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 text-navy-200 text-xs font-medium hover:bg-white/10 transition-colors"
                 >
                   <Copy size={12} />
-                  Duplicate & Edit
+                  Duplicate
                 </button>
               </div>
+              <button
+                onClick={handleExportPrompt}
+                className="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-violet/10 text-violet-light text-xs font-medium hover:bg-violet/20 transition-colors"
+              >
+                <MessageSquareText size={12} />
+                {copiedPrompt ? "Copied to clipboard!" : "Export as LLM Prompt"}
+              </button>
             </>
           ) : (
             <div className="space-y-2">
