@@ -82,6 +82,11 @@ export interface DeckInput {
   brandLogo?: string;
   brandPrimaryColor?: string;
   brandFont?: string;
+  // Generation preferences (optional overrides)
+  narrativeStyle?: string;   // Override narrative archetype
+  visualStyle?: string;      // Override visual personality
+  slideCountPreference?: number; // Preferred slide count (10-16)
+  emphasis?: "data-heavy" | "visual" | "balanced"; // Content emphasis
 }
 
 export interface DeckData {

@@ -63,6 +63,7 @@ model Deck {
   refinedFrom         Deck?    @relation("DeckRefinements", fields: [refinedFromId], references: [id])
   refinements         Deck[]   @relation("DeckRefinements")
   refinementNotes     String?          // JSON: improvements summary from refinement
+  generationMeta      String?          // JSON: { dna, narrative, visualSystem } from generation pipeline
 
   userId        String?
   owner         User?    @relation("UserDecks", fields: [userId], references: [id])

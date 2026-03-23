@@ -558,6 +558,78 @@ export default function DeckForm({ onGenerated, userPlan = "starter", templateDe
                 })}
               </div>
             </FormField>
+
+            {/* Generation Style (optional, collapsible) */}
+            <details className="group">
+              <summary className="flex items-center gap-2 cursor-pointer text-sm font-medium text-navy-500 hover:text-navy-700 transition-colors py-2">
+                <svg className="w-4 h-4 transition-transform group-open:rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                Advanced Generation Style
+                <span className="text-xs text-navy-400 font-normal">(optional)</span>
+              </summary>
+              <div className="mt-3 space-y-4 pl-6 border-l-2 border-navy-100">
+                <FormField label="Narrative Style" hint="How should the deck tell your story?">
+                  <select
+                    value={form.narrativeStyle || ""}
+                    onChange={(e) => update("narrativeStyle" as keyof DeckInput, e.target.value)}
+                    className="w-full p-3 rounded-xl border border-navy-200 bg-white text-navy text-sm focus:outline-none focus:ring-2 focus:ring-electric focus:border-transparent"
+                  >
+                    <option value="">Auto-detect (recommended)</option>
+                    <option value="disruptor">Disruptor — Shocking stat, broken status quo, revolution</option>
+                    <option value="traction-machine">Traction Machine — Lead with your best metric</option>
+                    <option value="data-story">Data Story — Numbers-driven narrative</option>
+                    <option value="vision">Vision — Paint the future, bridge to today</option>
+                    <option value="inevitable-trend">Inevitable Trend — Macro trend, why now, who wins</option>
+                    <option value="team-story">Team Story — Founder origin, personal connection</option>
+                    <option value="secret-insight">Secret Insight — Non-obvious insight others miss</option>
+                    <option value="proven-model">Proven Model — Existing success in new market</option>
+                  </select>
+                </FormField>
+
+                <FormField label="Visual Style" hint="The visual personality of your deck">
+                  <select
+                    value={form.visualStyle || ""}
+                    onChange={(e) => update("visualStyle" as keyof DeckInput, e.target.value)}
+                    className="w-full p-3 rounded-xl border border-navy-200 bg-white text-navy text-sm focus:outline-none focus:ring-2 focus:ring-electric focus:border-transparent"
+                  >
+                    <option value="">Auto-detect from industry</option>
+                    <option value="corporate-premium">Corporate Premium — Clean, trustworthy, enterprise</option>
+                    <option value="bold-playful">Bold Playful — Vibrant, dynamic, consumer</option>
+                    <option value="clinical-clean">Clinical Clean — Medical, scientific, credible</option>
+                    <option value="scientific-rigorous">Scientific Rigorous — Data-heavy, technical</option>
+                    <option value="futuristic-gradient">Futuristic Gradient — AI, crypto, frontier tech</option>
+                    <option value="organic-hopeful">Organic Hopeful — Climate, sustainability, growth</option>
+                    <option value="editorial-refined">Editorial Refined — Media, content, marketplace</option>
+                    <option value="startup-energetic">Startup Energetic — General early-stage energy</option>
+                  </select>
+                </FormField>
+
+                <FormField label="Content Emphasis" hint="Balance between data and visuals">
+                  <div className="flex gap-2">
+                    {[
+                      { value: "", label: "Auto" },
+                      { value: "data-heavy", label: "Data-heavy" },
+                      { value: "balanced", label: "Balanced" },
+                      { value: "visual", label: "More visual" },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => update("emphasis" as keyof DeckInput, opt.value)}
+                        className={`flex-1 px-3 py-2.5 rounded-xl text-xs font-medium border-2 transition-all ${
+                          (form.emphasis || "") === opt.value
+                            ? "border-electric bg-electric/5 text-electric"
+                            : "border-navy-200 text-navy-500 hover:border-navy-300"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </FormField>
+              </div>
+            </details>
           </div>
         )}
       </div>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
-import { generateDeck } from "@/lib/generate-deck";
+import { generateDeckFull } from "@/lib/generate-deck";
 import { scoreDeck } from "@/lib/piq-score";
 import { DeckInput } from "@/lib/types";
 import { getPlanLimits } from "@/lib/plan-limits";
@@ -80,7 +80,8 @@ export async function POST(req: NextRequest) {
       body.themeId = "midnight";
     }
 
-    const slides = await generateDeck(body);
+    const result = await generateDeckFull(body);
+    const { slides, dna, narrative, visualSystem } = result;
     const shareId = nanoid(10);
 
     // Score the deck
@@ -93,6 +94,13 @@ export async function POST(req: NextRequest) {
       solution: body.solution,
       keyMetrics: body.keyMetrics || "",
       teamInfo: body.teamInfo || "",
+    });
+
+    // Store generation metadata for later refinement/debugging
+    const generationMeta = JSON.stringify({
+      dna: { narrativeArchetype: dna.narrativeArchetype, visualPersonality: dna.visualPersonality, informationDensity: dna.informationDensity, contentTone: dna.contentTone },
+      narrative: { archetype: narrative.archetype, slideCount: narrative.slideCount, throughLine: narrative.throughLine },
+      visualSystem: { colors: visualSystem.colors, typography: { headingFont: visualSystem.typography.headingFont, headingWeight: visualSystem.typography.headingWeight } },
     });
 
     const deck = await prisma.deck.create({
@@ -111,6 +119,7 @@ export async function POST(req: NextRequest) {
         slides: JSON.stringify(slides),
         themeId: body.themeId || "midnight",
         piqScore: JSON.stringify(piqScore),
+        generationMeta,
         userId,
       },
     });
