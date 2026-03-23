@@ -18,6 +18,7 @@ import CommentsPanel from "./CommentsPanel";
 import VersionHistoryPanel from "./VersionHistoryPanel";
 import PresentMode from "../presentation/PresentMode";
 import SocialExportModal from "./SocialExportModal";
+import DeckInfoPanel from "@/components/DeckInfoPanel";
 import {
   DndContext,
   DragEndEvent,
@@ -222,7 +223,9 @@ export default function EditorShell({ deck, plan, userName }: EditorShellProps) 
               mobilePanel === "properties" ? "block" : "hidden"
             }`}
           >
-            {activeEditorPanel === "analytics" && deck ? (
+            {activeEditorPanel === "deck-info" && deck ? (
+              <DeckInfoPanel deck={deck} isOwner={true} onClose={() => setActiveEditorPanel(null)} mode="inline" />
+            ) : activeEditorPanel === "analytics" && deck ? (
               <DeckAnalytics shareId={deck.shareId} onClose={() => setActiveEditorPanel(null)} />
             ) : activeEditorPanel === "comments" && deck ? (
               <CommentsPanel shareId={deck.shareId} />

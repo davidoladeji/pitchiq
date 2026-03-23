@@ -78,8 +78,13 @@ const config: Config = {
         "border-flow": "borderFlow 3s linear infinite",
         "spin-slow": "spin 20s linear infinite",
         "bounce-subtle": "bounceSubtle 2s ease-in-out infinite",
+        "slide-in-right": "slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
       keyframes: {
+        slideInRight: {
+          "0%": { transform: "translateX(100%)", opacity: "0" },
+          "100%": { transform: "translateX(0)", opacity: "1" },
+        },
         bounceSubtle: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(4px)" },

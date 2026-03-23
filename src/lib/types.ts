@@ -99,6 +99,28 @@ export interface DeckData {
   isPremium: boolean;
   themeId?: string;
   piqScore?: PIQScore;
+  // Form input fields (for DeckInfoPanel)
+  industry?: string;
+  stage?: string;
+  fundingTarget?: string;
+  investorType?: string;
+  problem?: string;
+  solution?: string;
+  keyMetrics?: string;
+  teamInfo?: string;
+  source?: string;
+  foundedYear?: number;
+  businessModel?: string;
+  revenueModel?: string;
+  customerType?: string;
+  generationMeta?: {
+    dna?: { narrativeArchetype?: string; visualPersonality?: string; informationDensity?: string; contentTone?: string };
+    narrative?: { archetype?: string; slideCount?: number; throughLine?: string };
+    visualSystem?: { colors?: Record<string, string>; typography?: { headingFont?: string; headingWeight?: number } };
+  };
+  brandPrimaryColor?: string;
+  brandFont?: string;
+  brandLogo?: string;
 }
 
 /** PIQ Score — 0-100 fundability rating */

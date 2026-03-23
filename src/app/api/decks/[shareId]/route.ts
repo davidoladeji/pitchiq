@@ -66,6 +66,10 @@ export async function GET(
       showBranding = deck.owner?.brandingEnabled ?? true;
     }
 
+    // Parse generationMeta if present
+    let generationMeta;
+    try { generationMeta = deck.generationMeta ? JSON.parse(deck.generationMeta) : undefined; } catch { /* empty */ }
+
     return NextResponse.json({
       id: deck.id,
       shareId: deck.shareId,
@@ -80,6 +84,22 @@ export async function GET(
       isOwner,
       ownerPlan,
       viewId: viewRecord.id,
+      // Form input fields for DeckInfoPanel
+      industry: deck.industry,
+      stage: deck.stage,
+      fundingTarget: deck.fundingTarget,
+      investorType: deck.investorType,
+      problem: deck.problem,
+      solution: deck.solution,
+      keyMetrics: deck.keyMetrics,
+      teamInfo: deck.teamInfo,
+      source: deck.source,
+      foundedYear: deck.foundedYear,
+      businessModel: deck.businessModel,
+      revenueModel: deck.revenueModel,
+      customerType: deck.customerType,
+      generationMeta,
+      slideCount: JSON.parse(deck.slides).length,
       variants: isOwner
         ? deck.parentVariants.map((v) => {
             let score = null;
@@ -102,5 +122,89 @@ export async function GET(
       { error: "Failed to fetch deck" },
       { status: 500 }
     );
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  PATCH — Update deck form fields (owner only)                       */
+/* ------------------------------------------------------------------ */
+
+const ALLOWED_FIELDS = new Set([
+  "title", "companyName", "industry", "stage", "fundingTarget", "investorType",
+  "problem", "solution", "keyMetrics", "teamInfo",
+  "businessModel", "revenueModel", "customerType",
+  "foundedYear", "teamSize",
+]);
+const MAX_SHORT = 2000;
+const MAX_LONG = 5000;
+const LONG_FIELDS = new Set(["problem", "solution", "keyMetrics", "teamInfo"]);
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { shareId: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+    const userId = (session?.user as { id?: string })?.id;
+    if (!userId) {
+      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+    }
+
+    const deck = await prisma.deck.findUnique({
+      where: { shareId: params.shareId },
+      select: { id: true, userId: true },
+    });
+    if (!deck) {
+      return NextResponse.json({ error: "Deck not found" }, { status: 404 });
+    }
+    if (deck.userId !== userId) {
+      return NextResponse.json({ error: "Not authorized" }, { status: 403 });
+    }
+
+    const body = await req.json();
+
+    // Whitelist and validate fields
+    const updates: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(body)) {
+      if (!ALLOWED_FIELDS.has(key)) continue;
+
+      // Integer fields
+      if (key === "foundedYear" || key === "teamSize") {
+        const num = Number(value);
+        if (!Number.isNaN(num) && Number.isInteger(num)) {
+          updates[key] = num;
+        }
+        continue;
+      }
+
+      // String fields
+      if (typeof value === "string") {
+        const maxLen = LONG_FIELDS.has(key) ? MAX_LONG : MAX_SHORT;
+        if (value.length > maxLen) {
+          return NextResponse.json({ error: `${key} exceeds maximum length (${maxLen})` }, { status: 400 });
+        }
+        updates[key] = value;
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ error: "No valid fields to update" }, { status: 400 });
+    }
+
+    const updated = await prisma.deck.update({
+      where: { id: deck.id },
+      data: updates,
+      select: {
+        id: true, shareId: true, title: true, companyName: true, industry: true,
+        stage: true, fundingTarget: true, investorType: true, problem: true,
+        solution: true, keyMetrics: true, teamInfo: true, businessModel: true,
+        revenueModel: true, customerType: true, foundedYear: true, teamSize: true,
+      },
+    });
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("Deck PATCH error:", error);
+    return NextResponse.json({ error: "Failed to update deck" }, { status: 500 });
   }
 }

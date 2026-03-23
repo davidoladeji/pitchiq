@@ -36,6 +36,10 @@ export default async function DashboardPage({
         piqScore: true,
         isPremium: true,
         createdAt: true,
+        industry: true,
+        stage: true,
+        fundingTarget: true,
+        investorType: true,
         _count: { select: { views: true } },
       },
     }),
@@ -76,6 +80,10 @@ export default async function DashboardPage({
     isPremium: d.isPremium,
     createdAt: d.createdAt.toISOString(),
     viewCount: d._count.views,
+    industry: d.industry,
+    stage: d.stage,
+    fundingTarget: d.fundingTarget,
+    investorType: d.investorType,
   }));
 
   // Build activity feed from recent views + deck creations

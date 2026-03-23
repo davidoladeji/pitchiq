@@ -7,8 +7,10 @@ import AppNav from "@/components/AppNav";
 import SlideRenderer from "@/components/SlideRenderer";
 import ExportMenu from "@/components/ExportMenu";
 import DeckVariants from "@/components/DeckVariants";
+import DeckInfoPanel from "@/components/DeckInfoPanel";
 import { DeckData } from "@/lib/types";
 import { DeckTracker } from "@/lib/analytics/deck-tracker";
+import { FileText } from "lucide-react";
 
 export default function DeckViewerClient() {
   const params = useParams();
@@ -22,6 +24,9 @@ export default function DeckViewerClient() {
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
   const [viewId, setViewId] = useState<string | null>(null);
+  const [showInfoPanel, setShowInfoPanel] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [fullDeckData, setFullDeckData] = useState<any>(null);
   const trackerRef = useRef<DeckTracker | null>(null);
 
   const shareUrl =
@@ -43,6 +48,7 @@ export default function DeckViewerClient() {
         if (!res.ok) throw new Error("Deck not found");
         const data = await res.json();
         setDeck(data);
+        setFullDeckData(data);
         if (data.ownerPlan) setOwnerPlan(data.ownerPlan);
         if (data.showBranding !== undefined) setShowBranding(data.showBranding);
         if (data.isOwner) setIsOwner(true);
@@ -250,6 +256,16 @@ export default function DeckViewerClient() {
           {/* Actions below deck */}
           <div className="flex flex-col items-center gap-4 mt-8">
             <div className="flex flex-wrap items-center justify-center gap-3">
+              {isOwner && fullDeckData && (
+                <button
+                  onClick={() => setShowInfoPanel(true)}
+                  className="inline-flex items-center gap-2 min-h-[44px] px-5 py-2.5 rounded-xl border border-navy-200 text-navy text-sm font-medium hover:border-electric/30 hover:text-electric shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+                  aria-label="View deck info and inputs"
+                >
+                  <FileText size={16} />
+                  Deck Info
+                </button>
+              )}
               {deck && (
                 <ExportMenu deck={deck} userPlan={ownerPlan} />
               )}
@@ -312,6 +328,16 @@ export default function DeckViewerClient() {
           </div>
         </div>
       </main>
+
+      {/* Deck Info Panel (slide-over) */}
+      {showInfoPanel && fullDeckData && (
+        <DeckInfoPanel
+          deck={fullDeckData}
+          isOwner={isOwner}
+          onClose={() => setShowInfoPanel(false)}
+          mode="overlay"
+        />
+      )}
     </div>
   );
 }

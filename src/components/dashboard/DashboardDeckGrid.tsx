@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import DeckReportButton from "@/components/dashboard/DeckReportButton";
 import DashboardRefinePrompt from "@/components/dashboard/DashboardRefinePrompt";
@@ -17,6 +18,10 @@ interface DeckSummary {
   source?: string;
   refinedFromId?: string;
   refinedScoreDelta?: number;
+  industry?: string;
+  stage?: string;
+  fundingTarget?: string;
+  investorType?: string;
 }
 
 function parsePiqOverall(piqJson: string): number | null {
@@ -26,6 +31,71 @@ function parsePiqOverall(piqJson: string): number | null {
   } catch {
     return null;
   }
+}
+
+function formatLabel(str: string): string {
+  return str.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+function DeckInfoPopover({ deck }: { deck: DeckSummary }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={(e) => { e.preventDefault(); setOpen(!open); }}
+        className={`hidden sm:inline-flex items-center px-2 py-1.5 rounded-lg text-xs transition-all ${
+          open
+            ? "bg-electric/10 text-electric"
+            : "border border-navy-200 dark:border-white/10 text-navy-400 dark:text-navy-400 hover:text-electric hover:border-electric/30"
+        }`}
+        title="Quick info"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-1 w-56 p-3 rounded-xl bg-navy-900 border border-navy-700 shadow-xl z-50 space-y-2 text-xs">
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <span className="text-navy-400">Industry</span>
+              <p className="text-navy-200 truncate">{deck.industry || "—"}</p>
+            </div>
+            <div>
+              <span className="text-navy-400">Stage</span>
+              <p className="text-navy-200 truncate">{deck.stage ? formatLabel(deck.stage) : "—"}</p>
+            </div>
+            <div>
+              <span className="text-navy-400">Target</span>
+              <p className="text-navy-200 truncate">{deck.fundingTarget || "—"}</p>
+            </div>
+            <div>
+              <span className="text-navy-400">Investor</span>
+              <p className="text-navy-200 truncate">{deck.investorType ? formatLabel(deck.investorType) : "—"}</p>
+            </div>
+          </div>
+          <Link
+            href={`/deck/${deck.shareId}`}
+            className="block w-full text-center px-2 py-1.5 rounded-lg bg-white/5 text-navy-300 text-[11px] font-medium hover:bg-white/10 transition-colors"
+            onClick={() => setOpen(false)}
+          >
+            View Full Details
+          </Link>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function scoreRingColor(score: number): string {
@@ -171,6 +241,7 @@ export default function DashboardDeckGrid({ decks, plan = "starter" }: { decks: 
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 shrink-0">
+                  <DeckInfoPopover deck={deck} />
                   {(plan === "growth" || plan === "enterprise") && (
                     <span className="hidden sm:inline-flex">
                       <DeckReportButton shareId={deck.shareId} />

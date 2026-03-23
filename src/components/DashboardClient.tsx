@@ -32,6 +32,10 @@ interface DeckSummary {
   isPremium: boolean;
   createdAt: string;
   viewCount: number;
+  industry?: string;
+  stage?: string;
+  fundingTarget?: string;
+  investorType?: string;
 }
 
 const PLAN_LABELS: Record<string, { label: string; color: string }> = {
