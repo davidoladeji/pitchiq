@@ -86,7 +86,7 @@ export default function DeckViewerClient() {
 
   if (loading) {
     return (
-      <div className="bg-navy-950" aria-busy="true" aria-label="Loading deck">
+      <div className="min-h-screen bg-navy-950" aria-busy="true" aria-label="Loading deck">
         <p className="sr-only" role="status" aria-live="polite">
           Loading deck
         </p>
@@ -139,7 +139,7 @@ export default function DeckViewerClient() {
       <main
         id="main"
         tabIndex={-1}
-        className="flex flex-col items-center justify-center bg-navy-950 px-6 py-32 outline-none"
+        className="min-h-screen flex flex-col items-center justify-center bg-navy-950 px-6 outline-none"
         aria-labelledby="deck-not-found-heading"
       >
         <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-6">
@@ -189,7 +189,7 @@ export default function DeckViewerClient() {
   const btnAccent = `${btnBase} min-h-[42px] px-6 py-2.5 bg-violet/15 border border-violet/25 text-violet-light hover:bg-violet/25 hover:text-white`;
 
   return (
-    <div className="bg-navy-950">
+    <div className="min-h-screen bg-navy-950">
       <AppNav />
 
       <main
