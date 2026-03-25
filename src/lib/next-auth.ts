@@ -42,39 +42,53 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Auto-link OAuth accounts when email matches an existing user
+      // Auto-link OAuth accounts when email matches an existing user.
+      // This runs BEFORE the adapter's built-in linking check, ensuring
+      // that the account record exists so the adapter doesn't throw
+      // OAuthAccountNotLinked.
       if (account?.provider && user.email) {
-        const existingUser = await prisma.user.findUnique({
-          where: { email: user.email },
-          include: { accounts: true },
-        });
-        if (existingUser) {
-          const alreadyLinked = existingUser.accounts.some(
-            (a) => a.provider === account.provider,
-          );
-          if (!alreadyLinked) {
-            await prisma.account.create({
-              data: {
-                userId: existingUser.id,
-                type: account.type,
-                provider: account.provider,
-                providerAccountId: account.providerAccountId,
-                access_token: account.access_token,
-                refresh_token: account.refresh_token,
-                expires_at: account.expires_at,
-                token_type: account.token_type,
-                scope: account.scope,
-                id_token: account.id_token,
-              },
-            });
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email },
+            include: { accounts: true },
+          });
+          if (existingUser) {
+            const alreadyLinked = existingUser.accounts.some(
+              (a) => a.provider === account.provider && a.providerAccountId === account.providerAccountId,
+            );
+            if (!alreadyLinked) {
+              // Check if this providerAccountId already exists (prevent unique constraint violation)
+              const existingAccount = await prisma.account.findFirst({
+                where: { provider: account.provider, providerAccountId: account.providerAccountId },
+              });
+              if (!existingAccount) {
+                await prisma.account.create({
+                  data: {
+                    userId: existingUser.id,
+                    type: account.type,
+                    provider: account.provider,
+                    providerAccountId: account.providerAccountId,
+                    access_token: account.access_token,
+                    refresh_token: account.refresh_token,
+                    expires_at: account.expires_at,
+                    token_type: account.token_type,
+                    scope: account.scope,
+                    id_token: account.id_token,
+                  },
+                });
+              }
+            }
+            // Update profile image / name if missing
+            if (!existingUser.image && (profile as { picture?: string })?.picture) {
+              await prisma.user.update({
+                where: { id: existingUser.id },
+                data: { image: (profile as { picture?: string }).picture },
+              });
+            }
           }
-          // Update profile image / name if missing
-          if (!existingUser.image && (profile as { picture?: string })?.picture) {
-            await prisma.user.update({
-              where: { id: existingUser.id },
-              data: { image: (profile as { picture?: string }).picture },
-            });
-          }
+        } catch (linkError) {
+          // Log but don't block sign-in — the adapter may handle it
+          console.warn("[next-auth] Account linking error (non-blocking):", linkError);
         }
       }
       // Record last-seen timestamp for audit trail (non-blocking – must not break login)

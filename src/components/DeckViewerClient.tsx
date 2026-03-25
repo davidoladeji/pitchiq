@@ -189,7 +189,7 @@ export default function DeckViewerClient() {
   const btnAccent = `${btnBase} min-h-[42px] px-6 py-2.5 bg-violet/15 border border-violet/25 text-violet-light hover:bg-violet/25 hover:text-white`;
 
   return (
-    <div className="min-h-screen bg-navy-950">
+    <div className="bg-navy-950">
       <AppNav />
 
       <main
