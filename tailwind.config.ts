@@ -79,6 +79,14 @@ const config: Config = {
         "spin-slow": "spin 20s linear infinite",
         "bounce-subtle": "bounceSubtle 2s ease-in-out infinite",
         "slide-in-right": "slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        // v2 design system animations
+        "v2-enter": "v2Enter 0.3s ease-out forwards",
+        "v2-exit": "v2Exit 0.2s ease-in forwards",
+        "v2-slide-in-bottom": "v2SlideInBottom 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "v2-scale-in": "v2ScaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards",
+        "v2-progress-fill": "v2ProgressFill 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "v2-number-tick": "v2NumberTick 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "v2-shimmer": "shimmer 2s linear infinite",
       },
       keyframes: {
         slideInRight: {
@@ -146,6 +154,31 @@ const config: Config = {
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
         },
+        // v2 keyframes
+        v2Enter: {
+          "0%": { opacity: "0", transform: "translateY(4px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        v2Exit: {
+          "0%": { opacity: "1", transform: "translateY(0)" },
+          "100%": { opacity: "0", transform: "translateY(-4px)" },
+        },
+        v2SlideInBottom: {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        v2ScaleIn: {
+          "0%": { opacity: "0", transform: "scale(0.97)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        v2ProgressFill: {
+          "0%": { transform: "scaleX(0)" },
+          "100%": { transform: "scaleX(1)" },
+        },
+        v2NumberTick: {
+          "0%": { transform: "translateY(100%)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -168,6 +201,8 @@ const config: Config = {
         glow: "0 0 40px rgba(67, 97, 238, 0.15)",
         "glow-lg": "0 0 80px rgba(67, 97, 238, 0.2)",
         "glow-xl": "0 0 120px rgba(67, 97, 238, 0.15)",
+        "glow-electric": "0 0 0 1px rgba(67,97,238,0.12), 0 4px 16px rgba(67,97,238,0.15)",
+        "glow-violet": "0 0 0 1px rgba(139,92,246,0.12), 0 4px 16px rgba(139,92,246,0.15)",
         "card-hover":
           "0 20px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(67, 97, 238, 0.1)",
         premium: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
@@ -177,15 +212,33 @@ const config: Config = {
         "dark-card":
           "0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06)",
         subtle: "0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06)",
+        // v2 design system elevation levels
+        "elevation-1": "0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)",
+        "elevation-2": "0 2px 4px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06)",
+        "elevation-3": "0 4px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08)",
       },
       borderRadius: {
+        "xl2": "0.875rem",  // 14px
+        "2.5xl": "1.25rem", // 20px
+        "3xl": "1.5rem",    // 24px
         "4xl": "2rem",
       },
       spacing: {
+        "4.5": "1.125rem",
+        "13": "3.25rem",
+        "15": "3.75rem",
         "18": "4.5rem",
         "22": "5.5rem",
         "26": "6.5rem",
         "30": "7.5rem",
+      },
+      transitionTimingFunction: {
+        "ease-spring": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "ease-out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
+      },
+      backdropBlur: {
+        "2xl": "40px",
+        "3xl": "64px",
       },
     },
   },
