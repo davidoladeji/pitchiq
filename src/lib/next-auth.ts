@@ -14,6 +14,7 @@ export const authOptions: NextAuthOptions = {
           GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+            allowDangerousEmailAccountLinking: true,
           }),
         ]
       : []),
@@ -22,6 +23,7 @@ export const authOptions: NextAuthOptions = {
           GitHubProvider({
             clientId: process.env.GITHUB_CLIENT_ID,
             clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
+            allowDangerousEmailAccountLinking: true,
           }),
         ]
       : []),
@@ -30,6 +32,7 @@ export const authOptions: NextAuthOptions = {
           LinkedInProvider({
             clientId: process.env.LINKEDIN_CLIENT_ID,
             clientSecret: process.env.LINKEDIN_CLIENT_SECRET ?? "",
+            allowDangerousEmailAccountLinking: true,
           }),
         ]
       : []),
