@@ -6,6 +6,8 @@ import { prisma } from "@/lib/db";
 import { getPlanLimits } from "@/lib/plan-limits";
 import { DeckData, SlideData, PIQScore } from "@/lib/types";
 import EditorShell from "@/components/editor/EditorShell";
+import EditorShellV2 from "@/components/v2/editor/EditorShellV2";
+import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -78,11 +80,12 @@ export default async function EditorPage({
     piqScore,
   };
 
+  const editorProps = { deck: deckData, plan: user.plan, userName: user.name || "there" };
+
   return (
-    <EditorShell
-      deck={deckData}
-      plan={user.plan}
-      userName={user.name || "there"}
+    <DashboardVersionGate
+      classicComponent={<EditorShell {...editorProps} />}
+      newComponent={<EditorShellV2 {...editorProps} />}
     />
   );
 }
