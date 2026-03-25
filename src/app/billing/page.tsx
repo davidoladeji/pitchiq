@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import BillingClient from "@/components/BillingClient";
+import BillingV2 from "@/components/v2/BillingClient";
+import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -31,13 +33,18 @@ export default async function BillingPage() {
     },
   });
 
+  const billingProps = {
+    plan: user?.plan || "starter",
+    hasSubscription: !!user?.stripeSubscriptionId,
+    planExpiresAt: user?.planExpiresAt?.toISOString() || null,
+    memberSince: user?.createdAt?.toISOString() || null,
+    deckCount: user?._count.decks || 0,
+  };
+
   return (
-    <BillingClient
-      plan={user?.plan || "starter"}
-      hasSubscription={!!user?.stripeSubscriptionId}
-      planExpiresAt={user?.planExpiresAt?.toISOString() || null}
-      memberSince={user?.createdAt?.toISOString() || null}
-      deckCount={user?._count.decks || 0}
+    <DashboardVersionGate
+      classicComponent={<BillingClient {...billingProps} />}
+      newComponent={<BillingV2 {...billingProps} />}
     />
   );
 }

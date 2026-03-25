@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import SettingsClient from "@/components/SettingsClient";
+import SettingsV2 from "@/components/v2/SettingsClient";
+import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -33,16 +35,21 @@ export default async function SettingsPage() {
     },
   });
 
+  const settingsProps = {
+    name: user?.name || null,
+    email: user?.email || "",
+    image: user?.image || null,
+    plan: user?.plan || "starter",
+    brandingEnabled: user?.brandingEnabled ?? true,
+    customLogoUrl: user?.customLogoUrl || null,
+    customCompanyName: user?.customCompanyName || null,
+    customAccentColor: user?.customAccentColor || null,
+  };
+
   return (
-    <SettingsClient
-      name={user?.name || null}
-      email={user?.email || ""}
-      image={user?.image || null}
-      plan={user?.plan || "starter"}
-      brandingEnabled={user?.brandingEnabled ?? true}
-      customLogoUrl={user?.customLogoUrl || null}
-      customCompanyName={user?.customCompanyName || null}
-      customAccentColor={user?.customAccentColor || null}
+    <DashboardVersionGate
+      classicComponent={<SettingsClient {...settingsProps} />}
+      newComponent={<SettingsV2 {...settingsProps} />}
     />
   );
 }

@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import CreatePageClient from "@/components/CreatePageClient";
+import CreatePageV2 from "@/components/v2/CreatePageClient";
+import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -35,5 +37,10 @@ export default async function CreatePage() {
     // If auth/db fails, default to starter
   }
 
-  return <CreatePageClient userPlan={userPlan} deckCount={deckCount} />;
+  return (
+    <DashboardVersionGate
+      classicComponent={<CreatePageClient userPlan={userPlan} deckCount={deckCount} />}
+      newComponent={<CreatePageV2 userPlan={userPlan} deckCount={deckCount} />}
+    />
+  );
 }

@@ -2,6 +2,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import ScorePageClient from "@/components/ScorePageClient";
+import ScorePageV2 from "@/components/v2/ScorePageClient";
+import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -29,5 +31,10 @@ export default async function ScorePage() {
     // default to starter
   }
 
-  return <ScorePageClient userPlan={userPlan} />;
+  return (
+    <DashboardVersionGate
+      classicComponent={<ScorePageClient userPlan={userPlan} />}
+      newComponent={<ScorePageV2 userPlan={userPlan} />}
+    />
+  );
 }
