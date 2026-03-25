@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import DashboardClient from "@/components/DashboardClient";
+import DashboardNew from "@/components/v2/DashboardClient";
+import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -124,7 +126,7 @@ export default async function DashboardPage({
     .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
     .slice(0, 10);
 
-  return (
+  const classicDashboard = (
     <DashboardClient
       decks={serialized}
       userName={session.user.name || "there"}
@@ -133,6 +135,25 @@ export default async function DashboardPage({
       activities={activities}
       hasProfile={hasProfile}
       profileCount={profileCount}
+    />
+  );
+
+  const newDashboard = (
+    <DashboardNew
+      decks={serialized}
+      userName={session.user.name || "there"}
+      plan={user?.plan || "starter"}
+      upgradedPlan={searchParams.upgraded}
+      activities={activities}
+      hasProfile={hasProfile}
+      profileCount={profileCount}
+    />
+  );
+
+  return (
+    <DashboardVersionGate
+      classicComponent={classicDashboard}
+      newComponent={newDashboard}
     />
   );
 }

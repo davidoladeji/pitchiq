@@ -125,6 +125,7 @@ model User {
   customLogoUrl        String?
   customCompanyName    String?
   customAccentColor    String?
+  dashboardVersion     String    @default("classic") // "classic" | "new"
   lastSeenAt           DateTime?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt

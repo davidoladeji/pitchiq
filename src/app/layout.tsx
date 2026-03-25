@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/next-auth";
+import { prisma } from "@/lib/db";
 import Providers from "@/components/Providers";
 import { NAVY_HEX } from "@/lib/design-tokens";
 import "./globals.css";
@@ -41,11 +44,27 @@ export const metadata: Metadata = {
   themeColor: NAVY_HEX,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Fetch user's dashboard version preference (defaults to "classic")
+  let dashboardVersion: "classic" | "new" = "classic";
+  try {
+    const session = await getServerSession(authOptions);
+    const userId = (session?.user as { id?: string })?.id;
+    if (userId) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { dashboardVersion: true },
+      });
+      if (user?.dashboardVersion === "new") dashboardVersion = "new";
+    }
+  } catch {
+    // Ignore — default to classic
+  }
+
   return (
     <html lang="en" className={`${jetbrainsMono.variable} ${inter.variable}`}>
       <body className="antialiased">
@@ -56,7 +75,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
-        <Providers>{children}</Providers>
+        <Providers dashboardVersion={dashboardVersion}>{children}</Providers>
         <Analytics />
         <SpeedInsights />
       </body>
