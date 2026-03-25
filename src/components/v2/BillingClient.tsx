@@ -7,6 +7,7 @@ import AppShellV2 from "./shell/AppShell";
  * v2 Billing Page — wraps the existing BillingClient in the new app shell.
  */
 import BillingClientClassic from "@/components/BillingClient";
+import { PageTransition } from "./shared/PageTransition";
 
 interface Props {
   plan: string;
@@ -27,6 +28,7 @@ export default function BillingV2({ userName, ...props }: Props) {
         { label: "Billing" },
       ]}
     >
+      <PageTransition>
       <div className="max-w-3xl mx-auto space-y-6">
         <DashboardVersionToggle />
 
@@ -39,6 +41,7 @@ export default function BillingV2({ userName, ...props }: Props) {
           <BillingClientClassic {...props} />
         </div>
       </div>
+      </PageTransition>
     </AppShellV2>
   );
 }

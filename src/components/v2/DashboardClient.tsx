@@ -5,7 +5,10 @@ import AppShellV2 from "./shell/AppShell";
 import { WelcomeHeader } from "./dashboard/WelcomeHeader";
 import { DeckGrid } from "./dashboard/DeckGrid";
 import { QuickActions } from "./dashboard/QuickActions";
+import { ActivityPanel } from "./dashboard/ActivityPanel";
+import { FeatureWidgets } from "./dashboard/FeatureWidgets";
 import { FirstRunOnboarding } from "./dashboard/FirstRunOnboarding";
+import { PageTransition } from "./shared/PageTransition";
 
 interface DeckSummary {
   id: string;
@@ -71,33 +74,50 @@ export default function DashboardNew({
       breadcrumbs={[{ label: "Dashboard" }]}
       recentDecks={recentDecks}
     >
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Version toggle banner */}
-        <DashboardVersionToggle />
+      <PageTransition>
+        <div className="max-w-6xl mx-auto space-y-6">
+          {/* Version toggle banner */}
+          <DashboardVersionToggle />
 
-        {decks.length === 0 ? (
-          /* First-run onboarding for new users */
-          <FirstRunOnboarding userName={userName} />
-        ) : (
-          <>
-            {/* Welcome header with stats */}
-            <WelcomeHeader
-              userName={userName}
-              plan={plan}
-              deckCount={decks.length}
-              totalViews={totalViews}
-              avgScore={avgScore}
-              hasProfile={hasProfile}
-            />
+          {decks.length === 0 ? (
+            /* First-run onboarding for new users */
+            <FirstRunOnboarding userName={userName} />
+          ) : (
+            <>
+              {/* Welcome header with stats */}
+              <WelcomeHeader
+                userName={userName}
+                plan={plan}
+                deckCount={decks.length}
+                totalViews={totalViews}
+                avgScore={avgScore}
+                hasProfile={hasProfile}
+              />
 
-            {/* Quick actions */}
-            <QuickActions plan={plan} />
+              {/* Quick actions */}
+              <QuickActions plan={plan} />
 
-            {/* Deck grid */}
-            <DeckGrid decks={decks} activities={activities} />
-          </>
-        )}
-      </div>
+              {/* Main content: Deck grid + Activity panel */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2">
+                  <DeckGrid decks={decks} activities={activities} />
+                </div>
+                <div className="lg:col-span-1">
+                  <ActivityPanel activities={activities} totalViews={totalViews} />
+                </div>
+              </div>
+
+              {/* Feature widgets */}
+              <div>
+                <h2 className="text-sm font-semibold text-navy-400 dark:text-white/40 uppercase tracking-wider mb-3">
+                  Tools & Features
+                </h2>
+                <FeatureWidgets plan={plan} />
+              </div>
+            </>
+          )}
+        </div>
+      </PageTransition>
     </AppShellV2>
   );
 }

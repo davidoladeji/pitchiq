@@ -9,6 +9,7 @@ import AppShellV2 from "./shell/AppShell";
  * and adds a Dashboard Version preference section.
  */
 import SettingsClientClassic from "@/components/SettingsClient";
+import { PageTransition } from "./shared/PageTransition";
 
 interface Props {
   name: string | null;
@@ -33,6 +34,7 @@ export default function SettingsV2(props: Props) {
         { label: "Settings" },
       ]}
     >
+      <PageTransition>
       <div className="max-w-3xl mx-auto space-y-6">
         <DashboardVersionToggle />
 
@@ -80,6 +82,7 @@ export default function SettingsV2(props: Props) {
           <SettingsClientClassic {...props} />
         </div>
       </div>
+      </PageTransition>
     </AppShellV2>
   );
 }

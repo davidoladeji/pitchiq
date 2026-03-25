@@ -8,6 +8,7 @@ import AppShellV2 from "./shell/AppShell";
  * The scoring flow is reused from classic — only the chrome changes.
  */
 import ScorePageClientClassic from "@/components/ScorePageClient";
+import { PageTransition } from "./shared/PageTransition";
 
 interface Props {
   userPlan?: string;
@@ -24,13 +25,14 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
         { label: "Score Deck" },
       ]}
     >
-      <div className="max-w-4xl mx-auto">
-        <DashboardVersionToggle />
-        <div className="mt-4">
-          {/* Reuse the existing score page — it has the full upload + scoring flow */}
-          <ScorePageClientClassic userPlan={userPlan} />
+      <PageTransition>
+        <div className="max-w-4xl mx-auto">
+          <DashboardVersionToggle />
+          <div className="mt-4">
+            <ScorePageClientClassic userPlan={userPlan} />
+          </div>
         </div>
-      </div>
+      </PageTransition>
     </AppShellV2>
   );
 }

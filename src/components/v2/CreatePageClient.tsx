@@ -8,6 +8,7 @@ import type { DeckInput, SlideData } from "@/lib/types";
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { PageTransition } from "./shared/PageTransition";
 
 interface Props {
   userPlan?: string;
@@ -68,6 +69,7 @@ export default function CreatePageV2({ userPlan = "starter", userName }: Props) 
         { label: "Create Deck" },
       ]}
     >
+      <PageTransition>
       <div className="max-w-4xl mx-auto">
         <DashboardVersionToggle />
 
@@ -132,6 +134,7 @@ export default function CreatePageV2({ userPlan = "starter", userName }: Props) 
           </div>
         )}
       </div>
+      </PageTransition>
     </AppShellV2>
   );
 }
