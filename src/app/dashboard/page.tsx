@@ -25,7 +25,8 @@ export default async function DashboardPage({
     redirect("/auth/signin");
   }
 
-  const [decks, user, recentViews, startupProfile] = await Promise.all([
+  // Use Promise.allSettled to prevent one failed query from crashing the entire dashboard
+  const results = await Promise.allSettled([
     prisma.deck.findMany({
       where: { userId: session.user.id },
       orderBy: { createdAt: "desc" },
@@ -68,6 +69,16 @@ export default async function DashboardPage({
       where: { userId: session.user.id },
     }),
   ]);
+
+  // Extract results with safe fallbacks — dashboard renders even if DB is flaky
+  const decks = results[0].status === "fulfilled" ? results[0].value : [];
+  const user = results[1].status === "fulfilled" ? results[1].value : null;
+  const recentViews = results[2].status === "fulfilled" ? results[2].value : [];
+  const startupProfile = results[3].status === "fulfilled" ? results[3].value : 0;
+
+  if (results.some((r) => r.status === "rejected")) {
+    console.warn("[dashboard] Some queries failed:", results.filter((r) => r.status === "rejected").map((r) => (r as PromiseRejectedResult).reason?.message));
+  }
 
   const profileCount = startupProfile;
   const hasProfile = profileCount > 0;
