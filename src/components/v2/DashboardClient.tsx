@@ -8,8 +8,7 @@ import { FolderOpen, Eye, Star, Trophy, CheckCircle, X } from "lucide-react";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 import { MetricCard } from "./dashboard/metric-card";
-import { QuickActions } from "./dashboard/quick-actions";
-import { AnalyticsChart } from "./dashboard/analytics-chart";
+import { ActionHub } from "./dashboard/action-hub";
 import { ActivityFeed } from "./dashboard/activity-feed";
 import { InvestorMatches } from "./dashboard/investor-matches";
 import { FundraisePipelineCard } from "./dashboard/fundraise-pipeline";
@@ -127,14 +126,9 @@ export default function DashboardNew({ userName, plan }: Props) {
           <PaygStatusWidget />
         </motion.div>
 
-        {/* Quick Actions */}
-        <motion.div variants={fadeInUp}>
-          <QuickActions />
-        </motion.div>
-
-        {/* Analytics + Activity Feed */}
+        {/* Action Hub (tabs: New Deck, Score, Ideas, Profile, Guide → replaces chart) + Activity Feed */}
         <motion.div variants={fadeInUp} className="content-grid">
-          <AnalyticsChart data={dailyViews} />
+          <ActionHub dailyViews={dailyViews} decks={decks} avgScore={stats.avgScore} totalViews={stats.totalViews} />
           <ActivityFeed activities={activities} />
         </motion.div>
 
