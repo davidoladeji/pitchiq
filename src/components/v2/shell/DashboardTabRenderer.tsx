@@ -1,6 +1,6 @@
 "use client";
 
-import { useDashboardTab } from "./DashboardTabContext";
+import { useDashboardTabRequired } from "./DashboardTabContext";
 
 /* ── Page imports ── */
 import DashboardOverviewPage from "@/components/v2/pages/dashboard-overview";
@@ -28,7 +28,7 @@ const TABS: { key: string; Component: React.ComponentType }[] = [
 ];
 
 export default function DashboardTabRenderer() {
-  const { activeTab } = useDashboardTab();
+  const { activeTab } = useDashboardTabRequired();
 
   return (
     <>

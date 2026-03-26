@@ -54,14 +54,8 @@ export function IconRail() {
   const { data: session } = useSession();
   const user = session?.user as { image?: string; name?: string } | undefined;
 
-  // Try to use tab context (available when inside dashboard layout)
-  let tabCtx: { activeTab: string; setActiveTab: (t: string) => void } | null = null;
-  try {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    tabCtx = useDashboardTab();
-  } catch {
-    // Not inside DashboardTabProvider (e.g., /settings, /billing pages that render their own AppShellV2)
-  }
+  // Tab context is available inside dashboard layout, null on other pages (e.g. /settings, /score)
+  const tabCtx = useDashboardTab();
 
   const isActive = (href: string) => {
     if (tabCtx) {

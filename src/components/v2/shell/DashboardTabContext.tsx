@@ -38,10 +38,7 @@ interface DashboardTabContextValue {
   setActiveTab: (tab: string) => void;
 }
 
-const DashboardTabContext = createContext<DashboardTabContextValue>({
-  activeTab: "dashboard",
-  setActiveTab: () => {},
-});
+const DashboardTabContext = createContext<DashboardTabContextValue | null>(null);
 
 export function DashboardTabProvider({ children }: { children: React.ReactNode }) {
   const [activeTab, setActiveTabState] = useState(() => {
@@ -75,8 +72,16 @@ export function DashboardTabProvider({ children }: { children: React.ReactNode }
   );
 }
 
+/** Returns the tab context, or null when outside DashboardTabProvider */
 export function useDashboardTab() {
   return useContext(DashboardTabContext);
+}
+
+/** Returns the tab context — throws if used outside DashboardTabProvider */
+export function useDashboardTabRequired() {
+  const ctx = useContext(DashboardTabContext);
+  if (!ctx) throw new Error("useDashboardTabRequired must be used inside DashboardTabProvider");
+  return ctx;
 }
 
 export { TAB_TO_PATH };
