@@ -1,134 +1,81 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Plus, FlaskConical } from "lucide-react";
 import { Badge } from "@/components/v2/ui/badge";
 import { Button } from "@/components/v2/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/v2/ui/card";
-import { EmptyState } from "@/components/v2/ui/empty-state";
-import { mockABTests } from "@/lib/mock-data";
+import { Card } from "@/components/v2/ui/card";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
-
-function statusVariant(status: string) {
-  if (status === "running") return "primary" as const;
-  if (status === "completed") return "success" as const;
-  if (status === "paused") return "warning" as const;
-  return "default" as const;
-}
+import { relativeTime } from "@/lib/cn";
+import type { ABTest } from "@/types";
 
 export default function ABTestsPage() {
-  if (mockABTests.length === 0) {
+  const [tests, setTests] = useState<ABTest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/v2/dashboard")
+      .then((r) => r.json())
+      .then((d) => { setTests(d.abTests || []); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-neutral-900">A/B Tests</h1>
-          <Button variant="default">
-            <Plus className="h-4 w-4" />
-            Create Test
-          </Button>
-        </div>
-        <EmptyState
-          icon={FlaskConical}
-          title="No A/B tests yet"
-          description="Compare two deck variants to see which performs better."
-          actionLabel="Create Test"
-        />
+      <div className="section-gap">
+        <div className="h-8 w-48 bg-surface-muted rounded-lg animate-pulse" />
+        <div className="h-40 bg-surface-muted rounded-xl animate-pulse" />
       </div>
     );
   }
 
   return (
-    <motion.div
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-      className="space-y-6"
-    >
-      {/* Header */}
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="section-gap">
       <motion.div variants={fadeInUp} className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-neutral-900">A/B Tests</h1>
-        <Button variant="default">
-          <Plus className="h-4 w-4" />
-          Create Test
-        </Button>
+        <div>
+          <h2 className="text-xl font-semibold text-neutral-900">A/B Tests</h2>
+          <p className="text-sm text-neutral-500 mt-1">{tests.length} test{tests.length !== 1 ? "s" : ""}</p>
+        </div>
+        <Button><Plus size={16} className="mr-2" /> New Test</Button>
       </motion.div>
 
-      {/* Test cards */}
-      {mockABTests.map((test) => {
-        const totalViews = test.variantA.views + test.variantB.views;
-        const pctA = totalViews > 0 ? (test.variantA.views / totalViews) * 100 : 50;
-        const pctB = totalViews > 0 ? (test.variantB.views / totalViews) * 100 : 50;
-        const leader =
-          test.variantB.views > test.variantA.views * 1.05
-            ? "Variant B leading"
-            : test.variantA.views > test.variantB.views * 1.05
-              ? "Variant A leading"
-              : null;
-
-        return (
-          <motion.div key={test.id} variants={fadeInUp}>
-            <Card>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <CardTitle>{test.deckTitle}</CardTitle>
-                  <Badge variant={statusVariant(test.status)}>{test.status}</Badge>
+      {tests.length === 0 ? (
+        <motion.div variants={fadeInUp}>
+          <Card className="text-center py-12">
+            <FlaskConical size={32} className="text-neutral-300 mx-auto mb-3" />
+            <p className="text-sm font-medium text-neutral-700">No A/B tests yet</p>
+            <p className="text-xs text-neutral-500 mt-1">Test different deck variants to see which performs better</p>
+            <Button className="mt-4">Create Your First Test</Button>
+          </Card>
+        </motion.div>
+      ) : (
+        <motion.div variants={fadeInUp} className="space-y-3">
+          {tests.map((t) => (
+            <Card key={t.id} className="p-4 hover-lift">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-neutral-900">{t.deckTitle}</p>
+                  <p className="text-xs text-neutral-500">Started {relativeTime(t.startedAt)}</p>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {/* Two variant blocks */}
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Variant A */}
-                  <div className="rounded-lg border p-4 bg-surface-page">
-                    <p className="text-xs font-semibold uppercase text-primary-600">
-                      Variant A
-                    </p>
-                    <p className="mt-1 text-sm font-medium">{test.variantA.label}</p>
-                    <div className="mt-2 flex items-center gap-4 text-xs text-neutral-500">
-                      <span>{test.variantA.views} views</span>
-                      <span>{test.variantA.avgTimeSeconds}s avg</span>
-                    </div>
-                  </div>
-
-                  {/* Variant B */}
-                  <div className="rounded-lg border p-4 bg-surface-page">
-                    <p className="text-xs font-semibold uppercase text-primary-600">
-                      Variant B
-                    </p>
-                    <p className="mt-1 text-sm font-medium">{test.variantB.label}</p>
-                    <div className="mt-2 flex items-center gap-4 text-xs text-neutral-500">
-                      <span>{test.variantB.views} views</span>
-                      <span>{test.variantB.avgTimeSeconds}s avg</span>
-                    </div>
-                  </div>
+                <Badge variant={t.status === "active" ? "success" : "default"}>{t.status}</Badge>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <div className="rounded-lg bg-surface-muted p-3 text-center">
+                  <p className="text-xs text-neutral-500">Variant A</p>
+                  <p className="text-lg font-semibold text-neutral-900">{t.variantA.views} views</p>
+                  <p className="text-xs text-neutral-400">{t.variantA.avgTimeSeconds}s avg</p>
                 </div>
-
-                {/* Comparison bar */}
-                <div className="h-3 flex rounded-full overflow-hidden">
-                  <div
-                    className="bg-primary-400"
-                    style={{ width: `${pctA}%` }}
-                  />
-                  <div
-                    className="bg-primary-600"
-                    style={{ width: `${pctB}%` }}
-                  />
+                <div className="rounded-lg bg-surface-muted p-3 text-center">
+                  <p className="text-xs text-neutral-500">Variant B</p>
+                  <p className="text-lg font-semibold text-neutral-900">{t.variantB.views} views</p>
+                  <p className="text-xs text-neutral-400">{t.variantB.avgTimeSeconds}s avg</p>
                 </div>
-
-                {/* Labels below bar */}
-                <div className="flex justify-between text-xs text-neutral-500">
-                  <span>A: {Math.round(pctA)}%</span>
-                  <span>B: {Math.round(pctB)}%</span>
-                </div>
-
-                {/* Winner indicator */}
-                {leader && (
-                  <p className="text-sm font-medium text-primary-600">{leader}</p>
-                )}
-              </CardContent>
+              </div>
             </Card>
-          </motion.div>
-        );
-      })}
+          ))}
+        </motion.div>
+      )}
     </motion.div>
   );
 }

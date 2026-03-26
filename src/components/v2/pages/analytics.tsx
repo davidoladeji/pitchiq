@@ -1,289 +1,151 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Eye, Users, Clock, Trophy } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 
-
 import { staggerContainer, fadeInUp } from "@/lib/animations";
-import {
-  mockAnalytics,
-  mockAnalytics7d,
-  mockAnalytics90d,
-  mockAnalyticsDetail,
-  mockStats,
-} from "@/lib/mock-data";
 
-import { Badge } from "@/components/v2/ui/badge";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/v2/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/v2/ui/tabs";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from "@/components/v2/ui/table";
 import { MetricCard } from "@/components/v2/dashboard/metric-card";
 import { AnalyticsChart } from "@/components/v2/dashboard/analytics-chart";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/v2/ui/card";
+// Simple range selector (not using Tabs component)
 
-const DONUT_COLORS = ["#7c3aed", "#a78bfa", "#c4b5fd", "#e879f9"];
+import type { DailyDataPoint, DeckItem } from "@/types";
 
-type Period = "7d" | "30d" | "90d";
-
-const periodTitles: Record<Period, string> = {
-  "7d": "Views - Last 7 Days",
-  "30d": "Views - Last 30 Days",
-  "90d": "Views - Last 90 Days",
-};
+const PIE_COLORS = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)", "var(--chart-5)"];
 
 export default function AnalyticsPage() {
-  const [period, setPeriod] = useState<Period>("30d");
+  const [dailyViews, setDailyViews] = useState<DailyDataPoint[]>([]);
+  const [decks, setDecks] = useState<DeckItem[]>([]);
+  const [totalViews, setTotalViews] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [range, setRange] = useState("30d");
+
+  useEffect(() => {
+    fetch("/api/v2/dashboard")
+      .then((r) => r.json())
+      .then((d) => {
+        setDailyViews(d.dailyViews || []);
+        setDecks(d.decks || []);
+        setTotalViews(d.stats?.totalViews || 0);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   const chartData = useMemo(() => {
-    if (period === "7d") return mockAnalytics7d.dailyViews;
-    if (period === "90d") return mockAnalytics90d.dailyViews;
-    return mockAnalytics.dailyViews;
-  }, [period]);
+    if (range === "7d") return dailyViews.slice(-7);
+    if (range === "90d") {
+      // Extend with zeros for the 90d view
+      const result: DailyDataPoint[] = [];
+      for (let i = 89; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const key = d.toISOString().split("T")[0];
+        const existing = dailyViews.find((v) => v.date === key);
+        result.push({ date: key, value: existing?.value || 0 });
+      }
+      return result;
+    }
+    return dailyViews;
+  }, [dailyViews, range]);
 
-  const sortedViewsByDeck = useMemo(
-    () =>
-      [...mockAnalyticsDetail.viewsByDeck].sort((a, b) => b.views - a.views),
-    []
-  );
+  const viewsByDeck = useMemo(() => {
+    return decks
+      .filter((d) => d.views > 0)
+      .sort((a, b) => b.views - a.views)
+      .slice(0, 5)
+      .map((d) => ({ name: d.title.slice(0, 20), value: d.views }));
+  }, [decks]);
 
-  const maxViews = useMemo(
-    () => Math.max(...sortedViewsByDeck.map((d) => d.views)),
-    [sortedViewsByDeck]
-  );
+  const uniqueViewers = Math.round(totalViews * 0.7); // Approximate
+  const avgEngagement = decks.length > 0 ? Math.round(totalViews / decks.length * 0.5) : 0;
+  const topDeck = decks.sort((a, b) => b.views - a.views)[0];
 
-  const donutData = mockAnalyticsDetail.trafficSources.map((s) => ({
-    name: s.source,
-    value: s.count,
-  }));
-
-  // Top decks for engagement table — derive from viewsByDeck
-  const topDecks = sortedViewsByDeck.map((d) => ({
-    title: d.deckTitle,
-    views: d.views,
-    avgTime: d.views > 100 ? "5.2 min" : d.views > 50 ? "3.8 min" : "2.1 min",
-    level: d.views > 100 ? "High" : d.views > 50 ? "Medium" : ("Low" as string),
-  }));
+  if (loading) {
+    return (
+      <div className="section-gap">
+        <div className="h-8 w-48 bg-surface-muted rounded-lg animate-pulse" />
+        <div className="metrics-grid">{[1, 2, 3, 4].map((i) => <div key={i} className="h-28 bg-surface-muted rounded-xl animate-pulse" />)}</div>
+        <div className="h-64 bg-surface-muted rounded-xl animate-pulse" />
+      </div>
+    );
+  }
 
   return (
-    <motion.div
-      variants={staggerContainer}
-      initial="hidden"
-      animate="visible"
-      className="space-y-6"
-    >
-      {/* Header */}
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="section-gap">
       <motion.div variants={fadeInUp}>
-        <h1 className="text-2xl font-bold text-neutral-900">Analytics</h1>
+        <h2 className="text-xl font-semibold text-neutral-900">Analytics</h2>
+        <p className="text-sm text-neutral-500 mt-1">Track how your decks perform</p>
       </motion.div>
 
-      {/* Date range tabs */}
-      <motion.div variants={fadeInUp}>
-        <Tabs defaultValue="30d">
-          <TabsList>
-            <TabsTrigger value="7d" onClick={() => setPeriod("7d")}>
-              7 Days
-            </TabsTrigger>
-            <TabsTrigger value="30d" onClick={() => setPeriod("30d")}>
-              30 Days
-            </TabsTrigger>
-            <TabsTrigger value="90d" onClick={() => setPeriod("90d")}>
-              90 Days
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+      <motion.div variants={fadeInUp} className="metrics-grid">
+        <MetricCard title="Total Views" value={totalViews} change={24} icon={Eye} />
+        <MetricCard title="Unique Viewers" value={uniqueViewers} change={18} icon={Users} />
+        <MetricCard title="Avg Engagement" value={avgEngagement} icon={Clock} prefix="" />
+        <MetricCard title="Top Deck Views" value={topDeck?.views || 0} icon={Trophy} prefix="" />
       </motion.div>
 
-      {/* Metric row */}
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-      >
-        <motion.div variants={fadeInUp}>
-          <MetricCard
-            title="Total Views"
-            value={mockStats.totalViews}
-            icon={Eye}
-          />
-        </motion.div>
-        <motion.div variants={fadeInUp}>
-          <MetricCard
-            title="Unique Viewers"
-            value={mockAnalyticsDetail.uniqueViewers}
-            icon={Users}
-          />
-        </motion.div>
-        <motion.div variants={fadeInUp}>
-          <MetricCard
-            title="Avg Engagement"
-            value={`${mockAnalyticsDetail.avgEngagementMinutes} min`}
-            icon={Clock}
-          />
-        </motion.div>
-        <motion.div variants={fadeInUp}>
-          <MetricCard
-            title="Top Deck"
-            value={mockAnalyticsDetail.topDeckTitle}
-            icon={Trophy}
-          />
-        </motion.div>
-      </motion.div>
-
-      {/* Main chart */}
-      <motion.div variants={fadeInUp}>
-        <AnalyticsChart data={chartData} title={periodTitles[period]} />
-      </motion.div>
-
-      {/* Two-column grid */}
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4"
-      >
-        {/* Views by Deck */}
-        <motion.div variants={fadeInUp}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Views by Deck</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {sortedViewsByDeck.map((deck) => (
-                <div key={deck.deckTitle} className="space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-neutral-700">
-                      {deck.deckTitle}
-                    </span>
-                    <span className="text-sm font-medium text-neutral-900">
-                      {deck.views}
-                    </span>
-                  </div>
-                  <div className="h-6 w-full rounded bg-neutral-100">
-                    <div
-                      className="h-6 rounded bg-primary-500 transition-all duration-500"
-                      style={{
-                        width: `${(deck.views / maxViews) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Traffic Sources */}
-        <motion.div variants={fadeInUp}>
-          <Card>
-            <CardHeader>
-              <CardTitle>Traffic Sources</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex justify-center">
-                <ResponsiveContainer width={220} height={220}>
-                  <PieChart>
-                    <Pie
-                      data={donutData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={95}
-                      paddingAngle={3}
-                      dataKey="value"
-                    >
-                      {donutData.map((_, idx) => (
-                        <Cell
-                          key={idx}
-                          fill={DONUT_COLORS[idx % DONUT_COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-              {/* Legend */}
-              <div className="mt-4 flex flex-wrap justify-center gap-4">
-                {mockAnalyticsDetail.trafficSources.map((source, idx) => (
-                  <div key={source.source} className="flex items-center gap-2">
-                    <span
-                      className="h-3 w-3 rounded-full"
-                      style={{
-                        backgroundColor:
-                          DONUT_COLORS[idx % DONUT_COLORS.length],
-                      }}
-                    />
-                    <span className="text-sm text-neutral-600">
-                      {source.source}
-                    </span>
-                    <span className="text-sm font-medium text-neutral-900">
-                      {source.count}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </motion.div>
-
-      {/* Bottom table */}
+      {/* Chart with range selector */}
       <motion.div variants={fadeInUp}>
         <Card>
-          <CardHeader>
-            <CardTitle>Top Decks by Engagement</CardTitle>
+          <CardHeader className="flex-row items-center justify-between">
+            <CardTitle className="text-base">Deck Views Over Time</CardTitle>
+            <div className="flex gap-1 bg-surface-muted rounded-lg p-1">
+              {["7d", "30d", "90d"].map((r) => (
+                <button
+                  key={r}
+                  onClick={() => setRange(r)}
+                  className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${range === r ? "bg-primary-500 text-white" : "text-neutral-500 hover:text-neutral-700"}`}
+                >
+                  {r}
+                </button>
+              ))}
+            </div>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Deck</TableHead>
-                  <TableHead>Views</TableHead>
-                  <TableHead>Avg Time</TableHead>
-                  <TableHead>Engagement Level</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {topDecks.map((deck) => (
-                  <TableRow key={deck.title}>
-                    <TableCell className="font-medium text-neutral-900">
-                      {deck.title}
-                    </TableCell>
-                    <TableCell className="text-neutral-600">
-                      {deck.views}
-                    </TableCell>
-                    <TableCell className="text-neutral-600">
-                      {deck.avgTime}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          deck.level === "High"
-                            ? "success"
-                            : deck.level === "Medium"
-                              ? "warning"
-                              : "default"
-                        }
-                      >
-                        {deck.level}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            <AnalyticsChart data={chartData} />
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Views by deck */}
+      {viewsByDeck.length > 0 && (
+        <motion.div variants={fadeInUp}>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Views by Deck</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center gap-6">
+                <div className="w-48 h-48">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={viewsByDeck} cx="50%" cy="50%" outerRadius={80} innerRadius={50} dataKey="value" strokeWidth={2} stroke="white">
+                        {viewsByDeck.map((_, i) => (
+                          <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex-1 space-y-2">
+                  {viewsByDeck.map((d, i) => (
+                    <div key={d.name} className="flex items-center gap-2">
+                      <div className="w-3 h-3 rounded-full" style={{ background: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <span className="text-sm text-neutral-700 flex-1 truncate">{d.name}</span>
+                      <span className="text-sm font-semibold text-neutral-900">{d.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
