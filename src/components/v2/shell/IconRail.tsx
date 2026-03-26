@@ -1,0 +1,137 @@
+"use client";
+
+import { usePathname, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import {
+  LayoutDashboard, FolderOpen, Plus, Target, Lightbulb,
+  Search, Users, Mic, FlaskConical, Building2, Settings,
+  Coins,
+} from "lucide-react";
+
+/* ------------------------------------------------------------------ */
+/*  Icon Rail — Tesla-style vertical icon navigation                   */
+/* ------------------------------------------------------------------ */
+
+interface NavItem {
+  icon: React.ElementType;
+  label: string;
+  href: string;
+  badge?: string;
+  accent?: boolean;
+}
+
+const MAIN_NAV: NavItem[] = [
+  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+  { icon: FolderOpen, label: "My Decks", href: "/dashboard/decks" },
+  { icon: Plus, label: "Create", href: "/create", accent: true },
+  { icon: Target, label: "Score", href: "/score" },
+  { icon: Lightbulb, label: "Ideas", href: "/ideas" },
+];
+
+const FUNDRAISE_NAV: NavItem[] = [
+  { icon: Search, label: "Match", href: "/dashboard/investor-match" },
+  { icon: Users, label: "CRM", href: "/dashboard/investor-crm" },
+  { icon: Mic, label: "Practice", href: "/dashboard/practice" },
+  { icon: FlaskConical, label: "A/B Test", href: "/dashboard/ab-tests" },
+];
+
+const WORKSPACE_NAV: NavItem[] = [
+  { icon: Building2, label: "Team", href: "/workspace" },
+  { icon: Settings, label: "Settings", href: "/settings" },
+];
+
+export function IconRail() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = useSession();
+  const user = session?.user as { image?: string; name?: string } | undefined;
+
+  const isActive = (href: string) => {
+    if (href === "/dashboard") return pathname === "/dashboard";
+    return pathname.startsWith(href);
+  };
+
+  return (
+    <nav className="fixed left-0 top-0 bottom-0 z-30 flex flex-col items-center w-[var(--rail-width)] py-4 void-glass void-scrollbar"
+      style={{ borderRight: "1px solid var(--void-border)" }}
+    >
+      {/* Logo */}
+      <Link href="/dashboard" className="w-10 h-10 rounded-xl flex items-center justify-center mb-6 glow-electric" style={{ background: "var(--neon-electric)" }}>
+        <span className="text-white font-black text-sm">P</span>
+      </Link>
+
+      {/* Main nav */}
+      <div className="flex-1 flex flex-col items-center gap-1 w-full px-2">
+        {MAIN_NAV.map((item) => (
+          <RailItem key={item.href} item={item} active={isActive(item.href)} />
+        ))}
+
+        {/* Separator */}
+        <div className="w-6 h-px bg-white/[0.06] my-2" />
+
+        {FUNDRAISE_NAV.map((item) => (
+          <RailItem key={item.href} item={item} active={isActive(item.href)} />
+        ))}
+
+        {/* Separator */}
+        <div className="w-6 h-px bg-white/[0.06] my-2" />
+
+        {WORKSPACE_NAV.map((item) => (
+          <RailItem key={item.href} item={item} active={isActive(item.href)} />
+        ))}
+      </div>
+
+      {/* Bottom: Credits + Avatar */}
+      <div className="flex flex-col items-center gap-2 mt-auto px-2">
+        <Link
+          href="/dashboard/credits"
+          className="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:bg-white/[0.06]"
+          title="Credits"
+        >
+          <Coins size={18} className="text-white/40" />
+        </Link>
+
+        <button
+          onClick={() => router.push("/settings")}
+          className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-transparent hover:ring-white/20 transition-all"
+          title={user?.name || "Profile"}
+        >
+          {user?.image ? (
+            <img src={user.image} alt="" className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-xs font-bold" style={{ background: "var(--void-surface-active)", color: "var(--void-text-muted)" }}>
+              {(user?.name || "U").charAt(0).toUpperCase()}
+            </div>
+          )}
+        </button>
+      </div>
+    </nav>
+  );
+}
+
+function RailItem({ item, active }: { item: NavItem; active: boolean }) {
+  const Icon = item.icon;
+  return (
+    <Link
+      href={item.href}
+      className={`relative group w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+        active
+          ? "bg-white/[0.08]"
+          : "hover:bg-white/[0.04]"
+      } ${item.accent ? "ring-1 ring-[var(--neon-electric)]/30" : ""}`}
+      title={item.label}
+    >
+      {/* Active indicator (glowing left pill) */}
+      {active && (
+        <span className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[3px] w-[3px] h-5 rounded-full" style={{ background: "var(--neon-cyan)", boxShadow: "0 0 8px rgba(var(--neon-cyan-rgb), 0.5)" }} />
+      )}
+      <Icon size={20} className={active ? "text-white" : "text-white/40 group-hover:text-white/70"} style={active ? { filter: "drop-shadow(0 0 4px rgba(var(--neon-cyan-rgb), 0.3))" } : undefined} />
+
+      {/* Tooltip */}
+      <span className="absolute left-full ml-3 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style={{ background: "var(--void-3)", color: "var(--void-text)", border: "1px solid var(--void-border)" }}>
+        {item.label}
+      </span>
+    </Link>
+  );
+}

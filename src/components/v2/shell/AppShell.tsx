@@ -1,13 +1,22 @@
 "use client";
 
-import { useState } from "react";
-import { Sidebar } from "./sidebar-mockup";
-import { Header } from "./header-mockup";
+import { useState, useEffect } from "react";
+import { IconRail } from "./IconRail";
+import { GlassTopBar } from "./GlassTopBar";
 import { ToastProvider } from "@/components/v2/ui/toast";
 import CommandPalette from "./CommandPalette";
 
 /* ------------------------------------------------------------------ */
-/*  v2 App Shell — ported from the pitchiq-dashboard-mockup            */
+/*  v2 App Shell — Void Command Center Layout                         */
+/*                                                                     */
+/*  ┌──────┬──────────────────────────────────────────────┐           */
+/*  │ Rail │  Glass Top Bar                               │           */
+/*  │ 64px ├──────────────────────────────────────────────┤           */
+/*  │      │                                              │           */
+/*  │      │  Main Canvas (infinite workspace)            │           */
+/*  │      │                                              │           */
+/*  │      │                                              │           */
+/*  └──────┴──────────────────────────────────────────────┘           */
 /* ------------------------------------------------------------------ */
 
 interface AppShellProps {
@@ -20,74 +29,60 @@ interface AppShellProps {
   recentDecks?: { shareId: string; title: string; piqScore?: number }[];
 }
 
-export default function AppShellV2({
-  children,
-  userName,
-  userPlan,
-  creditBalance,
-  recentDecks,
-}: AppShellProps) {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+export default function AppShellV2({ children, recentDecks }: AppShellProps) {
+  const [cmdOpen, setCmdOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Global ⌘K shortcut
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCmdOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
   return (
-    <div className="relative min-h-screen bg-surface-page">
-      {/* Desktop sidebar */}
+    <div className="void-bg min-h-screen">
+      {/* Ambient background orbs (fixed, behind everything) */}
+      <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true" />
+
+      {/* Desktop icon rail */}
       <div className="hidden lg:block">
-        <Sidebar
-          collapsed={sidebarCollapsed}
-          onCollapsedChange={setSidebarCollapsed}
-          userPlan={userPlan}
-          userName={userName}
-          creditBalance={creditBalance}
-        />
+        <IconRail />
       </div>
 
-      {/* Mobile overlay sidebar */}
+      {/* Mobile sidebar overlay */}
       {mobileMenuOpen && (
         <>
-          <div
-            className="fixed inset-0 z-30 bg-neutral-900/40 lg:hidden"
-            onClick={() => setMobileMenuOpen(false)}
-          />
+          <div className="fixed inset-0 z-30 bg-black/60 lg:hidden" onClick={() => setMobileMenuOpen(false)} />
           <div className="fixed inset-y-0 left-0 z-40 lg:hidden">
-            <Sidebar userPlan={userPlan} userName={userName} creditBalance={creditBalance} />
+            <IconRail />
           </div>
         </>
       )}
 
-      {/* Main content */}
-      <main className="flex min-h-screen flex-col transition-[margin-left] duration-300 ease-in-out">
-        <div className="page-container">
-          <Header
-            showMenuButton
-            onMenuClick={() => setMobileMenuOpen((v) => !v)}
-            userName={userName}
-          />
-        </div>
+      {/* Main content area */}
+      <main className="lg:ml-[var(--rail-width)] min-h-screen flex flex-col relative z-10">
+        {/* Glass top bar */}
+        <GlassTopBar
+          onCommandPalette={() => setCmdOpen(true)}
+          onMobileMenu={() => setMobileMenuOpen((v) => !v)}
+        />
 
+        {/* Canvas */}
         <ToastProvider>
-          <div className="page-container section-gap flex-1 pb-12">
+          <div className="flex-1 px-6 py-6 max-w-[1400px] w-full mx-auto">
             {children}
           </div>
         </ToastProvider>
       </main>
 
-      <CommandPalette recentDecks={recentDecks} />
-
-      {/* Dynamic margin-left based on sidebar state */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-            @media (min-width: 1024px) {
-              main { margin-left: ${sidebarCollapsed ? 72 : 260}px !important; }
-            }
-            @media (max-width: 1023px) {
-              main { margin-left: 0 !important; }
-            }
-          `,
-        }}
-      />
+      {/* Command Palette */}
+      <CommandPalette recentDecks={recentDecks} open={cmdOpen} onOpenChange={setCmdOpen} />
     </div>
   );
 }

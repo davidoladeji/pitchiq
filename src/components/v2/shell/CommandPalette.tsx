@@ -12,23 +12,34 @@ import { cn } from "@/lib/cn";
 
 interface CommandPaletteProps {
   recentDecks?: { shareId: string; title: string; piqScore?: number }[];
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export default function CommandPalette({ recentDecks = [] }: CommandPaletteProps) {
-  const [open, setOpen] = useState(false);
+export default function CommandPalette({ recentDecks = [], open: controlledOpen, onOpenChange }: CommandPaletteProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = useCallback((v: boolean | ((prev: boolean) => boolean)) => {
+    if (onOpenChange) {
+      onOpenChange(typeof v === "function" ? v(open) : v);
+    } else {
+      setInternalOpen(v);
+    }
+  }, [onOpenChange, open]);
   const router = useRouter();
 
-  // Global keyboard shortcut
+  // Global keyboard shortcut (only when uncontrolled)
   useEffect(() => {
+    if (controlledOpen !== undefined) return; // Parent manages ⌘K
     const onKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
-        setOpen((prev) => !prev);
+        setOpen((prev: boolean) => !prev);
       }
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [controlledOpen, setOpen]);
 
   const runCommand = useCallback(
     (cmd: () => void) => {
