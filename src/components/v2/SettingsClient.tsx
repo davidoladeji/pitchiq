@@ -1,15 +1,14 @@
 "use client";
 
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
+import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import { User, Palette, Globe, Save, Loader2, Check } from "lucide-react";
 import { useDashboardVersion } from "@/lib/dashboard-version";
 import AppShellV2 from "./shell/AppShell";
-
-/**
- * v2 Settings Page — wraps the existing SettingsClient in the new app shell
- * and adds a Dashboard Version preference section.
- */
-import SettingsClientClassic from "@/components/SettingsClient";
-import { PageTransition } from "./shared/PageTransition";
+import { Card } from "./ui/card";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Input } from "./ui/input";
 
 interface Props {
   name: string | null;
@@ -22,67 +21,204 @@ interface Props {
   customAccentColor: string | null;
 }
 
+type Tab = "profile" | "branding" | "dashboard";
+
 export default function SettingsV2(props: Props) {
+  const router = useRouter();
   const { version, toggle, isToggling } = useDashboardVersion();
+  const [activeTab, setActiveTab] = useState<Tab>("profile");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  // Profile form
+  const [name, setName] = useState(props.name || "");
+  // Branding form
+  const [companyName, setCompanyName] = useState(props.customCompanyName || "");
+  const [accentColor, setAccentColor] = useState(props.customAccentColor || "#4361ee");
+  const [logoUrl, setLogoUrl] = useState(props.customLogoUrl || "");
+
+  const handleSaveProfile = useCallback(async () => {
+    setSaving(true);
+    try {
+      await fetch("/api/settings/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch { /* */ }
+    setSaving(false);
+  }, [name]);
+
+  const handleSaveBranding = useCallback(async () => {
+    setSaving(true);
+    try {
+      await fetch("/api/settings/branding", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ customCompanyName: companyName, customAccentColor: accentColor, customLogoUrl: logoUrl }),
+      });
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch { /* */ }
+    setSaving(false);
+  }, [companyName, accentColor, logoUrl]);
+
+  const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
+    { id: "profile", label: "Profile", icon: User },
+    { id: "branding", label: "Branding", icon: Palette },
+    { id: "dashboard", label: "Dashboard", icon: Globe },
+  ];
 
   return (
     <AppShellV2
       userName={props.name || undefined}
       userPlan={props.plan}
-      breadcrumbs={[
-        { label: "Dashboard", href: "/dashboard" },
-        { label: "Settings" },
-      ]}
+      breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Settings" }]}
     >
-      <PageTransition>
       <div className="max-w-3xl mx-auto space-y-6">
-        <DashboardVersionToggle />
-
         <div>
-          <h1 className="text-2xl font-bold text-navy dark:text-white mb-1">Settings</h1>
-          <p className="text-sm text-navy-500 dark:text-white/50">Manage your account and preferences</p>
+          <h1 className="text-2xl font-bold text-neutral-900">Settings</h1>
+          <p className="text-sm text-neutral-500 mt-1">Manage your account and preferences</p>
         </div>
 
-        {/* Dashboard Version Preference */}
-        <div className="bg-[var(--surface-1)] rounded-2xl border border-[var(--border-default)] p-5">
-          <h2 className="text-sm font-semibold text-navy dark:text-white mb-3">Dashboard Experience</h2>
-          <p className="text-xs text-navy-500 dark:text-white/50 mb-4">
-            You&apos;re currently using the <strong>{version === "new" ? "New" : "Classic"}</strong> dashboard.
-          </p>
-          <div className="flex gap-3">
-            <button
-              onClick={() => { if (version !== "classic") toggle(); }}
-              disabled={isToggling}
-              className={`flex-1 p-3 rounded-xl border-2 text-left transition-all ${
-                version === "classic"
-                  ? "border-electric bg-electric/5"
-                  : "border-[var(--border-default)] hover:border-[var(--border-emphasis)]"
-              }`}
-            >
-              <p className="text-sm font-medium text-navy dark:text-white">Classic</p>
-              <p className="text-xs text-navy-400 dark:text-white/40">The original PitchIQ layout</p>
-            </button>
-            <button
-              onClick={() => { if (version !== "new") toggle(); }}
-              disabled={isToggling}
-              className={`flex-1 p-3 rounded-xl border-2 text-left transition-all ${
-                version === "new"
-                  ? "border-electric bg-electric/5"
-                  : "border-[var(--border-default)] hover:border-[var(--border-emphasis)]"
-              }`}
-            >
-              <p className="text-sm font-medium text-navy dark:text-white">New</p>
-              <p className="text-xs text-navy-400 dark:text-white/40">Redesigned with sidebar navigation</p>
-            </button>
-          </div>
+        {/* Tab bar */}
+        <div className="flex gap-1 border-b border-neutral-200">
+          {TABS.map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px ${
+                  active
+                    ? "border-primary-500 text-primary-600"
+                    : "border-transparent text-neutral-500 hover:text-neutral-700"
+                }`}
+              >
+                <Icon size={16} />
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Existing settings wrapped in surface card */}
-        <div className="bg-[var(--surface-1)] rounded-2xl border border-[var(--border-default)] p-5">
-          <SettingsClientClassic {...props} />
-        </div>
+        {/* Profile tab */}
+        {activeTab === "profile" && (
+          <Card className="p-6 space-y-5">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-primary-100 flex items-center justify-center text-xl font-bold text-primary-700">
+                {(props.name || props.email || "?").charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <p className="text-lg font-semibold text-neutral-900">{props.name || "No name set"}</p>
+                <p className="text-sm text-neutral-500">{props.email}</p>
+                <Badge variant="primary" size="sm" className="mt-1">{props.plan}</Badge>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-neutral-600 mb-1">Display Name</label>
+                <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-neutral-600 mb-1">Email</label>
+                <Input value={props.email} disabled className="opacity-60" />
+                <p className="text-[10px] text-neutral-400 mt-1">Email cannot be changed</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Button onClick={handleSaveProfile} disabled={saving}>
+                {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : saved ? <Check size={14} className="mr-1" /> : <Save size={14} className="mr-1" />}
+                {saved ? "Saved!" : "Save Profile"}
+              </Button>
+              <Button variant="outline" onClick={() => router.push("/billing")}>
+                {props.plan === "starter" ? "Upgrade Plan" : "Manage Billing"}
+              </Button>
+            </div>
+          </Card>
+        )}
+
+        {/* Branding tab */}
+        {activeTab === "branding" && (
+          <Card className="p-6 space-y-5">
+            <div>
+              <h2 className="text-sm font-semibold text-neutral-900">Deck Branding</h2>
+              <p className="text-xs text-neutral-500 mt-0.5">Customize how your shared decks look to viewers</p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold text-neutral-600 mb-1">Company Name (on shared decks)</label>
+                <Input value={companyName} onChange={(e) => setCompanyName(e.target.value)} placeholder="Acme Corp" />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-neutral-600 mb-1">Accent Color</label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="color"
+                    value={accentColor}
+                    onChange={(e) => setAccentColor(e.target.value)}
+                    className="w-10 h-10 rounded-lg border border-neutral-200 cursor-pointer"
+                  />
+                  <Input value={accentColor} onChange={(e) => setAccentColor(e.target.value)} className="w-28 font-mono text-sm" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-neutral-600 mb-1">Logo URL</label>
+                <Input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://example.com/logo.png" />
+                {logoUrl && (
+                  <div className="mt-2 w-12 h-12 rounded-lg bg-neutral-50 border border-neutral-100 flex items-center justify-center overflow-hidden">
+                    <img src={logoUrl} alt="Logo preview" className="w-8 h-8 object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <Button onClick={handleSaveBranding} disabled={saving}>
+              {saving ? <Loader2 size={14} className="animate-spin mr-1" /> : saved ? <Check size={14} className="mr-1" /> : <Save size={14} className="mr-1" />}
+              {saved ? "Saved!" : "Save Branding"}
+            </Button>
+          </Card>
+        )}
+
+        {/* Dashboard tab */}
+        {activeTab === "dashboard" && (
+          <Card className="p-6 space-y-5">
+            <div>
+              <h2 className="text-sm font-semibold text-neutral-900">Dashboard Experience</h2>
+              <p className="text-xs text-neutral-500 mt-0.5">Choose your preferred dashboard layout</p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => { if (version !== "classic") toggle(); }}
+                disabled={isToggling}
+                className={`flex-1 p-4 rounded-xl border-2 text-left transition-all ${
+                  version === "classic" ? "border-primary-500 bg-primary-50" : "border-neutral-200 hover:border-neutral-300"
+                }`}
+              >
+                <p className="text-sm font-semibold text-neutral-900">Classic</p>
+                <p className="text-xs text-neutral-500 mt-0.5">The original PitchIQ layout with floating nav</p>
+              </button>
+              <button
+                onClick={() => { if (version !== "new") toggle(); }}
+                disabled={isToggling}
+                className={`flex-1 p-4 rounded-xl border-2 text-left transition-all ${
+                  version === "new" ? "border-primary-500 bg-primary-50" : "border-neutral-200 hover:border-neutral-300"
+                }`}
+              >
+                <p className="text-sm font-semibold text-neutral-900">New</p>
+                <p className="text-xs text-neutral-500 mt-0.5">Redesigned with sidebar navigation and enhanced visuals</p>
+              </button>
+            </div>
+          </Card>
+        )}
       </div>
-      </PageTransition>
     </AppShellV2>
   );
 }
