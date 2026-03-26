@@ -3,14 +3,16 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import AppNav from "@/components/AppNav";
 import SlideRenderer from "@/components/SlideRenderer";
 import ExportMenu from "@/components/ExportMenu";
 import DeckVariants from "@/components/DeckVariants";
 import DeckInfoPanel from "@/components/DeckInfoPanel";
 import { DeckData } from "@/lib/types";
 import { DeckTracker } from "@/lib/analytics/deck-tracker";
-import { FileText } from "lucide-react";
+import {
+  FileText, Check, ArrowLeft, Plus, Mic, LayoutDashboard,
+  Share2, Sparkles, AlertCircle,
+} from "lucide-react";
 
 export default function DeckViewerClient() {
   const params = useParams();
@@ -29,10 +31,7 @@ export default function DeckViewerClient() {
   const [fullDeckData, setFullDeckData] = useState<any>(null);
   const trackerRef = useRef<DeckTracker | null>(null);
 
-  const shareUrl =
-    typeof window !== "undefined" && shareId
-      ? `${window.location.origin}/deck/${shareId}`
-      : "";
+  const shareUrl = typeof window !== "undefined" && shareId ? `${window.location.origin}/deck/${shareId}` : "";
 
   const handleCopyLink = useCallback(() => {
     if (!shareUrl) return;
@@ -63,272 +62,207 @@ export default function DeckViewerClient() {
     fetchDeck();
   }, [shareId]);
 
-  // Initialize tracker when viewId is available
   useEffect(() => {
     if (!viewId || !shareId) return;
     const tracker = new DeckTracker(shareId, viewId);
     trackerRef.current = tracker;
-    // Track initial slide view (slide 0)
     tracker.trackSlideView(0);
-    return () => {
-      tracker.flush();
-      tracker.cleanup();
-    };
+    return () => { tracker.flush(); tracker.cleanup(); };
   }, [viewId, shareId]);
 
   const handleSlideChange = useCallback((slideIndex: number) => {
     trackerRef.current?.trackSlideView(slideIndex);
-    // Mark completed if viewing the last slide
-    if (deck && slideIndex === deck.slides.length - 1) {
-      trackerRef.current?.markCompleted();
-    }
+    if (deck && slideIndex === deck.slides.length - 1) trackerRef.current?.markCompleted();
   }, [deck]);
 
+  /* ── Loading ── */
   if (loading) {
     return (
-      <div className="min-h-screen bg-navy-950" aria-busy="true" aria-label="Loading deck">
-        <p className="sr-only" role="status" aria-live="polite">
-          Loading deck
-        </p>
-        <AppNav />
-        <main
-          id="main"
-          tabIndex={-1}
-          className="pt-24 pb-16 px-4 sm:px-6 outline-none"
-          aria-labelledby="deck-viewer-loading-heading"
-        >
-          <h1 id="deck-viewer-loading-heading" className="sr-only">
-            Loading deck
-          </h1>
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-8">
-              <div className="h-8 w-48 mx-auto rounded-lg bg-white/5 animate-pulse motion-reduce:animate-none mb-3" />
-              <div className="h-4 w-16 mx-auto rounded bg-white/5 animate-pulse motion-reduce:animate-none" />
-            </div>
-            <div className="space-y-6">
-              {[1, 2, 3].map((i) => (
-                <div
-                  key={i}
-                  className="aspect-video rounded-2xl bg-navy-50 border border-navy-50 animate-pulse motion-reduce:animate-none"
-                  style={{ animationDelay: `${i * 100}ms` }}
-                >
-                  <div className="h-full flex flex-col justify-center p-8 md:p-12">
-                    <div className="h-10 w-3/4 max-w-md rounded-lg bg-navy-100 mb-4" />
-                    <div className="h-5 w-1/2 max-w-xs rounded bg-navy-100/80 mb-6" />
-                    <div className="space-y-2">
-                      <div className="h-4 w-full rounded bg-navy-50" />
-                      <div className="h-4 w-4/5 rounded bg-navy-50" />
-                      <div className="h-4 w-2/3 rounded bg-navy-50" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center mt-8 gap-3">
-              <div className="h-10 w-24 rounded-xl bg-white/5 animate-pulse motion-reduce:animate-none" />
-              <div className="h-10 w-24 rounded-xl bg-white/5 animate-pulse motion-reduce:animate-none" />
+      <div className="min-h-screen" style={{ background: "var(--void, #000)" }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 pt-16 pb-10">
+          <div className="flex items-center justify-between mb-8">
+            <div className="h-5 w-32 rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
+            <div className="flex gap-2">
+              <div className="h-9 w-20 rounded-xl animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
+              <div className="h-9 w-9 rounded-full animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
             </div>
           </div>
-        </main>
+          <div className="text-center mb-8">
+            <div className="h-8 w-64 mx-auto rounded-lg animate-pulse mb-3" style={{ background: "rgba(255,255,255,0.04)" }} />
+            <div className="h-4 w-20 mx-auto rounded animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
+          </div>
+          <div className="aspect-video rounded-2xl animate-pulse mb-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }} />
+          <div className="flex justify-center gap-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="w-8 h-8 rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
+  /* ── Error ── */
   if (error || !deck) {
     return (
-      <main
-        id="main"
-        tabIndex={-1}
-        className="min-h-screen flex flex-col items-center justify-center bg-navy-950 px-6 outline-none"
-        aria-labelledby="deck-not-found-heading"
-      >
-        <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-6">
-          <svg
-            className="w-8 h-8 text-white/40"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+      <div className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: "var(--void, #000)" }}>
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6" style={{ background: "rgba(248,113,113,0.1)", border: "1px solid rgba(248,113,113,0.2)" }}>
+          <AlertCircle size={28} className="text-red-400" />
         </div>
-        <h1 id="deck-not-found-heading" className="text-2xl font-bold text-white mb-2 tracking-tight">
-          Deck not found
-        </h1>
-        <p className="text-white/50 mb-8 text-center max-w-sm">{error}</p>
-        <div className="flex flex-col sm:flex-row items-center gap-3">
-          <Link
-            href="/create"
-            aria-label="Create your own pitch deck"
-            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-violet text-white font-medium shadow-lg shadow-violet/25 hover:bg-violet-light hover:-translate-y-0.5 active:translate-y-0 transition-all"
-          >
-            Create a deck
+        <h1 className="text-2xl font-bold tracking-tight mb-2" style={{ color: "var(--void-text, #E8E8ED)" }}>Deck not found</h1>
+        <p className="text-sm mb-8 text-center max-w-sm" style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}>{error}</p>
+        <div className="flex items-center gap-3">
+          <Link href="/create" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:-translate-y-0.5" style={{ background: "var(--neon-electric, #4361EE)", boxShadow: "0 4px 20px rgba(67,97,238,0.3)" }}>
+            <Plus size={16} /> Create a deck
           </Link>
-          <Link
-            href="/"
-            aria-label="Go to PitchIQ home"
-            className="min-h-[44px] inline-flex items-center justify-center px-6 py-3 rounded-2xl border border-white/10 text-white/70 font-medium hover:bg-white/5 hover:text-white transition-all"
-          >
+          <Link href="/" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-colors" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.6)" }}>
             Go to PitchIQ
           </Link>
         </div>
-      </main>
+      </div>
     );
   }
 
-  // Button base styles for the action bar
-  const btnBase = "inline-flex items-center justify-center gap-2 rounded-2xl text-xs font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-navy-950";
-  const btnOutline = `${btnBase} min-h-[42px] px-6 py-2.5 border border-white/10 bg-white/5 text-white/80 hover:bg-white/10 hover:text-white hover:border-white/20 backdrop-blur-sm`;
-  const btnPrimary = `${btnBase} min-h-[42px] px-7 py-2.5 bg-violet text-white font-semibold shadow-lg shadow-violet/25 hover:bg-violet-light hover:-translate-y-0.5 active:translate-y-0`;
-  const btnAccent = `${btnBase} min-h-[42px] px-6 py-2.5 bg-violet/15 border border-violet/25 text-violet-light hover:bg-violet/25 hover:text-white`;
+  /* ── PIQ Score ── */
+  let piqScore: number | null = null;
+  try {
+    const parsed = typeof deck.piqScore === "string" ? JSON.parse(deck.piqScore) : deck.piqScore;
+    piqScore = parsed?.overall || null;
+  } catch { /* */ }
+  const scoreColor = piqScore && piqScore >= 80 ? "var(--neon-emerald, #00FF9D)" : piqScore && piqScore >= 60 ? "var(--neon-cyan, #00F0FF)" : "var(--neon-electric, #4361EE)";
 
   return (
-    <div className="bg-navy-950">
-      <AppNav />
-
-      <main
-        id="main"
-        tabIndex={-1}
-        className="pt-24 pb-10 px-4 sm:px-6 animate-fade-in motion-reduce:animate-none outline-none"
-        aria-labelledby="deck-viewer-title"
-      >
-        <div className="max-w-5xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 id="deck-viewer-title" className="text-xl sm:text-2xl font-bold text-white mb-1.5 tracking-tight">
+    <div style={{ background: "var(--void, #000)" }}>
+      {/* ── Top Bar ── */}
+      <header className="sticky top-0 z-40 backdrop-blur-xl" style={{ background: "rgba(0,0,0,0.7)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/dashboard" className="flex items-center gap-1.5 text-xs font-medium transition-colors hover:opacity-80" style={{ color: "rgba(255,255,255,0.5)" }}>
+              <ArrowLeft size={14} />
+              Dashboard
+            </Link>
+            <span style={{ color: "rgba(255,255,255,0.15)" }}>/</span>
+            <span className="text-xs font-medium truncate max-w-[200px]" style={{ color: "var(--void-text, #E8E8ED)" }}>
               {deck.title}
-            </h1>
-            <p className="text-white/40 text-xs mb-5">{deck.slides.length} slides</p>
-
-            {/* Share strip */}
-            {shareUrl && (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
-                <span className="text-white/40 text-xs">Share this deck</span>
-                <div className="flex items-center w-full sm:w-auto max-w-full sm:max-w-md rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm px-4 py-2 gap-2">
-                  <span className="flex-1 min-w-0 truncate text-xs text-white/60" aria-hidden="true">
-                    {shareUrl.replace(/^https?:\/\//, "")}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleCopyLink}
-                    className="shrink-0 inline-flex items-center justify-center gap-1.5 px-4 py-1.5 rounded-xl bg-violet/20 text-violet-light text-xs font-medium hover:bg-violet/30 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
-                    aria-label={copied ? "Link copied to clipboard" : "Copy share link"}
-                  >
-                    {copied ? (
-                      <>
-                        <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>Copied!</span>
-                      </>
-                    ) : (
-                      "Copy"
-                    )}
-                  </button>
-                </div>
-                {copied && (
-                  <p className="sr-only" role="status" aria-live="polite">
-                    Share link copied to clipboard.
-                  </p>
-                )}
-              </div>
-            )}
+            </span>
           </div>
 
-          {/* Investor variants (Growth+ owners only) */}
-          {isOwner && (
-            <div className="mb-6">
-              <DeckVariants
-                shareId={shareId}
-                variants={variants}
-                ownerPlan={ownerPlan}
-              />
-            </div>
-          )}
-
-          <SlideRenderer
-            slides={deck.slides}
-            companyName={deck.companyName}
-            showBranding={showBranding}
-            themeId={deck.themeId}
-            onSlideChange={handleSlideChange}
-          />
-
-          {/* Actions bar */}
-          <div className="flex flex-col items-center gap-5 mt-10">
-            <div className="flex flex-wrap items-center justify-center gap-2.5">
-              {isOwner && fullDeckData && (
-                <button
-                  onClick={() => setShowInfoPanel(true)}
-                  className={btnOutline}
-                  aria-label="View deck info and inputs"
-                >
-                  <FileText size={14} />
-                  Deck Info
-                </button>
-              )}
-              {deck && (
-                <ExportMenu deck={deck} userPlan={ownerPlan} />
-              )}
-              {isOwner && (ownerPlan === "growth" || ownerPlan === "enterprise") && (
-                <Link
-                  href={`/practice/${shareId}`}
-                  className={btnAccent}
-                  aria-label="Practice pitch with this deck"
-                >
-                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
-                  </svg>
-                  Practice Pitch
-                </Link>
-              )}
-              <Link href="/dashboard" className={btnOutline} aria-label="Go to dashboard">
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                Dashboard
-              </Link>
-              <Link href="/create" className={btnPrimary} aria-label="Create a new pitch deck">
-                Create New Deck
-              </Link>
-            </div>
-
-            {/* Upgrade CTA for starter-tier decks only */}
-            {ownerPlan === "starter" && (
-              <div className="w-full max-w-2xl rounded-2xl border border-violet/15 bg-navy-900 p-5">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <svg className="w-4 h-4 text-violet-light shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                      </svg>
-                      <h3 className="font-bold text-white text-xs">Upgrade to Pro</h3>
-                    </div>
-                    <p className="text-white/50 text-xs">
-                      Remove branding, unlock all themes, PPTX export, detailed analytics & engagement tracking.
-                    </p>
-                  </div>
-                  <Link
-                    href="/#pricing"
-                    className={`${btnPrimary} shrink-0`}
-                    aria-label="View plans and upgrade to Pro"
-                  >
-                    View Plans
-                  </Link>
-                </div>
+          <div className="flex items-center gap-2">
+            {/* PIQ Score badge */}
+            {piqScore && (
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{ background: `${scoreColor}10`, border: `1px solid ${scoreColor}25` }}>
+                <Sparkles size={12} style={{ color: scoreColor }} />
+                <span className="text-xs font-bold" style={{ color: scoreColor }}>{piqScore}</span>
+                <span className="text-[10px]" style={{ color: "rgba(255,255,255,0.3)" }}>PIQ</span>
               </div>
+            )}
+
+            {/* Share */}
+            <button onClick={handleCopyLink} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}>
+              {copied ? <><Check size={12} className="text-emerald-400" /> Copied</> : <><Share2 size={12} /> Share</>}
+            </button>
+
+            {/* Deck Info */}
+            {isOwner && fullDeckData && (
+              <button onClick={() => setShowInfoPanel(true)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.6)" }}>
+                <FileText size={12} /> Info
+              </button>
             )}
           </div>
         </div>
+      </header>
+
+      {/* ── Main Content ── */}
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-8 pb-12">
+        {/* Deck header */}
+        <div className="text-center mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight mb-1" style={{ color: "var(--void-text, #E8E8ED)" }}>
+            {deck.title}
+          </h1>
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.3)" }}>
+            {deck.companyName} · {deck.slides.length} slides
+          </p>
+
+          {/* Share URL */}
+          {shareUrl && (
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <div className="flex items-center max-w-md rounded-xl px-3 py-1.5 gap-2" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <span className="truncate text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>
+                  {shareUrl.replace(/^https?:\/\//, "")}
+                </span>
+                <button onClick={handleCopyLink} className="shrink-0 px-2.5 py-1 rounded-lg text-[10px] font-semibold transition-all" style={{ background: "rgba(var(--neon-electric-rgb, 67,97,238), 0.15)", color: "var(--neon-cyan, #00F0FF)" }}>
+                  {copied ? "Copied!" : "Copy"}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Investor variants */}
+        {isOwner && variants.length > 0 && (
+          <div className="mb-6">
+            <DeckVariants shareId={shareId} variants={variants} ownerPlan={ownerPlan} />
+          </div>
+        )}
+
+        {/* Slides */}
+        <SlideRenderer
+          slides={deck.slides}
+          companyName={deck.companyName}
+          showBranding={showBranding}
+          themeId={deck.themeId}
+          onSlideChange={handleSlideChange}
+        />
+
+        {/* ── Action Bar ── */}
+        <div className="mt-10 flex flex-col items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {deck && <ExportMenu deck={deck} userPlan={ownerPlan} />}
+
+            {isOwner && (ownerPlan === "growth" || ownerPlan === "enterprise") && (
+              <Link href={`/practice/${shareId}`} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all" style={{ background: "rgba(var(--neon-electric-rgb, 67,97,238), 0.1)", border: "1px solid rgba(var(--neon-electric-rgb, 67,97,238), 0.2)", color: "var(--neon-cyan, #00F0FF)" }}>
+                <Mic size={14} /> Practice Pitch
+              </Link>
+            )}
+
+            {isOwner && (
+              <Link href={`/editor/${shareId}`} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" }}>
+                Edit Deck
+              </Link>
+            )}
+
+            <Link href="/dashboard" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-medium transition-all" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" }}>
+              <LayoutDashboard size={14} /> Dashboard
+            </Link>
+
+            <Link href="/create" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-xs font-semibold transition-all hover:-translate-y-0.5" style={{ background: "var(--neon-electric, #4361EE)", boxShadow: "0 4px 20px rgba(67,97,238,0.3)" }}>
+              <Plus size={14} /> New Deck
+            </Link>
+          </div>
+
+          {/* Upgrade CTA */}
+          {ownerPlan === "starter" && (
+            <div className="w-full max-w-2xl rounded-2xl p-5" style={{ background: "rgba(var(--neon-electric-rgb, 67,97,238), 0.05)", border: "1px solid rgba(var(--neon-electric-rgb, 67,97,238), 0.15)" }}>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <Sparkles size={14} style={{ color: "var(--neon-electric, #4361EE)" }} />
+                    <h3 className="font-bold text-xs" style={{ color: "var(--void-text, #E8E8ED)" }}>Upgrade to Pro</h3>
+                  </div>
+                  <p className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+                    Remove branding, unlock all themes, PPTX export, detailed analytics & engagement tracking.
+                  </p>
+                </div>
+                <Link href="/#pricing" className="shrink-0 inline-flex items-center px-5 py-2 rounded-xl text-white text-xs font-semibold" style={{ background: "var(--neon-electric, #4361EE)" }}>
+                  View Plans
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
       </main>
 
-      {/* Deck Info Panel (slide-over) */}
+      {/* Deck Info Panel */}
       {showInfoPanel && fullDeckData && (
         <DeckInfoPanel
           deck={fullDeckData}
