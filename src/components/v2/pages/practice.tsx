@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Mic } from "lucide-react";
 import { Badge } from "@/components/v2/ui/badge";
@@ -12,6 +13,7 @@ import { relativeTime } from "@/lib/cn";
 import type { PracticeSession } from "@/types";
 
 export default function PracticePage() {
+  const router = useRouter();
   const [sessions, setSessions] = useState<PracticeSession[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -38,7 +40,7 @@ export default function PracticePage() {
           <h2 className="text-xl font-semibold text-neutral-900">Pitch Practice</h2>
           <p className="text-sm text-neutral-500 mt-1">{sessions.length} sessions recorded</p>
         </div>
-        <Button><Mic size={16} className="mr-2" /> New Session</Button>
+        <Button onClick={() => router.push("/dashboard/practice")}><Mic size={16} className="mr-2" /> New Session</Button>
       </motion.div>
 
       {sessions.length === 0 ? (
@@ -47,7 +49,7 @@ export default function PracticePage() {
             <Mic size={32} className="text-neutral-300 mx-auto mb-3" />
             <p className="text-sm font-medium text-neutral-700">No practice sessions yet</p>
             <p className="text-xs text-neutral-500 mt-1">Pick a deck and practice your pitch with AI feedback</p>
-            <Button className="mt-4">Start Practicing</Button>
+            <Button className="mt-4" onClick={() => router.push("/dashboard/practice")}>Start Practicing</Button>
           </Card>
         </motion.div>
       ) : (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Plus, FlaskConical } from "lucide-react";
 import { Badge } from "@/components/v2/ui/badge";
@@ -11,6 +12,7 @@ import { relativeTime } from "@/lib/cn";
 import type { ABTest } from "@/types";
 
 export default function ABTestsPage() {
+  const router = useRouter();
   const [tests, setTests] = useState<ABTest[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,7 +39,7 @@ export default function ABTestsPage() {
           <h2 className="text-xl font-semibold text-neutral-900">A/B Tests</h2>
           <p className="text-sm text-neutral-500 mt-1">{tests.length} test{tests.length !== 1 ? "s" : ""}</p>
         </div>
-        <Button><Plus size={16} className="mr-2" /> New Test</Button>
+        <Button onClick={() => router.push("/dashboard/ab-tests")}><Plus size={16} className="mr-2" /> New Test</Button>
       </motion.div>
 
       {tests.length === 0 ? (
@@ -46,7 +48,7 @@ export default function ABTestsPage() {
             <FlaskConical size={32} className="text-neutral-300 mx-auto mb-3" />
             <p className="text-sm font-medium text-neutral-700">No A/B tests yet</p>
             <p className="text-xs text-neutral-500 mt-1">Test different deck variants to see which performs better</p>
-            <Button className="mt-4">Create Your First Test</Button>
+            <Button className="mt-4" onClick={() => router.push("/dashboard/ab-tests")}>Create Your First Test</Button>
           </Card>
         </motion.div>
       ) : (

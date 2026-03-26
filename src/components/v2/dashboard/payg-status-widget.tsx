@@ -1,10 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Clock, Coins } from "lucide-react";
 
 import { Badge } from "@/components/v2/ui/badge";
 import { Card, CardContent } from "@/components/v2/ui/card";
-import { useToast } from "@/components/v2/ui/toast";
 
 /* ────────────────────── Mock data ────────────────────────── */
 
@@ -16,7 +16,7 @@ const MOCK_TRANSACTIONS = [
 /* ═══════════════════ PaygStatusWidget ═══════════════════════ */
 
 export function PaygStatusWidget() {
-  const { addToast } = useToast();
+  const router = useRouter();
 
   return (
     <Card>
@@ -43,7 +43,7 @@ export function PaygStatusWidget() {
                 23 credits
               </span>
               <button
-                onClick={() => addToast({ type: "info", title: "Credit Store", description: "Opening credit pack selection..." })}
+                onClick={() => router.push("/dashboard/credits")}
                 className="text-xs font-medium text-primary-600 hover:underline"
               >
                 Buy More

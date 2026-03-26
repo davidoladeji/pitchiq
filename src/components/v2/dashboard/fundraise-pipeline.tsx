@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -7,7 +8,6 @@ import {
   CardContent,
 } from "@/components/v2/ui/card";
 import { Badge } from "@/components/v2/ui/badge";
-import { useToast } from "@/components/v2/ui/toast";
 import type { FundraisePipeline } from "@/types";
 
 interface FundraisePipelineProps {
@@ -27,7 +27,7 @@ const stages: {
 ];
 
 export function FundraisePipelineCard({ pipeline }: FundraisePipelineProps) {
-  const { addToast } = useToast();
+  const router = useRouter();
   const maxCount = Math.max(
     ...stages.map((s) => pipeline[s.key]),
     1
@@ -39,7 +39,7 @@ export function FundraisePipelineCard({ pipeline }: FundraisePipelineProps) {
       <CardHeader className="flex-row items-center justify-between space-y-0">
         <CardTitle>Fundraise Pipeline</CardTitle>
         <button
-          onClick={() => addToast({ type: "info", title: "Fundraise Tracker", description: "Opening full pipeline view..." })}
+          onClick={() => router.push("/dashboard/fundraise")}
           className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
         >
           Open Tracker &rarr;

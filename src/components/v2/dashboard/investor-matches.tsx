@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 import { Card } from "@/components/v2/ui/card";
@@ -35,12 +36,12 @@ export function InvestorMatches({ investors }: InvestorMatchesProps) {
         <h2 className="text-lg font-semibold text-neutral-900">
           Top Investor Matches
         </h2>
-        <a
-          href="#"
+        <Link
+          href="/dashboard/investors"
           className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
         >
           View All Matches &rarr;
-        </a>
+        </Link>
       </div>
 
       <motion.div

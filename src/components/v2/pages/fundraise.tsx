@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { Badge } from "@/components/v2/ui/badge";
@@ -19,6 +20,7 @@ const STAGES = [
 ];
 
 export default function FundraisePage() {
+  const router = useRouter();
   const [pipeline, setPipeline] = useState<FundraisePipeline>({ identified: 0, contacted: 0, meeting: 0, dueDiligence: 0, termSheet: 0 });
   const [contacts, setContacts] = useState<InvestorContact[]>([]);
   const [loading, setLoading] = useState(true);
@@ -52,7 +54,7 @@ export default function FundraisePage() {
           <h2 className="text-xl font-semibold text-neutral-900">Fundraise Pipeline</h2>
           <p className="text-sm text-neutral-500 mt-1">{total} investor{total !== 1 ? "s" : ""} in pipeline</p>
         </div>
-        <Button><Plus size={16} className="mr-2" /> Add Investor</Button>
+        <Button onClick={() => router.push("/dashboard/investors")}><Plus size={16} className="mr-2" /> Add Investor</Button>
       </motion.div>
 
       {/* Pipeline bars */}

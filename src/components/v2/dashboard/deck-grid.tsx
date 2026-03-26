@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye } from "lucide-react";
 import { Card } from "@/components/v2/ui/card";
@@ -7,7 +8,6 @@ import { Badge } from "@/components/v2/ui/badge";
 import { Button } from "@/components/v2/ui/button";
 import { ProgressRing } from "@/components/v2/ui/progress-ring";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
-import { useToast } from "@/components/v2/ui/toast";
 import type { DeckItem } from "@/types";
 
 interface DeckGridProps {
@@ -15,7 +15,7 @@ interface DeckGridProps {
 }
 
 export function DeckGrid({ decks }: DeckGridProps) {
-  const { addToast } = useToast();
+  const router = useRouter();
 
   return (
     <section>
@@ -60,10 +60,10 @@ export function DeckGrid({ decks }: DeckGridProps) {
                   {deck.views}
                 </span>
                 <div className="flex gap-1.5">
-                  <Button variant="ghost" size="sm" onClick={() => addToast({ type: "info", title: "Opening Editor", description: `Loading deck editor for ${deck.title}...` })}>
+                  <Button variant="ghost" size="sm" onClick={() => router.push(`/editor/${deck.id}`)}>
                     Edit
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => addToast({ type: "info", title: "Opening Preview", description: `Loading ${deck.title} in preview mode...` })}>
+                  <Button variant="outline" size="sm" onClick={() => router.push(`/deck/${deck.id}`)}>
                     View
                   </Button>
                 </div>

@@ -3,6 +3,7 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import LinkedInProvider from "next-auth/providers/linkedin";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/lib/db";
 
 export const authOptions: NextAuthOptions = {
@@ -36,9 +37,37 @@ export const authOptions: NextAuthOptions = {
           }),
         ]
       : []),
+    // Dev-only credentials login (bypasses OAuth for local development)
+    ...(process.env.NODE_ENV === "development"
+      ? [
+          CredentialsProvider({
+            id: "dev-login",
+            name: "Dev Login",
+            credentials: {
+              email: { label: "Email", type: "email", placeholder: "dev@pitchiq.local" },
+            },
+            async authorize(credentials) {
+              if (!credentials?.email) return null;
+              // Find or create user in local DB
+              let user = await prisma.user.findUnique({ where: { email: credentials.email } });
+              if (!user) {
+                user = await prisma.user.create({
+                  data: {
+                    email: credentials.email,
+                    name: credentials.email.split("@")[0],
+                    plan: "enterprise", // Full access for dev testing
+                  },
+                });
+              }
+              return { id: user.id, email: user.email, name: user.name };
+            },
+          }),
+        ]
+      : []),
   ],
   session: {
-    strategy: "database",
+    // CredentialsProvider requires JWT strategy; use database for production OAuth
+    strategy: process.env.NODE_ENV === "development" ? "jwt" : "database",
   },
   callbacks: {
     async signIn({ user, account, profile }) {
@@ -105,9 +134,15 @@ export const authOptions: NextAuthOptions = {
 
       return true;
     },
-    async session({ session, user }) {
+    async jwt({ token, user }) {
+      // Store user ID in JWT token (needed for credentials/dev login)
+      if (user?.id) token.sub = user.id;
+      return token;
+    },
+    async session({ session, user, token }) {
       if (session.user) {
-        (session.user as { id?: string }).id = user.id;
+        // Database strategy provides `user`, JWT strategy provides `token`
+        (session.user as { id?: string }).id = user?.id || token?.sub || "";
       }
       return session;
     },

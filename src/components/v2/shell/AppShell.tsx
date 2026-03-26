@@ -23,6 +23,8 @@ interface AppShellProps {
 export default function AppShellV2({
   children,
   userName,
+  userPlan,
+  creditBalance,
   recentDecks,
 }: AppShellProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -35,6 +37,9 @@ export default function AppShellV2({
         <Sidebar
           collapsed={sidebarCollapsed}
           onCollapsedChange={setSidebarCollapsed}
+          userPlan={userPlan}
+          userName={userName}
+          creditBalance={creditBalance}
         />
       </div>
 
@@ -46,7 +51,7 @@ export default function AppShellV2({
             onClick={() => setMobileMenuOpen(false)}
           />
           <div className="fixed inset-y-0 left-0 z-40 lg:hidden">
-            <Sidebar />
+            <Sidebar userPlan={userPlan} userName={userName} creditBalance={creditBalance} />
           </div>
         </>
       )}

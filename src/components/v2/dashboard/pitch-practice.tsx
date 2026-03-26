@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -8,7 +9,6 @@ import {
 } from "@/components/v2/ui/card";
 import { Badge } from "@/components/v2/ui/badge";
 import { Button } from "@/components/v2/ui/button";
-import { useToast } from "@/components/v2/ui/toast";
 import type { PracticeSession } from "@/types";
 
 interface PitchPracticeProps {
@@ -33,13 +33,13 @@ function formatDate(dateStr: string): string {
 }
 
 export function PitchPractice({ sessions }: PitchPracticeProps) {
-  const { addToast } = useToast();
+  const router = useRouter();
 
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0">
         <CardTitle>Pitch Practice</CardTitle>
-        <Button variant="outline" size="sm" onClick={() => addToast({ type: "info", title: "Starting Practice", description: "Preparing AI pitch coach..." })}>
+        <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/practice")}>
           Start Practice &rarr;
         </Button>
       </CardHeader>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardHeader,
@@ -8,7 +9,6 @@ import {
 } from "@/components/v2/ui/card";
 import { Badge } from "@/components/v2/ui/badge";
 import { Button } from "@/components/v2/ui/button";
-import { useToast } from "@/components/v2/ui/toast";
 import type { ABTest } from "@/types";
 
 interface ABTestingProps {
@@ -37,7 +37,7 @@ function statusVariant(
 }
 
 export function ABTesting({ tests }: ABTestingProps) {
-  const { addToast } = useToast();
+  const router = useRouter();
 
   return (
     <Card>
@@ -49,7 +49,7 @@ export function ABTesting({ tests }: ABTestingProps) {
               {tests[0].status}
             </Badge>
           )}
-          <Button variant="outline" size="sm" onClick={() => addToast({ type: "info", title: "New A/B Test", description: "Opening test creation wizard..." })}>
+          <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/ab-tests")}>
             Create Test
           </Button>
         </div>
@@ -61,7 +61,7 @@ export function ABTesting({ tests }: ABTestingProps) {
             <p className="text-sm text-neutral-500">
               No active tests. Create one to compare deck variants.
             </p>
-            <Button variant="outline" size="sm" onClick={() => addToast({ type: "info", title: "New A/B Test", description: "Opening test creation wizard..." })}>
+            <Button variant="outline" size="sm" onClick={() => router.push("/dashboard/ab-tests")}>
               Create Test
             </Button>
           </div>

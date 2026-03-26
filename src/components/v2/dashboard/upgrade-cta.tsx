@@ -1,11 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Card } from "@/components/v2/ui/card";
 import { Button } from "@/components/v2/ui/button";
-import { useToast } from "@/components/v2/ui/toast";
 
 export function UpgradeCta() {
-  const { addToast } = useToast();
+  const router = useRouter();
 
   return (
     <Card gradient className="p-6">
@@ -19,7 +19,7 @@ export function UpgradeCta() {
             more.
           </p>
         </div>
-        <Button variant="default" className="flex-shrink-0" onClick={() => addToast({ type: "info", title: "Upgrade Plans", description: "Opening plan comparison..." })}>
+        <Button variant="default" className="flex-shrink-0" onClick={() => router.push("/billing")}>
           Upgrade Plan
         </Button>
       </div>
