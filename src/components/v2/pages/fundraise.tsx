@@ -21,20 +21,11 @@ const STAGES = [
 
 export default function FundraisePage() {
   const router = useRouter();
-  const { data: dashData, loading } = useDashboardData();
+  const { data: dashData } = useDashboardData();
   const pipeline = (dashData?.fundraise || { identified: 0, contacted: 0, meeting: 0, dueDiligence: 0, termSheet: 0 }) as FundraisePipeline;
   const contacts = (dashData?.investorContacts || []) as InvestorContact[];
 
   const total = Object.values(pipeline).reduce((s, v) => s + v, 0);
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <div className="h-8 w-48 rounded-lg animate-pulse" style={{ background: "var(--void-surface)" }} />
-        <div className="h-24 rounded-xl animate-pulse" style={{ background: "var(--void-surface)" }} />
-      </div>
-    );
-  }
 
   return (
     <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6">

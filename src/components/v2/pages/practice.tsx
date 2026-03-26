@@ -32,17 +32,8 @@ function timeAgo(dateStr: string): string {
 
 export default function PracticePage() {
   const router = useRouter();
-  const { data: dashData, loading } = useDashboardData();
+  const { data: dashData } = useDashboardData();
   const sessions = (dashData?.practice || []) as PracticeSession[];
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <div className="h-8 w-48 rounded-lg animate-pulse" style={{ background: "var(--void-surface)" }} />
-        {[1, 2].map((i) => <div key={i} className="h-24 rounded-xl animate-pulse" style={{ background: "var(--void-surface)" }} />)}
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">

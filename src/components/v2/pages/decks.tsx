@@ -35,7 +35,7 @@ function timeAgo(dateStr: string): string {
 
 export default function DecksPage() {
   const router = useRouter();
-  const { data: dashData, loading } = useDashboardData();
+  const { data: dashData } = useDashboardData();
   const decks = (dashData?.decks || []) as DeckItem[];
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"recent" | "score" | "views">("recent");
@@ -50,17 +50,6 @@ export default function DecksPage() {
     else if (sort === "views") list = [...list].sort((a, b) => b.views - a.views);
     return list;
   }, [decks, search, sort]);
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <div className="h-10 w-48 rounded-xl animate-pulse" style={{ background: "var(--void-surface)" }} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {[1, 2, 3].map((i) => <div key={i} className="h-48 rounded-2xl animate-pulse" style={{ background: "var(--void-surface)" }} />)}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">

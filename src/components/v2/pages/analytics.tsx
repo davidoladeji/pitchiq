@@ -17,7 +17,7 @@ import type { DailyDataPoint, DeckItem } from "@/types";
 const PIE_COLORS = ["var(--neon-electric)", "var(--neon-cyan)", "var(--neon-emerald)", "var(--neon-violet)", "#FBBF24"];
 
 export default function AnalyticsPage() {
-  const { data: dashData, loading } = useDashboardData();
+  const { data: dashData } = useDashboardData();
   const dailyViews = (dashData?.dailyViews || []) as DailyDataPoint[];
   const decks = (dashData?.decks || []) as DeckItem[];
   const totalViews = dashData?.stats?.totalViews || 0;
@@ -50,16 +50,6 @@ export default function AnalyticsPage() {
   const uniqueViewers = Math.round(totalViews * 0.7);
   const avgEngagement = decks.length > 0 ? Math.round(totalViews / decks.length * 0.5) : 0;
   const topDeck = decks.sort((a, b) => b.views - a.views)[0];
-
-  if (loading) {
-    return (
-      <div className="space-y-4">
-        <div className="h-8 w-48 rounded-lg animate-pulse" style={{ background: "var(--void-surface)" }} />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">{[1, 2, 3, 4].map((i) => <div key={i} className="h-28 rounded-xl animate-pulse" style={{ background: "var(--void-surface)" }} />)}</div>
-        <div className="h-64 rounded-xl animate-pulse" style={{ background: "var(--void-surface)" }} />
-      </div>
-    );
-  }
 
   return (
     <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6">
