@@ -21,6 +21,7 @@ import DashboardPitchPractice from "@/components/dashboard/DashboardPitchPractic
 import DashboardProfilePrompt from "@/components/dashboard/DashboardProfilePrompt";
 import PaygStatus from "@/components/dashboard/PaygStatus";
 import PlanCompareModal from "@/components/PlanCompareModal";
+import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 
 interface DeckSummary {
   id: string;
@@ -114,6 +115,9 @@ export default function DashboardClient({
         aria-labelledby="dashboard-page-heading"
       >
         <div className="w-full max-w-[1600px] mx-auto space-y-6">
+          {/* Version toggle banner */}
+          <DashboardVersionToggle />
+
           {/* Header row */}
           <div className="flex items-start justify-between gap-4">
             <div>
