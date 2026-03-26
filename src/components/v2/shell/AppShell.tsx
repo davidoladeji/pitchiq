@@ -29,7 +29,7 @@ export default function AppShellV2({
 
   return (
     <ToastProvider>
-      <div className="flex h-screen bg-[var(--surface-0)] overflow-hidden">
+      <div className="flex min-h-screen bg-[var(--surface-0)]">
         <Sidebar
           userName={userName}
           userPlan={userPlan}
@@ -38,12 +38,12 @@ export default function AppShellV2({
           isMobileOpen={mobileOpen}
           onMobileClose={() => setMobileOpen(false)}
         />
-        <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        <div className="flex-1 flex flex-col min-w-0">
           <TopBar
             onMenuClick={() => setMobileOpen(true)}
             breadcrumbs={breadcrumbs}
           />
-          <main id="main" className="flex-1 px-4 lg:px-6 pb-8">
+          <main id="main" className="flex-1 px-4 lg:px-6 pb-8 overflow-y-auto">
             {children}
           </main>
         </div>
