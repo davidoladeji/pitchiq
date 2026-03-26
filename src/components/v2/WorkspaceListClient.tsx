@@ -12,7 +12,7 @@ interface Props {
   userName?: string;
 }
 
-export default function WorkspaceListV2({ userName, userPlan, ...rest }: Props) {
+export default function WorkspaceListV2({ userName, userPlan, workspaces }: Props) {
   return (
     <AppShellV2
       userName={userName}
@@ -23,16 +23,9 @@ export default function WorkspaceListV2({ userName, userPlan, ...rest }: Props) 
       ]}
     >
       <PageTransition>
-        <div className="max-w-5xl mx-auto">
-          <DashboardVersionToggle />
-          <div className="mt-4 mb-6">
-            <h1 className="text-2xl font-bold text-navy dark:text-white">Workspaces</h1>
-            <p className="text-sm text-navy-400 dark:text-white/40 mt-1">Collaborate on decks with your team</p>
-          </div>
-          <div className="bg-[var(--surface-1)] rounded-2xl border border-[var(--border-default)] p-5">
-            <WorkspaceListClientClassic {...rest} userPlan={userPlan} />
-          </div>
-        </div>
+        <DashboardVersionToggle />
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        <WorkspaceListClientClassic workspaces={workspaces as any} plan={userPlan} />
       </PageTransition>
     </AppShellV2>
   );

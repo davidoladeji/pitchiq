@@ -7,32 +7,24 @@ import WorkspaceDashboardClientClassic from "@/components/workspace/WorkspaceDas
 
 interface Props {
   workspace: unknown;
-  members: unknown[];
-  decks: unknown[];
-  userRole: string;
-  userPlan: string;
-  currentUserId: string;
   userName?: string;
+  userPlan?: string;
 }
 
-export default function WorkspaceDashboardV2({ userName, userPlan, ...rest }: Props) {
+export default function WorkspaceDashboardV2({ userName, userPlan, workspace }: Props) {
   return (
     <AppShellV2
       userName={userName}
       userPlan={userPlan}
       breadcrumbs={[
         { label: "Dashboard", href: "/dashboard" },
-        { label: "Workspaces", href: "/workspace" },
         { label: "Workspace" },
       ]}
     >
       <PageTransition>
-        <div className="max-w-6xl mx-auto">
-          <DashboardVersionToggle />
-          <div className="mt-4">
-            <WorkspaceDashboardClientClassic {...rest} userRole={rest.userRole} userPlan={userPlan} currentUserId={rest.currentUserId} />
-          </div>
-        </div>
+        <DashboardVersionToggle />
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        <WorkspaceDashboardClientClassic workspace={workspace as any} />
       </PageTransition>
     </AppShellV2>
   );

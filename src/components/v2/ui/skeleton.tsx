@@ -66,6 +66,7 @@ function SkeletonTable({ rows = 5, className, ...props }: SkeletonTableProps) {
 
 /* ────────────────────── SkeletonChart ────────────────────────── */
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface SkeletonChartProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 function SkeletonChart({ className, ...props }: SkeletonChartProps) {

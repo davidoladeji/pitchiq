@@ -51,14 +51,15 @@ function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-export default function DecksPage() {
+export default function DecksPage({ decks: propDecks }: { decks?: DeckItem[] } = {}) {
+  const allDecks = propDecks && propDecks.length > 0 ? propDecks : mockDecks;
   const [searchQuery, setSearchQuery] = useState("");
   const [themeFilter, setThemeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("score");
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
 
   const filteredDecks = useMemo(() => {
-    let result = mockDecks.filter((deck: DeckItem) => {
+    let result = allDecks.filter((deck: DeckItem) => {
       const q = searchQuery.toLowerCase();
       const matchSearch =
         !q ||
