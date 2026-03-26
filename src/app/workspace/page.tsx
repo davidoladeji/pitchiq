@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import WorkspaceListClient from "@/components/workspace/WorkspaceListClient";
+import WorkspaceV2 from "@/components/v2/WorkspaceWrapper";
+import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -49,9 +51,15 @@ export default async function WorkspaceListPage() {
   }));
 
   return (
-    <WorkspaceListClient
-      workspaces={workspaces}
-      plan={user?.plan || "starter"}
+    <DashboardVersionGate
+      classicComponent={
+        <WorkspaceListClient workspaces={workspaces} plan={user?.plan || "starter"} />
+      }
+      newComponent={
+        <WorkspaceV2>
+          <WorkspaceListClient workspaces={workspaces} plan={user?.plan || "starter"} />
+        </WorkspaceV2>
+      }
     />
   );
 }
