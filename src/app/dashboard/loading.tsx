@@ -1,60 +1,66 @@
 /**
- * Dashboard route loading UI — skeleton for instant perceived performance.
- * Mirrors DashboardClient layout (nav + main + title + deck cards) so first paint feels instant.
- * Speed as a feature; respects prefers-reduced-motion via Tailwind animate-pulse (no custom motion).
+ * Dashboard route loading UI — void-themed skeleton.
+ * Shows for all /dashboard/* routes during server rendering.
+ * Matches the v2 void dark theme for seamless transitions.
  */
 export default function DashboardLoading() {
   return (
-    <div className="min-h-screen bg-navy-50" aria-busy="true">
-      {/* Screen reader: announce loading state (WCAG 2.1 AA) */}
-      <p className="sr-only" role="status" aria-live="polite">
-        Loading dashboard
-      </p>
-      {/* Nav skeleton — matches DashboardClient fixed nav */}
-      <header className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-hidden="true">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
-            <div className="h-5 w-20 rounded-md bg-navy-100 animate-pulse motion-reduce:animate-none" />
-          </div>
-          <div className="h-10 w-24 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
+    <div className="min-h-screen" style={{ background: "var(--void, #000)" }} aria-busy="true">
+      <p className="sr-only" role="status" aria-live="polite">Loading dashboard</p>
+
+      <div className="flex">
+        {/* Icon rail skeleton */}
+        <div className="hidden lg:flex flex-col items-center w-16 shrink-0 py-6 gap-4 border-r" style={{ background: "var(--void-1, #050510)", borderColor: "var(--void-border, rgba(255,255,255,0.06))" }}>
+          <div className="w-8 h-8 rounded-xl animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+          <div className="w-6 h-6 rounded-lg animate-pulse mt-4" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+          <div className="w-6 h-6 rounded-lg animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+          <div className="w-8 h-8 rounded-xl animate-pulse" style={{ background: "var(--neon-electric, #4361EE)" }} />
+          <div className="w-6 h-6 rounded-lg animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+          <div className="w-6 h-6 rounded-lg animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
         </div>
-      </header>
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none" aria-label="Main content" aria-hidden="true">
-        <div className="max-w-4xl mx-auto">
-          {/* Greeting + plan row skeleton */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-            <div className="h-8 w-56 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
-            <div className="h-9 w-24 rounded-lg bg-navy-50 animate-pulse motion-reduce:animate-none" />
+        {/* Main content */}
+        <div className="flex-1 p-6 lg:p-8">
+          {/* Top bar skeleton */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="h-4 w-48 rounded animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-28 rounded-xl animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+              <div className="h-8 w-8 rounded-full animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+            </div>
           </div>
 
-          {/* Deck cards skeleton — 2 rows */}
-          <div className="grid gap-4 sm:gap-6">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-navy-50 bg-white p-5 sm:p-6 animate-pulse motion-reduce:animate-none"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                  <div className="min-w-0 flex-1 space-y-2">
-                    <div className="h-5 w-3/4 rounded-md bg-navy-50" />
-                    <div className="h-4 w-1/2 rounded bg-navy-50/80" />
-                  </div>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <div className="h-8 w-14 rounded-lg bg-navy-50" />
-                    <div className="h-8 w-16 rounded-lg bg-navy-50" />
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t border-navy-50 flex items-center gap-4">
-                  <div className="h-4 w-12 rounded bg-navy-50/80" />
-                  <div className="h-4 w-20 rounded bg-navy-50/80" />
-                </div>
-              </div>
+          {/* Greeting skeleton */}
+          <div className="mb-8">
+            <div className="h-9 w-72 rounded-lg animate-pulse mb-2" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+            <div className="h-4 w-48 rounded animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+          </div>
+
+          {/* Metric cards skeleton */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-24 rounded-2xl animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))", border: "1px solid var(--void-border, rgba(255,255,255,0.06))" }} />
             ))}
           </div>
+
+          {/* Quick actions skeleton */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-14 rounded-xl animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))", border: "1px solid var(--void-border, rgba(255,255,255,0.06))" }} />
+            ))}
+          </div>
+
+          {/* Content grid skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-36 rounded-2xl animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))", border: "1px solid var(--void-border, rgba(255,255,255,0.06))" }} />
+              ))}
+            </div>
+            <div className="h-80 rounded-2xl animate-pulse" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))", border: "1px solid var(--void-border, rgba(255,255,255,0.06))" }} />
+          </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

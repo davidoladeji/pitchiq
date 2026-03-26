@@ -1,60 +1,35 @@
 /**
- * Ideas route loading UI — skeleton for instant perceived performance.
- * Mirrors IdeasPageClient layout (nav + main + form card) so first paint feels instant.
- * Speed as a feature; respects prefers-reduced-motion via Tailwind animate-pulse (no custom motion).
+ * Ideas route loading UI — void-themed skeleton.
+ * Mirrors IdeasPageClient layout (title + card grid).
+ * Matches the v2 void dark theme for seamless transitions.
  */
 export default function IdeasLoading() {
   return (
-    <div className="min-h-screen bg-navy-50" aria-busy="true">
-      {/* Screen reader: announce loading state (WCAG 2.1 AA) */}
+    <div className="min-h-screen" style={{ background: "var(--void, #000)" }} aria-busy="true">
       <p className="sr-only" role="status" aria-live="polite">
         Loading ideas
       </p>
-      {/* Nav skeleton — matches IdeasPageClient fixed nav */}
-      <header className="fixed top-0 w-full z-50 glass border-b border-white/10" aria-hidden="true">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
-            <div className="h-5 w-20 rounded-md bg-navy-100 animate-pulse motion-reduce:animate-none" />
-          </div>
-          <div className="h-10 w-24 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none" />
-        </div>
-      </header>
 
-      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6" aria-label="Main content" aria-hidden="true">
-        <div className="max-w-xl mx-auto">
-          {/* Title block skeleton — "Business idea generator" + subtext */}
+      <main id="main" tabIndex={-1} className="pt-24 pb-16 px-4 sm:px-6 outline-none" aria-label="Main content" aria-hidden="true">
+        <div className="max-w-4xl mx-auto">
+          {/* Title block skeleton */}
           <div className="mb-8">
-            <div className="h-9 w-72 rounded-lg bg-navy-100 animate-pulse motion-reduce:animate-none mb-2" />
-            <div className="h-4 max-w-md rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
+            <div className="h-9 w-72 rounded-lg animate-pulse motion-reduce:animate-none mb-2" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
+            <div className="h-4 max-w-md rounded animate-pulse motion-reduce:animate-none" style={{ background: "var(--void-surface, rgba(255,255,255,0.03))" }} />
           </div>
 
-          {/* Form card skeleton */}
-          <div className="bg-white rounded-2xl shadow-sm border border-navy-50 p-6 sm:p-8">
-            {/* Step / progress row */}
-            <div className="flex items-center gap-2 mb-6">
-              <div className="h-3 w-24 rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
-              <div className="flex-1 h-1.5 bg-navy-50 rounded-full overflow-hidden">
-                <div className="h-full w-1/3 bg-navy-100 rounded-full animate-pulse motion-reduce:animate-none" />
-              </div>
-            </div>
-
-            {/* Label + input row */}
-            <div className="space-y-3">
-              <div className="h-4 w-32 rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
-              <div className="h-12 w-full rounded-xl bg-navy-50/80 animate-pulse motion-reduce:animate-none" />
-            </div>
-
-            {/* Back / Next row */}
-            <div className="flex items-center justify-between mt-8">
-              <div className="h-11 w-16 rounded-xl bg-navy-50 animate-pulse motion-reduce:animate-none" />
-              <div className="h-11 w-20 rounded-xl bg-navy-100 animate-pulse motion-reduce:animate-none" />
-            </div>
-          </div>
-
-          {/* Bottom link placeholder */}
-          <div className="mt-6 flex justify-center">
-            <div className="h-4 w-56 rounded bg-navy-50 animate-pulse motion-reduce:animate-none" />
+          {/* Card grid skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div
+                key={i}
+                className="h-40 rounded-2xl animate-pulse motion-reduce:animate-none"
+                style={{
+                  background: "var(--void-surface, rgba(255,255,255,0.03))",
+                  border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+                }}
+              />
+            ))}
           </div>
         </div>
       </main>
