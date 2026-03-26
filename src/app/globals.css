@@ -554,3 +554,12 @@ select {
 .orb-breathe {
   animation: orb-breathe 4s ease-in-out infinite;
 }
+
+/* ── Hide classic AppNav when inside v2 shell ── */
+[data-v2-shell] nav[aria-label="Main navigation"] {
+  display: none !important;
+}
+/* ── Hide stray CommandPalette search trigger at bottom ── */
+[data-v2-shell] .cmdk-search-trigger-stray {
+  display: none !important;
+}

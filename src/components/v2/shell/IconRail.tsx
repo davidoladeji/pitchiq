@@ -112,23 +112,34 @@ export function IconRail() {
 
 function RailItem({ item, active }: { item: NavItem; active: boolean }) {
   const Icon = item.icon;
+
+  // Accent items (Create) get a filled neon background
+  if (item.accent) {
+    return (
+      <Link href={item.href} title={item.label}
+        className="relative group w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:scale-105"
+        style={{ background: "var(--neon-electric)", boxShadow: "0 0 16px rgba(var(--neon-electric-rgb), 0.3)" }}
+      >
+        <Icon size={20} className="text-white" />
+        <span className="absolute left-full ml-3 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style={{ background: "var(--void-3)", color: "var(--void-text)", border: "1px solid var(--void-border)" }}>
+          {item.label}
+        </span>
+      </Link>
+    );
+  }
+
   return (
     <Link
       href={item.href}
       className={`relative group w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-        active
-          ? "bg-white/[0.08]"
-          : "hover:bg-white/[0.04]"
-      } ${item.accent ? "ring-1 ring-[var(--neon-electric)]/30" : ""}`}
+        active ? "bg-white/[0.08]" : "hover:bg-white/[0.04]"
+      }`}
       title={item.label}
     >
-      {/* Active indicator (glowing left pill) */}
       {active && (
         <span className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[3px] w-[3px] h-5 rounded-full" style={{ background: "var(--neon-cyan)", boxShadow: "0 0 8px rgba(var(--neon-cyan-rgb), 0.5)" }} />
       )}
       <Icon size={20} className={active ? "text-white" : "text-white/40 group-hover:text-white/70"} style={active ? { filter: "drop-shadow(0 0 4px rgba(var(--neon-cyan-rgb), 0.3))" } : undefined} />
-
-      {/* Tooltip */}
       <span className="absolute left-full ml-3 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style={{ background: "var(--void-3)", color: "var(--void-text)", border: "1px solid var(--void-border)" }}>
         {item.label}
       </span>

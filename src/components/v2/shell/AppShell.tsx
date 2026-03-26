@@ -46,7 +46,7 @@ export default function AppShellV2({ children, recentDecks }: AppShellProps) {
   }, []);
 
   return (
-    <div className="void-bg min-h-screen">
+    <div className="void-bg min-h-screen" data-v2-shell>
       {/* Ambient background orbs (fixed, behind everything) */}
       <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true" />
 

@@ -51,21 +51,7 @@ export default function CommandPalette({ recentDecks = [], open: controlledOpen,
 
   return (
     <>
-      {/* Trigger button (used in TopBar) */}
-      <button
-        onClick={() => setOpen(true)}
-        className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--surface-2)] border border-[var(--border-default)] text-navy-400 dark:text-white/40 text-sm hover:border-[var(--border-emphasis)] transition-colors"
-      >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <span>Search...</span>
-        <kbd className="hidden md:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-[var(--surface-1)] border border-[var(--border-default)] text-[10px] font-mono text-navy-400 dark:text-white/30">
-          ⌘K
-        </kbd>
-      </button>
-
-      {/* Palette modal */}
+      {/* Palette modal — trigger is in GlassTopBar, not here */}
       <AnimatePresence>
         {open && (
           <>
