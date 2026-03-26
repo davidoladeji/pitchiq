@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
@@ -8,6 +9,7 @@ import { Badge } from "@/components/v2/ui/badge";
 import { Button } from "@/components/v2/ui/button";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
 import { useToast } from "@/components/v2/ui/toast";
+import { InvestorProfileDrawer } from "./investor-profile-drawer";
 import type { InvestorMatch } from "@/types";
 
 interface InvestorMatchesProps {
@@ -29,6 +31,26 @@ function scoreBarColor(score: number): string {
 export function InvestorMatches({ investors }: InvestorMatchesProps) {
   const { addToast } = useToast();
   const displayed = investors.slice(0, 3);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedFitScore, setSelectedFitScore] = useState<number | undefined>();
+
+  const handleSaveToPipeline = useCallback(async (name: string, investorProfileId: string) => {
+    try {
+      const res = await fetch("/api/investors", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, firm: name, stage: "identified", investorProfileId }),
+      });
+      if (res.ok) {
+        addToast({ type: "success", title: "Saved to Pipeline", description: `${name} added to your fundraise pipeline.` });
+      } else {
+        const err = await res.json().catch(() => ({}));
+        addToast({ type: "error", title: "Failed to save", description: err.error || "Could not add to pipeline" });
+      }
+    } catch {
+      addToast({ type: "error", title: "Network error", description: "Could not reach the server" });
+    }
+  }, [addToast]);
 
   return (
     <section>
@@ -52,7 +74,14 @@ export function InvestorMatches({ investors }: InvestorMatchesProps) {
       >
         {displayed.map((investor) => (
           <motion.div key={investor.id} variants={fadeInUp}>
-            <Card hover className="p-5">
+            <Card
+              hover
+              className="p-5 cursor-pointer"
+              onClick={() => {
+                setSelectedId(investor.id);
+                setSelectedFitScore(investor.fitScore);
+              }}
+            >
               {/* Header */}
               <div className="mb-3 flex items-center justify-between">
                 <span className="font-semibold text-neutral-900">
@@ -96,22 +125,9 @@ export function InvestorMatches({ investors }: InvestorMatchesProps) {
                 variant="outline"
                 size="sm"
                 className="mt-3 w-full"
-                onClick={async () => {
-                  try {
-                    const res = await fetch("/api/investors", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({ name: investor.name, firm: investor.name, stage: "identified", investorProfileId: investor.id }),
-                    });
-                    if (res.ok) {
-                      addToast({ type: "success", title: "Saved to Pipeline", description: `${investor.name} added to your fundraise pipeline.` });
-                    } else {
-                      const err = await res.json().catch(() => ({}));
-                      addToast({ type: "error", title: "Failed to save", description: err.error || "Could not add to pipeline" });
-                    }
-                  } catch {
-                    addToast({ type: "error", title: "Network error", description: "Could not reach the server" });
-                  }
+                onClick={(e) => {
+                  e.stopPropagation(); // Don't open drawer
+                  handleSaveToPipeline(investor.name, investor.id);
                 }}
               >
                 Save to Pipeline
@@ -120,6 +136,14 @@ export function InvestorMatches({ investors }: InvestorMatchesProps) {
           </motion.div>
         ))}
       </motion.div>
+
+      {/* Profile Drawer */}
+      <InvestorProfileDrawer
+        investorId={selectedId}
+        fitScore={selectedFitScore}
+        onClose={() => { setSelectedId(null); setSelectedFitScore(undefined); }}
+        onSaveToPipeline={handleSaveToPipeline}
+      />
     </section>
   );
 }
