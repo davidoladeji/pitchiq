@@ -563,3 +563,41 @@ select {
 [data-v2-shell] .cmdk-search-trigger-stray {
   display: none !important;
 }
+
+/* ── Void-theme overrides for classic components embedded in v2 shell ── */
+[data-v2-shell] .workspace-v2-override,
+[data-v2-shell] .workspace-v2-override * {
+  --tw-border-opacity: 1;
+}
+[data-v2-shell] .workspace-v2-override .bg-white {
+  background: var(--void-surface) !important;
+}
+[data-v2-shell] .workspace-v2-override .bg-navy-50,
+[data-v2-shell] .workspace-v2-override .bg-navy-100 {
+  background: var(--void-surface) !important;
+}
+[data-v2-shell] .workspace-v2-override .bg-navy-50\/50 {
+  background: var(--void-surface) !important;
+}
+[data-v2-shell] .workspace-v2-override .text-navy,
+[data-v2-shell] .workspace-v2-override .text-navy-700 {
+  color: var(--void-text) !important;
+}
+[data-v2-shell] .workspace-v2-override .text-navy-500,
+[data-v2-shell] .workspace-v2-override .text-navy-400,
+[data-v2-shell] .workspace-v2-override .text-navy-300 {
+  color: var(--void-text-dim) !important;
+}
+[data-v2-shell] .workspace-v2-override .border-navy-100,
+[data-v2-shell] .workspace-v2-override .border-navy-200 {
+  border-color: var(--void-border) !important;
+}
+[data-v2-shell] .workspace-v2-override input,
+[data-v2-shell] .workspace-v2-override select {
+  background: var(--void-surface) !important;
+  color: var(--void-text) !important;
+  border-color: var(--void-border) !important;
+}
+[data-v2-shell] .workspace-v2-override input::placeholder {
+  color: var(--void-text-dim) !important;
+}

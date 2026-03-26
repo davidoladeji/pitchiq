@@ -4,6 +4,8 @@ import { redirect, notFound } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import WorkspaceDashboardClient from "@/components/workspace/WorkspaceDashboardClient";
+import WorkspaceV2 from "@/components/v2/WorkspaceWrapper";
+import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -65,34 +67,41 @@ export default async function WorkspacePage({
   const currentMember = workspace.members.find((m) => m.userId === session.user!.id);
   const role = isOwner ? "owner" : currentMember?.role || "viewer";
 
+  const wsData = {
+    id: workspace.id,
+    name: workspace.name,
+    slug: workspace.slug,
+    role,
+    isOwner,
+    members: workspace.members.map((m) => ({
+      id: m.id,
+      userId: m.userId,
+      name: m.user.name || m.user.email || "Unknown",
+      email: m.user.email || "",
+      image: m.user.image || null,
+      role: m.role,
+    })),
+    decks: workspace.decks.map((d) => ({
+      id: d.id,
+      shareId: d.shareId,
+      title: d.title,
+      companyName: d.companyName,
+      themeId: d.themeId,
+      piqScore: d.piqScore,
+      createdAt: d.createdAt.toISOString(),
+      viewCount: d._count.views,
+    })),
+    pendingInvites: workspace._count.invites,
+  };
+
   return (
-    <WorkspaceDashboardClient
-      workspace={{
-        id: workspace.id,
-        name: workspace.name,
-        slug: workspace.slug,
-        role,
-        isOwner,
-        members: workspace.members.map((m) => ({
-          id: m.id,
-          userId: m.userId,
-          name: m.user.name || m.user.email || "Unknown",
-          email: m.user.email || "",
-          image: m.user.image || null,
-          role: m.role,
-        })),
-        decks: workspace.decks.map((d) => ({
-          id: d.id,
-          shareId: d.shareId,
-          title: d.title,
-          companyName: d.companyName,
-          themeId: d.themeId,
-          piqScore: d.piqScore,
-          createdAt: d.createdAt.toISOString(),
-          viewCount: d._count.views,
-        })),
-        pendingInvites: workspace._count.invites,
-      }}
+    <DashboardVersionGate
+      classicComponent={<WorkspaceDashboardClient workspace={wsData} />}
+      newComponent={
+        <WorkspaceV2>
+          <WorkspaceDashboardClient workspace={wsData} embedded />
+        </WorkspaceV2>
+      }
     />
   );
 }

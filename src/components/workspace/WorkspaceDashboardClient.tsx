@@ -37,8 +37,10 @@ interface WorkspaceData {
 
 export default function WorkspaceDashboardClient({
   workspace,
+  embedded = false,
 }: {
   workspace: WorkspaceData;
+  embedded?: boolean;
 }) {
   const [showInvite, setShowInvite] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
@@ -177,12 +179,12 @@ export default function WorkspaceDashboardClient({
   }
 
   return (
-    <div className="min-h-screen bg-navy-50">
-      <AppNav />
+    <div className={embedded ? "workspace-v2-override" : "min-h-screen bg-navy-50"}>
+      {!embedded && <AppNav />}
       <main
         id="main"
         tabIndex={-1}
-        className="pt-24 pb-16 px-4 sm:px-6 outline-none"
+        className={embedded ? "outline-none" : "pt-24 pb-16 px-4 sm:px-6 outline-none"}
         aria-labelledby="workspace-dashboard-heading"
       >
         <div className="max-w-6xl mx-auto">

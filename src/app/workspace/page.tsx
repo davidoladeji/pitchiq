@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import WorkspaceListClient from "@/components/workspace/WorkspaceListClient";
+import WorkspaceListV2 from "@/components/v2/pages/workspace-list";
 import WorkspaceV2 from "@/components/v2/WorkspaceWrapper";
 import DashboardVersionGate from "@/components/DashboardVersionGate";
 
@@ -57,7 +58,7 @@ export default async function WorkspaceListPage() {
       }
       newComponent={
         <WorkspaceV2>
-          <WorkspaceListClient workspaces={workspaces} plan={user?.plan || "starter"} />
+          <WorkspaceListV2 workspaces={workspaces} plan={user?.plan || "starter"} />
         </WorkspaceV2>
       }
     />

@@ -5,6 +5,8 @@ import { useDashboardTabRequired } from "./DashboardTabContext";
 /* ── Page imports ── */
 import DashboardOverviewPage from "@/components/v2/pages/dashboard-overview";
 import DecksPage from "@/components/v2/pages/decks";
+import ScorePage from "@/components/v2/pages/score";
+import IdeasPage from "@/components/v2/pages/ideas";
 import AnalyticsPage from "@/components/v2/pages/analytics";
 import InvestorsPage from "@/components/v2/pages/investors";
 import FundraisePage from "@/components/v2/pages/fundraise";
@@ -19,6 +21,8 @@ import CreditsPage from "@/components/v2/pages/credits";
 const TABS: { key: string; Component: React.ComponentType }[] = [
   { key: "dashboard", Component: DashboardOverviewPage },
   { key: "decks", Component: DecksPage },
+  { key: "score", Component: ScorePage },
+  { key: "ideas", Component: IdeasPage },
   { key: "analytics", Component: AnalyticsPage },
   { key: "investor-match", Component: InvestorsPage },
   { key: "investor-crm", Component: FundraisePage },

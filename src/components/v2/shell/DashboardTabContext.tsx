@@ -9,6 +9,8 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 const TAB_TO_PATH: Record<string, string> = {
   dashboard: "/dashboard",
   decks: "/dashboard/decks",
+  score: "/score",
+  ideas: "/ideas",
   analytics: "/dashboard/analytics",
   "investor-match": "/dashboard/investor-match",
   "investor-crm": "/dashboard/investor-crm",

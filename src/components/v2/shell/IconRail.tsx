@@ -142,7 +142,8 @@ export function IconRail() {
 
 function RailItem({ item, active, onNav }: { item: NavItem; active: boolean; onNav: (href: string, e: React.MouseEvent) => void }) {
   const Icon = item.icon;
-  const isDashboardRoute = item.href.startsWith("/dashboard");
+  // Check if this route is a tab (dashboard routes + /score, /ideas)
+  const isTabRoute = !!PATH_TO_TAB[item.href];
 
   // Accent items (Create) get a filled neon background — always use Link (non-dashboard)
   if (item.accent) {
@@ -175,8 +176,8 @@ function RailItem({ item, active, onNav }: { item: NavItem; active: boolean; onN
     </>
   );
 
-  // Dashboard routes: use <a> with tab switching; others: use <Link>
-  if (isDashboardRoute) {
+  // Tab routes: use <a> with tab switching; others: use <Link>
+  if (isTabRoute) {
     return (
       <a href={item.href} onClick={(e) => onNav(item.href, e)} className={cls} title={item.label}>
         {inner}
