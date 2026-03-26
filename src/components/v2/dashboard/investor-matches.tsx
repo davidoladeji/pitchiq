@@ -96,7 +96,23 @@ export function InvestorMatches({ investors }: InvestorMatchesProps) {
                 variant="outline"
                 size="sm"
                 className="mt-3 w-full"
-                onClick={() => addToast({ type: "success", title: "Saved to Pipeline", description: `${investor.name} added to your fundraise pipeline.` })}
+                onClick={async () => {
+                  try {
+                    const res = await fetch("/api/investors", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ name: investor.name, firm: investor.name, stage: "identified", investorProfileId: investor.id }),
+                    });
+                    if (res.ok) {
+                      addToast({ type: "success", title: "Saved to Pipeline", description: `${investor.name} added to your fundraise pipeline.` });
+                    } else {
+                      const err = await res.json().catch(() => ({}));
+                      addToast({ type: "error", title: "Failed to save", description: err.error || "Could not add to pipeline" });
+                    }
+                  } catch {
+                    addToast({ type: "error", title: "Network error", description: "Could not reach the server" });
+                  }
+                }}
               >
                 Save to Pipeline
               </Button>

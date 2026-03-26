@@ -160,19 +160,43 @@ export async function GET() {
   // Fill in missing days with 0
   const filledDailyViews = fillMissingDays(dailyViews, 30);
 
-  // ── Investor matches ──
+  // ── Investor matches (with deterministic fit scoring) ──
+  // Collect user's industries and stages from their decks for matching
+  const userIndustries = new Set(decks.map((d) => d.industry?.toLowerCase()).filter(Boolean));
+  const userStages = new Set(decks.map((d) => d.stage?.toLowerCase()).filter(Boolean));
+
   const investors = investorProfiles.map((ip) => {
     let sectors: string[] = [];
+    let stages: string[] = [];
     try { sectors = JSON.parse(ip.sectors || "[]"); } catch { /* */ }
+    try { stages = JSON.parse(ip.stages || "[]"); } catch { /* */ }
+
+    // Compute fit score: sector overlap (40pts) + stage overlap (40pts) + base (20pts)
+    const sectorOverlap = sectors.filter((s) => userIndustries.has(s.toLowerCase())).length;
+    const stageOverlap = stages.filter((s) => userStages.has(s.toLowerCase())).length;
+    const sectorScore = sectors.length > 0 ? Math.min(40, (sectorOverlap / sectors.length) * 40) : 20;
+    const stageScore = stages.length > 0 ? Math.min(40, (stageOverlap / stages.length) * 40) : 20;
+    const fitScore = Math.round(20 + sectorScore + stageScore);
+
+    // Build match reasons from actual overlapping sectors
+    const matchReasons = sectors.filter((s) => userIndustries.has(s.toLowerCase())).slice(0, 2);
+    if (matchReasons.length === 0 && sectors.length > 0) matchReasons.push(sectors[0]);
+    if (stageOverlap > 0) {
+      const matchedStage = stages.find((s) => userStages.has(s.toLowerCase()));
+      if (matchedStage) matchReasons.push(`Invests at ${matchedStage}`);
+    }
+
     return {
       id: ip.id,
       name: ip.name || "Unknown",
       type: ip.type || "vc",
-      fitScore: 75 + Math.floor(Math.random() * 20), // TODO: real match scoring
-      matchReasons: sectors.slice(0, 3),
+      fitScore: Math.min(99, Math.max(20, fitScore)),
+      matchReasons: matchReasons.length > 0 ? matchReasons : ["General match"],
       avatarUrl: ip.logoUrl || undefined,
     };
-  });
+  })
+  // Sort by fit score descending so best matches show first
+  .sort((a, b) => b.fitScore - a.fitScore);
 
   // ── Fundraise pipeline (from CRM contacts by status) ──
   const stageMap: Record<string, number> = {};
