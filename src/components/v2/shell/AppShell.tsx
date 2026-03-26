@@ -1,10 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Sidebar } from "./Sidebar";
-import { TopBar } from "./TopBar";
+import { Sidebar } from "./sidebar-mockup";
+import { Header } from "./header-mockup";
+import { ToastProvider } from "@/components/v2/ui/toast";
 import CommandPalette from "./CommandPalette";
-import { ToastProvider } from "@/components/v2/ui/Toast";
+
+/* ------------------------------------------------------------------ */
+/*  v2 App Shell — ported from the pitchiq-dashboard-mockup            */
+/* ------------------------------------------------------------------ */
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -19,36 +23,66 @@ interface AppShellProps {
 export default function AppShellV2({
   children,
   userName,
-  userPlan,
-  userImage,
-  creditBalance,
-  breadcrumbs,
   recentDecks,
 }: AppShellProps) {
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <ToastProvider>
-      <div className="flex min-h-screen bg-[var(--surface-0)]">
+    <div className="relative min-h-screen bg-surface-page">
+      {/* Desktop sidebar */}
+      <div className="hidden lg:block">
         <Sidebar
-          userName={userName}
-          userPlan={userPlan}
-          userImage={userImage}
-          creditBalance={creditBalance}
-          isMobileOpen={mobileOpen}
-          onMobileClose={() => setMobileOpen(false)}
+          collapsed={sidebarCollapsed}
+          onCollapsedChange={setSidebarCollapsed}
         />
-        <div className="flex-1 flex flex-col min-w-0">
-          <TopBar
-            onMenuClick={() => setMobileOpen(true)}
-            breadcrumbs={breadcrumbs}
-          />
-          <main id="main" className="flex-1 px-4 lg:px-6 pb-8 overflow-y-auto">
-            {children}
-          </main>
-        </div>
-        <CommandPalette recentDecks={recentDecks} />
       </div>
-    </ToastProvider>
+
+      {/* Mobile overlay sidebar */}
+      {mobileMenuOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-30 bg-neutral-900/40 lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="fixed inset-y-0 left-0 z-40 lg:hidden">
+            <Sidebar />
+          </div>
+        </>
+      )}
+
+      {/* Main content */}
+      <main className="flex min-h-screen flex-col transition-[margin-left] duration-300 ease-in-out">
+        <div className="page-container">
+          <Header
+            showMenuButton
+            onMenuClick={() => setMobileMenuOpen((v) => !v)}
+            userName={userName}
+          />
+        </div>
+
+        <ToastProvider>
+          <div className="page-container section-gap flex-1 pb-12">
+            {children}
+          </div>
+        </ToastProvider>
+      </main>
+
+      <CommandPalette recentDecks={recentDecks} />
+
+      {/* Dynamic margin-left based on sidebar state */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+            @media (min-width: 1024px) {
+              main { margin-left: ${sidebarCollapsed ? 72 : 260}px !important; }
+            }
+            @media (max-width: 1023px) {
+              main { margin-left: 0 !important; }
+            }
+          `,
+        }}
+      />
+    </div>
   );
 }

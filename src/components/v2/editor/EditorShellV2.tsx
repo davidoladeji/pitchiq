@@ -7,7 +7,7 @@
  */
 
 import EditorShell from "@/components/editor/EditorShell";
-import { ToastProvider } from "@/components/v2/ui/Toast";
+import { ToastProvider } from "@/components/v2/ui/toast";
 import CommandPalette from "@/components/v2/shell/CommandPalette";
 import type { DeckData } from "@/lib/types";
 
