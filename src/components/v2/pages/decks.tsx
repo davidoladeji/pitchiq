@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Eye, Plus, Pencil, ExternalLink } from "lucide-react";
-import { Card } from "@/components/v2/ui/card";
-// Badge available for future use
-import { Button } from "@/components/v2/ui/button";
-import { Input } from "@/components/v2/ui/input";
+import Link from "next/link";
+import { Search, Eye, Plus, Pencil, ExternalLink, Sparkles } from "lucide-react";
+
+/* ------------------------------------------------------------------ */
+/*  Decks Page — Void Command Center style                             */
+/* ------------------------------------------------------------------ */
 
 interface DeckItem {
   id: string;
@@ -23,19 +24,12 @@ interface DeckItem {
 function timeAgo(dateStr: string): string {
   try {
     const diff = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 60) return `${mins}m ago`;
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) return `${hours}h ago`;
-    return `${Math.floor(hours / 24)}d ago`;
+    const m = Math.floor(diff / 60000);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h / 24)}d ago`;
   } catch { return dateStr; }
-}
-
-function scoreColor(score: number): string {
-  if (score >= 80) return "text-emerald-600 bg-emerald-50";
-  if (score >= 60) return "text-primary-600 bg-primary-50";
-  if (score > 0) return "text-amber-600 bg-amber-50";
-  return "text-neutral-400 bg-neutral-50";
 }
 
 export default function DecksPage() {
@@ -66,9 +60,9 @@ export default function DecksPage() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-10 w-48 rounded-lg bg-neutral-100 animate-pulse" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => <div key={i} className="h-48 rounded-xl bg-neutral-100 animate-pulse" />)}
+        <div className="h-10 w-48 rounded-xl animate-pulse" style={{ background: "var(--void-surface)" }} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {[1, 2, 3].map((i) => <div key={i} className="h-48 rounded-2xl animate-pulse" style={{ background: "var(--void-surface)" }} />)}
         </div>
       </div>
     );
@@ -79,33 +73,40 @@ export default function DecksPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold text-neutral-900">My Decks</h2>
-          <p className="text-sm text-neutral-500">{decks.length} deck{decks.length !== 1 ? "s" : ""}</p>
+          <h2 className="text-xl font-semibold" style={{ color: "var(--void-text)" }}>My Decks</h2>
+          <p className="text-sm" style={{ color: "var(--void-text-dim)" }}>{decks.length} deck{decks.length !== 1 ? "s" : ""}</p>
         </div>
-        <Button onClick={() => router.push("/create")}>
-          <Plus size={16} className="mr-1.5" /> New Deck
-        </Button>
+        <button
+          onClick={() => router.push("/create")}
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-white text-xs font-semibold transition-all hover:-translate-y-0.5"
+          style={{ background: "var(--neon-electric)", boxShadow: "0 4px 20px rgba(var(--neon-electric-rgb), 0.3)" }}
+        >
+          <Plus size={14} /> New Deck
+        </button>
       </div>
 
       {/* Filters */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1 max-w-xs">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
-          <Input
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--void-text-dim)" }} />
+          <input
             placeholder="Search decks..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-8 h-9 text-sm"
+            className="w-full pl-8 pr-3 py-2 rounded-xl text-sm outline-none transition-all"
+            style={{ background: "var(--void-surface)", border: "1px solid var(--void-border)", color: "var(--void-text)" }}
           />
         </div>
-        <div className="flex gap-1 rounded-lg border border-neutral-200 p-0.5">
+        <div className="flex gap-0.5 rounded-xl p-0.5" style={{ background: "var(--void-surface)", border: "1px solid var(--void-border)" }}>
           {(["recent", "score", "views"] as const).map((s) => (
             <button
               key={s}
               onClick={() => setSort(s)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                sort === s ? "bg-primary-500 text-white" : "text-neutral-500 hover:bg-neutral-50"
-              }`}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+              style={sort === s
+                ? { background: "rgba(var(--neon-electric-rgb), 0.15)", color: "var(--neon-cyan)" }
+                : { color: "var(--void-text-dim)" }
+              }
             >
               {s === "recent" ? "Recent" : s === "score" ? "Score" : "Views"}
             </button>
@@ -115,76 +116,79 @@ export default function DecksPage() {
 
       {/* Empty state */}
       {filtered.length === 0 && !search && (
-        <Card className="text-center py-12">
-          <div className="w-14 h-14 rounded-2xl bg-primary-50 flex items-center justify-center mx-auto mb-4">
-            <Plus size={24} className="text-primary-500" />
+        <div className="void-card p-12 text-center">
+          <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center orb-breathe" style={{ background: "rgba(var(--neon-electric-rgb), 0.1)", border: "1px solid rgba(var(--neon-electric-rgb), 0.2)" }}>
+            <Sparkles size={24} style={{ color: "var(--neon-electric)" }} />
           </div>
-          <p className="text-sm font-medium text-neutral-700">No decks yet</p>
-          <p className="text-xs text-neutral-500 mt-1">Create your first AI-powered pitch deck</p>
-          <Button className="mt-4" onClick={() => router.push("/create")}>Create Deck</Button>
-        </Card>
+          <p className="text-sm font-medium" style={{ color: "var(--void-text)" }}>No decks yet</p>
+          <p className="text-xs mt-1 mb-4" style={{ color: "var(--void-text-dim)" }}>Create your first AI-powered pitch deck</p>
+          <button onClick={() => router.push("/create")} className="px-5 py-2.5 rounded-xl text-white text-xs font-semibold" style={{ background: "var(--neon-electric)" }}>
+            Create Deck
+          </button>
+        </div>
       )}
 
       {filtered.length === 0 && search && (
-        <p className="text-center text-sm text-neutral-400 py-8">No decks match &ldquo;{search}&rdquo;</p>
+        <p className="text-center text-sm py-8" style={{ color: "var(--void-text-dim)" }}>No decks match &ldquo;{search}&rdquo;</p>
       )}
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((deck) => (
-          <Card key={deck.id} hover className="overflow-hidden">
-            {/* Thumbnail placeholder */}
-            <div
-              className="h-32 bg-neutral-900 flex items-center justify-center cursor-pointer"
-              onClick={() => router.push(`/deck/${deck.id}`)}
-            >
-              <span className="text-white/30 text-xs">Click to view</span>
-            </div>
-
-            <div className="p-4">
-              <h3
-                className="text-sm font-semibold text-neutral-900 truncate cursor-pointer hover:text-primary-600 transition-colors"
-                onClick={() => router.push(`/deck/${deck.id}`)}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {filtered.map((deck) => {
+          const scoreColor = deck.score >= 90 ? "var(--neon-emerald)" : deck.score >= 70 ? "var(--neon-cyan)" : deck.score >= 50 ? "#FBBF24" : deck.score > 0 ? "#F87171" : "var(--void-text-dim)";
+          return (
+            <div key={deck.id} className="void-card overflow-hidden group">
+              {/* Thumbnail area */}
+              <Link
+                href={`/deck/${deck.id}`}
+                className="block h-28 flex items-center justify-center"
+                style={{ background: "var(--void-2)" }}
               >
-                {deck.title}
-              </h3>
-              <p className="text-xs text-neutral-500 mt-0.5">{deck.companyName}</p>
+                <span className="text-[10px]" style={{ color: "var(--void-text-dim)" }}>Click to view</span>
+              </Link>
 
-              {/* Stats row */}
-              <div className="flex items-center gap-3 mt-3">
-                {deck.score > 0 && (
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold ${scoreColor(deck.score)}`}>
-                    {deck.score} PIQ
+              <div className="p-4">
+                <Link href={`/deck/${deck.id}`} className="block">
+                  <h3 className="text-sm font-semibold truncate hover:underline" style={{ color: "var(--void-text)" }}>
+                    {deck.title}
+                  </h3>
+                </Link>
+                <p className="text-xs mt-0.5" style={{ color: "var(--void-text-dim)" }}>{deck.companyName}</p>
+
+                {/* Stats row */}
+                <div className="flex items-center gap-3 mt-3">
+                  {deck.score > 0 && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold" style={{ background: `${scoreColor}15`, color: scoreColor, border: `1px solid ${scoreColor}25` }}>
+                      {deck.score}
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1 text-xs" style={{ color: "var(--void-text-dim)" }}>
+                    <Eye size={12} /> {deck.views}
                   </span>
-                )}
-                <span className="flex items-center gap-1 text-xs text-neutral-400">
-                  <Eye size={12} /> {deck.views}
-                </span>
-                <span className="text-xs text-neutral-400 ml-auto">{timeAgo(deck.updatedAt)}</span>
-              </div>
+                  <span className="text-xs ml-auto" style={{ color: "var(--void-text-dim)" }}>{timeAgo(deck.updatedAt)}</span>
+                </div>
 
-              {/* Action buttons */}
-              <div className="flex items-center gap-2 mt-3 pt-3 border-t border-neutral-100">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => router.push(`/editor/${deck.id}`)}
-                >
-                  <Pencil size={12} className="mr-1" /> Edit
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  onClick={() => router.push(`/deck/${deck.id}`)}
-                >
-                  <ExternalLink size={12} className="mr-1" /> View
-                </Button>
+                {/* Action buttons */}
+                <div className="flex items-center gap-2 mt-3 pt-3" style={{ borderTop: "1px solid var(--void-border)" }}>
+                  <button
+                    onClick={() => router.push(`/editor/${deck.id}`)}
+                    className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                    style={{ background: "var(--void-surface)", color: "var(--void-text-muted)", border: "1px solid var(--void-border)" }}
+                  >
+                    <Pencil size={12} /> Edit
+                  </button>
+                  <button
+                    onClick={() => router.push(`/deck/${deck.id}`)}
+                    className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                    style={{ background: "var(--void-surface)", color: "var(--void-text-muted)", border: "1px solid var(--void-border)" }}
+                  >
+                    <ExternalLink size={12} /> View
+                  </button>
+                </div>
               </div>
             </div>
-          </Card>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
