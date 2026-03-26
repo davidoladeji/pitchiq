@@ -22,10 +22,29 @@ export default function SignInPage() {
   const [providers, setProviders] = useState<Record<string, Provider> | null>(
     null
   );
+  const [signingIn, setSigningIn] = useState(false);
 
   useEffect(() => {
     getProviders().then(setProviders);
   }, []);
+
+  const handleDevLogin = async () => {
+    setSigningIn(true);
+    try {
+      const res = await signIn("dev-login", {
+        redirect: false,
+        email: "dev@pitchiq.local",
+      });
+      if (res?.error) {
+        setSigningIn(false);
+        return;
+      }
+      // Force full page load to pick up new session cookie
+      window.location.href = "/dashboard";
+    } catch {
+      setSigningIn(false);
+    }
+  };
 
   return (
     <>
@@ -66,7 +85,12 @@ export default function SignInPage() {
                   <button
                     key={provider.id}
                     type="button"
-                    onClick={() => signIn(provider.id, { callbackUrl: "/dashboard" })}
+                    disabled={signingIn}
+                    onClick={() =>
+                      provider.id === "dev-login"
+                        ? handleDevLogin()
+                        : signIn(provider.id, { callbackUrl: "/dashboard" })
+                    }
                     aria-label={`Sign in with ${provider.name}`}
                     className="w-full min-h-[44px] flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-navy-200 text-sm font-medium text-navy shadow-sm hover:bg-navy-50 hover:border-navy-300 hover:shadow-glow hover:shadow-electric/10 hover:-translate-y-0.5 active:translate-y-0 transition-all motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                   >

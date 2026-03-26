@@ -74,24 +74,49 @@ export default function CommandPalette({ recentDecks = [], open: controlledOpen,
               className="fixed inset-x-0 top-[20%] z-[9999] mx-auto w-full max-w-lg px-4"
             >
               <Command
-                className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-1)] shadow-elevation-3 overflow-hidden"
+                className="rounded-2xl overflow-hidden"
+                style={{
+                  border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+                  background: "var(--void, #0A0A0F)",
+                  boxShadow: "0 25px 50px -12px rgba(0,0,0,0.5)",
+                }}
                 shouldFilter={true}
               >
-                <div className="flex items-center gap-2 border-b border-[var(--border-default)] px-4">
-                  <svg className="w-4 h-4 text-navy-400 dark:text-white/40 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <div
+                  className="flex items-center gap-2 px-4"
+                  style={{ borderBottom: "1px solid var(--void-border, rgba(255,255,255,0.06))" }}
+                >
+                  <svg
+                    className="w-4 h-4 shrink-0"
+                    style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   <Command.Input
                     placeholder="Type a command or search..."
-                    className="flex-1 py-3.5 text-sm bg-transparent text-navy dark:text-white placeholder:text-navy-400 dark:placeholder:text-white/30 outline-none"
+                    className="flex-1 py-3.5 text-sm bg-transparent outline-none"
+                    style={{
+                      color: "var(--void-text, #E8E8ED)",
+                    }}
                   />
-                  <kbd className="px-1.5 py-0.5 rounded-md bg-[var(--surface-2)] border border-[var(--border-default)] text-[10px] font-mono text-navy-400 dark:text-white/30">
+                  <kbd
+                    className="px-1.5 py-0.5 rounded-md text-[10px] font-mono"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+                      color: "var(--void-text-dim, rgba(255,255,255,0.3))",
+                    }}
+                  >
                     ESC
                   </kbd>
                 </div>
 
                 <Command.List className="max-h-[320px] overflow-y-auto p-2">
-                  <Command.Empty className="py-8 text-center text-sm text-navy-400 dark:text-white/40">
+                  <Command.Empty
+                    className="py-8 text-center text-sm"
+                    style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}
+                  >
                     No results found.
                   </Command.Empty>
 
@@ -188,21 +213,37 @@ function CommandItem({
       onSelect={onSelect}
       className={cn(
         "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm cursor-pointer transition-colors",
-        "text-navy-600 dark:text-white/70",
-        "data-[selected=true]:bg-electric/5 data-[selected=true]:text-electric dark:data-[selected=true]:text-electric",
+        "data-[selected=true]:bg-[rgba(67,97,238,0.08)]",
       )}
+      style={{ color: "var(--void-text-muted, rgba(255,255,255,0.5))" }}
     >
-      <span className="shrink-0 w-5 h-5 flex items-center justify-center text-navy-400 dark:text-white/40 data-[selected=true]:text-electric">
+      <span
+        className="shrink-0 w-5 h-5 flex items-center justify-center"
+        style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}
+      >
         {icon}
       </span>
       <span className="flex-1 truncate">{label}</span>
       {badge && (
-        <span className="shrink-0 px-1.5 py-0.5 rounded-md bg-electric/10 text-electric text-[10px] font-semibold">
+        <span
+          className="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-semibold"
+          style={{
+            background: "rgba(67,97,238,0.1)",
+            color: "var(--neon-electric, #4361EE)",
+          }}
+        >
           {badge}
         </span>
       )}
       {shortcut && (
-        <kbd className="shrink-0 px-1.5 py-0.5 rounded-md bg-[var(--surface-2)] border border-[var(--border-default)] text-[10px] font-mono text-navy-400 dark:text-white/30">
+        <kbd
+          className="shrink-0 px-1.5 py-0.5 rounded-md text-[10px] font-mono"
+          style={{
+            background: "rgba(255,255,255,0.06)",
+            border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+            color: "var(--void-text-dim, rgba(255,255,255,0.3))",
+          }}
+        >
           {shortcut}
         </kbd>
       )}

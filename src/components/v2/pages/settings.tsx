@@ -23,9 +23,8 @@ function Toggle({
       role="switch"
       aria-checked={checked}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full transition-colors ${
-        checked ? "bg-primary-500" : "bg-neutral-200"
-      }`}
+      className="relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full transition-colors"
+      style={{ background: checked ? "var(--neon-electric)" : "rgba(255,255,255,0.1)" }}
     >
       <span
         className={`pointer-events-none inline-block h-4 w-4 translate-y-0.5 rounded-full bg-white shadow-sm transition-transform ${
@@ -52,8 +51,8 @@ function NotificationRow({
   return (
     <div className="flex items-center justify-between py-3">
       <div>
-        <p className="text-sm font-medium text-neutral-700">{label}</p>
-        <p className="text-xs text-neutral-500">{description}</p>
+        <p className="text-sm font-medium" style={{ color: "var(--void-text-muted)" }}>{label}</p>
+        <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>{description}</p>
       </div>
       <Toggle checked={checked} onChange={onChange} />
     </div>
@@ -63,12 +62,12 @@ function NotificationRow({
 /* ──────────────────────── Accent Colors ─────────────────── */
 
 const ACCENT_COLORS = [
-  { name: "primary", className: "bg-primary-500" },
-  { name: "success", className: "bg-success-500" },
-  { name: "warning", className: "bg-warning-500" },
-  { name: "error", className: "bg-error-500" },
-  { name: "neutral", className: "bg-neutral-700" },
-  { name: "violet", className: "bg-violet-500" },
+  { name: "primary", color: "var(--neon-electric)" },
+  { name: "success", color: "var(--neon-emerald)" },
+  { name: "warning", color: "#FBBF24" },
+  { name: "error", color: "#F87171" },
+  { name: "neutral", color: "rgba(255,255,255,0.4)" },
+  { name: "violet", color: "var(--neon-violet)" },
 ];
 
 /* ═══════════════════════ Settings Page ═══════════════════════ */
@@ -84,7 +83,7 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <h1 className="text-2xl font-bold text-neutral-900">Settings</h1>
+      <h1 className="text-2xl font-bold" style={{ color: "var(--void-text)" }}>Settings</h1>
 
       {/* ─── Section 1: Profile ─── */}
       <Card>
@@ -93,8 +92,8 @@ export default function SettingsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Avatar */}
-          <div className="h-16 w-16 rounded-full bg-primary-100 flex items-center justify-center">
-            <span className="text-primary-700 text-xl font-bold">
+          <div className="h-16 w-16 rounded-full flex items-center justify-center" style={{ background: "rgba(67,97,238,0.15)" }}>
+            <span className="text-xl font-bold" style={{ color: "var(--neon-cyan)" }}>
               {mockUserProfile.name.charAt(0)}
             </span>
           </div>
@@ -120,9 +119,9 @@ export default function SettingsPage() {
 
           {/* Logo upload */}
           <div>
-            <p className="mb-1.5 text-sm font-medium text-neutral-700">Logo</p>
-            <div className="flex h-24 items-center justify-center rounded-lg border-2 border-dashed border-neutral-200">
-              <span className="text-sm text-neutral-400">
+            <p className="mb-1.5 text-sm font-medium" style={{ color: "var(--void-text-muted)" }}>Logo</p>
+            <div className="flex h-24 items-center justify-center rounded-lg border-2 border-dashed" style={{ borderColor: "var(--void-border)" }}>
+              <span className="text-sm" style={{ color: "var(--void-text-dim)" }}>
                 Drop logo here or click to upload
               </span>
             </div>
@@ -130,7 +129,7 @@ export default function SettingsPage() {
 
           {/* Accent Color */}
           <div>
-            <p className="mb-1.5 text-sm font-medium text-neutral-700">
+            <p className="mb-1.5 text-sm font-medium" style={{ color: "var(--void-text-muted)" }}>
               Accent Color
             </p>
             <div className="flex gap-3">
@@ -139,11 +138,11 @@ export default function SettingsPage() {
                   key={c.name}
                   type="button"
                   onClick={() => setSelectedColor(c.name)}
-                  className={`h-8 w-8 rounded-full ${c.className} transition-shadow ${
-                    selectedColor === c.name
-                      ? "ring-2 ring-offset-2 ring-primary-500"
-                      : ""
-                  }`}
+                  className="h-8 w-8 rounded-full transition-shadow"
+                  style={{
+                    background: c.color,
+                    boxShadow: selectedColor === c.name ? `0 0 0 2px var(--void-1), 0 0 0 4px ${c.color}` : "none",
+                  }}
                 />
               ))}
             </div>
@@ -151,7 +150,7 @@ export default function SettingsPage() {
 
           {/* Remove branding toggle */}
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-neutral-700">
+            <span className="text-sm font-medium" style={{ color: "var(--void-text-muted)" }}>
               Remove PitchIQ branding
             </span>
             <Toggle checked={removeBranding} onChange={setRemoveBranding} />
@@ -165,7 +164,7 @@ export default function SettingsPage() {
           <CardTitle>Startup Profile</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm" style={{ color: "var(--void-text-muted)" }}>
             You have 1 startup profile configured.
           </p>
           <Button variant="outline" className="mt-3">
@@ -180,7 +179,7 @@ export default function SettingsPage() {
           <CardTitle>Notifications</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="divide-y divide-neutral-100">
+          <div className="divide-y" style={{ borderColor: "var(--void-border)" }}>
             <NotificationRow
               label="Deck Viewed"
               description="Get notified when someone views your deck"
@@ -210,12 +209,12 @@ export default function SettingsPage() {
       </Card>
 
       {/* ─── Section 5: Danger Zone ─── */}
-      <Card className="border-error-200">
+      <Card className="border-red-500/20">
         <CardHeader>
           <CardTitle>Danger Zone</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm" style={{ color: "var(--void-text-muted)" }}>
             Permanently delete your account and all associated data.
           </p>
           <Button variant="destructive" className="mt-3">

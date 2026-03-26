@@ -25,19 +25,19 @@ export default function ABTestsPage() {
 
   if (loading) {
     return (
-      <div className="section-gap">
-        <div className="h-8 w-48 bg-surface-muted rounded-lg animate-pulse" />
-        <div className="h-40 bg-surface-muted rounded-xl animate-pulse" />
+      <div className="space-y-4">
+        <div className="h-8 w-48 rounded-lg animate-pulse" style={{ background: "var(--void-surface)" }} />
+        <div className="h-40 rounded-xl animate-pulse" style={{ background: "var(--void-surface)" }} />
       </div>
     );
   }
 
   return (
-    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="section-gap">
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6">
       <motion.div variants={fadeInUp} className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-neutral-900">A/B Tests</h2>
-          <p className="text-sm text-neutral-500 mt-1">{tests.length} test{tests.length !== 1 ? "s" : ""}</p>
+          <h2 className="text-xl font-semibold" style={{ color: "var(--void-text)" }}>A/B Tests</h2>
+          <p className="text-sm mt-1" style={{ color: "var(--void-text-dim)" }}>{tests.length} test{tests.length !== 1 ? "s" : ""}</p>
         </div>
         <Button onClick={() => router.push("/dashboard/ab-tests")}><Plus size={16} className="mr-2" /> New Test</Button>
       </motion.div>
@@ -45,9 +45,9 @@ export default function ABTestsPage() {
       {tests.length === 0 ? (
         <motion.div variants={fadeInUp}>
           <Card className="text-center py-12">
-            <FlaskConical size={32} className="text-neutral-300 mx-auto mb-3" />
-            <p className="text-sm font-medium text-neutral-700">No A/B tests yet</p>
-            <p className="text-xs text-neutral-500 mt-1">Test different deck variants to see which performs better</p>
+            <FlaskConical size={32} className="mx-auto mb-3" style={{ color: "var(--void-text-dim)" }} />
+            <p className="text-sm font-medium" style={{ color: "var(--void-text)" }}>No A/B tests yet</p>
+            <p className="text-xs mt-1" style={{ color: "var(--void-text-dim)" }}>Test different deck variants to see which performs better</p>
             <Button className="mt-4" onClick={() => router.push("/dashboard/ab-tests")}>Create Your First Test</Button>
           </Card>
         </motion.div>
@@ -57,21 +57,21 @@ export default function ABTestsPage() {
             <Card key={t.id} className="p-4 hover-lift">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-neutral-900">{t.deckTitle}</p>
-                  <p className="text-xs text-neutral-500">Started {relativeTime(t.startedAt)}</p>
+                  <p className="text-sm font-medium" style={{ color: "var(--void-text)" }}>{t.deckTitle}</p>
+                  <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>Started {relativeTime(t.startedAt)}</p>
                 </div>
                 <Badge variant={t.status === "active" ? "success" : "default"}>{t.status}</Badge>
               </div>
               <div className="mt-3 grid grid-cols-2 gap-3">
-                <div className="rounded-lg bg-surface-muted p-3 text-center">
-                  <p className="text-xs text-neutral-500">Variant A</p>
-                  <p className="text-lg font-semibold text-neutral-900">{t.variantA.views} views</p>
-                  <p className="text-xs text-neutral-400">{t.variantA.avgTimeSeconds}s avg</p>
+                <div className="rounded-lg p-3 text-center" style={{ background: "var(--void-surface)", border: "1px solid var(--void-border)" }}>
+                  <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>Variant A</p>
+                  <p className="text-lg font-semibold" style={{ color: "var(--void-text)" }}>{t.variantA.views} views</p>
+                  <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>{t.variantA.avgTimeSeconds}s avg</p>
                 </div>
-                <div className="rounded-lg bg-surface-muted p-3 text-center">
-                  <p className="text-xs text-neutral-500">Variant B</p>
-                  <p className="text-lg font-semibold text-neutral-900">{t.variantB.views} views</p>
-                  <p className="text-xs text-neutral-400">{t.variantB.avgTimeSeconds}s avg</p>
+                <div className="rounded-lg p-3 text-center" style={{ background: "var(--void-surface)", border: "1px solid var(--void-border)" }}>
+                  <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>Variant B</p>
+                  <p className="text-lg font-semibold" style={{ color: "var(--void-text)" }}>{t.variantB.views} views</p>
+                  <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>{t.variantB.avgTimeSeconds}s avg</p>
                 </div>
               </div>
             </Card>

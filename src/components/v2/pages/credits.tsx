@@ -50,10 +50,10 @@ export default function CreditsPage() {
       {/* ── Page header ─────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-neutral-900">
+          <h1 className="text-2xl font-bold" style={{ color: "var(--void-text)" }}>
             Credits &amp; Passes
           </h1>
-          <span className="flex items-center gap-1.5 rounded-lg bg-primary-50 px-3 py-1 text-lg font-bold text-primary-700">
+          <span className="flex items-center gap-1.5 rounded-lg px-3 py-1 text-lg font-bold" style={{ background: "rgba(67,97,238,0.15)", color: "var(--neon-cyan)" }}>
             <Coins size={18} />
             23
           </span>
@@ -72,8 +72,8 @@ export default function CreditsPage() {
         <CardContent>
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-mono text-4xl font-bold text-neutral-900">23</p>
-              <p className="mt-1 text-sm text-neutral-500">
+              <p className="font-mono text-4xl font-bold" style={{ color: "var(--void-text)" }}>23</p>
+              <p className="mt-1 text-sm" style={{ color: "var(--void-text-dim)" }}>
                 Lifetime earned: 85 credits
               </p>
             </div>
@@ -89,15 +89,15 @@ export default function CreditsPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Active pass */}
-          <div className="flex items-center justify-between rounded-lg border border-primary-200 bg-primary-50/50 p-4">
+          <div className="flex items-center justify-between rounded-lg p-4" style={{ background: "rgba(67,97,238,0.08)", border: "1px solid rgba(67,97,238,0.2)" }}>
             <div className="flex items-center gap-3">
               <Badge variant="primary" size="lg">Growth Pass</Badge>
               <div>
-                <p className="text-sm font-medium text-neutral-900 flex items-center gap-1.5">
-                  <Clock size={14} className="text-primary-500" />
+                <p className="text-sm font-medium flex items-center gap-1.5" style={{ color: "var(--void-text)" }}>
+                  <Clock size={14} style={{ color: "var(--neon-electric)" }} />
                   5 days remaining
                 </p>
-                <p className="text-xs text-neutral-500">
+                <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>
                   Expires Mar 27, 2026
                 </p>
               </div>
@@ -109,14 +109,14 @@ export default function CreditsPage() {
           </div>
 
           {/* Expired pass */}
-          <div className="flex items-center justify-between rounded-lg border border-neutral-200 bg-neutral-50/50 p-4 opacity-70">
+          <div className="flex items-center justify-between rounded-lg p-4 opacity-50" style={{ background: "var(--void-surface)", border: "1px solid var(--void-border)" }}>
             <div className="flex items-center gap-3">
               <Badge variant="outline" size="lg">Expired</Badge>
               <div>
-                <p className="text-sm font-medium text-neutral-600">
+                <p className="text-sm font-medium" style={{ color: "var(--void-text-muted)" }}>
                   Basic Pass
                 </p>
-                <p className="text-xs text-neutral-400">
+                <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>
                   Mar 1 &ndash; Mar 8, 2026
                 </p>
               </div>
@@ -144,7 +144,7 @@ export default function CreditsPage() {
             <TableBody>
               {TRANSACTIONS.map((tx) => (
                 <TableRow key={tx.id}>
-                  <TableCell className="whitespace-nowrap text-neutral-600">
+                  <TableCell className="whitespace-nowrap">
                     {tx.date}
                   </TableCell>
                   <TableCell>
@@ -152,17 +152,13 @@ export default function CreditsPage() {
                       {tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}
                     </Badge>
                   </TableCell>
-                  <TableCell
-                    className={`text-right font-mono font-medium ${
-                      tx.amount > 0 ? "text-success-600" : "text-neutral-700"
-                    }`}
-                  >
+                  <TableCell className="text-right font-mono font-medium" style={{ color: tx.amount > 0 ? "var(--neon-emerald)" : "var(--void-text-muted)" }}>
                     {tx.amount > 0 ? `+${tx.amount}` : tx.amount}
                   </TableCell>
-                  <TableCell className="text-right font-mono text-neutral-600">
+                  <TableCell className="text-right font-mono">
                     {tx.balanceAfter}
                   </TableCell>
-                  <TableCell className="text-neutral-600">
+                  <TableCell>
                     {tx.description}
                   </TableCell>
                 </TableRow>

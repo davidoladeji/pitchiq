@@ -88,8 +88,16 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
           <DashboardVersionToggle />
 
           <div className="mt-4 mb-8">
-            <h1 className="text-2xl font-bold text-navy dark:text-white">Score Your Pitch Deck</h1>
-            <p className="text-sm text-navy-400 dark:text-white/40 mt-1">
+            <h1
+              className="text-2xl font-bold"
+              style={{ color: "var(--void-text, #E8E8ED)" }}
+            >
+              Score Your Pitch Deck
+            </h1>
+            <p
+              className="text-sm mt-1"
+              style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}
+            >
               Upload your deck and get an instant PIQ fundability score with actionable feedback
             </p>
           </div>
@@ -103,10 +111,16 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
                 onDrop={handleDrop}
                 onClick={() => fileRef.current?.click()}
                 className={`relative cursor-pointer rounded-2xl border-2 border-dashed transition-all duration-200 p-12 text-center ${
-                  dragOver
-                    ? "border-electric bg-electric/5 scale-[1.01]"
-                    : "border-[var(--border-default)] bg-[var(--surface-1)] hover:border-[var(--border-emphasis)] hover:bg-[var(--surface-2)]"
+                  dragOver ? "scale-[1.01]" : ""
                 }`}
+                style={{
+                  borderColor: dragOver
+                    ? "var(--neon-electric, #4361EE)"
+                    : "var(--void-border, rgba(255,255,255,0.06))",
+                  background: dragOver
+                    ? "rgba(67,97,238,0.05)"
+                    : "var(--void-surface, rgba(255,255,255,0.03))",
+                }}
               >
                 <input
                   ref={fileRef}
@@ -115,44 +129,97 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
                   onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }}
                   className="hidden"
                 />
-                <div className="w-14 h-14 rounded-2xl bg-electric/10 flex items-center justify-center mx-auto mb-4">
-                  <Upload size={24} className="text-electric" />
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                  style={{ background: "rgba(67,97,238,0.1)" }}
+                >
+                  <Upload size={24} style={{ color: "var(--neon-electric, #4361EE)" }} />
                 </div>
-                <p className="text-sm font-medium text-navy dark:text-white mb-1">
+                <p
+                  className="text-sm font-medium mb-1"
+                  style={{ color: "var(--void-text, #E8E8ED)" }}
+                >
                   Drop your deck here or click to browse
                 </p>
-                <p className="text-xs text-navy-400 dark:text-white/30">
+                <p
+                  className="text-xs"
+                  style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}
+                >
                   Supports PDF and PPTX files
                 </p>
                 <div className="flex justify-center gap-2 mt-3">
-                  <span className="px-2 py-0.5 rounded-md bg-[var(--surface-2)] text-[10px] font-mono text-navy-400 dark:text-white/30">PDF</span>
-                  <span className="px-2 py-0.5 rounded-md bg-[var(--surface-2)] text-[10px] font-mono text-navy-400 dark:text-white/30">PPTX</span>
+                  <span
+                    className="px-2 py-0.5 rounded-md text-[10px] font-mono"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      color: "var(--void-text-dim, rgba(255,255,255,0.3))",
+                    }}
+                  >
+                    PDF
+                  </span>
+                  <span
+                    className="px-2 py-0.5 rounded-md text-[10px] font-mono"
+                    style={{
+                      background: "rgba(255,255,255,0.06)",
+                      color: "var(--void-text-dim, rgba(255,255,255,0.3))",
+                    }}
+                  >
+                    PPTX
+                  </span>
                 </div>
               </div>
 
               {error && (
-                <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-2">
-                  <AlertTriangle size={16} className="text-red-500 shrink-0" />
-                  <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                <div
+                  className="mt-4 p-3 rounded-xl flex items-center gap-2"
+                  style={{
+                    background: "rgba(248,113,113,0.1)",
+                    border: "1px solid rgba(248,113,113,0.2)",
+                  }}
+                >
+                  <AlertTriangle size={16} className="text-red-400 shrink-0" />
+                  <p className="text-sm" style={{ color: "#F87171" }}>{error}</p>
                 </div>
               )}
             </>
           )}
 
           {(state === "uploading" || state === "scoring") && (
-            <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-1)] p-8 text-center">
-              <Loader2 size={32} className="text-electric animate-spin mx-auto mb-4" />
-              <p className="text-sm font-medium text-navy dark:text-white mb-2">
+            <div
+              className="rounded-2xl p-8 text-center"
+              style={{
+                border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+                background: "var(--void-surface, rgba(255,255,255,0.03))",
+              }}
+            >
+              <Loader2
+                size={32}
+                className="animate-spin mx-auto mb-4"
+                style={{ color: "var(--neon-electric, #4361EE)" }}
+              />
+              <p
+                className="text-sm font-medium mb-2"
+                style={{ color: "var(--void-text, #E8E8ED)" }}
+              >
                 {state === "uploading" ? "Uploading your deck..." : "Analyzing your deck..."}
               </p>
-              <div className="w-48 h-1.5 rounded-full bg-[var(--surface-2)] mx-auto overflow-hidden">
+              <div
+                className="w-48 h-1.5 rounded-full mx-auto overflow-hidden"
+                style={{ background: "rgba(255,255,255,0.06)" }}
+              >
                 <div
-                  className="h-full bg-electric rounded-full transition-all duration-500"
-                  style={{ width: `${progress}%` }}
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${progress}%`,
+                    background: "var(--neon-electric, #4361EE)",
+                  }}
                 />
               </div>
               {file && (
-                <div className="flex items-center justify-center gap-2 mt-3 text-xs text-navy-400 dark:text-white/30">
+                <div
+                  className="flex items-center justify-center gap-2 mt-3 text-xs"
+                  style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}
+                >
                   <FileText size={12} />
                   {file.name}
                 </div>
@@ -163,34 +230,88 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
           {state === "result" && score && (
             <div className="space-y-6">
               {/* Overall score */}
-              <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-1)] p-6">
+              <div
+                className="rounded-2xl p-6"
+                style={{
+                  border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+                  background: "var(--void-surface, rgba(255,255,255,0.03))",
+                }}
+              >
                 <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 rounded-2xl bg-electric/10 flex items-center justify-center">
-                    <span className="text-3xl font-bold text-electric">{score.overall}</span>
+                  <div
+                    className="w-20 h-20 rounded-2xl flex items-center justify-center"
+                    style={{ background: "rgba(67,97,238,0.1)" }}
+                  >
+                    <span
+                      className="text-3xl font-bold"
+                      style={{ color: "var(--neon-electric, #4361EE)" }}
+                    >
+                      {score.overall}
+                    </span>
                   </div>
                   <div>
-                    <p className="text-lg font-bold text-navy dark:text-white">PIQ Score: {score.overall}/100</p>
-                    <p className="text-sm text-navy-400 dark:text-white/40">Grade: {score.grade}</p>
+                    <p
+                      className="text-lg font-bold"
+                      style={{ color: "var(--void-text, #E8E8ED)" }}
+                    >
+                      PIQ Score: {score.overall}/100
+                    </p>
+                    <p
+                      className="text-sm"
+                      style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}
+                    >
+                      Grade: {score.grade}
+                    </p>
                   </div>
                 </div>
               </div>
 
               {/* Dimensions */}
-              <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-1)] p-6">
-                <h2 className="text-sm font-semibold text-navy dark:text-white mb-4">Dimension Breakdown</h2>
+              <div
+                className="rounded-2xl p-6"
+                style={{
+                  border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+                  background: "var(--void-surface, rgba(255,255,255,0.03))",
+                }}
+              >
+                <h2
+                  className="text-sm font-semibold mb-4"
+                  style={{ color: "var(--void-text, #E8E8ED)" }}
+                >
+                  Dimension Breakdown
+                </h2>
                 <div className="space-y-3">
                   {score.dimensions?.map((dim) => (
                     <div key={dim.id} className="flex items-center gap-3">
-                      <span className="text-xs text-navy-500 dark:text-white/50 w-32 truncate">{dim.label}</span>
-                      <div className="flex-1 h-2 rounded-full bg-[var(--surface-2)] overflow-hidden">
+                      <span
+                        className="text-xs w-32 truncate"
+                        style={{ color: "var(--void-text-muted, rgba(255,255,255,0.5))" }}
+                      >
+                        {dim.label}
+                      </span>
+                      <div
+                        className="flex-1 h-2 rounded-full overflow-hidden"
+                        style={{ background: "rgba(255,255,255,0.06)" }}
+                      >
                         <div
-                          className={`h-full rounded-full transition-all duration-700 ${
-                            dim.score >= 80 ? "bg-emerald-500" : dim.score >= 60 ? "bg-amber-500" : "bg-red-500"
-                          }`}
-                          style={{ width: `${dim.score}%` }}
+                          className="h-full rounded-full transition-all duration-700"
+                          style={{
+                            width: `${dim.score}%`,
+                            background:
+                              dim.score >= 80
+                                ? "var(--neon-emerald, #00FF9D)"
+                                : dim.score >= 60
+                                ? "#FBBF24"
+                                : "#F87171",
+                          }}
                         />
                       </div>
-                      <span className="text-xs font-semibold text-navy dark:text-white w-8 text-right">{dim.score}</span>
+                      <span
+                        className="text-xs font-semibold w-8 text-right"
+                        style={{ color: "var(--void-text, #E8E8ED)" }}
+                      >
+                        {dim.score}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -198,13 +319,30 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
 
               {/* Recommendations */}
               {score.recommendations && score.recommendations.length > 0 && (
-                <div className="rounded-2xl border border-[var(--border-default)] bg-[var(--surface-1)] p-6">
-                  <h2 className="text-sm font-semibold text-navy dark:text-white mb-4">Recommendations</h2>
+                <div
+                  className="rounded-2xl p-6"
+                  style={{
+                    border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+                    background: "var(--void-surface, rgba(255,255,255,0.03))",
+                  }}
+                >
+                  <h2
+                    className="text-sm font-semibold mb-4"
+                    style={{ color: "var(--void-text, #E8E8ED)" }}
+                  >
+                    Recommendations
+                  </h2>
                   <div className="space-y-2">
                     {score.recommendations.map((rec, i) => (
                       <div key={i} className="flex items-start gap-2 text-sm">
-                        <Target size={14} className="text-electric mt-0.5 shrink-0" />
-                        <p className="text-navy-600 dark:text-white/70">{rec}</p>
+                        <Target
+                          size={14}
+                          className="mt-0.5 shrink-0"
+                          style={{ color: "var(--neon-electric, #4361EE)" }}
+                        />
+                        <p style={{ color: "var(--void-text-muted, rgba(255,255,255,0.5))" }}>
+                          {rec}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -216,7 +354,8 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
                 {shareId && (
                   <button
                     onClick={() => router.push(`/create?from=${shareId}`)}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-electric text-white text-sm font-semibold hover:bg-electric-600 transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-colors hover:brightness-110"
+                    style={{ background: "var(--neon-electric, #4361EE)" }}
                   >
                     <CheckCircle2 size={16} />
                     Improve This Deck
@@ -224,7 +363,12 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
                 )}
                 <button
                   onClick={() => { setState("idle"); setFile(null); setScore(null); setError(""); }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-[var(--border-default)] bg-[var(--surface-1)] text-sm font-medium text-navy dark:text-white hover:bg-[var(--surface-2)] transition-colors"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-colors hover:bg-white/[0.06]"
+                  style={{
+                    border: "1px solid var(--void-border, rgba(255,255,255,0.06))",
+                    background: "var(--void-surface, rgba(255,255,255,0.03))",
+                    color: "var(--void-text, #E8E8ED)",
+                  }}
                 >
                   Score Another
                 </button>

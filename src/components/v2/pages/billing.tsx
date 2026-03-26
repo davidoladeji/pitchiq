@@ -37,12 +37,12 @@ const CURRENT_PLAN = "growth";
 
 function FeatureCell({ value }: { value: boolean | string }) {
   if (typeof value === "string") {
-    return <span className="text-sm text-neutral-700">{value}</span>;
+    return <span className="text-sm" style={{ color: "var(--void-text-muted)" }}>{value}</span>;
   }
   return value ? (
-    <CheckCircle className="h-4 w-4 text-success-500" />
+    <CheckCircle className="h-4 w-4" style={{ color: "var(--neon-emerald)" }} />
   ) : (
-    <X className="h-4 w-4 text-neutral-300" />
+    <X className="h-4 w-4" style={{ color: "var(--void-text-dim)" }} />
   );
 }
 
@@ -68,7 +68,7 @@ export default function BillingPage() {
   return (
     <div className="space-y-6">
       {/* Page header */}
-      <h1 className="text-2xl font-bold text-neutral-900">
+      <h1 className="text-2xl font-bold" style={{ color: "var(--void-text)" }}>
         Billing &amp; Plans
       </h1>
 
@@ -80,13 +80,13 @@ export default function BillingPage() {
         <CardContent>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xl font-bold text-primary-700">
+              <p className="text-xl font-bold" style={{ color: "var(--neon-electric)" }}>
                 {mockPlanInfo.name}
               </p>
-              <p className="text-lg text-neutral-700">
+              <p className="text-lg" style={{ color: "var(--void-text-muted)" }}>
                 ${mockPlanInfo.price}/{mockPlanInfo.interval}
               </p>
-              <p className="text-sm text-neutral-500">
+              <p className="text-sm" style={{ color: "var(--void-text-dim)" }}>
                 Renews on{" "}
                 {new Date(mockPlanInfo.renewalDate).toLocaleDateString(
                   "en-US",
@@ -107,12 +107,12 @@ export default function BillingPage() {
         <CardContent>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <CreditCard className="h-5 w-5 text-neutral-500" />
+              <CreditCard className="h-5 w-5" style={{ color: "var(--void-text-dim)" }} />
               <div>
-                <p className="text-sm font-medium text-neutral-700">
+                <p className="text-sm font-medium" style={{ color: "var(--void-text-muted)" }}>
                   {mockPlanInfo.cardBrand} ending in {mockPlanInfo.cardLast4}
                 </p>
-                <p className="text-xs text-neutral-400">Expires 12/2028</p>
+                <p className="text-xs" style={{ color: "var(--void-text-dim)" }}>Expires 12/2028</p>
               </div>
             </div>
             <Button variant="ghost" size="sm">
@@ -124,10 +124,10 @@ export default function BillingPage() {
 
       {/* ─── Section 2b: Pay As You Go ─── */}
       <div>
-        <h2 className="text-lg font-semibold text-neutral-900 mb-1">
+        <h2 className="text-lg font-semibold mb-1" style={{ color: "var(--void-text)" }}>
           Pay As You Go
         </h2>
-        <p className="text-sm text-neutral-500 mb-4">
+        <p className="text-sm mb-4" style={{ color: "var(--void-text-dim)" }}>
           No commitment &mdash; use PitchIQ when you need it
         </p>
 
@@ -136,22 +136,23 @@ export default function BillingPage() {
           <Card>
             <CardContent className="py-5">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-50">
-                  <CalendarClock size={20} className="text-primary-600" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg" style={{ background: "rgba(67,97,238,0.15)" }}>
+                  <CalendarClock size={20} style={{ color: "var(--neon-electric)" }} />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-neutral-900">
+                  <p className="text-sm font-semibold" style={{ color: "var(--void-text)" }}>
                     Period Passes
                   </p>
-                  <p className="text-lg font-bold text-primary-700">
+                  <p className="text-lg font-bold" style={{ color: "var(--neon-electric)" }}>
                     From $5/day
                   </p>
-                  <p className="mt-1 text-xs text-neutral-500">
+                  <p className="mt-1 text-xs" style={{ color: "var(--void-text-dim)" }}>
                     Get temporary access to Pro, Growth, or Enterprise features
                   </p>
                   <Link
                     href="/dashboard/credits"
-                    className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary-600 hover:underline"
+                    className="mt-2 inline-flex items-center gap-1 text-xs font-medium hover:underline"
+                    style={{ color: "var(--neon-cyan)" }}
                   >
                     View Passes
                     <ArrowRight size={12} />
@@ -165,22 +166,23 @@ export default function BillingPage() {
           <Card>
             <CardContent className="py-5">
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary-50">
-                  <Coins size={20} className="text-primary-600" />
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg" style={{ background: "rgba(67,97,238,0.15)" }}>
+                  <Coins size={20} style={{ color: "var(--neon-electric)" }} />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-neutral-900">
+                  <p className="text-sm font-semibold" style={{ color: "var(--void-text)" }}>
                     Credits
                   </p>
-                  <p className="text-lg font-bold text-primary-700">
+                  <p className="text-lg font-bold" style={{ color: "var(--neon-electric)" }}>
                     From $0.99/credit
                   </p>
-                  <p className="mt-1 text-xs text-neutral-500">
+                  <p className="mt-1 text-xs" style={{ color: "var(--void-text-dim)" }}>
                     Pay per action &mdash; AI coaching, exports, investor matching
                   </p>
                   <Link
                     href="/dashboard/credits"
-                    className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary-600 hover:underline"
+                    className="mt-2 inline-flex items-center gap-1 text-xs font-medium hover:underline"
+                    style={{ color: "var(--neon-cyan)" }}
                   >
                     Buy Credits
                     <ArrowRight size={12} />
@@ -194,7 +196,7 @@ export default function BillingPage() {
 
       {/* ─── Section 3: Compare Plans ─── */}
       <div>
-        <h2 className="text-lg font-semibold text-neutral-900 mb-4">
+        <h2 className="text-lg font-semibold mb-4" style={{ color: "var(--void-text)" }}>
           Compare Plans
         </h2>
 
@@ -209,15 +211,12 @@ export default function BillingPage() {
             return (
               <Card
                 key={plan.key}
-                className={
-                  isCurrent
-                    ? "border-primary-300 ring-1 ring-primary-200"
-                    : ""
-                }
+                className={isCurrent ? "ring-1" : ""}
+                style={isCurrent ? { borderColor: "rgba(67,97,238,0.4)", boxShadow: "0 0 20px rgba(67,97,238,0.1)" } : {}}
               >
                 <CardHeader>
                   <CardTitle>{plan.name}</CardTitle>
-                  <p className="text-lg font-bold text-neutral-900">
+                  <p className="text-lg font-bold" style={{ color: "var(--void-text)" }}>
                     {plan.price}
                   </p>
                 </CardHeader>
@@ -230,7 +229,7 @@ export default function BillingPage() {
                         className="flex items-center gap-2 text-sm"
                       >
                         <FeatureCell value={f[plan.key]} />
-                        <span className="text-neutral-600">{f.name}</span>
+                        <span style={{ color: "var(--void-text-muted)" }}>{f.name}</span>
                       </li>
                     ))}
                   </ul>

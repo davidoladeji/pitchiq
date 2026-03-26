@@ -8,14 +8,14 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-gradient-primary text-white shadow-glow-primary/50 hover:shadow-glow-primary",
+          "text-white shadow-[0_4px_20px_rgba(67,97,238,0.3)]",
         secondary:
-          "bg-neutral-100 text-neutral-700 hover:bg-neutral-200",
+          "text-[var(--void-text-muted,rgba(255,255,255,0.5))] hover:bg-white/[0.08]",
         outline:
-          "border border-neutral-200 bg-transparent hover:bg-primary-50 hover:text-primary-700 hover:border-primary-300",
-        ghost: "hover:bg-neutral-100",
-        destructive: "bg-error-500 text-white hover:bg-error-600",
-        link: "text-primary-600 underline-offset-4 hover:underline",
+          "border bg-transparent border-[var(--void-border,rgba(255,255,255,0.06))] text-[var(--void-text-muted,rgba(255,255,255,0.5))] hover:bg-white/[0.06] hover:border-white/[0.12]",
+        ghost: "text-[var(--void-text-muted,rgba(255,255,255,0.5))] hover:bg-white/[0.06]",
+        destructive: "bg-red-500/80 text-white hover:bg-red-500",
+        link: "text-[var(--neon-cyan,#00F0FF)] underline-offset-4 hover:underline",
       },
       size: {
         sm: "h-8 px-3 text-xs",
@@ -38,11 +38,16 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, loading, children, disabled, ...props }, ref) => (
+  ({ className, variant, size, loading, children, disabled, style, ...props }, ref) => (
     <button
       ref={ref}
       className={cn(buttonVariants({ variant, size }), className)}
       disabled={disabled || loading}
+      style={{
+        ...(variant === "default" || variant === undefined ? { background: "var(--neon-electric, #4361EE)" } : {}),
+        ...(variant === "secondary" ? { background: "var(--void-surface, rgba(255,255,255,0.03))" } : {}),
+        ...style,
+      }}
       {...props}
     >
       {loading && (
