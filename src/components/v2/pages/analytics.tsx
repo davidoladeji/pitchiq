@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { Eye, Users, Clock, Trophy } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
@@ -10,29 +10,18 @@ import { staggerContainer, fadeInUp } from "@/lib/animations";
 import { MetricCard } from "@/components/v2/dashboard/metric-card";
 import { AnalyticsChart } from "@/components/v2/dashboard/analytics-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/v2/ui/card";
+import { useDashboardData } from "@/components/v2/shell/DashboardDataContext";
 
 import type { DailyDataPoint, DeckItem } from "@/types";
 
 const PIE_COLORS = ["var(--neon-electric)", "var(--neon-cyan)", "var(--neon-emerald)", "var(--neon-violet)", "#FBBF24"];
 
 export default function AnalyticsPage() {
-  const [dailyViews, setDailyViews] = useState<DailyDataPoint[]>([]);
-  const [decks, setDecks] = useState<DeckItem[]>([]);
-  const [totalViews, setTotalViews] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const { data: dashData, loading } = useDashboardData();
+  const dailyViews = (dashData?.dailyViews || []) as DailyDataPoint[];
+  const decks = (dashData?.decks || []) as DeckItem[];
+  const totalViews = dashData?.stats?.totalViews || 0;
   const [range, setRange] = useState("30d");
-
-  useEffect(() => {
-    fetch("/api/v2/dashboard")
-      .then((r) => r.json())
-      .then((d) => {
-        setDailyViews(d.dailyViews || []);
-        setDecks(d.decks || []);
-        setTotalViews(d.stats?.totalViews || 0);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
 
   const chartData = useMemo(() => {
     if (range === "7d") return dailyViews.slice(-7);

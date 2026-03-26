@@ -8,6 +8,7 @@ import {
   Search, Users, Mic, FlaskConical, Building2, Settings,
   Coins,
 } from "lucide-react";
+import { useDashboardTab, TAB_TO_PATH } from "./DashboardTabContext";
 
 /* ------------------------------------------------------------------ */
 /*  Icon Rail — Tesla-style vertical icon navigation                   */
@@ -41,15 +42,44 @@ const WORKSPACE_NAV: NavItem[] = [
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
+/** Reverse-lookup: path → tab key */
+const PATH_TO_TAB: Record<string, string> = {};
+for (const [tab, path] of Object.entries(TAB_TO_PATH)) {
+  PATH_TO_TAB[path] = tab;
+}
+
 export function IconRail() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user as { image?: string; name?: string } | undefined;
 
+  // Try to use tab context (available when inside dashboard layout)
+  let tabCtx: { activeTab: string; setActiveTab: (t: string) => void } | null = null;
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    tabCtx = useDashboardTab();
+  } catch {
+    // Not inside DashboardTabProvider (e.g., /settings, /billing pages that render their own AppShellV2)
+  }
+
   const isActive = (href: string) => {
+    if (tabCtx) {
+      const tab = PATH_TO_TAB[href];
+      if (tab) return tabCtx.activeTab === tab;
+    }
+    // Fallback for non-dashboard routes
     if (href === "/dashboard") return pathname === "/dashboard";
     return pathname.startsWith(href);
+  };
+
+  const handleNav = (href: string, e: React.MouseEvent) => {
+    const tab = PATH_TO_TAB[href];
+    if (tab && tabCtx) {
+      e.preventDefault();
+      tabCtx.setActiveTab(tab);
+    }
+    // Non-dashboard hrefs: let the <a> / <Link> do its normal thing
   };
 
   return (
@@ -57,40 +87,46 @@ export function IconRail() {
       style={{ borderRight: "1px solid var(--void-border)" }}
     >
       {/* Logo */}
-      <Link href="/dashboard" className="w-10 h-10 rounded-xl flex items-center justify-center mb-6 glow-electric" style={{ background: "var(--neon-electric)" }}>
+      <a
+        href="/dashboard"
+        onClick={(e) => handleNav("/dashboard", e)}
+        className="w-10 h-10 rounded-xl flex items-center justify-center mb-6 glow-electric"
+        style={{ background: "var(--neon-electric)" }}
+      >
         <span className="text-white font-black text-sm">P</span>
-      </Link>
+      </a>
 
       {/* Main nav */}
       <div className="flex-1 flex flex-col items-center gap-1 w-full px-2">
         {MAIN_NAV.map((item) => (
-          <RailItem key={item.href} item={item} active={isActive(item.href)} />
+          <RailItem key={item.href} item={item} active={isActive(item.href)} onNav={handleNav} />
         ))}
 
         {/* Separator */}
         <div className="w-6 h-px bg-white/[0.06] my-2" />
 
         {FUNDRAISE_NAV.map((item) => (
-          <RailItem key={item.href} item={item} active={isActive(item.href)} />
+          <RailItem key={item.href} item={item} active={isActive(item.href)} onNav={handleNav} />
         ))}
 
         {/* Separator */}
         <div className="w-6 h-px bg-white/[0.06] my-2" />
 
         {WORKSPACE_NAV.map((item) => (
-          <RailItem key={item.href} item={item} active={isActive(item.href)} />
+          <RailItem key={item.href} item={item} active={isActive(item.href)} onNav={handleNav} />
         ))}
       </div>
 
       {/* Bottom: Credits + Avatar */}
       <div className="flex flex-col items-center gap-2 mt-auto px-2">
-        <Link
+        <a
           href="/dashboard/credits"
+          onClick={(e) => handleNav("/dashboard/credits", e)}
           className="w-10 h-10 rounded-xl flex items-center justify-center transition-all hover:bg-white/[0.06]"
           title="Credits"
         >
           <Coins size={18} className="text-white/40" />
-        </Link>
+        </a>
 
         <button
           onClick={() => router.push("/settings")}
@@ -110,10 +146,11 @@ export function IconRail() {
   );
 }
 
-function RailItem({ item, active }: { item: NavItem; active: boolean }) {
+function RailItem({ item, active, onNav }: { item: NavItem; active: boolean; onNav: (href: string, e: React.MouseEvent) => void }) {
   const Icon = item.icon;
+  const isDashboardRoute = item.href.startsWith("/dashboard");
 
-  // Accent items (Create) get a filled neon background
+  // Accent items (Create) get a filled neon background — always use Link (non-dashboard)
   if (item.accent) {
     return (
       <Link href={item.href} title={item.label}
@@ -128,14 +165,12 @@ function RailItem({ item, active }: { item: NavItem; active: boolean }) {
     );
   }
 
-  return (
-    <Link
-      href={item.href}
-      className={`relative group w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-        active ? "bg-white/[0.08]" : "hover:bg-white/[0.04]"
-      }`}
-      title={item.label}
-    >
+  // Shared inner content
+  const cls = `relative group w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
+    active ? "bg-white/[0.08]" : "hover:bg-white/[0.04]"
+  }`;
+  const inner = (
+    <>
       {active && (
         <span className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[3px] w-[3px] h-5 rounded-full" style={{ background: "var(--neon-cyan)", boxShadow: "0 0 8px rgba(var(--neon-cyan-rgb), 0.5)" }} />
       )}
@@ -143,6 +178,21 @@ function RailItem({ item, active }: { item: NavItem; active: boolean }) {
       <span className="absolute left-full ml-3 px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" style={{ background: "var(--void-3)", color: "var(--void-text)", border: "1px solid var(--void-border)" }}>
         {item.label}
       </span>
+    </>
+  );
+
+  // Dashboard routes: use <a> with tab switching; others: use <Link>
+  if (isDashboardRoute) {
+    return (
+      <a href={item.href} onClick={(e) => onNav(item.href, e)} className={cls} title={item.label}>
+        {inner}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={item.href} className={cls} title={item.label}>
+      {inner}
     </Link>
   );
 }

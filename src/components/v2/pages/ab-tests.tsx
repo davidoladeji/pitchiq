@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Plus, FlaskConical } from "lucide-react";
@@ -9,19 +8,13 @@ import { Button } from "@/components/v2/ui/button";
 import { Card } from "@/components/v2/ui/card";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
 import { relativeTime } from "@/lib/cn";
+import { useDashboardData } from "@/components/v2/shell/DashboardDataContext";
 import type { ABTest } from "@/types";
 
 export default function ABTestsPage() {
   const router = useRouter();
-  const [tests, setTests] = useState<ABTest[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/v2/dashboard")
-      .then((r) => r.json())
-      .then((d) => { setTests(d.abTests || []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
+  const { data: dashData, loading } = useDashboardData();
+  const tests = (dashData?.abTests || []) as ABTest[];
 
   if (loading) {
     return (

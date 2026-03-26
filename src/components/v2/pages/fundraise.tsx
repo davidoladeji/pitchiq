@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
@@ -9,6 +8,7 @@ import { Button } from "@/components/v2/ui/button";
 import { Card, CardContent } from "@/components/v2/ui/card";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
 import { relativeTime } from "@/lib/cn";
+import { useDashboardData } from "@/components/v2/shell/DashboardDataContext";
 import type { FundraisePipeline, InvestorContact } from "@/types";
 
 const STAGES = [
@@ -21,20 +21,9 @@ const STAGES = [
 
 export default function FundraisePage() {
   const router = useRouter();
-  const [pipeline, setPipeline] = useState<FundraisePipeline>({ identified: 0, contacted: 0, meeting: 0, dueDiligence: 0, termSheet: 0 });
-  const [contacts, setContacts] = useState<InvestorContact[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/v2/dashboard")
-      .then((r) => r.json())
-      .then((d) => {
-        setPipeline(d.fundraise || { identified: 0, contacted: 0, meeting: 0, dueDiligence: 0, termSheet: 0 });
-        setContacts(d.investorContacts || []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+  const { data: dashData, loading } = useDashboardData();
+  const pipeline = (dashData?.fundraise || { identified: 0, contacted: 0, meeting: 0, dueDiligence: 0, termSheet: 0 }) as FundraisePipeline;
+  const contacts = (dashData?.investorContacts || []) as InvestorContact[];
 
   const total = Object.values(pipeline).reduce((s, v) => s + v, 0);
 

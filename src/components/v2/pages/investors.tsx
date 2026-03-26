@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Search, UserCheck } from "lucide-react";
 import { staggerContainer, fadeInUp } from "@/lib/animations";
@@ -9,25 +9,15 @@ import { relativeTime } from "@/lib/cn";
 import { Card, CardHeader, CardTitle } from "@/components/v2/ui/card";
 import { Badge } from "@/components/v2/ui/badge";
 import { Input } from "@/components/v2/ui/input";
+import { useDashboardData } from "@/components/v2/shell/DashboardDataContext";
 
 import type { InvestorMatch, InvestorContact } from "@/types";
 
 export default function InvestorsPage() {
-  const [investors, setInvestors] = useState<InvestorMatch[]>([]);
-  const [contacts, setContacts] = useState<InvestorContact[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: dashData, loading } = useDashboardData();
+  const investors = (dashData?.investors || []) as InvestorMatch[];
+  const contacts = (dashData?.investorContacts || []) as InvestorContact[];
   const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    fetch("/api/v2/dashboard")
-      .then((r) => r.json())
-      .then((d) => {
-        setInvestors(d.investors || []);
-        setContacts(d.investorContacts || []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
 
   const filteredContacts = contacts.filter((c) =>
     !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.firm.toLowerCase().includes(search.toLowerCase())

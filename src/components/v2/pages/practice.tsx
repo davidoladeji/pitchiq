@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Mic, Clock, BarChart3 } from "lucide-react";
 import { Badge } from "@/components/v2/ui/badge";
 import { Card } from "@/components/v2/ui/card";
 import { Button } from "@/components/v2/ui/button";
+import { useDashboardData } from "@/components/v2/shell/DashboardDataContext";
 
 interface PracticeSession {
   id: string;
@@ -32,15 +32,8 @@ function timeAgo(dateStr: string): string {
 
 export default function PracticePage() {
   const router = useRouter();
-  const [sessions, setSessions] = useState<PracticeSession[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/v2/dashboard")
-      .then((r) => r.json())
-      .then((d) => { setSessions(d.practice || []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
+  const { data: dashData, loading } = useDashboardData();
+  const sessions = (dashData?.practice || []) as PracticeSession[];
 
   if (loading) {
     return (

@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Search, Eye, Plus, Pencil, ExternalLink, Sparkles } from "lucide-react";
+import { useDashboardData } from "@/components/v2/shell/DashboardDataContext";
 
 /* ------------------------------------------------------------------ */
 /*  Decks Page — Void Command Center style                             */
@@ -34,17 +35,10 @@ function timeAgo(dateStr: string): string {
 
 export default function DecksPage() {
   const router = useRouter();
-  const [decks, setDecks] = useState<DeckItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: dashData, loading } = useDashboardData();
+  const decks = (dashData?.decks || []) as DeckItem[];
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<"recent" | "score" | "views">("recent");
-
-  useEffect(() => {
-    fetch("/api/v2/dashboard")
-      .then((r) => r.json())
-      .then((d) => { setDecks(d.decks || []); setLoading(false); })
-      .catch(() => setLoading(false));
-  }, []);
 
   const filtered = useMemo(() => {
     let list = decks;
