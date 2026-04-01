@@ -112,7 +112,11 @@ export async function GET() {
   // ── Transform decks ──
   const deckItems = decks.map((d) => {
     let score = 0;
-    try { score = JSON.parse(d.piqScore)?.overall || 0; } catch { /* */ }
+    try {
+      const parsed = JSON.parse(d.piqScore);
+      const raw = parsed?.overall;
+      score = typeof raw === "number" ? raw : (typeof raw?.score === "number" ? raw.score : 0);
+    } catch { /* */ }
     return {
       id: d.shareId,
       title: d.title,
