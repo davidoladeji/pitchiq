@@ -238,7 +238,8 @@ function QuickAction({ icon: Icon, label, href, glow }: {
 }
 
 function DeckCard({ deck }: { deck: DeckItem }) {
-  const scoreColor = deck.score >= 90 ? "var(--neon-emerald)" : deck.score >= 70 ? "var(--neon-cyan)" : deck.score >= 50 ? "#FBBF24" : "#F87171";
+  const score = typeof deck.score === "number" ? deck.score : (typeof deck.score === "object" && deck.score && "score" in deck.score ? Number((deck.score as { score: unknown }).score) || 0 : Number(deck.score) || 0);
+  const scoreColor = score >= 90 ? "var(--neon-emerald)" : score >= 70 ? "var(--neon-cyan)" : score >= 50 ? "#FBBF24" : "#F87171";
   return (
     <Link href={`/deck/${deck.id}`} className="void-card p-4 group block">
       <div className="flex items-start justify-between mb-3">
@@ -248,9 +249,9 @@ function DeckCard({ deck }: { deck: DeckItem }) {
             {deck.companyName}
           </p>
         </div>
-        {deck.score > 0 && (
+        {score > 0 && (
           <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ml-2" style={{ border: `2px solid ${scoreColor}`, color: scoreColor, boxShadow: `0 0 12px ${scoreColor}30` }}>
-            {deck.score}
+            {score}
           </div>
         )}
       </div>

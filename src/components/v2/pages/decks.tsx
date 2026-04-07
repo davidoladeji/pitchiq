@@ -118,7 +118,8 @@ export default function DecksPage() {
       {/* Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {filtered.map((deck) => {
-          const scoreColor = deck.score >= 90 ? "var(--neon-emerald)" : deck.score >= 70 ? "var(--neon-cyan)" : deck.score >= 50 ? "#FBBF24" : deck.score > 0 ? "#F87171" : "var(--void-text-dim)";
+          const numScore = typeof deck.score === "number" ? deck.score : (typeof deck.score === "object" && deck.score && "score" in deck.score ? Number((deck.score as { score: unknown }).score) || 0 : Number(deck.score) || 0);
+          const scoreColor = numScore >= 90 ? "var(--neon-emerald)" : numScore >= 70 ? "var(--neon-cyan)" : numScore >= 50 ? "#FBBF24" : numScore > 0 ? "#F87171" : "var(--void-text-dim)";
           return (
             <div key={deck.id} className="void-card overflow-hidden group">
               {/* Thumbnail area */}
@@ -140,9 +141,9 @@ export default function DecksPage() {
 
                 {/* Stats row */}
                 <div className="flex items-center gap-3 mt-3">
-                  {deck.score > 0 && (
+                  {numScore > 0 && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold" style={{ background: `${scoreColor}15`, color: scoreColor, border: `1px solid ${scoreColor}25` }}>
-                      {deck.score}
+                      {numScore}
                     </span>
                   )}
                   <span className="flex items-center gap-1 text-xs" style={{ color: "var(--void-text-dim)" }}>

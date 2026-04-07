@@ -202,8 +202,16 @@ function QuickAction({ icon: Icon, label, href, tab, onTab }: {
   );
 }
 
+/** Safely extract a numeric score — handles object {score, feedback} or raw number */
+function safeScore(val: unknown): number {
+  if (typeof val === "number") return val;
+  if (val && typeof val === "object" && "score" in val) return Number((val as { score: unknown }).score) || 0;
+  return Number(val) || 0;
+}
+
 function DeckCard({ deck }: { deck: DeckItem }) {
-  const scoreColor = deck.score >= 90 ? "var(--neon-emerald)" : deck.score >= 70 ? "var(--neon-cyan)" : deck.score >= 50 ? "#FBBF24" : "#F87171";
+  const score = safeScore(deck.score);
+  const scoreColor = score >= 90 ? "var(--neon-emerald)" : score >= 70 ? "var(--neon-cyan)" : score >= 50 ? "#FBBF24" : "#F87171";
   return (
     <Link href={`/deck/${deck.id}`} className="void-card p-4 group block">
       <div className="flex items-start justify-between mb-3">
@@ -213,9 +221,9 @@ function DeckCard({ deck }: { deck: DeckItem }) {
             {deck.companyName}
           </p>
         </div>
-        {deck.score > 0 && (
+        {score > 0 && (
           <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ml-2" style={{ border: `2px solid ${scoreColor}`, color: scoreColor, boxShadow: `0 0 12px ${scoreColor}30` }}>
-            {deck.score}
+            {score}
           </div>
         )}
       </div>
