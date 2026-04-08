@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 import AppShellV2 from "./shell/AppShell";
 import Link from "next/link";
 import {
@@ -59,7 +58,6 @@ export default function DashboardNew({ userName, plan }: Props) {
   if (loading || !data) {
     return (
       <AppShellV2 userName={userName} userPlan={plan}>
-        <DashboardVersionToggle />
         <div className="space-y-6 mt-4">
           {/* Skeleton telemetry */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -86,7 +84,6 @@ export default function DashboardNew({ userName, plan }: Props) {
       userPlan={plan}
       recentDecks={decks.slice(0, 5).map((d) => ({ shareId: d.id, title: d.title, piqScore: d.score }))}
     >
-      <DashboardVersionToggle />
 
       <div className="space-y-8 mt-2">
         {/* ── Hero Greeting ── */}

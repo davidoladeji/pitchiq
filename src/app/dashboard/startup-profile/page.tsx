@@ -3,9 +3,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useDashboardVersion } from "@/lib/dashboard-version";
 import AppShellV2 from "@/components/v2/shell/AppShell";
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 import {
   Building2,
   Tag,
@@ -391,7 +389,6 @@ function completeness(form: ProfileForm): number {
 /* ------------------------------------------------------------------ */
 export default function StartupProfilePage() {
   const router = useRouter();
-  const { version: dashboardVersion } = useDashboardVersion();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<ProfileForm>(EMPTY_FORM);
   const [loading, setLoading] = useState(true);
@@ -1141,8 +1138,7 @@ export default function StartupProfilePage() {
     <main
       id="main"
       tabIndex={-1}
-      className={dashboardVersion === "new" ? "outline-none" : "min-h-screen outline-none"}
-      style={dashboardVersion === "new" ? undefined : { background: "#0F0F14" }}
+      className="outline-none"
       aria-labelledby="startup-profile-page-heading"
     >
       {/* Close dropdown on outside click */}
@@ -1346,16 +1342,11 @@ export default function StartupProfilePage() {
     </main>
   );
 
-  if (dashboardVersion === "new") {
-    return (
-      <AppShellV2 breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Startup Profile" }]}>
-        <DashboardVersionToggle />
-        {pageContent}
-      </AppShellV2>
-    );
-  }
-
-  return pageContent;
+  return (
+    <AppShellV2 breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Startup Profile" }]}>
+      {pageContent}
+    </AppShellV2>
+  );
 }
 
 /* ------------------------------------------------------------------ */

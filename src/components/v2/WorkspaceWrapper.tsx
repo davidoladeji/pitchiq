@@ -1,6 +1,5 @@
 "use client";
 import AppShellV2 from "./shell/AppShell";
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 
 interface Props {
   children: React.ReactNode;
@@ -9,7 +8,6 @@ interface Props {
 export default function WorkspaceV2({ children }: Props) {
   return (
     <AppShellV2 breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Team" }]}>
-      <DashboardVersionToggle />
       {children}
     </AppShellV2>
   );

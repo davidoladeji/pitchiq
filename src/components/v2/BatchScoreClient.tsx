@@ -2,7 +2,6 @@
 
 import AppShellV2 from "./shell/AppShell";
 import { PageTransition } from "./shared/PageTransition";
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 import BatchScoreClientClassic from "@/components/BatchScoreClient";
 
 interface Props {
@@ -24,7 +23,6 @@ export default function BatchScoreV2({ userName, userPlan, ...rest }: Props) {
     >
       <PageTransition>
         <div className="max-w-5xl mx-auto">
-          <DashboardVersionToggle />
           <div className="mt-4 mb-6">
             <h1 className="text-2xl font-bold" style={{ color: "var(--void-text, #E8E8ED)" }}>Batch Scoring</h1>
             <p className="text-sm mt-1" style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}>Score multiple pitch decks at once</p>

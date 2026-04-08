@@ -1,6 +1,5 @@
 "use client";
 
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 import AppShellV2 from "./shell/AppShell";
 import { PageTransition } from "./shared/PageTransition";
 import { useState, useCallback, useRef } from "react";
@@ -85,7 +84,6 @@ export default function ScorePageV2({ userPlan = "starter", userName }: Props) {
     >
       <PageTransition>
         <div className="max-w-3xl mx-auto">
-          <DashboardVersionToggle />
 
           <div className="mt-4 mb-8">
             <h1

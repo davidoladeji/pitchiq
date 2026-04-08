@@ -1,6 +1,5 @@
 "use client";
 import AppShellV2 from "./shell/AppShell";
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 
 // Lazy-import the existing credits page content to avoid circular deps
 import { useState, useEffect } from "react";
@@ -30,7 +29,6 @@ export default function CreditsV2() {
 
   return (
     <AppShellV2 breadcrumbs={[{ label: "Dashboard", href: "/dashboard" }, { label: "Credits" }]}>
-      <DashboardVersionToggle />
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-neutral-900">Credits & Passes</h1>

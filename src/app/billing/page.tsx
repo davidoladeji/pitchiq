@@ -3,9 +3,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
-import BillingClient from "@/components/BillingClient";
 import BillingV2 from "@/components/v2/BillingClient";
-import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -41,10 +39,5 @@ export default async function BillingPage() {
     deckCount: user?._count.decks || 0,
   };
 
-  return (
-    <DashboardVersionGate
-      classicComponent={<BillingClient {...billingProps} />}
-      newComponent={<BillingV2 {...billingProps} />}
-    />
-  );
+  return <BillingV2 {...billingProps} />;
 }

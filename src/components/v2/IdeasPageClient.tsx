@@ -2,7 +2,6 @@
 
 import AppShellV2 from "./shell/AppShell";
 import { PageTransition } from "./shared/PageTransition";
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 import IdeasPageClientClassic from "@/components/IdeasPageClient";
 
 export default function IdeasPageV2() {
@@ -15,7 +14,6 @@ export default function IdeasPageV2() {
     >
       <PageTransition>
         <div className="max-w-4xl mx-auto">
-          <DashboardVersionToggle />
           <div className="mt-4 mb-6">
             <h1 className="text-2xl font-bold" style={{ color: "var(--void-text, #E8E8ED)" }}>Startup Ideas</h1>
             <p className="text-sm mt-1" style={{ color: "var(--void-text-dim, rgba(255,255,255,0.3))" }}>Answer a few questions and get AI-generated startup ideas</p>

@@ -2,7 +2,6 @@
 
 import AppShellV2 from "./shell/AppShell";
 import { PageTransition } from "./shared/PageTransition";
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 import WorkspaceDashboardClientClassic from "@/components/workspace/WorkspaceDashboardClient";
 
 interface Props {
@@ -22,7 +21,6 @@ export default function WorkspaceDashboardV2({ userName, userPlan, workspace }: 
       ]}
     >
       <PageTransition>
-        <DashboardVersionToggle />
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <WorkspaceDashboardClientClassic workspace={workspace as any} />
       </PageTransition>

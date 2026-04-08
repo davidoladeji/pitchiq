@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { cookies } from "next/headers";
 import Providers from "@/components/Providers";
 import { NAVY_HEX } from "@/lib/design-tokens";
 import "./globals.css";
@@ -45,17 +44,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Read dashboard version from cookie (set by toggle + dashboard layout)
-  // No DB query — cookie is the source of truth after first visit
-  const cookieStore = await cookies();
-  const dashboardVersion: "classic" | "new" =
-    cookieStore.get("dashboard_version")?.value === "new" ? "new" : "classic";
-
   return (
     <html lang="en" className={`${jetbrainsMono.variable} ${inter.variable}`}>
       <body className="antialiased">
@@ -66,7 +59,7 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <Providers dashboardVersion={dashboardVersion}>{children}</Providers>
+        <Providers>{children}</Providers>
         <Analytics />
         <SpeedInsights />
       </body>

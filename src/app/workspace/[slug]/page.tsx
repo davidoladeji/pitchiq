@@ -5,7 +5,6 @@ import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import WorkspaceDashboardClient from "@/components/workspace/WorkspaceDashboardClient";
 import WorkspaceV2 from "@/components/v2/WorkspaceWrapper";
-import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -95,13 +94,8 @@ export default async function WorkspacePage({
   };
 
   return (
-    <DashboardVersionGate
-      classicComponent={<WorkspaceDashboardClient workspace={wsData} />}
-      newComponent={
-        <WorkspaceV2>
-          <WorkspaceDashboardClient workspace={wsData} embedded />
-        </WorkspaceV2>
-      }
-    />
+    <WorkspaceV2>
+      <WorkspaceDashboardClient workspace={wsData} embedded />
+    </WorkspaceV2>
   );
 }

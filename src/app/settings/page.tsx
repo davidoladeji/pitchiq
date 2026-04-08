@@ -3,9 +3,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
-import SettingsClient from "@/components/SettingsClient";
 import SettingsV2 from "@/components/v2/SettingsClient";
-import DashboardVersionGate from "@/components/DashboardVersionGate";
 
 export const dynamic = "force-dynamic";
 
@@ -46,10 +44,5 @@ export default async function SettingsPage() {
     customAccentColor: user?.customAccentColor || null,
   };
 
-  return (
-    <DashboardVersionGate
-      classicComponent={<SettingsClient {...settingsProps} />}
-      newComponent={<SettingsV2 {...settingsProps} />}
-    />
-  );
+  return <SettingsV2 {...settingsProps} />;
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { DashboardVersionToggle } from "@/components/DashboardVersionToggle";
 import AppShellV2 from "./shell/AppShell";
 import { PageTransition } from "./shared/PageTransition";
 import type { DeckInput } from "@/lib/types";
@@ -93,7 +92,6 @@ export default function CreatePageV2({ userPlan = "starter", userName }: Props) 
     <AppShellV2 userName={userName} userPlan={userPlan}>
       <PageTransition>
         <div className="max-w-3xl mx-auto">
-          <DashboardVersionToggle />
 
           {/* Header */}
           <div className="mt-4 mb-6 flex items-center gap-3">
@@ -111,18 +109,15 @@ export default function CreatePageV2({ userPlan = "starter", userName }: Props) 
             {STEPS.map((step) => {
               const Icon = step.icon;
               const active = activeStep === step.id;
-              const complete = isStepComplete(step.id) && activeStep !== step.id;
               return (
                 <button key={step.id} onClick={() => setActiveStep(step.id)}
                   className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-xs font-medium transition-all"
                   style={active
                     ? { background: "rgba(var(--neon-electric-rgb), 0.1)", color: "var(--neon-cyan)", border: "1px solid rgba(var(--neon-electric-rgb), 0.2)" }
-                    : complete
-                      ? { color: "var(--neon-emerald)" }
-                      : { color: "var(--void-text-dim)" }
+                    : { color: "var(--void-text-dim)" }
                   }
                 >
-                  {complete ? <Check size={14} style={{ color: "var(--neon-emerald)" }} /> : <Icon size={14} />}
+                  <Icon size={14} />
                   <span className="hidden sm:inline">{step.label}</span>
                 </button>
               );

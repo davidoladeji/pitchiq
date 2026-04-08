@@ -2,8 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { User, Palette, Globe, Save, Loader2, Check } from "lucide-react";
-import { useDashboardVersion } from "@/lib/dashboard-version";
+import { User, Palette, Save, Loader2, Check } from "lucide-react";
 import AppShellV2 from "./shell/AppShell";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
@@ -21,11 +20,10 @@ interface Props {
   customAccentColor: string | null;
 }
 
-type Tab = "profile" | "branding" | "dashboard";
+type Tab = "profile" | "branding";
 
 export default function SettingsV2(props: Props) {
   const router = useRouter();
-  const { version, toggle, isToggling } = useDashboardVersion();
   const [activeTab, setActiveTab] = useState<Tab>("profile");
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -68,7 +66,6 @@ export default function SettingsV2(props: Props) {
   const TABS: { id: Tab; label: string; icon: React.ElementType }[] = [
     { id: "profile", label: "Profile", icon: User },
     { id: "branding", label: "Branding", icon: Palette },
-    { id: "dashboard", label: "Dashboard", icon: Globe },
   ];
 
   return (
@@ -186,38 +183,6 @@ export default function SettingsV2(props: Props) {
           </Card>
         )}
 
-        {/* Dashboard tab */}
-        {activeTab === "dashboard" && (
-          <Card className="p-6 space-y-5">
-            <div>
-              <h2 className="text-sm font-semibold text-neutral-900">Dashboard Experience</h2>
-              <p className="text-xs text-neutral-500 mt-0.5">Choose your preferred dashboard layout</p>
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => { if (version !== "classic") toggle(); }}
-                disabled={isToggling}
-                className={`flex-1 p-4 rounded-xl border-2 text-left transition-all ${
-                  version === "classic" ? "border-primary-500 bg-primary-50" : "border-neutral-200 hover:border-neutral-300"
-                }`}
-              >
-                <p className="text-sm font-semibold text-neutral-900">Classic</p>
-                <p className="text-xs text-neutral-500 mt-0.5">The original PitchIQ layout with floating nav</p>
-              </button>
-              <button
-                onClick={() => { if (version !== "new") toggle(); }}
-                disabled={isToggling}
-                className={`flex-1 p-4 rounded-xl border-2 text-left transition-all ${
-                  version === "new" ? "border-primary-500 bg-primary-50" : "border-neutral-200 hover:border-neutral-300"
-                }`}
-              >
-                <p className="text-sm font-semibold text-neutral-900">New</p>
-                <p className="text-xs text-neutral-500 mt-0.5">Redesigned with sidebar navigation and enhanced visuals</p>
-              </button>
-            </div>
-          </Card>
-        )}
       </div>
     </AppShellV2>
   );
