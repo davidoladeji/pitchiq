@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   FolderOpen, Eye, Star, Trophy, Plus, Target, Lightbulb,
   ArrowUpRight, Clock, TrendingUp, Sparkles,
 } from "lucide-react";
+import { staggerContainer, fadeInUp } from "@/lib/animations";
 import { useDashboardData } from "@/components/v2/shell/DashboardDataContext";
 import { useDashboardTab } from "@/components/v2/shell/DashboardTabContext";
 
@@ -38,9 +40,9 @@ export default function DashboardOverview() {
   };
 
   return (
-    <div className="space-y-8">
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-8">
       {/* ── Hero Greeting ── */}
-      <div>
+      <motion.div variants={fadeInUp}>
         <h1 className="text-3xl lg:text-4xl font-bold tracking-tight" style={{ color: "var(--void-text)" }}>
           {greeting}, {firstName}
         </h1>
@@ -50,26 +52,26 @@ export default function DashboardOverview() {
             : "Create your first deck to get started"
           }
         </p>
-      </div>
+      </motion.div>
 
       {/* ── Telemetry Orbs (metric cards) ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <motion.div variants={fadeInUp} className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <TelemetryOrb label="Decks" value={stats.totalDecks} icon={FolderOpen} color="var(--neon-electric)" />
         <TelemetryOrb label="Total Views" value={stats.totalViews} icon={Eye} color="var(--neon-cyan)" />
         <TelemetryOrb label="Avg PIQ" value={stats.avgScore} icon={Star} color="var(--neon-violet)" suffix="/100" />
         <TelemetryOrb label="Best Score" value={stats.bestScore} icon={Trophy} color="var(--neon-emerald)" suffix="/100" />
-      </div>
+      </motion.div>
 
       {/* ── Quick Launch ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <motion.div variants={fadeInUp} className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         <QuickAction icon={Plus} label="New Deck" href="/create" />
         <QuickAction icon={Target} label="Score Deck" href="/score" tab="score" onTab={goTab} />
         <QuickAction icon={Lightbulb} label="Ideas" href="/ideas" tab="ideas" onTab={goTab} />
         <QuickAction icon={TrendingUp} label="Investors" href="/dashboard/investor-match" tab="investor-match" onTab={goTab} />
-      </div>
+      </motion.div>
 
       {/* ── Deck Grid + Activity ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <motion.div variants={fadeInUp} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Deck grid */}
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
@@ -145,8 +147,8 @@ export default function DashboardOverview() {
             </div>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { Building2, Users, FolderOpen, Plus } from "lucide-react";
+import { staggerContainer, fadeInUp, scaleIn } from "@/lib/animations";
 import { Card } from "@/components/v2/ui/card";
 import { Button } from "@/components/v2/ui/button";
 import { Input } from "@/components/v2/ui/input";
@@ -75,9 +77,9 @@ export default function WorkspaceListV2({
   }
 
   return (
-    <div className="space-y-6">
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <motion.div variants={fadeInUp} className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold" style={{ color: "var(--void-text)" }}>
             Workspaces
@@ -91,11 +93,12 @@ export default function WorkspaceListV2({
             <Plus size={16} className="mr-2" /> New Workspace
           </Button>
         )}
-      </div>
+      </motion.div>
 
       {/* Create form */}
+      <AnimatePresence>
       {showCreate && (
-        <Card className="p-6">
+        <motion.div variants={scaleIn} initial="hidden" animate="visible" exit="hidden"><Card className="p-6">
           <h2 className="font-bold text-sm mb-3" style={{ color: "var(--void-text)" }}>
             Create workspace
           </h2>
@@ -124,12 +127,13 @@ export default function WorkspaceListV2({
               Workspaces are available on all plans. Upgrade to Enterprise for real-time collaboration.
             </p>
           )}
-        </Card>
+        </Card></motion.div>
       )}
+      </AnimatePresence>
 
       {/* Workspace list */}
       {workspaces.length === 0 ? (
-        <Card className="text-center py-16">
+        <motion.div variants={fadeInUp}><Card className="text-center py-16">
           <Building2 size={32} className="mx-auto mb-3" style={{ color: "var(--void-text-dim)" }} />
           <h2 className="text-lg font-bold mb-2" style={{ color: "var(--void-text)" }}>
             No workspaces yet
@@ -142,9 +146,9 @@ export default function WorkspaceListV2({
               Create Your First Workspace
             </Button>
           )}
-        </Card>
+        </Card></motion.div>
       ) : (
-        <div className="grid gap-4">
+        <motion.div variants={fadeInUp} className="grid gap-4">
           {workspaces.map((ws) => (
             <Link key={ws.id} href={`/workspace/${ws.slug}`}>
               <Card className="p-5 hover-lift">
@@ -174,8 +178,8 @@ export default function WorkspaceListV2({
               </Card>
             </Link>
           ))}
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

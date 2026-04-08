@@ -1,6 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Coins, Clock, ArrowUpRight } from "lucide-react";
+import { staggerContainer, fadeInUp } from "@/lib/animations";
 
 import { Badge } from "@/components/v2/ui/badge";
 import { Button } from "@/components/v2/ui/button";
@@ -46,9 +48,9 @@ const TYPE_BADGE: Record<Transaction["type"], "success" | "warning" | "primary">
 
 export default function CreditsPage() {
   return (
-    <div className="space-y-6">
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6">
       {/* ── Page header ─────────────────────────────────────── */}
-      <div className="flex items-center justify-between">
+      <motion.div variants={fadeInUp} className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold" style={{ color: "var(--void-text)" }}>
             Credits &amp; Passes
@@ -62,10 +64,10 @@ export default function CreditsPage() {
           <Coins size={16} />
           Buy Credits
         </Button>
-      </div>
+      </motion.div>
 
       {/* ── Section 1: Credit Balance ───────────────────────── */}
-      <Card>
+      <motion.div variants={fadeInUp}><Card>
         <CardHeader>
           <CardTitle>Credit Balance</CardTitle>
         </CardHeader>
@@ -80,10 +82,10 @@ export default function CreditsPage() {
             <Button>Buy More</Button>
           </div>
         </CardContent>
-      </Card>
+      </Card></motion.div>
 
       {/* ── Section 2: Active Passes ────────────────────────── */}
-      <Card>
+      <motion.div variants={fadeInUp}><Card>
         <CardHeader>
           <CardTitle>Active Passes</CardTitle>
         </CardHeader>
@@ -123,10 +125,10 @@ export default function CreditsPage() {
             </div>
           </div>
         </CardContent>
-      </Card>
+      </Card></motion.div>
 
       {/* ── Section 3: Transaction History ───────────────────── */}
-      <Card>
+      <motion.div variants={fadeInUp}><Card>
         <CardHeader>
           <CardTitle>Transaction History</CardTitle>
         </CardHeader>
@@ -166,7 +168,7 @@ export default function CreditsPage() {
             </TableBody>
           </Table>
         </CardContent>
-      </Card>
-    </div>
+      </Card></motion.div>
+    </motion.div>
   );
 }

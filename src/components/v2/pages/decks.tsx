@@ -3,7 +3,9 @@
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Search, Eye, Plus, Pencil, ExternalLink, Sparkles } from "lucide-react";
+import { staggerContainer, fadeInUp } from "@/lib/animations";
 import { useDashboardData } from "@/components/v2/shell/DashboardDataContext";
 
 /* ------------------------------------------------------------------ */
@@ -52,9 +54,9 @@ export default function DecksPage() {
   }, [decks, search, sort]);
 
   return (
-    <div className="space-y-6">
+    <motion.div variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-semibold" style={{ color: "var(--void-text)" }}>My Decks</h2>
           <p className="text-sm" style={{ color: "var(--void-text-dim)" }}>{decks.length} deck{decks.length !== 1 ? "s" : ""}</p>
@@ -66,10 +68,10 @@ export default function DecksPage() {
         >
           <Plus size={14} /> New Deck
         </button>
-      </div>
+      </motion.div>
 
       {/* Filters */}
-      <div className="flex items-center gap-3">
+      <motion.div variants={fadeInUp} className="flex items-center gap-3">
         <div className="relative flex-1 max-w-xs">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--void-text-dim)" }} />
           <input
@@ -95,7 +97,7 @@ export default function DecksPage() {
             </button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       {/* Empty state */}
       {filtered.length === 0 && !search && (
@@ -116,7 +118,7 @@ export default function DecksPage() {
       )}
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <motion.div variants={fadeInUp} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         {filtered.map((deck) => {
           const numScore = typeof deck.score === "number" ? deck.score : (typeof deck.score === "object" && deck.score && "score" in deck.score ? Number((deck.score as { score: unknown }).score) || 0 : Number(deck.score) || 0);
           const scoreColor = numScore >= 90 ? "var(--neon-emerald)" : numScore >= 70 ? "var(--neon-cyan)" : numScore >= 50 ? "#FBBF24" : numScore > 0 ? "#F87171" : "var(--void-text-dim)";
@@ -173,7 +175,7 @@ export default function DecksPage() {
             </div>
           );
         })}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

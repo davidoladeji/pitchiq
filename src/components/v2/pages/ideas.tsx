@@ -3,7 +3,9 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { Sparkles, ArrowRight, ArrowLeft, Lightbulb, Users, Clock, Loader2, RotateCcw } from "lucide-react";
+import { staggerContainer, fadeInUp } from "@/lib/animations";
 import { IDEA_QUESTIONS } from "@/lib/generate-ideas";
 import { BusinessIdea, IdeaQuestionAnswer } from "@/lib/types";
 import { Button } from "@/components/v2/ui/button";
@@ -153,15 +155,15 @@ export default function IdeasPageV2() {
   // ── Results view ──
   if (ideas && ideas.length > 0) {
     return (
-      <div ref={resultsRef} className="space-y-6 scroll-mt-24">
-        <div>
+      <motion.div ref={resultsRef} variants={staggerContainer} initial="hidden" animate="visible" className="space-y-6 scroll-mt-24 max-w-3xl mx-auto">
+        <motion.div variants={fadeInUp}>
           <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--void-text)" }}>Here are your ideas</h1>
           <p className="text-sm mt-1" style={{ color: "var(--void-text-dim)" }}>Pick one to turn into a full pitch deck with PIQ Score.</p>
-        </div>
+        </motion.div>
 
         <div className="space-y-4">
           {ideas.map((idea, i) => (
-            <Card key={i} className="p-6 group hover:border-white/[0.12] transition-all">
+            <motion.div key={i} variants={fadeInUp}><Card className="p-6 group hover:border-white/[0.12] transition-all">
               <div className="flex items-start justify-between gap-4 mb-3">
                 <div>
                   <h2 className="text-lg font-bold" style={{ color: "var(--void-text)" }}>{idea.name}</h2>
@@ -191,21 +193,21 @@ export default function IdeasPageV2() {
               <Button onClick={() => handleCreateDeck(idea, i)} disabled={deckLoadingId !== null}>
                 {deckLoadingId === i ? <><Loader2 size={14} className="animate-spin" /> Building deck...</> : <>Turn into pitch deck <ArrowRight size={14} /></>}
               </Button>
-            </Card>
+            </Card></motion.div>
           ))}
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <motion.div variants={fadeInUp} className="flex flex-wrap gap-3">
           <Button variant="outline" onClick={resetAll}><RotateCcw size={14} /> Start over</Button>
           <Button variant="outline" onClick={handleSurpriseMe} disabled={loading}><Sparkles size={14} /> Surprise me again</Button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
   // ── Question wizard view ──
   return (
-    <div className="space-y-6 max-w-xl">
+    <div className="space-y-6 max-w-xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold tracking-tight" style={{ color: "var(--void-text)" }}>Find your next startup idea</h1>
         <p className="text-sm mt-1" style={{ color: "var(--void-text-dim)" }}>Answer a few questions and AI will suggest tailored ideas. Or skip the questions entirely.</p>
