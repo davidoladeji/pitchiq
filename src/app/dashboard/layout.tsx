@@ -1,10 +1,9 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import DashboardShellClient from "@/components/v2/shell/DashboardShellClient";
-
-export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({
   children,
@@ -15,23 +14,36 @@ export default async function DashboardLayout({
   const userId = (session?.user as { id?: string })?.id;
   if (!userId) redirect("/auth/signin");
 
-  // Check dashboard version preference
-  let isV2 = false;
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { dashboardVersion: true },
+  // Read version from cookie first (fast path — no DB query)
+  const cookieStore = await cookies();
+  const versionCookie = cookieStore.get("dashboard_version")?.value;
+
+  let isV2: boolean;
+  if (versionCookie === "new" || versionCookie === "classic") {
+    // Cookie exists — trust it, skip DB
+    isV2 = versionCookie === "new";
+  } else {
+    // First visit or no cookie — check DB once, then set cookie for future
+    let dbVersion = "classic";
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { dashboardVersion: true },
+      });
+      dbVersion = user?.dashboardVersion || "classic";
+    } catch { /* default to classic */ }
+    isV2 = dbVersion === "new";
+    // Set cookie so future requests skip DB
+    cookieStore.set("dashboard_version", dbVersion, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
     });
-    isV2 = user?.dashboardVersion === "new";
-  } catch {
-    // Default to classic on error
   }
 
   if (isV2) {
-    // v2: Render tab-based shell — children from route files are not used
     return <DashboardShellClient />;
   }
 
-  // Classic: passthrough to individual route pages
   return <>{children}</>;
 }

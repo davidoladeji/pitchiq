@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/next-auth";
-import { prisma } from "@/lib/db";
+import { cookies } from "next/headers";
 import Providers from "@/components/Providers";
 import { NAVY_HEX } from "@/lib/design-tokens";
 import "./globals.css";
@@ -49,21 +47,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Fetch user's dashboard version preference (defaults to "classic")
-  let dashboardVersion: "classic" | "new" = "classic";
-  try {
-    const session = await getServerSession(authOptions);
-    const userId = (session?.user as { id?: string })?.id;
-    if (userId) {
-      const user = await prisma.user.findUnique({
-        where: { id: userId },
-        select: { dashboardVersion: true },
-      });
-      if (user?.dashboardVersion === "new") dashboardVersion = "new";
-    }
-  } catch {
-    // Ignore — default to classic
-  }
+  // Read dashboard version from cookie (set by toggle + dashboard layout)
+  // No DB query — cookie is the source of truth after first visit
+  const cookieStore = await cookies();
+  const dashboardVersion: "classic" | "new" =
+    cookieStore.get("dashboard_version")?.value === "new" ? "new" : "classic";
 
   return (
     <html lang="en" className={`${jetbrainsMono.variable} ${inter.variable}`}>

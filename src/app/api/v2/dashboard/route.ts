@@ -12,6 +12,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 
+// Auth-gated per-user data — must be dynamic, but we add cache headers
+// so the browser can serve stale data during revalidation
 export const dynamic = "force-dynamic";
 
 export async function GET() {
@@ -276,6 +278,12 @@ export async function GET() {
       plan: user?.plan || "starter",
       creditBalance: user?.creditBalance || 0,
       name: user?.name || "",
+    },
+  }, {
+    headers: {
+      // Browser can serve stale for 30s, then revalidate in background
+      // CDN won't cache (private) since this is per-user data
+      "Cache-Control": "private, max-age=30, stale-while-revalidate=300",
     },
   });
 }

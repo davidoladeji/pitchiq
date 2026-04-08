@@ -27,6 +27,8 @@ export function DashboardVersionProvider({
   const toggle = useCallback(() => {
     const next = version === "classic" ? "new" : "classic";
     setVersion(next);
+    // Set cookie so server layouts read it without a DB query
+    document.cookie = `dashboard_version=${next};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
     startTransition(() => {
       fetch("/api/settings/dashboard-version", {
         method: "PUT",
@@ -34,6 +36,7 @@ export function DashboardVersionProvider({
         body: JSON.stringify({ version: next }),
       }).catch(() => {
         setVersion(version);
+        document.cookie = `dashboard_version=${version};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
       });
     });
   }, [version]);

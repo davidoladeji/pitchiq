@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/next-auth";
 import { prisma } from "@/lib/db";
 import DashboardClient from "@/components/DashboardClient";
-import DashboardNew from "@/components/v2/DashboardClient";
-import DashboardVersionGate from "@/components/DashboardVersionGate";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Dashboard | PitchIQ",
@@ -20,29 +17,27 @@ export default async function DashboardPage({
 }: {
   searchParams: { upgraded?: string };
 }) {
+  // V2 users: layout renders DashboardShellClient which ignores children.
+  // Skip the expensive server-side queries entirely.
+  const cookieStore = await cookies();
+  if (cookieStore.get("dashboard_version")?.value === "new") {
+    return null;
+  }
+
+  // Classic dashboard — fetch data server-side
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     redirect("/auth/signin");
   }
 
-  // Use Promise.allSettled to prevent one failed query from crashing the entire dashboard
   const results = await Promise.allSettled([
     prisma.deck.findMany({
       where: { userId: session.user.id },
       orderBy: { createdAt: "desc" },
       select: {
-        id: true,
-        shareId: true,
-        title: true,
-        companyName: true,
-        themeId: true,
-        piqScore: true,
-        isPremium: true,
-        createdAt: true,
-        industry: true,
-        stage: true,
-        fundingTarget: true,
-        investorType: true,
+        id: true, shareId: true, title: true, companyName: true,
+        themeId: true, piqScore: true, isPremium: true, createdAt: true,
+        industry: true, stage: true, fundingTarget: true, investorType: true,
         _count: { select: { views: true } },
       },
     }),
@@ -50,121 +45,53 @@ export default async function DashboardPage({
       where: { id: session.user.id },
       select: { plan: true, stripeSubscriptionId: true },
     }),
-    // Fetch recent views across all user decks for the activity feed
     prisma.view.findMany({
-      where: {
-        deck: { userId: session.user.id },
-      },
+      where: { deck: { userId: session.user.id } },
       orderBy: { createdAt: "desc" },
       take: 10,
-      select: {
-        id: true,
-        createdAt: true,
-        deck: {
-          select: { title: true },
-        },
-      },
+      select: { id: true, createdAt: true, deck: { select: { title: true } } },
     }),
-    prisma.startupProfile.count({
-      where: { userId: session.user.id },
-    }),
+    prisma.startupProfile.count({ where: { userId: session.user.id } }),
   ]);
 
-  // Extract results with safe fallbacks — dashboard renders even if DB is flaky
   const decks = results[0].status === "fulfilled" ? results[0].value : [];
   const user = results[1].status === "fulfilled" ? results[1].value : null;
   const recentViews = results[2].status === "fulfilled" ? results[2].value : [];
   const startupProfile = results[3].status === "fulfilled" ? results[3].value : 0;
 
-  if (results.some((r) => r.status === "rejected")) {
-    console.warn("[dashboard] Some queries failed:", results.filter((r) => r.status === "rejected").map((r) => (r as PromiseRejectedResult).reason?.message));
-  }
-
-  const profileCount = startupProfile;
-  const hasProfile = profileCount > 0;
-
   const serialized = decks.map((d) => ({
-    id: d.id,
-    shareId: d.shareId,
-    title: d.title,
-    companyName: d.companyName,
-    themeId: d.themeId,
-    piqScore: d.piqScore,
-    isPremium: d.isPremium,
-    createdAt: d.createdAt.toISOString(),
-    viewCount: d._count.views,
-    industry: d.industry,
-    stage: d.stage,
-    fundingTarget: d.fundingTarget,
-    investorType: d.investorType,
+    id: d.id, shareId: d.shareId, title: d.title, companyName: d.companyName,
+    themeId: d.themeId, piqScore: d.piqScore, isPremium: d.isPremium,
+    createdAt: d.createdAt.toISOString(), viewCount: d._count.views,
+    industry: d.industry, stage: d.stage, fundingTarget: d.fundingTarget, investorType: d.investorType,
   }));
 
-  // Build activity feed from recent views + deck creations
   const viewActivities = recentViews.map((v) => ({
-    type: "view" as const,
-    title: "Someone viewed your deck",
-    deckTitle: v.deck.title,
-    time: v.createdAt.toISOString(),
+    type: "view" as const, title: "Someone viewed your deck",
+    deckTitle: v.deck.title, time: v.createdAt.toISOString(),
   }));
-
   const deckCreationActivities = decks.slice(0, 5).map((d) => ({
-    type: "created" as const,
-    title: "You created a new deck",
-    deckTitle: d.title,
-    time: d.createdAt.toISOString(),
+    type: "created" as const, title: "You created a new deck",
+    deckTitle: d.title, time: d.createdAt.toISOString(),
   }));
-
-  // Deck scoring activities (decks with a non-empty piqScore)
   const scoredActivities = decks
-    .filter((d) => {
-      try {
-        const parsed = JSON.parse(d.piqScore);
-        return typeof parsed.overall === "number";
-      } catch {
-        return false;
-      }
-    })
+    .filter((d) => { try { const p = JSON.parse(d.piqScore); return typeof p.overall === "number"; } catch { return false; } })
     .slice(0, 5)
-    .map((d) => ({
-      type: "scored" as const,
-      title: "PIQ scored your deck",
-      deckTitle: d.title,
-      time: d.createdAt.toISOString(),
-    }));
+    .map((d) => ({ type: "scored" as const, title: "PIQ scored your deck", deckTitle: d.title, time: d.createdAt.toISOString() }));
 
-  // Merge and sort by time, take top 10
   const activities = [...viewActivities, ...deckCreationActivities, ...scoredActivities]
     .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime())
     .slice(0, 10);
 
-  const classicDashboard = (
+  return (
     <DashboardClient
       decks={serialized}
       userName={session.user.name || "there"}
       plan={user?.plan || "starter"}
       upgradedPlan={searchParams.upgraded}
       activities={activities}
-      hasProfile={hasProfile}
-      profileCount={profileCount}
-    />
-  );
-
-  const newDashboard = (
-    <DashboardNew
-      decks={serialized}
-      userName={session.user.name || "there"}
-      plan={user?.plan || "starter"}
-      upgradedPlan={searchParams.upgraded}
-      activities={activities}
-      hasProfile={hasProfile}
-      profileCount={profileCount}
-    />
-  );
-
-  return (
-    <DashboardVersionGate
-      classicComponent={classicDashboard}
-      newComponent={newDashboard}
+      hasProfile={startupProfile > 0}
+      profileCount={startupProfile}
     />
   );
 }
