@@ -271,8 +271,8 @@ function FormSection({ title, step, activeStep, onToggle, complete, number, opti
       <button type="button" onClick={() => onToggle(step)} className="w-full flex items-center justify-between px-5 py-4">
         <div className="flex items-center gap-3">
           {complete && !open ? (
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(var(--neon-emerald-rgb), 0.1)" }}>
-              <Check size={14} style={{ color: "var(--neon-emerald)" }} />
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: "rgba(var(--neon-electric-rgb), 0.1)" }}>
+              <Check size={14} style={{ color: "var(--neon-electric)" }} />
             </div>
           ) : (
             <div className="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold"
