@@ -23,7 +23,8 @@ export default async function DashboardLayout({
     // Cookie exists — trust it, skip DB
     isV2 = versionCookie === "new";
   } else {
-    // First visit or no cookie — check DB once, then set cookie for future
+    // First visit or no cookie — check DB once
+    // Cookie will be set client-side by DashboardVersionProvider on mount
     let dbVersion = "classic";
     try {
       const user = await prisma.user.findUnique({
@@ -33,12 +34,6 @@ export default async function DashboardLayout({
       dbVersion = user?.dashboardVersion || "classic";
     } catch { /* default to classic */ }
     isV2 = dbVersion === "new";
-    // Set cookie so future requests skip DB
-    cookieStore.set("dashboard_version", dbVersion, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: "lax",
-    });
   }
 
   if (isV2) {

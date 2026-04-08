@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, useTransition } from "react";
+import { createContext, useContext, useState, useCallback, useTransition, useEffect } from "react";
 
 interface DashboardVersionContextType {
   version: "classic" | "new";
@@ -23,6 +23,11 @@ export function DashboardVersionProvider({
 }) {
   const [version, setVersion] = useState<"classic" | "new">(initialVersion);
   const [isPending, startTransition] = useTransition();
+
+  // Sync cookie on mount so server layouts can read it without a DB query
+  useEffect(() => {
+    document.cookie = `dashboard_version=${initialVersion};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggle = useCallback(() => {
     const next = version === "classic" ? "new" : "classic";
